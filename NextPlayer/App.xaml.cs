@@ -35,8 +35,6 @@ namespace NextPlayer
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-
-
         }
 
         /// <summary>
