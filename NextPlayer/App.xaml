@@ -6,9 +6,269 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:converters="using:NextPlayer.Converters"
     xmlns:vm="using:NextPlayer.ViewModel">
     <Application.Resources>
-        <vm:ViewModelLocator x:Key="Locator"
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="Assets/HubBackground.png"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="{x:Null}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <vm:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
+            
+            <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
+            <JumpListItemForegroundConverter x:Key="JumpListItemForegroundConverter"/>
+            <DataTemplate x:Key="ZoomedInHeaderTemplate">
+                <Border Background="{StaticResource PhoneAccentBrush}" 
+                        BorderBrush="{StaticResource PhoneAccentBrush}"
+                        Width="50" 
+                        Height="50"
+                        Margin="0,9.5,0,9.5">
+                    <TextBlock 
+                            Text='{Binding Key}' 
+                            Foreground="{StaticResource PhoneForegroundBrush}" 
+                            FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                            FontSize="30"  
+                            Padding="5,0,0,5"
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Bottom"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="ZoomedOutItemsTemplate">
+                <Border Margin="10,10,0,0"
+                        Background="{Binding Converter={StaticResource JumpListItemBackgroundConverter}}"
+                        Width="85" Height="85">
+                    <TextBlock Text="{Binding Group.Key}" 
+                               Foreground="{Binding Converter={StaticResource JumpListItemForegroundConverter}}" 
+                               FontSize="40"
+                               FontWeight="SemiBold"      
+                               Padding="5,0,0,5"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Bottom"/>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="AlbumItemTemplate">
+                <Grid Width="{Binding ActualWidth, ElementName=ContentRoot}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="24"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding Album}" 
+                               TextWrapping="NoWrap" 
+                               TextTrimming="CharacterEllipsis" 
+                               FontSize="20" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,0"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
+                        <TextBlock Text="{Binding Artist}" 
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="17" 
+                               FontWeight="Normal" 
+                               Margin="0,0,4.5,0"/>
+                    </Border>
+                    <Border Grid.Column="1" Grid.RowSpan="2"   >
+                        <TextBlock Text="{Binding SongsNumber}" 
+                               FontSize="17" 
+                               FontWeight="Normal"
+                               Margin="4.5,0,4.5,0"  
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"/>
+                    </Border>
+                    <Border Grid.Column="2" Grid.RowSpan="2">
+                        <TextBlock FontSize="16" FontFamily="Segoe UI Symbol" Text="&#xE189;" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ArtistItemTemplate">
+                <Grid Width="{Binding ActualWidth, ElementName=ContentRoot}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="10*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Grid.RowSpan="2"  Margin="0,10,0,10">
+                        <TextBlock Text="{Binding Artist}" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"
+                               TextWrapping="NoWrap" 
+                               TextTrimming="CharacterEllipsis" 
+                               VerticalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="1"  >
+                        <TextBlock Text="{Binding AlbumsNumber}" 
+                               FontSize="15" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,0" 
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom"/>
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="2"  >
+                        <TextBlock Text="&#x1f4bf;" 
+                               FontSize="13" 
+                               FontFamily="Segoe UI Symbol" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Center"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="1" >
+                        <TextBlock Text="{Binding SongsNumber}" 
+                               FontSize="15" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,0" 
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="2" >
+                        <TextBlock Text="&#xE189;"
+                               FontSize="12" 
+                               FontFamily="Segoe UI Symbol" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Top"/>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="SongItemTemplate">
+                <Grid Width="{Binding ActualWidth, ElementName=ContentRoot}">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Add to"/>
+                            <MenuFlyoutItem Text="Add to playlist"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="5*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding Title}" 
+                                   TextWrapping="NoWrap" 
+                                   TextTrimming="CharacterEllipsis" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,0,0"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
+                        <TextBlock Text="{Binding Artist}" 
+                                   TextWrapping="NoWrap" 
+                                   TextTrimming="CharacterEllipsis" 
+                                   FontSize="17" 
+                                   FontWeight="Normal" 
+                                   Margin="0,0,4.5,0"/>
+                    </Border>
+                    <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
+                        <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" 
+                                   FontSize="17" 
+                                   FontWeight="Normal" 
+                                   Margin="4.5,9.5,0,0"  
+                                   HorizontalAlignment="Right"/>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+            
+            <converters:TimeSpanToStringConverter x:Key="TimeSpanToString"/>
+            <converters:IntToSongsConverter x:Key="IntToSongsConverter"/>
+            <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
+            <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
+            <FontWeight x:Key="PhoneButtonFontWeight">Semibold</FontWeight>
+            <x:Double x:Key="TextStyleLargeFontSize">18.14</x:Double>
+            <Thickness x:Key="PhoneButtonContentPadding">9.5,0,9.5,3.5</Thickness>
+            <x:Double x:Key="PhoneButtonMinHeight">57.5</x:Double>
+            <x:Double x:Key="PhoneButtonMinWidth">109</x:Double>
+            <Thickness x:Key="PhoneTouchTargetOverhang">0,9.5</Thickness>
+            <SolidColorBrush x:Key="ButtonDisabledBackgroundThemeBrush" Color="Transparent"/>
+            <Style x:Key="ButtonStyle1" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource PhoneForegroundBrush}"/>
+                <Setter Property="Foreground" Value="{ThemeResource PhoneForegroundBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontFamily" Value="{ThemeResource PhoneFontFamilyNormal}"/>
+                <Setter Property="FontWeight" Value="{ThemeResource PhoneButtonFontWeight}"/>
+                <Setter Property="FontSize" Value="{ThemeResource TextStyleLargeFontSize}"/>
+                <Setter Property="Padding" Value="{ThemeResource PhoneButtonContentPadding}"/>
+                <Setter Property="MinHeight" Value="{ThemeResource PhoneButtonMinHeight}"/>
+                <Setter Property="MinWidth" Value="{ThemeResource PhoneButtonMinWidth}"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="Grid" Background="Transparent">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition From="Pressed" To="PointerOver">
+                                                <Storyboard>
+                                                    <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition From="PointerOver" To="Normal">
+                                                <Storyboard>
+                                                    <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition From="Pressed" To="Normal">
+                                                <Storyboard>
+                                                    <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver"/>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <PointerDownThemeAnimation Storyboard.TargetName="Grid"/>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledForegroundThemeBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Border">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBorderThemeBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBackgroundThemeBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="{ThemeResource PhoneTouchTargetOverhang}">
+                                    <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

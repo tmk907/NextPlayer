@@ -33,7 +33,8 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
-
+            SimpleIoc.Default.Register<GenresViewModel>();
+            SimpleIoc.Default.Register<SongsViewModel>();
 
         }
 
@@ -41,8 +42,19 @@ namespace NextPlayer.ViewModel
         {
             var navigationService = new NavigationService();
             navigationService.Configure(ViewNames.MainView, typeof(MainPage));
+            navigationService.Configure(ViewNames.AlbumsView, typeof(AlbumsView));
+            navigationService.Configure(ViewNames.AlbumView, typeof(AlbumView));
+            navigationService.Configure(ViewNames.ArtistsView, typeof(ArtistsView));
+            navigationService.Configure(ViewNames.GenresView, typeof(GenresView));
+            navigationService.Configure(ViewNames.FoldersView, typeof(FoldersView));
+            navigationService.Configure(ViewNames.LyricsView, typeof(LyricsView));
+            navigationService.Configure(ViewNames.NewSmartPlaylistView, typeof(NewSmartPlaylistView));
+            navigationService.Configure(ViewNames.NowPlayingPlaylistView, typeof(NowPlayingPlaylistView));
+            navigationService.Configure(ViewNames.NowPlayingView, typeof(NowPlayingView));
             navigationService.Configure(ViewNames.PlaylistsView, typeof(PlaylistsView));
+            navigationService.Configure(ViewNames.PlaylistView, typeof(PlaylistView));
             navigationService.Configure(ViewNames.SettingsView, typeof(SettingsView));
+            navigationService.Configure(ViewNames.SongsView, typeof(SongView));
 
             // navigationService.Configure("key2", typeof(OtherPage2));
             //HardwareButtons.BackPressed += (sender, args) =>
@@ -58,6 +70,21 @@ namespace NextPlayer.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainPageViewModel>();
+            }
+        }
+
+        public SongsViewModel SongsVM
+        {
+            get 
+            { 
+                return ServiceLocator.Current.GetInstance<SongsViewModel>();
+            }
+        }
+        public GenresViewModel GenresVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<GenresViewModel>();
             }
         }
 

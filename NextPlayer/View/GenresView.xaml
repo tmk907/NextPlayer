@@ -5,9 +5,47 @@
     xmlns:local="using:NextPlayer.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:NextPlayer.Helpers"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding GenresVM, Mode=OneWay, Source={StaticResource Locator}}">
+    
+    <Page.Resources>
+        <DataTemplate x:Key="GenreItemTemplate">
+            <Grid Width="{Binding ActualWidth, ElementName=ContentRoot}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="24"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Margin="0,16,0,0">
+                    <TextBlock Text="{Binding Genre}"
+                               TextWrapping="NoWrap" 
+                               TextTrimming="CharacterEllipsis" 
+                               FontSize="21" 
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,0"/>
+                </Border>
+                <Border Grid.Column="1" VerticalAlignment="Bottom"  >
+                    <TextBlock Text="{Binding SongsNumber}" 
+                               FontSize="17" 
+                               FontWeight="SemiBold" 
+                               Margin="4.5,0,4.5,0" 
+                               HorizontalAlignment="Right"/>
+                </Border>
+                <Border Grid.Column="2" VerticalAlignment="Bottom"  >
+                    <TextBlock Text="&#xE189;"
+                               FontSize="16" 
+                               FontFamily="Segoe UI Symbol"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -23,13 +61,29 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="page title" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="AppNameTextBlock" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="GenresPageTitle" Text="genres" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-
+            <ListView x:Name="listView"
+                      SelectionMode="None"
+                      IsItemClickEnabled="True"
+                      DataContext="{Binding }"
+                ItemsSource="{Binding Genres}"
+                helpers:ItemClickCommand.Command="{Binding ItemClicked}"
+                      ItemTemplate="{StaticResource GenreItemTemplate}">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Loaded">
+                        <core:InvokeCommandAction Command="{Binding LoadItems}"  />
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ListView>
+            <!--DataContext="{Binding }"-->
+            <!--ItemsSource="{Binding Genres}"-->
+            <!--Loaded="LoadedListView"-->
+            <!--d:DataContext="{Binding Source={d:DesignData Source=/DataModel/SampleGenres.json}}"-->
         </Grid>
     </Grid>
 </Page>

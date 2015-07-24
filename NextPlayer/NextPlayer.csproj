@@ -98,12 +98,16 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Constants\ViewNames.cs" />
+    <Compile Include="Converters\IntToSongsConverter.cs" />
+    <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\GenresViewModel.cs" />
     <Compile Include="ViewModel\INavigable.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\PlaylistsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\SongsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AlbumsView.xaml.cs">
       <DependentUpon>AlbumsView.xaml</DependentUpon>
@@ -244,8 +248,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Converters\" />
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
