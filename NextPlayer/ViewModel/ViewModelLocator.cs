@@ -35,6 +35,7 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<GenresViewModel>();
             SimpleIoc.Default.Register<SongsViewModel>();
+            SimpleIoc.Default.Register<AlbumsViewModel>();
 
         }
 
@@ -78,6 +79,14 @@ namespace NextPlayer.ViewModel
             get 
             { 
                 return ServiceLocator.Current.GetInstance<SongsViewModel>();
+            }
+        }
+
+        public AlbumsViewModel AlbumsVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AlbumsViewModel>();
             }
         }
         public GenresViewModel GenresVM

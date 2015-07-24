@@ -188,6 +188,7 @@
             
             <converters:TimeSpanToStringConverter x:Key="TimeSpanToString"/>
             <converters:IntToSongsConverter x:Key="IntToSongsConverter"/>
+            <converters:GetListViewConverter x:Key="GetListView"/>
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
             <FontWeight x:Key="PhoneButtonFontWeight">Semibold</FontWeight>

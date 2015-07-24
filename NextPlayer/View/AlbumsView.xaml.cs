@@ -1,4 +1,5 @@
 ﻿using NextPlayer.Common;
+using NextPlayer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,6 +68,9 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var navigableViewModel = this.DataContext as INavigable;
+            if (navigableViewModel != null)
+                navigableViewModel.Activate(e.NavigationParameter, e.PageState);
         }
 
         /// <summary>
@@ -79,6 +83,9 @@ namespace NextPlayer.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            var navigableViewModel = this.DataContext as INavigable;
+            if (navigableViewModel != null)
+                navigableViewModel.Deactivate(e.PageState);
         }
 
         #region NavigationHelper registration

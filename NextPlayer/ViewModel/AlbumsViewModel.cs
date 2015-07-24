@@ -10,73 +10,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
+using NextPlayerDataLayer.Common;
 
 namespace NextPlayer.ViewModel
 {
-    public class SongsViewModel : ViewModelBase, INavigable
+    public class AlbumsViewModel : ViewModelBase, INavigable
     {
         private INavigationService navigationService;
         private int index;
-        private string genre;
+        private string artist;
+        
 
-        public SongsViewModel(INavigationService navigationService)
+        public AlbumsViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
-            PageTitle = "songs";
             index = 0;
-            genre = null;
-        }
-
-        public string PageTitle
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// The <see cref="Songs" /> property's name.
-        /// </summary>
-        public const string SongsPropertyName = "Songs";
-
-        private ObservableCollection<GroupedOC<SongItem>> songs = new ObservableCollection<GroupedOC<SongItem>>();
-
-        /// <summary>
-        /// Sets and gets the Songs property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public ObservableCollection<GroupedOC<SongItem>> Songs
-        {
-            get
-            {
-                if (songs.Count == 0)
-                {
-                    if (IsInDesignMode)
-                    {
-                        ObservableCollection<SongItem> a = new ObservableCollection<SongItem>();
-
-                        for (int i = 0; i < 5; i++)
-                        {
-                            a.Add(new SongItem());
-                        }
-                        songs = Grouped.CreateGrouped<SongItem>(a, x => x.Title);
-                    }
-                    //songs = Grouped.CreateGrouped<SongItem>(DatabaseManager.GetSongItems(), x => x.Title);
-                }
-                return songs;
-            }
-
-            set
-            {
-                if (songs == value)
-                {
-                    return;
-                }
-
-                songs = value;
-                RaisePropertyChanged(SongsPropertyName);
-            }
+            artist = null;
         }
 
         private RelayCommand<object> scrollListView;
@@ -103,26 +53,66 @@ namespace NextPlayer.ViewModel
             }
         }
 
-        private RelayCommand<SongItem> itemClicked;
+        /// <summary>
+        /// The <see cref="Albums" /> property's name.
+        /// </summary>
+        public const string AlbumsPropertyName = "Albums";
+
+        private ObservableCollection<GroupedOC<AlbumItem>> albums = new ObservableCollection<GroupedOC<AlbumItem>>();
+
+        /// <summary>
+        /// Sets and gets the Albums property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<GroupedOC<AlbumItem>> Albums
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    ObservableCollection<AlbumItem> a = new ObservableCollection<AlbumItem>();
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        a.Add(new AlbumItem());
+                    }
+                    albums = Grouped.CreateGrouped<AlbumItem>(a, x => x.Album);
+                }
+                return albums;
+            }
+
+            set
+            {
+                if (albums == value)
+                {
+                    return;
+                }
+
+                albums = value;
+                RaisePropertyChanged(AlbumsPropertyName);
+            }
+        }
+
+        private RelayCommand<AlbumItem> itemClicked;
 
         /// <summary>
         /// Gets the ItemClicked.
         /// </summary>
-        public RelayCommand<SongItem> ItemClicked
+        public RelayCommand<AlbumItem> ItemClicked
         {
             get
             {
                 return itemClicked
-                    ?? (itemClicked = new RelayCommand<SongItem>(
+                    ?? (itemClicked = new RelayCommand<AlbumItem>(
                     item =>
                     {
                         bool find = false;
                         int i = 0;
-                        foreach (var a in Songs)
+                        foreach (var a in Albums)
                         {
                             foreach (var b in a)
                             {
-                                if (b.SongId == item.SongId)
+                                if (b.Album == item.Album)
                                 {
                                     find = true;
                                     break;
@@ -135,7 +125,7 @@ namespace NextPlayer.ViewModel
                         else index = 0;
                         //Library.Current.SetNowPlayingList(Library.Current.Songs);
                         //Library.Current.SaveCurrentSongIndex(((SongItem)e.ClickedItem).SongId);
-                        navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
+                        navigationService.NavigateTo(ViewNames.AlbumView, item.Album+"|"+artist);//!
                     }));
             }
         }
@@ -153,13 +143,13 @@ namespace NextPlayer.ViewModel
                     ?? (loadItems = new RelayCommand(
                     () =>
                     {
-                        if (genre == null)
+                        if (artist == null)
                         {
-                            Songs = Grouped.CreateGrouped<SongItem>(DatabaseManager.GetSongItems(), x => x.Title);
+                            Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(), x => x.Album);
                         }
                         else
                         {
-                            Songs = Grouped.CreateGrouped <SongItem>(DatabaseManager.GetSongItemsFromGenre(genre),x => x.Title);
+                            Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artist), x => x.Album);
                         }
                     }));
             }
@@ -171,18 +161,18 @@ namespace NextPlayer.ViewModel
             {
                 if (state.ContainsKey("index"))
                 {
-                    index = (int) state["index"];
+                    index = (int)state["index"];
                 }
             }
             if (parameter == null)
             {
-                
+
             }
             else
             {
                 if (parameter.GetType() == typeof(String[]))
                 {
-                    if (((String[])parameter)[0].Equals("genre")) genre = ((String[])parameter)[1];
+                    if (((String[])parameter)[0].Equals("artist")) artist = ((String[])parameter)[1];
                 }
             }
         }

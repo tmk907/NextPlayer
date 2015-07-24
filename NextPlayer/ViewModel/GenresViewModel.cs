@@ -76,7 +76,8 @@ namespace NextPlayer.ViewModel
                     ?? (itemClicked = new RelayCommand<GenreItem>(
                     item =>
                     {
-                        navigationService.NavigateTo(ViewNames.PlaylistView, item.ToString());
+                        item.SongsNumber = 20;
+                        //navigationService.NavigateTo(ViewNames.PlaylistView, item.ToString());
                     }));
             }
         }
