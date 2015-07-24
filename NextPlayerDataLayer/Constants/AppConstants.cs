@@ -3,7 +3,7 @@ namespace NextPlayerDataLayer.Constants
 {
     public sealed class AppConstants
     {
-        public const string DBFileName = "database4.db";
+        public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
         public const string NowPlayingListChanged = "nplistchanged";
         public const string SongId = "songid";

@@ -1,8 +1,13 @@
-﻿using System;
+﻿using NextPlayer.Common;
+using NextPlayerDataLayer.Constants;
+using NextPlayerDataLayer.Helpers;
+using NextPlayerDataLayer.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -35,6 +40,9 @@ namespace NextPlayer
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+
+
+            if (FirstRun()) Library.Current.SetDB();
         }
 
         /// <summary>
@@ -43,7 +51,7 @@ namespace NextPlayer
         /// search results, and so forth.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -61,12 +69,24 @@ namespace NextPlayer
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
+                // Associate the frame with a SuspensionManager key.
+                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+
                 // TODO: change this value to a cache size that is appropriate for your application
                 rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    // TODO: Load state from previously suspended application
+                    // Restore the saved session state only when appropriate.
+                    try
+                    {
+                        await SuspensionManager.RestoreAsync();
+                    }
+                    catch (SuspensionManagerException)
+                    {
+                        // Something went wrong restoring state.
+                        // Assume there is no state and continue.
+                    }
                 }
 
                 // Place the frame in the current Window
@@ -91,7 +111,7 @@ namespace NextPlayer
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(View.MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -120,12 +140,39 @@ namespace NextPlayer
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            // TODO: Save application state and stop any background activity
+            await SuspensionManager.SaveAsync();
             deferral.Complete();
+        }
+
+        public async Task<bool> CheckFileExists(string filename)
+        {
+            try
+            {
+                var store = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool FirstRun()
+        {
+            object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.FirstRun);
+            if (o == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.FirstRun, false);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

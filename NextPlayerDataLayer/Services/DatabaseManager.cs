@@ -15,7 +15,7 @@ using NextPlayerDataLayer.Tables;
 
 namespace NextPlayerDataLayer.Services
 {
-    class DatabaseManager
+    public class DatabaseManager
     {
 
         private static SQLiteAsyncConnection AsyncConnectionDb()
