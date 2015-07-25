@@ -115,17 +115,20 @@ namespace NextPlayer.ViewModel
                                 if (b.Album == item.Album)
                                 {
                                     find = true;
+                                    index = i;
                                     break;
                                 }
                                 i++;
                             }
                             if (find) break;
                         }
-                        if (find) index = i;
-                        else index = 0;
-                        //Library.Current.SetNowPlayingList(Library.Current.Songs);
-                        //Library.Current.SaveCurrentSongIndex(((SongItem)e.ClickedItem).SongId);
-                        navigationService.NavigateTo(ViewNames.AlbumView, item.Album+"|"+artist);//!
+                        if (!find) index = 0;
+                        String[] s = new String[4];
+                        s[0] = "album";
+                        s[1] = item.Album;
+                        s[2] = "artist";
+                        s[3] = artist;
+                        navigationService.NavigateTo(ViewNames.AlbumView, s);
                     }));
             }
         }
@@ -157,6 +160,7 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            index = 0;
             if (state != null)
             {
                 if (state.ContainsKey("index"))
@@ -164,11 +168,8 @@ namespace NextPlayer.ViewModel
                     index = (int)state["index"];
                 }
             }
-            if (parameter == null)
-            {
-
-            }
-            else
+            artist = null;
+            if (parameter != null)
             {
                 if (parameter.GetType() == typeof(String[]))
                 {

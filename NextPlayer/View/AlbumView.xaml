@@ -5,8 +5,13 @@
     xmlns:local="using:NextPlayer.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:NextPlayer.Helpers"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding AlbumVM, Mode=OneWay, Source={StaticResource Locator}}">
+
 
     <Grid x:Name="LayoutRoot">
 
@@ -29,7 +34,34 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Image x:Name="albumCover" Width="150" Height="150"/>
+                    <StackPanel Orientation="Vertical" Height="150" Width="210">
+                        <StackPanel Height="120" VerticalAlignment="Stretch" >
+                            <TextBlock Text="{Binding Album}" MaxHeight="60" FontSize="21" FontWeight="Medium" TextWrapping="WrapWholeWords"  Padding="10,5,5,5"/>
+                            <TextBlock Text="{Binding Artist}" MaxHeight="60" FontSize="21" FontWeight="Medium" TextWrapping="WrapWholeWords"  Padding="10,5,5,5"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" Height="30" FontSize="20" FontWeight="Normal"  HorizontalAlignment="Right" Padding="5,0,0,15"/>
+                    </StackPanel>
+                </StackPanel>
+                <ListView x:Name="SongsListView"
+                    Grid.Row="1" 
+                    SelectionMode="None"
+                    IsItemClickEnabled="True"
+                    ItemsSource="{Binding Songs}"
+                    ItemTemplate="{StaticResource SongItemTemplate}">
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Loaded">
+                            <core:InvokeCommandAction Command="{Binding LoadItems}" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

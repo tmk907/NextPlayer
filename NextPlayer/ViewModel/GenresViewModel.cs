@@ -46,7 +46,6 @@ namespace NextPlayer.ViewModel
                             genres.Add(new GenreItem(TimeSpan.Zero, i.ToString(), i));
                         }
                     }
-                   // else genres = DatabaseManager.GetGenreItems(); ;
                 }
                 return genres;
             }
@@ -76,8 +75,10 @@ namespace NextPlayer.ViewModel
                     ?? (itemClicked = new RelayCommand<GenreItem>(
                     item =>
                     {
-                        item.SongsNumber = 20;
-                        //navigationService.NavigateTo(ViewNames.PlaylistView, item.ToString());
+                        String[] s = new String[2];
+                        s[0] = "genre";
+                        s[1] = item.Genre
+                        navigationService.NavigateTo(ViewNames.PlaylistView, s);
                     }));
             }
         }

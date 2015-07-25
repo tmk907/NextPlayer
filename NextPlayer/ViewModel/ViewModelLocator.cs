@@ -36,7 +36,8 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<GenresViewModel>();
             SimpleIoc.Default.Register<SongsViewModel>();
             SimpleIoc.Default.Register<AlbumsViewModel>();
-
+            SimpleIoc.Default.Register<ArtistsViewModel>();
+            SimpleIoc.Default.Register<AlbumViewModel>();
         }
 
         private static INavigationService CreateNavigationService()
@@ -82,11 +83,27 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        public AlbumViewModel AlbumVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AlbumViewModel>();
+            }
+        }
+
         public AlbumsViewModel AlbumsVM
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<AlbumsViewModel>();
+            }
+        }
+
+        public ArtistsViewModel ArtistsVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ArtistsViewModel>();
             }
         }
         public GenresViewModel GenresVM

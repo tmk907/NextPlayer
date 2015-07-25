@@ -136,7 +136,7 @@ namespace NextPlayerDataLayer.Services
             return newSong.SongId;
         }
 
-        public static void InsertNewNowPlayingPlaylist(ObservableCollection<SongItem> list)
+        public static void InsertNewNowPlayingPlaylist(IEnumerable<SongItem> list)
         {
             ClearNowPlaying();
             int i = 0;
@@ -260,6 +260,29 @@ namespace NextPlayerDataLayer.Services
             return collection;
         }
 
+        public static AlbumItem GetAlbumItem(string album, string artist)
+        {
+            List<SongsTable> query;
+            if (artist == null ||  artist.Equals(""))
+            {
+                query = ConnectionDb().Table<SongsTable>().Where(a => a.Album.Equals(album)).ToList();
+            }
+            else
+            {
+                query = ConnectionDb().Table<SongsTable>().Where(a => a.Album.Equals(album)).Where(b => b.Artist.Equals(artist)).ToList();
+            }
+            
+            TimeSpan duration = TimeSpan.Zero;
+            int songs = 0;
+            foreach (var item in query)
+            {
+                songs++;
+                duration += item.Duration;
+            }
+            AlbumItem albumItem = new AlbumItem(query.FirstOrDefault().Album, query.FirstOrDefault().Artist, duration, songs);
+            return albumItem;
+        }
+
         public static ObservableCollection<GenreItem> GetGenreItems()
         {
             ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
@@ -311,9 +334,9 @@ namespace NextPlayerDataLayer.Services
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            if (artist.Equals(""))
+            if (artist == null || artist.Equals(""))
             {
-                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(a => a.Album.Equals(album)).ToList();
+                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.TrackNumber).Where(a => a.Album.Equals(album)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));
@@ -321,7 +344,7 @@ namespace NextPlayerDataLayer.Services
             }
             else
             {
-                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(w => w.Artist.Equals(artist)).Where(a => a.Album.Equals(album)).ToList();
+                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.TrackNumber).Where(w => w.Artist.Equals(artist)).Where(a => a.Album.Equals(album)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));

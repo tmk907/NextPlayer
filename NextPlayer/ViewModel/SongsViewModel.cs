@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
+using NextPlayerDataLayer.Helpers;
 
 namespace NextPlayer.ViewModel
 {
@@ -62,7 +63,6 @@ namespace NextPlayer.ViewModel
                         }
                         songs = Grouped.CreateGrouped<SongItem>(a, x => x.Title);
                     }
-                    //songs = Grouped.CreateGrouped<SongItem>(DatabaseManager.GetSongItems(), x => x.Title);
                 }
                 return songs;
             }
@@ -118,23 +118,27 @@ namespace NextPlayer.ViewModel
                     {
                         bool find = false;
                         int i = 0;
+                        List<SongItem> list = new List<SongItem>();
                         foreach (var a in Songs)
                         {
                             foreach (var b in a)
                             {
+                                list.Add(b);
                                 if (b.SongId == item.SongId)
                                 {
                                     find = true;
+                                    index = i;
                                     break;
                                 }
                                 i++;
                             }
                             if (find) break;
                         }
-                        if (find) index = i;
-                        else index = 0;
-                        //Library.Current.SetNowPlayingList(Library.Current.Songs);
-                        //Library.Current.SaveCurrentSongIndex(((SongItem)e.ClickedItem).SongId);
+                        if (!find) index = 0;
+
+                        ApplicationSettingsHelper.SaveSongIndex(index);
+                        DatabaseManager.InsertNewNowPlayingPlaylist(list);
+
                         navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
                     }));
             }
@@ -167,6 +171,7 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            index = 0;
             if (state != null)
             {
                 if (state.ContainsKey("index"))
@@ -174,11 +179,8 @@ namespace NextPlayer.ViewModel
                     index = (int) state["index"];
                 }
             }
-            if (parameter == null)
-            {
-                
-            }
-            else
+            genre = null;
+            if (parameter!=null)
             {
                 if (parameter.GetType() == typeof(String[]))
                 {
