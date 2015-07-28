@@ -30,8 +30,8 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="artists" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="ArtistsPageTitle" Text="artists" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
@@ -58,9 +58,9 @@
                               ItemTemplate="{StaticResource ArtistItemTemplate}"
                               ScrollViewer.IsVerticalScrollChainingEnabled="False">
                         <i:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Loaded">
+                            <!--<core:EventTriggerBehavior EventName="Loaded">
                                 <core:InvokeCommandAction Command="{Binding LoadItems}" />
-                            </core:EventTriggerBehavior>
+                            </core:EventTriggerBehavior>-->
                             <core:EventTriggerBehavior EventName="Loaded">
                                 <core:InvokeCommandAction
                                     Command="{Binding ScrollListView, Mode=TwoWay}"
@@ -68,6 +68,11 @@
                                     InputConverterParameter="{Binding ElementName=ZoomedInListView}" />
                             </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.GroupStyle>
                             <GroupStyle HidesIfEmpty="True" HeaderTemplate="{StaticResource ZoomedInHeaderTemplate}"/>
                         </ListView.GroupStyle>

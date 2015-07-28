@@ -21,7 +21,7 @@ namespace NextPlayerDataLayer.Common
             foreach (var item in InitialItemsList)
             {
                 string a = characterGroupings.Lookup(selector(item));
-                GroupedItems.FirstOrDefault(e => e.Key.Equals(characterGroupings.Lookup((selector(item))))).Add(item);
+                GroupedItems.FirstOrDefault(e => e.Key.Equals(a)).Add(item);
             }
             return GroupedItems;
         }

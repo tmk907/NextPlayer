@@ -1,4 +1,6 @@
 ﻿using NextPlayer.Common;
+using NextPlayer.ViewModel;
+using NextPlayerDataLayer.Constants;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +25,12 @@ namespace NextPlayer.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NowPlayingPlaylistView : Page
+    public sealed partial class NowPlayingView2 : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public NowPlayingPlaylistView()
+        public NowPlayingView2()
         {
             this.InitializeComponent();
 
@@ -67,6 +69,9 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var navigableViewModel = this.DataContext as INavigable;
+            if (navigableViewModel != null)
+                navigableViewModel.Activate(e.NavigationParameter, e.PageState);
         }
 
         /// <summary>
@@ -79,6 +84,9 @@ namespace NextPlayer.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            var navigableViewModel = this.DataContext as INavigable;
+            if (navigableViewModel != null)
+                navigableViewModel.Deactivate(e.PageState);
         }
 
         #region NavigationHelper registration
@@ -107,5 +115,44 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+
+
+        private void Repeat_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Shuffle_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ShowLyrics_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            NowPlayingViewModel viewModel = (NowPlayingViewModel)DataContext;
+            viewModel.sliderpressed = true;
+        }
+
+        void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            NowPlayingViewModel viewModel = (NowPlayingViewModel)DataContext;
+            viewModel.sliderpressed = false;
+            viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(progressbar.Value));
+        }
+
+        void progressbar_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            NowPlayingViewModel viewModel = (NowPlayingViewModel)DataContext;
+            if (!viewModel.sliderpressed)
+            {
+                viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
+            }
+        }
     }
 }

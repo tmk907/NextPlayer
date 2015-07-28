@@ -1,9 +1,13 @@
 ﻿using NextPlayer.Common;
+using NextPlayer.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -28,6 +32,11 @@ namespace NextPlayer.View
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
+        string address;
+        string artist;
+        string title;
+        Windows.ApplicationModel.Resources.ResourceLoader loader;
+
         public LyricsView()
         {
             this.InitializeComponent();
@@ -35,6 +44,7 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         }
 
         /// <summary>
@@ -67,6 +77,14 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            statusTextBlock.Text = loader.GetString("Connecting") + "...";
+            webView1.ContentLoading += webView1_ContentLoading;
+            webView1.NavigationStarting += webView1_NavigationStarting;
+            //webView1.FrameNavigationCompleted += webView1_FrameNavigationCompleted;
+            string[] array = ParamConvert.ToStringArray((string)e.NavigationParameter);
+            artist = array[0];
+            title = array[1];
+            ShowLyrics();
         }
 
         /// <summary>
@@ -107,5 +125,82 @@ namespace NextPlayer.View
         }
 
         #endregion
+        async private void ShowLyrics()
+        {
+            string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?artist=" + artist + "&song=" + title + "&fmt=realjson");
+            if (result == null || result == "")
+            {
+                statusTextBlock.Text = loader.GetString("ConnectionError");
+                statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                return;
+            }
+            JsonValue jsonList = JsonValue.Parse(result);
+            address = jsonList.GetObject().GetNamedString("url");
+
+            try
+            {
+                System.Uri a = new Uri(address);
+                webView1.Navigate(a);
+                webView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
+            catch (FormatException e)
+            {
+
+            }
+        }
+
+        async private Task<string> ReadDataFromWeb(string a)
+        {
+            var client = new HttpClient();
+            var response = await client.GetAsync(new Uri(a));
+            var result = await response.Content.ReadAsStringAsync();
+            return result;
+        }
+
+        private bool IsAllowedUri(Uri uri)
+        {
+            return uri.ToString().Contains("lyrics.wikia.com");
+        }
+
+        private void webView1_NavigationStarting(object sender, WebViewNavigationStartingEventArgs args)
+        {
+            if (!IsAllowedUri(args.Uri))
+                args.Cancel = true;
+        }
+
+        private void webView1_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
+        {
+            if (args.Uri != null)
+            {
+                statusTextBlock.Text = "Loading content for " + args.Uri.ToString();
+            }
+        }
+
+        //private void webView1_FrameNavigationCompleted(WebView sender, WebViewContentLoadingEventArgs args)
+        //{
+        //    if (args.Uri != null)
+        //    {
+        //        statusTextBlock.Text = "Cannot connect. " + args.Uri.ToString();
+        //    }
+        //}
+
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            artist = editArtist.Text;
+            title = editTitle.Text;
+            FlyoutBase.GetAttachedFlyout(this).Hide();
+            if (artist!="" && title!="") ShowLyrics();
+        }
+
+        private void edit_Click(object sender, RoutedEventArgs e)
+        {
+            editArtist.Text = artist;
+            editTitle.Text = title;
+            FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["EditFlyout"]);
+            FlyoutBase.ShowAttachedFlyout(this);
+        }
+
+
     }
 }

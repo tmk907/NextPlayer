@@ -1,5 +1,6 @@
 ﻿using NextPlayerDataLayer.Constants;
 using System;
+using System.Collections.Generic;
 using Windows.Storage;
 
 namespace NextPlayerDataLayer.Helpers
@@ -58,6 +59,28 @@ namespace NextPlayerDataLayer.Helpers
             if (value != null) Int32.Parse(value.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PrevSongIndex, i);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, index);
+        }
+
+        public static int ReadSongIndex()
+        {
+            object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongIndex);
+            if (value != null)
+            {
+                return Int32.Parse(value.ToString());
+            }
+            else return -1;
+        }
+
+        public static Dictionary<int,string> PredefinedSmartPlaylistsId()
+        {
+            Dictionary<int, string> ids = new Dictionary<int, string>();
+            ids.Add((int)ReadSettingsValue(AppConstants.OstatnioDodane),AppConstants.OstatnioDodane);
+            ids.Add((int)ReadSettingsValue(AppConstants.OstatnioOdtwarzane),AppConstants.OstatnioOdtwarzane);
+            ids.Add((int)ReadSettingsValue(AppConstants.NajczesciejOdtwarzane),AppConstants.NajczesciejOdtwarzane);
+            ids.Add((int)ReadSettingsValue(AppConstants.NajgorzejOceniane),AppConstants.NajgorzejOceniane);
+            ids.Add((int)ReadSettingsValue(AppConstants.NajlepiejOceniane),AppConstants.NajlepiejOceniane);
+            ids.Add((int)ReadSettingsValue(AppConstants.NajrzadziejOdtwarzane), AppConstants.NajrzadziejOdtwarzane);
+            return ids;
         }
     }
 }

@@ -28,8 +28,8 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="page title" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="AlbumPageTitle" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
@@ -40,7 +40,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Image x:Name="albumCover" Width="150" Height="150"/>
+                    <Image x:Name="albumCover" Width="150" Height="150" Source="{Binding Cover}"/>
                     <StackPanel Orientation="Vertical" Height="150" Width="210">
                         <StackPanel Height="120" VerticalAlignment="Stretch" >
                             <TextBlock Text="{Binding Album}" MaxHeight="60" FontSize="21" FontWeight="Medium" TextWrapping="WrapWholeWords"  Padding="10,5,5,5"/>
@@ -54,7 +54,13 @@
                     SelectionMode="None"
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Songs}"
+                    helpers:ItemClickCommand.Command="{Binding ItemClicked}"
                     ItemTemplate="{StaticResource SongItemTemplate}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <i:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Loaded">
                             <core:InvokeCommandAction Command="{Binding LoadItems}" />

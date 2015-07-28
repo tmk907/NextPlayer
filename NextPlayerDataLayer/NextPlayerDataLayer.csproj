@@ -94,6 +94,7 @@
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\Repeat.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
+    <Compile Include="Helpers\PerfTests.cs" />
     <Compile Include="Model\AlbumItem.cs" />
     <Compile Include="Model\ArtistItem.cs" />
     <Compile Include="Model\FolderItem.cs" />

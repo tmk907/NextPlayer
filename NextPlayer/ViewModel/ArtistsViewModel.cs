@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
+using NextPlayer.Converters;
 
 namespace NextPlayer.ViewModel
 {
@@ -40,16 +41,24 @@ namespace NextPlayer.ViewModel
         {
             get
             {
-                if (IsInDesignMode)
+                if (artists.Count == 0)
                 {
-                    ObservableCollection<ArtistItem> a = new ObservableCollection<ArtistItem>();
-
-                    for (int i = 0; i < 5; i++)
+                    if (IsInDesignMode)
                     {
-                        a.Add(new ArtistItem());
+                        ObservableCollection<ArtistItem> a = new ObservableCollection<ArtistItem>();
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            a.Add(new ArtistItem());
+                        }
+                        artists = Grouped.CreateGrouped<ArtistItem>(a, x => x.Artist);
                     }
-                    artists = Grouped.CreateGrouped<ArtistItem>(a, x => x.Artist);
+                    else
+                    {
+                        LoadArtists();
+                    }
                 }
+                
                 return artists;
             }
 
@@ -98,7 +107,7 @@ namespace NextPlayer.ViewModel
                         String[] s = new String[2];
                         s[0] = "artist";
                         s[1] = item.Artist;
-                        navigationService.NavigateTo(ViewNames.AlbumsView, s);
+                        navigationService.NavigateTo(ViewNames.AlbumsView, ParamConvert.ToString(s));
                     }));
             }
         }
@@ -135,14 +144,23 @@ namespace NextPlayer.ViewModel
                     p =>
                     {
                         ListView l = (ListView)p;
-                        SemanticZoomLocation loc = new SemanticZoomLocation();
-                        l.SelectedIndex = index;
-                        loc.Item = l.SelectedItem;
-                        l.UpdateLayout();
-                        l.MakeVisible(loc);
-                        l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        if (l.Items.Count > 0)
+                        {
+                            SemanticZoomLocation loc = new SemanticZoomLocation();
+                            l.SelectedIndex = index;
+                            loc.Item = l.SelectedItem;
+                            l.UpdateLayout();
+                            l.MakeVisible(loc);
+                            l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        }
                     }));
             }
+        }
+
+        private async void LoadArtists()
+        {
+            var a = await DatabaseManager.GetArtistItemsAsync();
+            Artists = Grouped.CreateGrouped<ArtistItem>(a, x => x.Artist);
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)

@@ -31,6 +31,13 @@ namespace NextPlayerDataLayer.Constants
 
         public const string CurrentTrack = "trackname";
         public const string Trackchanged = "songchanged";
-    
+
+
+        public const string OstatnioDodane = "OstatnioDodane";
+        public const string OstatnioOdtwarzane = "OstatnioOdtwarzane";
+        public const string NajlepiejOceniane = "NajlepiejOceniane";
+        public const string NajgorzejOceniane = "NajgorzejOceniane";
+        public const string NajczesciejOdtwarzane = "NajczesciejOdtwarzane";
+        public const string NajrzadziejOdtwarzane = "NajrzadziejOdtwarzane";
     }
 }

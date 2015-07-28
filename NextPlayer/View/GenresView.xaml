@@ -14,7 +14,7 @@
     
     <Page.Resources>
         <DataTemplate x:Key="GenreItemTemplate">
-            <Grid Width="{Binding ActualWidth, ElementName=ContentRoot}">
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
@@ -61,7 +61,7 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="AppNameTextBlock" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock x:Uid="GenresPageTitle" Text="genres" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
@@ -71,12 +71,23 @@
                       SelectionMode="None"
                       IsItemClickEnabled="True"
                       DataContext="{Binding }"
-                ItemsSource="{Binding Genres}"
-                helpers:ItemClickCommand.Command="{Binding ItemClicked}"
+                      ItemsSource="{Binding Genres}"
+                      helpers:ItemClickCommand.Command="{Binding ItemClicked}"
                       ItemTemplate="{StaticResource GenreItemTemplate}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <i:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Loaded">
+                    <!--<core:EventTriggerBehavior EventName="Loaded">
                         <core:InvokeCommandAction Command="{Binding LoadItems}"  />
+                    </core:EventTriggerBehavior>-->
+                    <core:EventTriggerBehavior EventName="Loaded">
+                        <core:InvokeCommandAction
+                            Command="{Binding ScrollListView, Mode=TwoWay}"
+                            InputConverter="{StaticResource GetListView}"
+                            InputConverterParameter="{Binding ElementName=listView}" />
                     </core:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>

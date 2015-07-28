@@ -130,7 +130,13 @@ namespace NextPlayerDataLayer.Services
             song.AlbumArtist = mp.AlbumArtist;
             song.Artist = mp.Artist;
             //song.Bitrate = mp.Bitrate;
-            //song.Duration = mp.Duration;
+            
+            song.Duration = TimeSpan.FromMilliseconds(mp.Duration.Ticks);
+            List<string> l1 = new List<string>();
+            foreach(var l2 in mp.Genre){
+                l1.Add(l2);
+            }
+
             //song.Genre = mp.Genre.FirstOrDefault();
             //song.Lyrics = ""; //jak odczytac?
             song.Title = mp.Title;
@@ -171,8 +177,8 @@ namespace NextPlayerDataLayer.Services
                 song.AlbumArtist = tags.FirstAlbumArtist ?? "";
                 song.Artist = tags.FirstPerformer ?? "Unknown";
                 song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
-                song.Duration = tagFile.Properties.Duration;
-                song.Genre = tags.FirstGenre ?? "";
+                //song.Duration = tagFile.Properties.Duration;
+                song.Genre = tags.FirstGenre ?? "Unknown";
                 song.Lyrics = tags.Lyrics ?? "";
                 song.Title = tags.Title ?? file.DisplayName;
                 song.TrackNumber = tags.Track;
@@ -185,7 +191,7 @@ namespace NextPlayerDataLayer.Services
                 song.Artist = "Unknown";
                 song.Bitrate = mp.Bitrate;
                 song.Duration = TimeSpan.Zero;
-                song.Genre = "";
+                song.Genre = "Unknown";
                 song.Lyrics = "";
                 song.Title = file.DisplayName;
                 song.TrackNumber = 0;

@@ -23,7 +23,7 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="AppNameTextBlock" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock x:Uid="SettingsPageTitle" Text="Settings" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
@@ -31,12 +31,12 @@
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="ImportMediaButton" Content="Add songs to library" Click="ImportMedia_Click" Width="200"/>
+                    <Button x:Uid="ImportMediaButton" x:Name="ImportMediaButton" Content="Add songs to library" Click="ImportMedia_Click" Width="200"/>
                     <ProgressRing x:Name="ProgressRing1" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
                     <TextBlock x:Name="Count" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button  x:Name="UpdateMediaButton" Content="Update Library" Click="UpdateLibrary_Click" Width="200"/>
+                    <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton" Content="Update Library" Click="UpdateLibrary_Click" Width="200"/>
                     <ProgressRing x:Name="ProgressRing2" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
                     <TextBlock x:Name="Count2" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
                 </StackPanel>

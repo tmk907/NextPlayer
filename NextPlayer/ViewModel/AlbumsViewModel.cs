@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using NextPlayerDataLayer.Common;
+using NextPlayer.Converters;
 
 namespace NextPlayer.ViewModel
 {
@@ -43,12 +44,15 @@ namespace NextPlayer.ViewModel
                     p =>
                     {
                         ListView l = (ListView)p;
-                        SemanticZoomLocation loc = new SemanticZoomLocation();
-                        l.SelectedIndex = index;
-                        loc.Item = l.SelectedItem;
-                        l.UpdateLayout();
-                        l.MakeVisible(loc);
-                        l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        if (l.Items.Count > 0)
+                        {
+                            SemanticZoomLocation loc = new SemanticZoomLocation();
+                            l.SelectedIndex = index;
+                            loc.Item = l.SelectedItem;
+                            l.UpdateLayout();
+                            l.MakeVisible(loc);
+                            l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        }
                     }));
             }
         }
@@ -68,16 +72,24 @@ namespace NextPlayer.ViewModel
         {
             get
             {
-                if (IsInDesignMode)
+                if (albums.Count == 0)
                 {
-                    ObservableCollection<AlbumItem> a = new ObservableCollection<AlbumItem>();
-
-                    for (int i = 0; i < 5; i++)
+                    if (IsInDesignMode)
                     {
-                        a.Add(new AlbumItem());
+                        ObservableCollection<AlbumItem> a = new ObservableCollection<AlbumItem>();
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            a.Add(new AlbumItem());
+                        }
+                        albums = Grouped.CreateGrouped<AlbumItem>(a, x => x.Album);
                     }
-                    albums = Grouped.CreateGrouped<AlbumItem>(a, x => x.Album);
+                    else
+                    {
+
+                    }
                 }
+                
                 return albums;
             }
 
@@ -128,7 +140,7 @@ namespace NextPlayer.ViewModel
                         s[1] = item.Album;
                         s[2] = "artist";
                         s[3] = artist;
-                        navigationService.NavigateTo(ViewNames.AlbumView, s);
+                        navigationService.NavigateTo(ViewNames.AlbumView, ParamConvert.ToString(s));
                     }));
             }
         }
@@ -171,9 +183,10 @@ namespace NextPlayer.ViewModel
             artist = null;
             if (parameter != null)
             {
-                if (parameter.GetType() == typeof(String[]))
+                if (parameter.GetType() == typeof(string))
                 {
-                    if (((String[])parameter)[0].Equals("artist")) artist = ((String[])parameter)[1];
+                    String[] s = ParamConvert.ToStringArray(parameter as string);
+                    if (s[0].Equals("artist")) artist = s[1];
                 }
             }
         }

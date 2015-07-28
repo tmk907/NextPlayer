@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
 using NextPlayerDataLayer.Helpers;
+using NextPlayer.Converters;
 
 namespace NextPlayer.ViewModel
 {
@@ -21,11 +22,13 @@ namespace NextPlayer.ViewModel
         private INavigationService navigationService;
         private int index;
         private string genre;
+        private bool loaded;
 
         public SongsViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
-            PageTitle = "songs";
+            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            PageTitle = loader.GetString("SongsPageTitle");
             index = 0;
             genre = null;
         }
@@ -61,7 +64,10 @@ namespace NextPlayer.ViewModel
                         {
                             a.Add(new SongItem());
                         }
-                        songs = Grouped.CreateGrouped<SongItem>(a, x => x.Title);
+                    }
+                    else
+                    {
+                        LoadSongs();
                     }
                 }
                 return songs;
@@ -93,12 +99,16 @@ namespace NextPlayer.ViewModel
                     p =>
                     {
                         ListView l = (ListView)p;
-                        SemanticZoomLocation loc = new SemanticZoomLocation();
-                        l.SelectedIndex = index;
-                        loc.Item = l.SelectedItem;
-                        l.UpdateLayout();
-                        l.MakeVisible(loc);
-                        l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        
+                        if (l.Items.Count > 0 && index > 0)
+                        {
+                            SemanticZoomLocation loc = new SemanticZoomLocation();
+                            l.SelectedIndex = index;
+                            loc.Item = l.SelectedItem;
+                            l.UpdateLayout();
+                            l.MakeVisible(loc);
+                            l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        }
                     }));
             }
         }
@@ -128,11 +138,9 @@ namespace NextPlayer.ViewModel
                                 {
                                     find = true;
                                     index = i;
-                                    break;
                                 }
                                 i++;
                             }
-                            if (find) break;
                         }
                         if (!find) index = 0;
 
@@ -157,16 +165,26 @@ namespace NextPlayer.ViewModel
                     ?? (loadItems = new RelayCommand(
                     () =>
                     {
-                        if (genre == null)
-                        {
-                            Songs = Grouped.CreateGrouped<SongItem>(DatabaseManager.GetSongItems(), x => x.Title);
-                        }
-                        else
-                        {
-                            Songs = Grouped.CreateGrouped <SongItem>(DatabaseManager.GetSongItemsFromGenre(genre),x => x.Title);
-                        }
+                        
+                        //Songs = Grouped.CreateGrouped<SongItem>(DatabaseManager.GetSongItems(), x => x.Title);
+                        //LoadSongs();
+                        
+                        //if (genre == null)
+                        //{
+                        //    
+                        //}
+                        //else
+                        //{
+                        //    Songs = Grouped.CreateGrouped <SongItem>(DatabaseManager.GetSongItemsFromGenre(genre),x => x.Title);
+                        //}
                     }));
             }
+        }
+
+        private async Task LoadSongs()
+        {
+            var a = await DatabaseManager.GetSongItemsAsync();
+            Songs = Grouped.CreateGrouped<SongItem>(a, x => x.Title);
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)
@@ -182,9 +200,10 @@ namespace NextPlayer.ViewModel
             genre = null;
             if (parameter!=null)
             {
-                if (parameter.GetType() == typeof(String[]))
+                if (parameter.GetType() == typeof(string))
                 {
-                    if (((String[])parameter)[0].Equals("genre")) genre = ((String[])parameter)[1];
+                    String[] s = ParamConvert.ToStringArray(parameter as string);
+                    if (s[0].Equals("genre")) genre = s[1];
                 }
             }
         }

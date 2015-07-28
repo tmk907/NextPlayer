@@ -33,7 +33,7 @@ namespace NextPlayer.ViewModel
                     ?? (goToNowPlayingListPage = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo(ViewNames.NowPlayingPlaylistView);
+                        navigationService.NavigateTo(ViewNames.PlaylistView);
                     }));
             }
         }
@@ -105,7 +105,9 @@ namespace NextPlayer.ViewModel
                     ?? (goToFoldersPage = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo(ViewNames.FoldersView);
+                        NextPlayerDataLayer.Helpers.PerfTests s = new NextPlayerDataLayer.Helpers.PerfTests();
+                        s.Run();
+                        //navigationService.NavigateTo(ViewNames.NowPlayingView);
                     }));
             }
         }

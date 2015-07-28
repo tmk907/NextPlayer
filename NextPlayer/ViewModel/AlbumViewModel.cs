@@ -10,6 +10,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NextPlayerDataLayer.Helpers;
+using NextPlayer.Converters;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NextPlayer.ViewModel
 {
@@ -156,6 +159,36 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="Cover" /> property's name.
+        /// </summary>
+        public const string CoverPropertyName = "Cover";
+
+        private BitmapImage cover = new BitmapImage();
+
+        /// <summary>
+        /// Sets and gets the Cover property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public BitmapImage Cover
+        {
+            get
+            {
+                return cover;
+            }
+
+            set
+            {
+                if (cover == value)
+                {
+                    return;
+                }
+
+                cover = value;
+                RaisePropertyChanged(CoverPropertyName);
+            }
+        }
+
         private RelayCommand<SongItem> itemClicked;
 
         /// <summary>
@@ -169,6 +202,14 @@ namespace NextPlayer.ViewModel
                     ?? (itemClicked = new RelayCommand<SongItem>(
                     item =>
                     {
+                        int index = 0;
+                        foreach (var song in songs)
+                        {
+                            if (song.SongId == item.SongId) break;
+                            index++;
+                        }
+                        ApplicationSettingsHelper.SaveSongIndex(index);
+                        DatabaseManager.InsertNewNowPlayingPlaylist(Songs);
                         navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
                     }));
             }
@@ -192,8 +233,14 @@ namespace NextPlayer.ViewModel
                         Artist = a.Artist;
                         Duration = a.Duration;
                         Songs = DatabaseManager.GetSongItemsFromAlbum(albumParam, artistParam);
+                        SetCover();
                     }));
             }
+        }
+
+        private async void SetCover()
+        {
+            Cover = await Library.Current.GetCover(songs.FirstOrDefault().Path);
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)
@@ -202,9 +249,9 @@ namespace NextPlayer.ViewModel
             artistParam = null;
             if (parameter != null)
             {
-                if (parameter.GetType() == typeof(String[]))
+                if (parameter.GetType() == typeof(string))
                 {
-                    String[] s = (String[])parameter;
+                    String[] s = ParamConvert.ToStringArray(parameter as string);
                     if (s.Length >= 2 && s[0].Equals("album")) albumParam = s[1];
                     if (s.Length >= 4 && s[2].Equals("artist")) artistParam = s[3];
                 }

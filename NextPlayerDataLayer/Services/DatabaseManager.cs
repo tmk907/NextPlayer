@@ -12,6 +12,7 @@ using NextPlayerDataLayer.Enums;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Tables;
+using System.Diagnostics;
 
 namespace NextPlayerDataLayer.Services
 {
@@ -224,6 +225,32 @@ namespace NextPlayerDataLayer.Services
             return collection;
         }
 
+        public async static Task<ObservableCollection<ArtistItem>> GetArtistItemsAsync()
+        {
+            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Artist).ToListAsync();
+            ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
+            var result = query.GroupBy(s => s.Artist);
+            foreach (var artist in result)
+            {
+                ArtistItem artistItem = new ArtistItem();
+                string name = artist.FirstOrDefault().Artist;
+                int songs = 0;
+                int albums = 0;
+                TimeSpan duration = TimeSpan.Zero;
+                foreach (var item in artist.GroupBy(e => e.Album).ToList())
+                {
+                    foreach (var song in item)
+                    {
+                        duration += song.Duration;
+                        songs++;
+                    }
+                    albums++;
+                }
+                collection.Add(new ArtistItem(albums, name, duration, songs));
+            }
+            return collection;
+        }
+
         public static ObservableCollection<AlbumItem> GetAlbumItems()
         {
             ObservableCollection<AlbumItem> collection = new ObservableCollection<AlbumItem>();
@@ -232,12 +259,15 @@ namespace NextPlayerDataLayer.Services
             {
                 TimeSpan duration = TimeSpan.Zero;
                 int songs = 0;
+                string albumArtist = item.FirstOrDefault().Artist;
                 foreach (var song in item)
                 {
                     duration += song.Duration;
                     songs++;
+                    //if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
                 }
-                collection.Add(new AlbumItem(item.FirstOrDefault().Album, item.FirstOrDefault().Artist, duration, songs));
+                if (item.FirstOrDefault().Album.Equals("Unknown")) albumArtist = "Various Artists";
+                collection.Add(new AlbumItem(item.FirstOrDefault().Album, albumArtist, duration, songs));
             }
             return collection;
         }
@@ -274,12 +304,14 @@ namespace NextPlayerDataLayer.Services
             
             TimeSpan duration = TimeSpan.Zero;
             int songs = 0;
+            string albumArtist = query.FirstOrDefault().Artist;
             foreach (var item in query)
             {
                 songs++;
                 duration += item.Duration;
             }
-            AlbumItem albumItem = new AlbumItem(query.FirstOrDefault().Album, query.FirstOrDefault().Artist, duration, songs);
+            if (album.Equals("Unknown") && artist.Equals("")) albumArtist = "Various Artists";
+            AlbumItem albumItem = new AlbumItem(query.FirstOrDefault().Album, albumArtist, duration, songs);
             return albumItem;
         }
 
@@ -301,13 +333,43 @@ namespace NextPlayerDataLayer.Services
             return collection;
         }
 
+        public async static Task<ObservableCollection<GenreItem>> GetGenreItemsAsync()
+        {
+            ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
+            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(g => g.Genre).ToListAsync();
+            var result = query.GroupBy(x => x.Genre);
+            foreach (var item in result)
+            {
+                TimeSpan duration = TimeSpan.Zero;
+                int songs = 0;
+                foreach (var song in item)
+                {
+                    duration += song.Duration;
+                    songs++;
+                }
+                collection.Add(new GenreItem(duration, item.FirstOrDefault().Genre, songs));
+            }
+            return collection;
+        }
+
         public static ObservableCollection<PlaylistItem> GetPlaylistItems()
         {
             ObservableCollection<PlaylistItem> collection = new ObservableCollection<PlaylistItem>();
             var query1 = ConnectionDb().Table<SmartPlaylistsTable>().OrderBy(p => p.SmartPlaylistId).ToList();
+            Dictionary<int,string> ids = ApplicationSettingsHelper.PredefinedSmartPlaylistsId();
+            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            string name;
             foreach (var item in query1)
             {
-                collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                if (ids.TryGetValue(item.SmartPlaylistId,out name))
+                {
+                    collection.Add(new PlaylistItem(item.SmartPlaylistId, true, loader.GetString(name)));
+                }
+                else
+                {
+                    collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                }
+                
             }
             var query = ConnectionDb().Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToList();
             foreach (var item in query)
@@ -323,6 +385,18 @@ namespace NextPlayerDataLayer.Services
 
             var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title);
             var result = query.ToList();
+            foreach (var item in result)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsAsync()
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+
+            var result = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
                 songs.Add(CreateSongItem(item));
@@ -364,6 +438,17 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromGenreAsync(string genre)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(g => g.Genre.Equals(genre)).ToListAsync();
+            foreach (var item in query)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+
         public static ObservableCollection<SongItem> GetSongItemsFromPlainPlaylist(int id)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -373,6 +458,21 @@ namespace NextPlayerDataLayer.Services
                         where e.PlaylistId.Equals(id)
                         select s;
 
+            foreach (var item in query)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+        //ToDo
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromPlainPlaylistAsync(int id)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            SQLiteConnection conn = ConnectionDb();
+            var query = from e in conn.Table<PlainPlaylistEntryTable>()
+                        join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
+                        where e.PlaylistId.Equals(id)
+                        select s;
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -451,6 +551,77 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromSmartPlaylistAsync(int id)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            SQLiteAsyncConnection conn = AsyncConnectionDb();
+
+            List<int> list = new List<int>();
+            var q2 = await conn.Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).FirstOrDefaultAsync();
+            string name = q2.Name;
+            int maxNumber = q2.SongsNumber;
+            string sorting = SPUtility.SPsorting[q2.SortBy];
+
+            var query = await conn.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("select * from SongsTable where ");
+
+            foreach (var x in query) //x = condition
+            {
+                string comparison = SPUtility.SPConditionComparison[x.Comparison];
+                string item = SPUtility.SPConditionItem[x.Item];
+                string value = x.Value;
+
+                if (x.Comparison.Equals(SPUtility.Comparison.Contains))
+                {
+                    value = "'%" + value + "%'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
+                {
+                    value = "'%" + value + "%'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.StartsWith))
+                {
+                    value = "'%" + value + "'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.EndsWith))
+                {
+                    value = "'" + value + "%'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.Is))
+                {
+                    value = "'" + value + "'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.IsNot))
+                {
+                    value = "'" + value + "'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.IsGreater))
+                {
+                    value = "'" + value + "'";
+                }
+                else if (x.Comparison.Equals(SPUtility.Comparison.IsLess))
+                {
+                    value = "'" + value + "'";
+                }
+
+                builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+            }
+            builder.Remove(builder.Length - 4, 4);
+            builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
+
+            List<SongsTable> q = await conn.QueryAsync<SongsTable>(builder.ToString());
+
+
+            foreach (var x in q)
+            {
+                songs.Add(CreateSongItem(x));
+            }
+
+            return songs;
+        }
+
         #endregion
 
 
@@ -493,6 +664,18 @@ namespace NextPlayerDataLayer.Services
             foreach (var e in query)
             {
                 var query2 = ConnectionDb().Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
+                list.Add(CreateSongItem(query2));
+            }
+            return list;
+        }
+
+        public async static Task<ObservableCollection<SongItem>> SelectAllSongItemsFromNowPlayingAsync()
+        {
+            var query = await AsyncConnectionDb().Table<NowPlayingTable>().OrderBy(e => e.Position).ToListAsync();
+            ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            foreach (var e in query)
+            {
+                var query2 = await AsyncConnectionDb().Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefaultAsync();
                 list.Add(CreateSongItem(query2));
             }
             return list;

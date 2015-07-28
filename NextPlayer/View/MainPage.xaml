@@ -25,21 +25,21 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="AppNameTextBlock" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="Main Page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="main Page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel HorizontalAlignment="Center">
-                <Button Content="Now Playing List" Background="{StaticResource PhoneAccentBrush}" Command="{Binding GoToNowPlayingListPage}"/>
-                <Button Content="Songs" Command="{Binding GoToSongsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                <Button Content="Albums" Command="{Binding GoToAlbumsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                <Button Content="Artists" Command="{Binding GoToArtistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                <Button Content="Folders" Command="{Binding GoToFoldersPage}" HorizontalAlignment="Center"/>
-                <Button Content="Genres" Command="{Binding GoToGenresPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                <Button Content="Playlists" Command="{Binding GoToPlaylistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                <Button Content="Settings" Command="{Binding GoToSettingsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuNowPlayingPlaylist" Content="Now Playing List" Background="{StaticResource PhoneAccentBrush}" Command="{Binding GoToNowPlayingListPage}"/>
+                <Button x:Uid="MenuSongs" Content="Songs" Command="{Binding GoToSongsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuAlbums" Content="Albums" Command="{Binding GoToAlbumsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuArtists" Content="Artists" Command="{Binding GoToArtistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuFolders" Content="Folders" Command="{Binding GoToFoldersPage}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuGenres" Content="Genres" Command="{Binding GoToGenresPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuPlaylists" Content="Playlists" Command="{Binding GoToPlaylistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+                <Button x:Uid="MenuSettings" Content="Settings" Command="{Binding GoToSettingsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
     </Grid>

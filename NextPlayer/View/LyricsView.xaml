@@ -7,29 +7,52 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.BottomAppBar>
+        <CommandBar IsOpen="False">
+            <AppBarButton Label="Edit" Icon="Edit" Click="edit_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Page.Resources>
+        <Flyout x:Key="EditFlyout">
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"  Text="Artist" 
+                       FontSize="23"
+                       Width="60"
+                       Margin="12,12,0,0"
+                       VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" x:Name="editArtist"
+                     FontSize="20" 
+                     Margin="0,12,12,0"
+                     HorizontalAlignment="Stretch" 
+                     VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Title"
+                       FontSize="23"
+                       Width="60" 
+                       Margin="12,0,0,0"
+                       VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" x:Name="editTitle"
+                     FontSize="20" 
+                     Margin="0,0,12,0"
+                     HorizontalAlignment="Stretch" 
+                     VerticalAlignment="Center"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Search" Click="Search_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+    </Page.Resources>
     <Grid x:Name="LayoutRoot">
-
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Title Panel -->
-        <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="page title" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
-        </StackPanel>
-
-        <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-
-        </Grid>
+        <TextBlock x:Name="statusTextBlock" Text="Connecting..." FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <WebView x:Name="webView1" Visibility="Collapsed"/>
     </Grid>
 </Page>
