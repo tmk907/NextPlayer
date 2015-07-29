@@ -59,14 +59,14 @@ namespace NextPlayerDataLayer.Services
 
         #region Insert
 
-        public async static Task<int> InsertPlainPlaylist(string _name)
+        public static int InsertPlainPlaylist(string _name)
         {
             var newplaylist = new PlainPlaylistsTable
             {
                 Name = _name,
             };
 
-            await AsyncConnectionDb().InsertAsync(newplaylist);
+            ConnectionDb().Insert(newplaylist);
             return newplaylist.PlainPlaylistId;
         }
 
@@ -159,30 +159,76 @@ namespace NextPlayerDataLayer.Services
             db.InsertAll(list2);
         }
 
+        public async static Task AddToNowPlayingAsync(SongItem song)
+        {
+            var conn = AsyncConnectionDb();
+            var count = await conn.Table<NowPlayingTable>().CountAsync();
+            var newSong = new NowPlayingTable()
+            {
+                Artist = song.Artist,
+                Path = song.Path,
+                Position = count,
+                SongId = song.SongId,
+                Title = song.Title,
+            };
+            await conn.InsertAsync(newSong);
+        }
+
+        public async static Task AddToNowPlayingAsync(IEnumerable<SongItem> songList)
+        {
+            var conn = AsyncConnectionDb();
+            var count = await conn.Table<NowPlayingTable>().CountAsync();
+            List<NowPlayingTable> list2 = new List<NowPlayingTable>();
+            foreach (var e in songList)
+            {
+                var newSong = new NowPlayingTable()
+                {
+                    Artist = e.Artist,
+                    Path = e.Path,
+                    Position = count,
+                    SongId = e.SongId,
+                    Title = e.Title,
+                };
+                list2.Add(newSong);
+                count++;
+            }
+            await conn.InsertAllAsync(list2);
+        }
         #endregion
 
         #region Delete
 
         public async static void DeletePlainPlaylist(int _playlistId) 
         {
-            var playlist = AsyncConnectionDb().Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(_playlistId)).FirstOrDefaultAsync();
-            await AsyncConnectionDb().DeleteAsync(playlist);
+            var items = await AsyncConnectionDb().Table<PlainPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(_playlistId)).ToListAsync();
+            foreach (var item in items)
+            {
+                DeletePlainPlaylistEntry(item.Id);
+            }
+            var playlist = ConnectionDb().Table<PlainPlaylistsTable>().Where(p => p.PlainPlaylistId.Equals(_playlistId)).FirstOrDefault();
+            ConnectionDb().Delete(playlist);
         }
 
-        public async static void DeletePlainPlaylistEntry(int _songId)
+        public static void DeletePlainPlaylistEntry(int primaryId)
         {
-            var entry = AsyncConnectionDb().Table<PlainPlaylistEntryTable>().Where(e => e.SongId.Equals(_songId)).FirstOrDefaultAsync();
-            await AsyncConnectionDb().DeleteAsync(entry);
+            //var entry = ConnectionDb().Table<PlainPlaylistEntryTable>().Where(e => e.SongId.Equals(_songId)).FirstOrDefault();
+            ConnectionDb().Delete<PlainPlaylistEntryTable>(primaryId);
         }
 
-        public async static void DeleteSmartPlaylist()
+        public async static void DeleteSmartPlaylist(int id)
         {
-
+            var items = await AsyncConnectionDb().Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
+            foreach (var item in items)
+            {
+                DeleteSmartPlaylistEntry(item.Id);
+            }
+            var playlist = ConnectionDb().Table<SmartPlaylistsTable>().Where(p => p.SmartPlaylistId.Equals(id)).FirstOrDefault();
+            ConnectionDb().Delete(playlist);
         }
 
-        public async static void DeleteSmartPlaylistEntry()
+        public static void DeleteSmartPlaylistEntry(int primaryId)
         {
-
+            ConnectionDb().Delete<SmartPlaylistEntryTable>(primaryId);
         }
 
         public async static Task DeleteSong(int _songId)
@@ -453,15 +499,20 @@ namespace NextPlayerDataLayer.Services
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             SQLiteConnection conn = ConnectionDb();
-            var query = from e in conn.Table<PlainPlaylistEntryTable>()
-                        join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
-                        where e.PlaylistId.Equals(id)
-                        select s;
-
-            foreach (var item in query)
+            var count = conn.Table<PlainPlaylistEntryTable>().Where(x => x.PlaylistId == id).Count();
+            if (count != 0)
             {
-                songs.Add(CreateSongItem(item));
+                var query = from e in conn.Table<PlainPlaylistEntryTable>()
+                            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
+                            where e.PlaylistId.Equals(id)
+                            select s;
+
+                foreach (var item in query)
+                {
+                    songs.Add(CreateSongItem(item));
+                }
             }
+            
             return songs;
         }
         //ToDo

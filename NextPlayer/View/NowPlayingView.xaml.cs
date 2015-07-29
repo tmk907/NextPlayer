@@ -6,6 +6,7 @@ using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -40,9 +41,7 @@ namespace NextPlayer.View
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private AutoResetEvent SererInitialized;
-
-        private bool shuffle;
-        private RepeatEnum repeat;
+        private ObservableCollection<SongItem> npList;
 
         private bool IsMyBackgroundTaskRunning
         {
@@ -75,7 +74,7 @@ namespace NextPlayer.View
             }
             set
             {
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, value.ToString());
+                ApplicationSettingsHelper.SaveSongIndex((int)value);
             }
         }
 
@@ -92,6 +91,7 @@ namespace NextPlayer.View
             SererInitialized = new AutoResetEvent(false);
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
+            npList = new ObservableCollection<SongItem>();
             _timer = new DispatcherTimer();
         }
 
@@ -128,20 +128,25 @@ namespace NextPlayer.View
 
             if (CurrentSongIndex != -1)
             {
-                NrTextBlock.Text = (CurrentSongIndex + 1).ToString();
-                AllTextBlock.Text = Library.Current.NowPlayingCount.ToString();
-                SetCover();
+
+                npList = Library.Current.NowPlayingList;
                 SetupTimer();
                 StartTimer();
-                repeat = Repeat.CurrenState();
-                RepeatButton.Content = Repeat.CurrentStateContent(repeat);
-                RepeatButton.Foreground = Repeat.CurrentStateColor(repeat);
-
-                shuffle = Shuffle.CurrentState();
+                RepeatButton.Content = Repeat.CurrentStateContent();
+                RepeatButton.Foreground = Repeat.CurrentStateColor();
                 ShuffleButton.Foreground = Shuffle.CurrentStateColor();
+                int index = ApplicationSettingsHelper.ReadSongIndex();
+                SongItem song = npList.ElementAt(index);
+                this.defaultViewModel["Song"] = song;
+                NrTextBlock.Text = (index + 1).ToString();
+                AllTextBlock.Text = npList.Count().ToString();
+                
+                
+                SetCover(song.Path);
+    
+                
 
-                songItem = Library.Current.GetFromNowPlaying(CurrentSongIndex);
-                this.defaultViewModel["Song"] = songItem;
+                
                 //if (e.NavigationParameter != null) //powrot z lyricsview
                 //{
                 //    if (IsMyBackgroundTaskRunning) SendMessage(AppConstants.AppResumed, DateTime.Now.ToString());
@@ -349,6 +354,8 @@ namespace NextPlayer.View
                     {
                         StopTimer();
                         progressbar.Value = 0.0;
+                        this.defaultViewModel["CurrentTime"] = TimeSpan.Zero;
+                        this.defaultViewModel["EndTime"] = TimeSpan.Zero;
                         CurrentTime.Text = String.Format(@"{0:hh\:mm\:ss}", TimeSpan.Zero);
                         EndTime.Text = String.Format(@"{0:hh\:mm\:ss}", TimeSpan.Zero);
                     }
@@ -372,8 +379,9 @@ namespace NextPlayer.View
                         {
                             NrTextBlock.Text = (Int32.Parse(e.Data[key].ToString()) + 1).ToString();
                             CurrentSongIndex = Int32.Parse(e.Data[key].ToString());
-                            SetCover();
-                            this.defaultViewModel["Song"] = Library.Current.GetFromNowPlaying(Int32.Parse(e.Data[key].ToString()));
+                            SongItem song = npList.ElementAt(CurrentSongIndex);
+                            SetCover(song.Path);
+                            this.defaultViewModel["Song"] = song;
                             //try
                             //{
                             //    EndTime.Text = String.Format(@"{0:hh\:mm\:ss}", BackgroundMediaPlayer.Current.NaturalDuration).Remove(8);
@@ -393,6 +401,8 @@ namespace NextPlayer.View
                             progressbar.Maximum = absvalue;
                             progressbar.StepFrequency = 1.0;
                             progressbar.Value = 0.0;
+                            this.defaultViewModel["CurrentTime"] = TimeSpan.Zero;
+                            this.defaultViewModel["EndTime"] = BackgroundMediaPlayer.Current.NaturalDuration;
                             CurrentTime.Text = String.Format(@"{0:hh\:mm\:ss}", TimeSpan.Zero);
                             EndTime.Text = String.Format(@"{0:hh\:mm\:ss}", BackgroundMediaPlayer.Current.NaturalDuration);
                         }
@@ -404,6 +414,8 @@ namespace NextPlayer.View
                             TimeSpan result;
                             TimeSpan.TryParse(e.Data[key].ToString(), out result);
                             progressbar.Value = result.Seconds;
+                            this.defaultViewModel["CurrentTime"] = result;
+                            this.defaultViewModel["EndTime"] = BackgroundMediaPlayer.Current.NaturalDuration;
                             CurrentTime.Text = String.Format(@"{0:hh\:mm\:ss}", result);
                             EndTime.Text = String.Format(@"{0:hh\:mm\:ss}", BackgroundMediaPlayer.Current.NaturalDuration);
                         }
@@ -507,10 +519,12 @@ namespace NextPlayer.View
                 //    progressbar.Value = BackgroundMediaPlayer.Current.Position.TotalSeconds;
                 //}
                 progressbar.Value = BackgroundMediaPlayer.Current.Position.TotalSeconds;
+                this.defaultViewModel["CurrentTime"] = BackgroundMediaPlayer.Current.Position;
                 CurrentTime.Text = String.Format(@"{0:hh\:mm\:ss}", BackgroundMediaPlayer.Current.Position);
             }
             else
             {
+                this.defaultViewModel["CurrentTime"] = TimeSpan.FromSeconds(progressbar.Value);
                 CurrentTime.Text = String.Format(@"{0:hh\:mm\:ss}", TimeSpan.FromSeconds(progressbar.Value));
             }
         }
@@ -586,9 +600,9 @@ namespace NextPlayer.View
 
         #endregion
 
-        private async void SetCover()
+        private async void SetCover(string path)
         {
-            CoverImage.Source = await Library.Current.GetCurrentCover(CurrentSongIndex);
+            CoverImage.Source = await Library.Current.GetCover(path);
         }
 
         private void ShowLyrics_Click(object sender, RoutedEventArgs e)
@@ -602,16 +616,15 @@ namespace NextPlayer.View
 
         private void Shuffle_Click(object sender, RoutedEventArgs e)
         {
-            shuffle = Shuffle.Change(shuffle);
             ShuffleButton.Foreground = Shuffle.CurrentStateColor();
             SendMessage(AppConstants.Shuffle);
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)
         {
-            repeat = Repeat.Change(repeat);
-            RepeatButton.Content = Repeat.CurrentStateContent(repeat); //repeat.ToString();
-            RepeatButton.Foreground = Repeat.CurrentStateColor(repeat);
+            Repeat.Change();
+            RepeatButton.Content = Repeat.CurrentStateContent(); //repeat.ToString();
+            RepeatButton.Foreground = Repeat.CurrentStateColor();
             SendMessage(AppConstants.Repeat);
         }
 

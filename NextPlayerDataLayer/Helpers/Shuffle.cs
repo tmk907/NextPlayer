@@ -12,8 +12,9 @@ namespace NextPlayerDataLayer.Helpers
     {
         public static readonly string ShuffleButtonContent = "&#xE17e;&#xE14b;";
 
-        public static bool Change(bool s)
+        public static bool Change()
         {
+            bool s = CurrentState();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Shuffle, !s);
             return !s;
         }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using NextPlayerDataLayer.Model;
 using Windows.Storage;
 using TagLib;
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
 
 namespace NextPlayerDataLayer.Services
 {
@@ -110,6 +112,7 @@ namespace NextPlayerDataLayer.Services
                 count++;
             }
             OnMediaImported("NewDatabase");
+            SendToast();
         }
 
         private async static Task<SongData> CreateSongFromFile(StorageFile file)
@@ -216,6 +219,17 @@ namespace NextPlayerDataLayer.Services
 
 
             return song;
+        }
+
+        private static void SendToast()
+        {
+            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
+            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+            XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
+            toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("LibraryUpdated")));
+            ToastNotification toast = new ToastNotification(toastXml);
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
     }
 }

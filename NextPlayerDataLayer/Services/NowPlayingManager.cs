@@ -48,7 +48,7 @@ namespace NextPlayerDataLayer.Services
             isShuffleOn = Shuffle.CurrentState();
 
             //Repeat
-            repeat = Repeat.CurrenState();
+            repeat = Repeat.CurrentState();
 
             paused = false;
 
@@ -212,7 +212,7 @@ namespace NextPlayerDataLayer.Services
 
         public void ChangeRepeat()
         {
-            repeat = Repeat.CurrenState();
+            repeat = Repeat.CurrentState();
             ResetRepeat();
         }
 

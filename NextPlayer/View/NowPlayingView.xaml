@@ -107,8 +107,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" x:Name="CurrentTime" Text="0:00:00"/>
-                        <TextBlock Grid.Column="2" x:Name="EndTime" Text="0:00:00"/>
+                        <TextBlock Grid.Column="0" x:Name="CurrentTime" 
+                                   Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToString}}" />
+                        <TextBlock Grid.Column="2" x:Name="EndTime" 
+                                   Text="{Binding EndTime, Converter={StaticResource TimeSpanToString}}" />
                     </Grid>
                     <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <TextBlock x:Name="CurrentTime" Text="0:00"  Margin="20,0,0,0" />

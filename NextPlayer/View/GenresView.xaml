@@ -15,6 +15,17 @@
     <Page.Resources>
         <DataTemplate x:Key="GenreItemTemplate">
             <Grid >
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Holding">
+                        <helpers:OpenMenuFlyoutAction />
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click" />
+                        <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist"  />
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                 </Grid.RowDefinitions>

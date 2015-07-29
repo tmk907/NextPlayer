@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddToNowPlaying" xml:space="preserve">
+    <value>Add to now playing</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
   <data name="AlbumPageTitle.Text" xml:space="preserve">
     <value>album</value>
   </data>
@@ -135,11 +141,20 @@
   <data name="ConnectionError" xml:space="preserve">
     <value>Connection error</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value />
+  </data>
   <data name="GenresPageTitle.Text" xml:space="preserve">
     <value>genres</value>
   </data>
   <data name="ImportMediaButton.Content" xml:space="preserve">
     <value>Add songs to library</value>
+  </data>
+  <data name="LibraryUpdated" xml:space="preserve">
+    <value>Library updated.</value>
   </data>
   <data name="LyricsButton.Content" xml:space="preserve">
     <value>Lyrics</value>

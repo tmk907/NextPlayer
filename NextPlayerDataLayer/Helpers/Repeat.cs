@@ -36,14 +36,14 @@ namespace NextPlayerDataLayer.Helpers
             }
         }
 
-        public static RepeatEnum Change(RepeatEnum e)
+        public static RepeatEnum Change()
         {
-            RepeatEnum newEnum = Next(e);
+            RepeatEnum newEnum = Next(CurrentState());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Repeat, newEnum.ToString());
             return newEnum;
         }
 
-        public static RepeatEnum CurrenState()
+        public static RepeatEnum CurrentState()
         {
             RepeatEnum repeat;
             object o = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Repeat);
@@ -58,9 +58,9 @@ namespace NextPlayerDataLayer.Helpers
             return repeat;
         }
 
-        public static SolidColorBrush CurrentStateColor(RepeatEnum e)
+        public static SolidColorBrush CurrentStateColor()
         {
-            switch (e)
+            switch (CurrentState())
             {
                 case RepeatEnum.NoRepeat:
                     return new SolidColorBrush(Windows.UI.Colors.Gray);
@@ -73,9 +73,9 @@ namespace NextPlayerDataLayer.Helpers
             }
         }
 
-        public static string CurrentStateContent(RepeatEnum e)
+        public static string CurrentStateContent()
         {
-            switch (e)
+            switch (CurrentState())
             {
                 case RepeatEnum.NoRepeat:
                     return NoRepeat;

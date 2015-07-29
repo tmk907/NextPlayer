@@ -1,4 +1,5 @@
-﻿using NextPlayer.Common;
+﻿using GalaSoft.MvvmLight.Threading;
+using NextPlayer.Common;
 using NextPlayer.ViewModel;
 using NextPlayerDataLayer.Constants;
 using System;
@@ -29,7 +30,7 @@ namespace NextPlayer.View
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
+        NowPlayingViewModel viewModel;
         public NowPlayingView2()
         {
             this.InitializeComponent();
@@ -37,6 +38,8 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            DispatcherHelper.Initialize();
+            viewModel = (NowPlayingViewModel)DataContext;
         }
 
         /// <summary>
@@ -132,6 +135,16 @@ namespace NextPlayer.View
         {
 
         }
+        #region Slider 
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
+            progressbar.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
+
+            PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
+            progressbar.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
+        }
 
         void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -154,5 +167,36 @@ namespace NextPlayer.View
                 viewModel.SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
             }
         }
+        #endregion
+        #region ImageEvents
+        private double x, y;
+
+        private void Image_Pressed(object sender, PointerRoutedEventArgs e)
+        {
+            var a = e.GetCurrentPoint(null);
+            x = a.Position.X;
+            y = a.Position.Y;
+        }
+
+        private void Image_Released(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        private void Image_Exited(object sender, PointerRoutedEventArgs e)
+        {
+            var a = e.GetCurrentPoint(null);
+            if (Math.Abs(x - a.Position.X) > 50)
+            {
+                if (x - a.Position.X > 0) viewModel.Next();
+                else viewModel.Previous();
+            }
+        }
+
+        private void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            viewModel.Play();
+        }
+        #endregion
     }
 }

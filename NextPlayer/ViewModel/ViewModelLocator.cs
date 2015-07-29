@@ -53,7 +53,8 @@ namespace NextPlayer.ViewModel
             navigationService.Configure(ViewNames.FoldersView, typeof(FoldersView));
             navigationService.Configure(ViewNames.LyricsView, typeof(LyricsView));
             navigationService.Configure(ViewNames.NewSmartPlaylistView, typeof(NewSmartPlaylistView));
-            navigationService.Configure(ViewNames.NowPlayingView, typeof(NowPlayingView));
+            navigationService.Configure(ViewNames.NowPlayingView, typeof(NowPlayingView2));
+            //navigationService.Configure(ViewNames.NowPlayingView2, typeof(NowPlayingView2));
             navigationService.Configure(ViewNames.PlaylistsView, typeof(PlaylistsView));
             navigationService.Configure(ViewNames.PlaylistView, typeof(PlaylistView));
             navigationService.Configure(ViewNames.SettingsView, typeof(SettingsView));

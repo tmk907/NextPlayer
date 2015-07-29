@@ -137,6 +137,12 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        public async void AddToNowPlaying(GenreItem genre)
+        {
+            var g = await DatabaseManager.GetSongItemsFromGenreAsync(genre.Genre);
+            Library.Current.AddToNowPlaying(g);
+        }
+
         private async void LoadGenres()
         {
             Genres = await DatabaseManager.GetGenreItemsAsync();

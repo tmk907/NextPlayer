@@ -145,7 +145,7 @@ namespace NextPlayer.ViewModel
                         if (!find) index = 0;
 
                         ApplicationSettingsHelper.SaveSongIndex(index);
-                        DatabaseManager.InsertNewNowPlayingPlaylist(list);
+                        Library.Current.SetNowPlayingList(list);
 
                         navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
                     }));

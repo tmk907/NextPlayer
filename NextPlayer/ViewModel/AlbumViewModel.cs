@@ -209,7 +209,7 @@ namespace NextPlayer.ViewModel
                             index++;
                         }
                         ApplicationSettingsHelper.SaveSongIndex(index);
-                        DatabaseManager.InsertNewNowPlayingPlaylist(Songs);
+                        Library.Current.SetNowPlayingList(Songs);
                         navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
                     }));
             }

@@ -105,8 +105,8 @@ namespace NextPlayer.ViewModel
                     ?? (goToFoldersPage = new RelayCommand(
                     () =>
                     {
-                        NextPlayerDataLayer.Helpers.PerfTests s = new NextPlayerDataLayer.Helpers.PerfTests();
-                        s.Run();
+                        //NextPlayerDataLayer.Helpers.PerfTests s = new NextPlayerDataLayer.Helpers.PerfTests();
+                        //s.Run();
                         //navigationService.NavigateTo(ViewNames.NowPlayingView);
                     }));
             }

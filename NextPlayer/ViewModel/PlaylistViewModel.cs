@@ -116,7 +116,7 @@ namespace NextPlayer.ViewModel
                             index++;
                         }
                         ApplicationSettingsHelper.SaveSongIndex(index);
-                        DatabaseManager.InsertNewNowPlayingPlaylist(Playlist);
+                        Library.Current.SetNowPlayingList(Playlist);
                         navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
                     }));
             }
@@ -168,7 +168,8 @@ namespace NextPlayer.ViewModel
         }
         private async void LoadNowPlayingPlaylist()
         {
-            Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlayingAsync();
+            Playlist = Library.Current.NowPlayingList;
+            //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlayingAsync();
         }
         private async void LoadGenrePlaylist()
         {

@@ -15,6 +15,13 @@ using Windows.Media.Playback;
 using Windows.Foundation.Collections;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
+using Windows.UI.Xaml.Media.Imaging;
+using NextPlayer.Converters;
+using Windows.Foundation;
+using System.Threading;
+using Windows.UI.Core;
+using GalaSoft.MvvmLight.Threading;
+using Windows.UI.Xaml.Media;
 
 namespace NextPlayer.ViewModel
 {
@@ -22,6 +29,7 @@ namespace NextPlayer.ViewModel
     {
         private INavigationService navigationService;
         private int songId;
+        private int index;
         private bool IsMyBackgroundTaskRunning
         {
             get
@@ -38,12 +46,28 @@ namespace NextPlayer.ViewModel
                 }
             }
         }
+        private int CurrentSongIndex
+        {
+            get
+            {
+                return ApplicationSettingsHelper.ReadSongIndex();
+            }
+            set
+            {
+                ApplicationSettingsHelper.SaveSongIndex((int)value);
+            }
+        }
+        private AutoResetEvent SererInitialized;
 
         public NowPlayingViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            SererInitialized = new AutoResetEvent(false);
+            _timer = new DispatcherTimer();
+            
         }
 
+        #region Properties
         /// <summary>
         /// The <see cref="CurrentNr" /> property's name.
         /// </summary>
@@ -261,31 +285,219 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="Cover" /> property's name.
+        /// </summary>
+        public const string CoverPropertyName = "Cover";
 
+        private BitmapImage cover = new BitmapImage();
 
-
-
-
-
-        public void Activate(object parameter, Dictionary<string, object> state)
+        /// <summary>
+        /// Sets and gets the Cover property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public BitmapImage Cover
         {
-            if (parameter != null)
+            get
             {
-                if (parameter.GetType() == typeof(int))
+                return cover;
+            }
+
+            set
+            {
+                if (cover == value)
                 {
-                    songId = (int)parameter;
+                    return;
                 }
+
+                cover = value;
+                RaisePropertyChanged(CoverPropertyName);
             }
         }
 
-        public void Deactivate(Dictionary<string, object> state)
+        /// <summary>
+        /// The <see cref="ProgressBarValue" /> property's name.
+        /// </summary>
+        public const string ProgressBarValuePropertyName = "ProgressBarValue";
+
+        private double progressBarValue = 0.0;
+
+        /// <summary>
+        /// Sets and gets the ProgressBarValue property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double ProgressBarValue
         {
+            get
+            {
+                return progressBarValue;
+            }
+
+            set
+            {
+                if (progressBarValue == value)
+                {
+                    return;
+                }
+
+                progressBarValue = value;
+                RaisePropertyChanged(ProgressBarValuePropertyName);
+            }
         }
 
-        public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        /// <summary>
+        /// The <see cref="ProgressBarMaxValue" /> property's name.
+        /// </summary>
+        public const string ProgressBarMaxValuePropertyName = "ProgressBarMaxValue";
+
+        private double progressBarMaxValue = 0.0;
+
+        /// <summary>
+        /// Sets and gets the ProgressBarMaxValue property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double ProgressBarMaxValue
         {
+            get
+            {
+                return progressBarMaxValue;
+            }
+
+            set
+            {
+                if (progressBarMaxValue == value)
+                {
+                    return;
+                }
+
+                progressBarMaxValue = value;
+                RaisePropertyChanged(ProgressBarMaxValuePropertyName);
+            }
         }
 
+        /// <summary>
+        /// The <see cref="PlayButtonContent" /> property's name.
+        /// </summary>
+        public const string PlayButtonContentPropertyName = "PlayButtonContent";
+
+        private string playButtonContent = "\uE17e\uE102";
+
+        /// <summary>
+        /// Sets and gets the PlayButtonContent property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string PlayButtonContent
+        {
+            get
+            {
+                return playButtonContent;
+            }
+
+            set
+            {
+                if (playButtonContent == value)
+                {
+                    return;
+                }
+
+                playButtonContent = value;
+                RaisePropertyChanged(PlayButtonContentPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="RepeatButtonContent" /> property's name.
+        /// </summary>
+        public const string RepeatButtonContentPropertyName = "RepeatButtonContent";
+
+        private string repeatButtonContent = "\uE17e\uE1cd";
+
+        /// <summary>
+        /// Sets and gets the RepeatButtonContent property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string RepeatButtonContent
+        {
+            get
+            {
+                return repeatButtonContent;
+            }
+
+            set
+            {
+                if (repeatButtonContent == value)
+                {
+                    return;
+                }
+
+                repeatButtonContent = value;
+                RaisePropertyChanged(RepeatButtonContentPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="RepeatButtonForegorund" /> property's name.
+        /// </summary>
+        public const string RepeatButtonForegroundPropertyName = "RepeatButtonForeground";
+
+        private SolidColorBrush repeatButtonForeground = new SolidColorBrush(Windows.UI.Colors.Gray);
+
+        /// <summary>
+        /// Sets and gets the RepeatButtonForegorund property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public SolidColorBrush RepeatButtonForeground
+        {
+            get
+            {
+                return repeatButtonForeground;
+            }
+
+            set
+            {
+                if (repeatButtonForeground == value)
+                {
+                    return;
+                }
+
+                repeatButtonForeground = value;
+                RaisePropertyChanged(RepeatButtonForegroundPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ShuffleButtonForeground" /> property's name.
+        /// </summary>
+        public const string ShuffleButtonForegroundPropertyName = "ShuffleButtonForeground";
+
+        private SolidColorBrush shuffleButtonForeground = new SolidColorBrush(Windows.UI.Colors.Gray);
+
+        /// <summary>
+        /// Sets and gets the ShuffleButtonForeground property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public SolidColorBrush ShuffleButtonForeground
+        {
+            get
+            {
+                return shuffleButtonForeground;
+            }
+
+            set
+            {
+                if (shuffleButtonForeground == value)
+                {
+                    return;
+                }
+
+                shuffleButtonForeground = value;
+                RaisePropertyChanged(ShuffleButtonForegroundPropertyName);
+            }
+        }
+        #endregion
+
+        #region Buttons Commands
+        
         private RelayCommand previousButtonClick;
 
         /// <summary>
@@ -299,14 +511,7 @@ namespace NextPlayer.ViewModel
                     ?? (previousButtonClick = new RelayCommand(
                     () =>
                     {
-                        if (IsMyBackgroundTaskRunning)
-                        {
-                            SendMessage(AppConstants.SkipPrevious);
-                        }
-                        else
-                        {
-                            //StartBackgroundAudioTask(AppConstants.SkipPrevious, "");
-                        }
+                        Previous();
                     }));
             }
         }
@@ -324,25 +529,7 @@ namespace NextPlayer.ViewModel
                     ?? (playButtonClick = new RelayCommand(
                     () =>
                     {
-                        if (IsMyBackgroundTaskRunning)
-                        {
-                            if (MediaPlayerState.Playing == BackgroundMediaPlayer.Current.CurrentState)
-                            {
-                                SendMessage(AppConstants.Pause);
-                            }
-                            else if (MediaPlayerState.Paused == BackgroundMediaPlayer.Current.CurrentState)
-                            {
-                                SendMessage(AppConstants.Play);
-                            }
-                            else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
-                            {
-                                //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
-                            }
-                        }
-                        else
-                        {
-                            //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
-                        }
+                        Play();
                     }));
             }
         }
@@ -360,113 +547,443 @@ namespace NextPlayer.ViewModel
                     ?? (nextButtonClick = new RelayCommand(
                     () =>
                     {
-                        if (IsMyBackgroundTaskRunning)
-                        {
-                            SendMessage(AppConstants.SkipNext);
-                        }
-                        else
-                        {
-                            //StartBackgroundAudioTask(AppConstants.SkipNext, "");
-                        }
+                        Next();
                     }));
             }
         }
 
+        private RelayCommand shuffle_Click;
+
+        /// <summary>
+        /// Gets the Shuffle_Click.
+        /// </summary>
+        public RelayCommand Shuffle_Click
+        {
+            get
+            {
+                return shuffle_Click
+                    ?? (shuffle_Click = new RelayCommand(
+                    () =>
+                    {
+                        Shuffle.Change();
+                        ShuffleButtonForeground = Shuffle.CurrentStateColor();
+                        SendMessage(AppConstants.Shuffle);
+                    }));
+            }
+        }
+
+        private RelayCommand repeat_Click;
+
+        /// <summary>
+        /// Gets the Repeat_Click.
+        /// </summary>
+        public RelayCommand Repeat_Click
+        {
+            get
+            {
+                return repeat_Click
+                    ?? (repeat_Click = new RelayCommand(
+                    () =>
+                    {
+                        Repeat.Change();
+                        RepeatButtonContent = Repeat.CurrentStateContent(); //repeat.ToString();
+                        RepeatButtonForeground = Repeat.CurrentStateColor();
+                        SendMessage(AppConstants.Repeat);
+                    }));
+            }
+        }
+        private RelayCommand showLyricsclick;
+
+        /// <summary>
+        /// Gets the ShowLyricsClick.
+        /// </summary>
+        public RelayCommand ShowLyricsClick
+        {
+            get
+            {
+                return showLyricsclick
+                    ?? (showLyricsclick = new RelayCommand(
+                    () =>
+                    {
+                        if (!NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))
+                        {
+                            NextPlayer.Common.SuspensionManager.SessionState.Add("lyrics", true);
+                        }
+                        String[] s = new String[2];
+                        s[0] = Artist;
+                        s[1] = Title;
+                        navigationService.NavigateTo(ViewNames.LyricsView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+        #endregion
+
+        public void Activate(object parameter, Dictionary<string, object> state)
+        {
+            index = CurrentSongIndex;
+            if (index > -1)
+            {
+                SongItem song = Library.Current.NowPlayingList.ElementAt(index);
+                CurrentNr = index + 1;
+                SongsCount = Library.Current.NowPlayingList.Count;
+                Title = song.Title;
+                Artist = song.Artist;
+                Album = song.Album;
+                SetCover(song.Path);
+                SetupTimer();
+                StartTimer();
+
+                RepeatButtonContent = Repeat.CurrentStateContent();
+                RepeatButtonForeground = Repeat.CurrentStateColor();
+                ShuffleButtonForeground = Shuffle.CurrentStateColor();
+
+                if (IsMyBackgroundTaskRunning)
+                {
+                    if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
+                    {
+                        NextPlayer.Common.SuspensionManager.SessionState.Remove("lyrics");
+                    }
+                    else
+                    {
+                        SendMessage(AppConstants.NowPlayingListChanged);
+                        SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
+                    }
+                }
+                else
+                {
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                }
+            }
+            else
+            {
+                navigationService.NavigateTo(ViewNames.MainView);
+            }
+            if (parameter != null)
+            {
+                
+                if (parameter.GetType() == typeof(int))
+                {
+                    songId = (int)parameter;
+                }
+            }
+        }
+
+        public void Deactivate(Dictionary<string, object> state)
+        {
+        }
+
+        public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+        }
+
+        #region Foreground App Lifecycle Handlers
+        /// <summary>
+        /// Sends message to background informing app has resumed
+        /// Subscribe to MediaPlayer events
+        /// </summary>
+        void ForegroundApp_Resuming(object sender, object e)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
+
+            // Verify if the task was running before
+            if (IsMyBackgroundTaskRunning)
+            {
+
+                //if yes, reconnect to media play handlers
+                AddMediaPlayerEventHandlers();
+
+                //send message to background task that app is resumed, so it can start sending notifications
+                SendMessage(AppConstants.AppResumed, DateTime.Now.ToString());
 
 
+                if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
+                {
+                    PlayButtonContent = "\uE17e\uE103";//pause
+                }
+                else
+                {
+                    PlayButtonContent = "\uE17e\uE102";//play
+                }
+                SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                SetCover(song.Path);
+                Artist = song.Artist;
+                Album = song.Album;
+                Title = song.Title;
+            }
+            else
+            {
+                PlayButtonContent = "\uE17e\uE102";//play
+            }
 
+        }
+        /// <summary>
+        /// Send message to Background process that app is to be suspended
+        /// Stop clock and slider when suspending
+        /// Unsubscribe handlers for MediaPlayer events
+        /// </summary>
+        void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            StopTimer();
+            var deferral = e.SuspendingOperation.GetDeferral();
+            SendMessage(AppConstants.AppSuspended, DateTime.Now.ToString());
+            RemoveMediaPlayerEventHandlers();
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppSuspended);
+            deferral.Complete();
+        }
+        #endregion
+
+        #region Media Playback Helper methods
+        /// <summary>
+        /// Unsubscribes to MediaPlayer events. Should run only on suspend
+        /// </summary>
+        private void RemoveMediaPlayerEventHandlers()
+        {
+            BackgroundMediaPlayer.Current.CurrentStateChanged -= this.MediaPlayer_CurrentStateChanged;
+            BackgroundMediaPlayer.MessageReceivedFromBackground -= this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+        }
+
+        /// <summary>
+        /// Subscribes to MediaPlayer events
+        /// </summary>
+        private void AddMediaPlayerEventHandlers()
+        {
+            BackgroundMediaPlayer.Current.CurrentStateChanged += this.MediaPlayer_CurrentStateChanged;
+            BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+        }
+
+        /// <summary>
+        /// Initialize Background Media Player Handlers and starts playback
+        /// </summary>
+        private void StartBackgroundAudioTask(string s, object o)
+        {
+            AddMediaPlayerEventHandlers();
+            //IAsyncAction backgroundtaskinitializationresult = ;
+            Task.Run(() =>
+            {
+                bool result = SererInitialized.WaitOne(10000);
+                //Send message to initiate playback
+                if (result == true)
+                {
+                    SendMessage(s, o);
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, false);
+                    throw new Exception("Background Audio Task didn't start in expected time");
+                }
+            }
+            );
+            //backgroundtaskinitializationresult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
+        }
+
+        private void BackgroundTaskInitializationCompleted(IAsyncAction action, AsyncStatus status)
+        {
+            if (status == AsyncStatus.Completed)
+            {
+                //Debug.WriteLine("Background Audio Task initialized");
+            }
+            else if (status == AsyncStatus.Error)
+            {
+                //Debug.WriteLine("Background Audio Task could not initialized due to an error ::" + action.ErrorCode.ToString());
+            }
+        }
+        #endregion
+
+        #region Background MediaPlayer Event handlers
+        /// <summary>
+        /// MediaPlayer state changed event handlers. 
+        /// Note that we can subscribe to events even if Media Player is playing media in background
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        async void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
+        {
+            switch (sender.CurrentState)
+            {
+                case MediaPlayerState.Playing:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        PlayButtonContent = "\uE17e\uE103";// Change to pause button
+
+                    });
+                    break;
+                case MediaPlayerState.Paused:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        PlayButtonContent = "\uE17e\uE102";     // Change to play button
+
+                    });
+                    break;
+                case MediaPlayerState.Stopped:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        StopTimer();
+                        ProgressBarValue = 0.0;
+                        CurrentTime = TimeSpan.Zero;
+                        EndTime = TimeSpan.Zero;
+                    });
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// This event fired when a message is recieved from Background Process
+        /// </summary>
+        async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+        {
+            foreach (string key in e.Data.Keys)
+            {
+                switch (key)
+                {
+                    case AppConstants.SongIndex:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            CurrentNr = Int32.Parse(e.Data[key].ToString()) + 1;
+                            CurrentSongIndex = Int32.Parse(e.Data[key].ToString());
+                            SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                            SetCover(song.Path);
+                            Artist = song.Artist;
+                            Album = song.Album;
+                            Title = song.Title;
+                        });
+                        break;
+                    case AppConstants.MediaOpened:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
+                            double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                            ProgressBarMaxValue = absvalue;                           
+                            ProgressBarValue = 0.0;
+                            CurrentTime = TimeSpan.Zero;
+                            EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                        });
+                        break;
+                    case AppConstants.Position:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            TimeSpan result;
+                            TimeSpan.TryParse(e.Data[key].ToString(), out result);
+                            ProgressBarValue = result.Seconds;
+                            CurrentTime = result;
+                            EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                        });
+                        break;
+                    case AppConstants.BackgroundTaskStarted:
+                        //Wait for Background Task to be initialized before starting playback
+                        SererInitialized.Set();
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
+        public void Previous()
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                SendMessage(AppConstants.SkipPrevious);
+            }
+            else
+            {
+                StartBackgroundAudioTask(AppConstants.SkipPrevious, "");
+            }
+        }
+        public void Play()
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                if (MediaPlayerState.Playing == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    SendMessage(AppConstants.Pause);
+                }
+                else if (MediaPlayerState.Paused == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    SendMessage(AppConstants.Play);
+                }
+                else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                }
+            }
+            else
+            {
+                StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+            }
+        }
+        public void Next()
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                SendMessage(AppConstants.SkipNext);
+            }
+            else
+            {
+                StartBackgroundAudioTask(AppConstants.SkipNext, "");
+            }
+        }
+        
+        #region Slider Timer
 
         public bool sliderpressed = false;
+        private DispatcherTimer _timer;
 
-        //#region Slider Timer
+        private void SetupTimer()
+        {
+            _timer.Interval = TimeSpan.FromSeconds(0.5);
+        }
 
-        //private DispatcherTimer _timer;
+        private void _timer_Tick(object sender, object e)
+        {
+            if (!sliderpressed)
+            {
 
-        //private void SetupTimer()
-        //{
-        //    _timer.Interval = TimeSpan.FromSeconds(0.5);
-        //}
+                ProgressBarValue = BackgroundMediaPlayer.Current.Position.TotalSeconds;
+                CurrentTime = BackgroundMediaPlayer.Current.Position;
+            }
+            else
+            {
+                CurrentTime = TimeSpan.FromSeconds(ProgressBarValue);
+            }
+        }
 
-        //private void _timer_Tick(object sender, object e)
-        //{
-        //    if (!sliderpressed)
-        //    {
-                
-        //        progressbar.Value = BackgroundMediaPlayer.Current.Position.TotalSeconds;
-        //        CurrentTime = BackgroundMediaPlayer.Current.Position;
-        //    }
-        //    else
-        //    {
-        //        CurrentTime = TimeSpan.FromSeconds(progressbar.Value);
-        //    }
-        //}
+        private void StartTimer()
+        {
+            _timer.Tick += _timer_Tick;
+            _timer.Start();
+        }
 
-        //private void StartTimer()
-        //{
-        //    _timer.Tick += _timer_Tick;
-        //    _timer.Start();
-        //}
+        private void StopTimer()
+        {
+            _timer.Stop();
+            _timer.Tick -= _timer_Tick;
+        }
 
-        //private void StopTimer()
-        //{
-        //    _timer.Stop();
-        //    _timer.Tick -= _timer_Tick;
-        //}
 
-        //void slider_PointerEntered(object sender, PointerRoutedEventArgs e)
-        //{
-        //    sliderpressed = true;
-        //}
+        private void videoMediaElement_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            // get HRESULT from event args 
+            string hr = GetHresultFromErrorMessage(e);
 
-        //void slider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
-        //{
+            // Handle media failed event appropriately 
+        }
 
-        //    SendMessage(AppConstants.Position, TimeSpan.FromSeconds(progressbar.Value));
-        //    sliderpressed = false;
-        //}
+        private string GetHresultFromErrorMessage(ExceptionRoutedEventArgs e)
+        {
+            String hr = String.Empty;
+            String token = "HRESULT - ";
+            const int hrLength = 10;     // eg "0xFFFFFFFF"
 
-        //void progressbar_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
-        //{
-        //    if (!sliderpressed)
-        //    {
-        //        SendMessage(AppConstants.Position, TimeSpan.FromSeconds(e.NewValue));
-        //    }
-        //}
+            int tokenPos = e.ErrorMessage.IndexOf(token, StringComparison.Ordinal);
+            if (tokenPos != -1)
+            {
+                hr = e.ErrorMessage.Substring(tokenPos + token.Length, hrLength);
+            }
 
-        //private void videoMediaElement_MediaFailed(object sender, ExceptionRoutedEventArgs e)
-        //{
-        //    // get HRESULT from event args 
-        //    string hr = GetHresultFromErrorMessage(e);
+            return hr;
+        }
 
-        //    // Handle media failed event appropriately 
-        //}
-
-        //private string GetHresultFromErrorMessage(ExceptionRoutedEventArgs e)
-        //{
-        //    String hr = String.Empty;
-        //    String token = "HRESULT - ";
-        //    const int hrLength = 10;     // eg "0xFFFFFFFF"
-
-        //    int tokenPos = e.ErrorMessage.IndexOf(token, StringComparison.Ordinal);
-        //    if (tokenPos != -1)
-        //    {
-        //        hr = e.ErrorMessage.Substring(tokenPos + token.Length, hrLength);
-        //    }
-
-        //    return hr;
-        //}
-
-        //private void MainPage_Loaded(object sender, RoutedEventArgs e)
-        //{
-
-        //    PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
-        //    progressbar.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
-
-        //    PointerEventHandler pointerreleasedhandler = new PointerEventHandler(slider_PointerCaptureLost);
-        //    progressbar.AddHandler(Control.PointerCaptureLostEvent, pointerreleasedhandler, true);
-        //}
-
-        //#endregion
+        #endregion
 
 
         private void SendMessage(string constants)
@@ -481,6 +998,11 @@ namespace NextPlayer.ViewModel
             var message = new ValueSet();
             message.Add(constants, value);
             BackgroundMediaPlayer.SendMessageToBackground(message);
+        }
+
+        private async void SetCover(string path)
+        {
+            Cover = await Library.Current.GetCover(path);
         }
     }
 }
