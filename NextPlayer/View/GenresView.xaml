@@ -22,8 +22,8 @@
                 </i:Interaction.Behaviors>
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click" />
-                        <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist"  />
+                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click"/>
+                        <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" Click="AddToPlaylist" />
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <Grid.RowDefinitions>

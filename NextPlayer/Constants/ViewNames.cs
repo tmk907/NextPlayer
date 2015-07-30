@@ -3,6 +3,7 @@ namespace NextPlayer.Constants
 {
     public sealed class ViewNames
     {
+        public static readonly string AddToPlaylistView = "AddToPlaylistView";
         public static readonly string AlbumView = "AlbumView";
         public static readonly string AlbumsView = "AlbumsView";
         public static readonly string ArtistsView = "ArtistsView";

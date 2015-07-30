@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NextPlayer.Converters;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 
 namespace NextPlayer.ViewModel
 {
@@ -136,11 +137,21 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
-
-        public async void AddToNowPlaying(GenreItem genre)
+       
+        public async void AddToNowPlaying(RoutedEventArgs e)
         {
-            var g = await DatabaseManager.GetSongItemsFromGenreAsync(genre.Genre);
+            GenreItem item = (e.OriginalSource as FrameworkElement).DataContext as GenreItem;
+            var g = await DatabaseManager.GetSongItemsFromGenreAsync(item.Genre);
             Library.Current.AddToNowPlaying(g);
+        }
+
+        public void AddToPlaylist(RoutedEventArgs e)
+        {
+            GenreItem item = (e.OriginalSource as FrameworkElement).DataContext as GenreItem;
+            String[] s = new String[2];
+            s[0] = "genre";
+            s[1] = item.Genre;
+            navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
         }
 
         private async void LoadGenres()

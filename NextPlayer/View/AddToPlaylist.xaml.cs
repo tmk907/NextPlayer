@@ -1,11 +1,11 @@
 ﻿using NextPlayer.Common;
-using NextPlayer.ViewModel;
-using NextPlayerDataLayer.Enums;
+using NextPlayer.Converters;
+using NextPlayerDataLayer.Model;
+using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -26,42 +26,23 @@ namespace NextPlayer.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NewSmartPlaylistView : Page
+    public sealed partial class AddToPlaylist : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private string genre;
+        private int songId;
+        private string artist;
+        private string album;
 
-        public NewSmartPlaylistView()
+        public AddToPlaylist()
         {
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-            foreach (var k in typeof(SPUtility.SortBy).GetRuntimeFields())
-            {
-                object o = k.GetValue(null);
-                if (o is string)
-                {
-                    sortByBox.Items.Add(o as string);
-                }
-            }
-            //foreach (var k in typeof(SPUtility.Item).GetRuntimeFields())
-            //{
-            //    object o = k.GetValue(null);
-            //    if (o is string)
-            //    {
-            //        itemBox1.Items.Add(o as string);
-            //    }
-            //}
-            //foreach (var k in typeof(SPUtility.Comparison).GetRuntimeFields())
-            //{
-            //    object o = k.GetValue(null);
-            //    if (o is string)
-            //    {
-            //        compareBox1.Items.Add(o as string);
-            //    }
-            //}
+            songId = -1;
         }
 
         /// <summary>
@@ -94,9 +75,28 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var navigableViewModel = this.DataContext as INavigable;
-            if (navigableViewModel != null)
-                navigableViewModel.Activate(e.NavigationParameter, e.PageState);
+            if (e.NavigationParameter != null)
+            {
+                List<PlaylistItem> list = DatabaseManager.SelectPlainPlaylists();
+                DataContext = list;
+                String[] s = ParamConvert.ToStringArray(e.NavigationParameter as string);
+                if (s[0] == "genre")
+                {
+                    genre = s[1];
+                }
+                else if (s[0] == "song")
+                {
+                    songId = Int32.Parse(s[1]);
+                }
+                else if (s[0] == "artist")
+                {
+                    artist = s[1];
+                }
+                else if (s[0] == "album")
+                {
+                    album = s[1];
+                }
+            }
         }
 
         /// <summary>
@@ -109,10 +109,6 @@ namespace NextPlayer.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            var navigableViewModel = this.DataContext as INavigable;
-            if (navigableViewModel != null)
-                navigableViewModel.Deactivate(e.PageState);
-
         }
 
         #region NavigationHelper registration
@@ -141,5 +137,27 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        private void item_Click(object sender, ItemClickEventArgs e)
+        {
+            PlaylistItem p = (PlaylistItem)(e.ClickedItem);
+            if (genre != null)
+            {
+                DatabaseManager.AddGenreToPlaylistAsync(genre, p.Id);
+            }
+            else if (artist != null)
+            {
+                DatabaseManager.AddArtistToPlaylistAsync(artist, p.Id);
+            }
+            else if (album != null)
+            {
+                DatabaseManager.AddAlbumToPlaylistAsync(album, p.Id);
+            }
+            else if (songId > -1)
+            {
+                DatabaseManager.AddSongToPlaylist(songId, p.Id);
+            }
+            Frame.GoBack();
+        }
     }
 }

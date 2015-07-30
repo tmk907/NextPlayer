@@ -194,6 +194,78 @@ namespace NextPlayerDataLayer.Services
             }
             await conn.InsertAllAsync(list2);
         }
+
+        public static void AddSongToPlaylist(int songId, int playlistId)
+        {
+            var conn = ConnectionDb();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            var item = new PlainPlaylistEntryTable(){
+                PlaylistId = playlistId,
+                SongId = songId,
+                Place = lastPosition + 1,
+            };
+            conn.Insert(item);
+        }
+
+        public async static Task AddGenreToPlaylistAsync(string genre, int playlistId)
+        {
+            var conn = ConnectionDb();
+            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Genre.Equals(genre)).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            foreach (var item in query)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            conn.InsertAll(list);
+        }
+
+        public async static Task AddArtistToPlaylistAsync(string artist, int playlistId)
+        {
+            var conn = ConnectionDb();
+            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Artist.Equals(artist)).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            foreach (var item in query)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            conn.InsertAll(list);
+        }
+
+        public async static Task AddAlbumToPlaylistAsync(string album, int playlistId)
+        {
+            var conn = ConnectionDb();
+            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Album.Equals(album)).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            foreach (var item in query)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            conn.InsertAll(list);
+        }
         #endregion
 
         #region Delete
@@ -502,12 +574,14 @@ namespace NextPlayerDataLayer.Services
             var count = conn.Table<PlainPlaylistEntryTable>().Where(x => x.PlaylistId == id).Count();
             if (count != 0)
             {
-                var query = from e in conn.Table<PlainPlaylistEntryTable>()
-                            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
-                            where e.PlaylistId.Equals(id)
-                            select s;
+                //var query = from e in conn.Table<PlainPlaylistEntryTable>()
+                //            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
+                //            where e.PlaylistId.Equals(id)
+                //            select s;
+                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId order by PlainPlaylistEntryTable.Place");
 
-                foreach (var item in query)
+
+                foreach (var item in list)
                 {
                     songs.Add(CreateSongItem(item));
                 }
@@ -728,6 +802,17 @@ namespace NextPlayerDataLayer.Services
             {
                 var query2 = await AsyncConnectionDb().Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefaultAsync();
                 list.Add(CreateSongItem(query2));
+            }
+            return list;
+        }
+
+        public static List<PlaylistItem> SelectPlainPlaylists()
+        {
+            var query = ConnectionDb().Table<PlainPlaylistsTable>().OrderBy(p=>p.Name).ToList();
+            List<PlaylistItem> list = new List<PlaylistItem>();
+            foreach (var item in query)
+            {
+                list.Add(new PlaylistItem(item.PlainPlaylistId, false, item.Name));
             }
             return list;
         }

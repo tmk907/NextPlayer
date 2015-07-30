@@ -8,8 +8,7 @@ namespace NextPlayer.Helpers
 {
     public static class ItemClickCommand
     {
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached("Command", typeof(ICommand),
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand),
             typeof(ItemClickCommand), new PropertyMetadata(null, OnCommandPropertyChanged));
 
         public static void SetCommand(DependencyObject d, ICommand value)

@@ -1,6 +1,5 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.ViewModel;
-using NextPlayerDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -119,9 +118,14 @@ namespace NextPlayer.View
 
         private void AddToNP_Click(object sender, RoutedEventArgs e)
         {
-            GenreItem item = (e.OriginalSource as FrameworkElement).DataContext as GenreItem;
             GenresViewModel ViewModel = (GenresViewModel)DataContext;
-            ViewModel.AddToNowPlaying(item);
+            ViewModel.AddToNowPlaying(e);
+        }
+
+        private void AddToPlaylist(object sender, RoutedEventArgs e)
+        {
+            GenresViewModel ViewModel = (GenresViewModel)DataContext;
+            ViewModel.AddToPlaylist(e);
         }
     }
 }

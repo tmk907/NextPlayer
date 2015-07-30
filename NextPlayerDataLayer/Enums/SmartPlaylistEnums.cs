@@ -30,7 +30,7 @@ namespace NextPlayerDataLayer.Enums
             public static readonly string Year = "Year";
             public static readonly string Rating = "Rating";
             public static readonly string PlayCount = "PlayCount";
-            public static readonly string FilePath = "FilePatch";
+            public static readonly string FilePath = "FilePath";
             public static readonly string DateAdded = "DateAdded";
             public static readonly string LastPlayed = "LastPlayed";
         }

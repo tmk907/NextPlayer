@@ -99,7 +99,9 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Common\TrulyObservableCollection.cs" />
     <Compile Include="Constants\ViewNames.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
@@ -113,12 +115,16 @@
     <Compile Include="ViewModel\GenresViewModel.cs" />
     <Compile Include="ViewModel\INavigable.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\NewSmartPlaylistViewModel.cs" />
     <Compile Include="ViewModel\NowPlayingViewModel.cs" />
     <Compile Include="ViewModel\PlaylistsViewModel.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SongsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\AddToPlaylist.xaml.cs">
+      <DependentUpon>AddToPlaylist.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AlbumsView.xaml.cs">
       <DependentUpon>AlbumsView.xaml</DependentUpon>
     </Compile>
@@ -181,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\AddToPlaylist.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AlbumsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -40,12 +40,14 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<PlaylistViewModel>();
             SimpleIoc.Default.Register<NowPlayingViewModel>();
+            SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();
         }
 
         private static INavigationService CreateNavigationService()
         {
             var navigationService = new NavigationService();
             navigationService.Configure(ViewNames.MainView, typeof(MainPage));
+            navigationService.Configure(ViewNames.AddToPlaylistView, typeof(AddToPlaylist));
             navigationService.Configure(ViewNames.AlbumsView, typeof(AlbumsView));
             navigationService.Configure(ViewNames.AlbumView, typeof(AlbumView));
             navigationService.Configure(ViewNames.ArtistsView, typeof(ArtistsView));
@@ -145,6 +147,14 @@ namespace NextPlayer.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<SettingsViewModel>();
+            }
+        }
+
+        public NewSmartPlaylistViewModel NewSmartPlaylistVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<NewSmartPlaylistViewModel>();
             }
         }
     }
