@@ -13,6 +13,12 @@
     DataContext="{Binding NewSmartPlaylistVM, Mode=TwoWay, Source={StaticResource Locator}}">
 
     <Page.Resources>
+        <Flyout x:Key="ErrorFlyout">
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Uid="SPErrorText" FontSize="21" Text="Error"/>
+                <Button Content="Ok" Click="Cancel_Click"/>
+            </StackPanel>
+        </Flyout>
         <DataTemplate x:Key="RuleItemTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -42,6 +48,19 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar x:Name="myCommandBar">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton  x:Uid="Save"
+                              Label="Save" Icon="Save" 
+                              Click="Save_Click"/>
+                <AppBarButton  x:Uid="Cancel"
+                              Label="Cancel" Icon="Cancel" 
+                              Command="{Binding Cancel_Click}"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -129,31 +148,43 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <ComboBox Grid.Row="0" Grid.Column="0" 
-                          x:Name="itemBox1" 
                           Margin="9.5,0,0,9.5"
                           HorizontalAlignment="Stretch"
-                          FontSize="25" 
+                          VerticalAlignment="Center"
                           ItemsSource="{Binding Items}"
                           DisplayMemberPath="Name"
                           SelectedValue="{Binding SelectedItem, Mode=TwoWay}"
                           SelectedValuePath="Value"/>
                 <ComboBox Grid.Row="0" Grid.Column="1" 
-                          x:Name="compareBox1" 
                           Margin="9.5,0,0,9.5"
                           HorizontalAlignment="Stretch"
-                          FontSize="25" 
+                          VerticalAlignment="Center"
                           ItemsSource="{Binding ComparisonItems}"
                           DisplayMemberPath="Name"
                           SelectedValue="{Binding SelectedComparison, Mode=TwoWay}"
                           SelectedValuePath="Value"/>
-                <DatePicker Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding DatePickerVisibility,Converter={StaticResource BoolToVisibilityConverter} }" />
-                <TextBox Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding TextBoxVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
-                         x:Name="valueTextBox1"
+                <DatePicker Grid.Row="1" Grid.ColumnSpan="2" 
+                            Visibility="{Binding DatePickerVisibility,Converter={StaticResource BoolToVisibilityConverter} }" 
+                            Date="{Binding Date, Converter={StaticResource DateTimeToDateTimeOffsetConverter},Mode=TwoWay}"/>
+                <TextBox Grid.Row="1" 
+                         Visibility="{Binding TextBoxVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+                         Text="{Binding ValueTextBox, Mode=TwoWay}"
+                         FontSize="25"
+                         VerticalAlignment="Center"
                          Margin="9.5,0,0,9.5"
                          />
+                <ComboBox Grid.Row="1" Grid.Column="1" 
+                          Margin="9.5,0,0,9.5"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Visibility="{Binding TimeUnitsVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+                          ItemsSource="{Binding TimeUnits}"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding SelectedTimeUnit, Mode=TwoWay}"
+                          SelectedValuePath="Value"/>
             </Grid>
             <!--<ListView x:Name="RulesListView"
                     Grid.Row="2" 

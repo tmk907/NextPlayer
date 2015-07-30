@@ -617,62 +617,64 @@ namespace NextPlayerDataLayer.Services
             string sorting = SPUtility.SPsorting[q2.SortBy];
 
             var query = conn.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToList();
-
-            StringBuilder builder = new StringBuilder();
-            builder.Append("select * from SongsTable where ");
-
-            foreach (var x in query) //x = condition
+            if (query.Count != 0)
             {
-                string comparison = SPUtility.SPConditionComparison[x.Comparison];
-                string item = SPUtility.SPConditionItem[x.Item];
-                string value = x.Value;
+                StringBuilder builder = new StringBuilder();
+                builder.Append("select * from SongsTable where ");
 
-                if (x.Comparison.Equals(SPUtility.Comparison.Contains))
+                foreach (var x in query) //x = condition
                 {
-                    value = "'%" + value + "%'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
-                {
-                    value = "'%" + value + "%'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.StartsWith))
-                {
-                    value = "'%" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.EndsWith))
-                {
-                    value = "'" + value + "%'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.Is))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsNot))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsGreater))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsLess))
-                {
-                    value = "'" + value + "'";
-                }
+                    string comparison = SPUtility.SPConditionComparison[x.Comparison];
+                    string item = SPUtility.SPConditionItem[x.Item];
+                    string value = x.Value;
 
-                builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+                    if (x.Comparison.Equals(SPUtility.Comparison.Contains))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.StartsWith))
+                    {
+                        value = "'%" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.EndsWith))
+                    {
+                        value = "'" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.Is))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsNot))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsGreater))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsLess))
+                    {
+                        value = "'" + value + "'";
+                    }
+
+                    builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+                }
+                builder.Remove(builder.Length - 4, 4);
+                builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
+
+                List<SongsTable> q = conn.Query<SongsTable>(builder.ToString());
+
+
+                foreach (var x in q)
+                {
+                    songs.Add(CreateSongItem(x));
+                }
             }
-            builder.Remove(builder.Length - 4, 4);
-            builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
-
-            List<SongsTable> q = conn.Query<SongsTable>(builder.ToString());
-
-
-            foreach (var x in q)
-            {
-                songs.Add(CreateSongItem(x));
-            }
-
+            
             return songs;
         }
 
@@ -688,62 +690,65 @@ namespace NextPlayerDataLayer.Services
             string sorting = SPUtility.SPsorting[q2.SortBy];
 
             var query = await conn.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
-
-            StringBuilder builder = new StringBuilder();
-            builder.Append("select * from SongsTable where ");
-
-            foreach (var x in query) //x = condition
+            if (query.Count > 0)
             {
-                string comparison = SPUtility.SPConditionComparison[x.Comparison];
-                string item = SPUtility.SPConditionItem[x.Item];
-                string value = x.Value;
+                StringBuilder builder = new StringBuilder();
+                builder.Append("select * from SongsTable where ");
 
-                if (x.Comparison.Equals(SPUtility.Comparison.Contains))
+                foreach (var x in query) //x = condition
                 {
-                    value = "'%" + value + "%'";
+                    string comparison = SPUtility.SPConditionComparison[x.Comparison];
+                    string item = SPUtility.SPConditionItem[x.Item];
+                    string value = x.Value;
+
+                    if (x.Comparison.Equals(SPUtility.Comparison.Contains))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
+                    {
+                        value = "'%" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.StartsWith))
+                    {
+                        value = "'" + value + "%'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.EndsWith))
+                    {
+                        value = "'%" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.Is))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsNot))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsGreater))
+                    {
+                        value = "'" + value + "'";
+                    }
+                    else if (x.Comparison.Equals(SPUtility.Comparison.IsLess))
+                    {
+                        value = "'" + value + "'";
+                    }
+
+                    builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
                 }
-                else if (x.Comparison.Equals(SPUtility.Comparison.DoesNotContain))
+                builder.Remove(builder.Length - 4, 4);
+                builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
+
+                List<SongsTable> q = await conn.QueryAsync<SongsTable>(builder.ToString());
+
+
+                foreach (var x in q)
                 {
-                    value = "'%" + value + "%'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.StartsWith))
-                {
-                    value = "'%" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.EndsWith))
-                {
-                    value = "'" + value + "%'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.Is))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsNot))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsGreater))
-                {
-                    value = "'" + value + "'";
-                }
-                else if (x.Comparison.Equals(SPUtility.Comparison.IsLess))
-                {
-                    value = "'" + value + "'";
+                    songs.Add(CreateSongItem(x));
                 }
 
-                builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
             }
-            builder.Remove(builder.Length - 4, 4);
-            builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
-
-            List<SongsTable> q = await conn.QueryAsync<SongsTable>(builder.ToString());
-
-
-            foreach (var x in q)
-            {
-                songs.Add(CreateSongItem(x));
-            }
-
+            
             return songs;
         }
 

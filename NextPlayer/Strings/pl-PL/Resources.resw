@@ -141,6 +141,12 @@
   <data name="ArtistsPageTitle.Text" xml:space="preserve">
     <value>artyści</value>
   </data>
+  <data name="Cancel.Content" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Cancel.Label" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
   <data name="Connecting" xml:space="preserve">
     <value>Łączę</value>
   </data>
@@ -179,6 +185,9 @@
   </data>
   <data name="HighestRating" xml:space="preserve">
     <value>Highest Rating</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Godziny</value>
   </data>
   <data name="ImportMediaButton.Content" xml:space="preserve">
     <value>Utwórz bibliotekę</value>
@@ -240,6 +249,9 @@
   <data name="MenuSongs.Content" xml:space="preserve">
     <value>Utwory</value>
   </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuty</value>
+  </data>
   <data name="MostOftenPlayed" xml:space="preserve">
     <value>Most often played</value>
   </data>
@@ -285,6 +297,15 @@
   <data name="Rating" xml:space="preserve">
     <value>Rating</value>
   </data>
+  <data name="Save.Content" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Save.Label" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Sekundy</value>
+  </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
     <value>ustawienia</value>
   </data>
@@ -294,9 +315,6 @@
   <data name="StartsWith" xml:space="preserve">
     <value>Starts With</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
   </data>
@@ -304,6 +322,6 @@
     <value>Aktualizuj bibliotekę</value>
   </data>
   <data name="Year" xml:space="preserve">
-    <value>Year</value>
+    <value>Rok</value>
   </data>
 </root>

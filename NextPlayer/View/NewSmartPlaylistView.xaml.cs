@@ -141,5 +141,21 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.GetAttachedFlyout(this).Hide();
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            NewSmartPlaylistViewModel ViewModel = (NewSmartPlaylistViewModel)DataContext;
+            if (ViewModel.IsCorrect()) ViewModel.SaveSmartPlaylist();
+            else
+            {
+                FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["ErrorFlyout"]);
+                FlyoutBase.ShowAttachedFlyout(this);
+            }
+        }
     }
 }

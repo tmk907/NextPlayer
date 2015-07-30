@@ -183,6 +183,7 @@
             <converters:TimeSpanToStringConverter x:Key="TimeSpanToString"/>
             <converters:IntToSongsConverter x:Key="IntToSongsConverter"/>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
             <converters:GetListViewConverter x:Key="GetListView"/>
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
