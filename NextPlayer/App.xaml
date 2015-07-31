@@ -5,6 +5,9 @@
     xmlns:local="using:NextPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:helpers="using:NextPlayer.Helpers"
     mc:Ignorable="d"
     xmlns:converters="using:NextPlayer.Converters"
     xmlns:vm="using:NextPlayer.ViewModel">
@@ -21,7 +24,6 @@
 
             <vm:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
-            
             <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
             <JumpListItemForegroundConverter x:Key="JumpListItemForegroundConverter"/>
             <DataTemplate x:Key="ZoomedInHeaderTemplate">
@@ -55,6 +57,21 @@
             </DataTemplate>
             <DataTemplate x:Key="AlbumItemTemplate">
                 <Grid>
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Holding">
+                            <helpers:OpenMenuFlyoutAction />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" 
+                                        Command="{Binding DataContext.PlayNow, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddToNowPlaying, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -95,6 +112,21 @@
             </DataTemplate>
             <DataTemplate x:Key="ArtistItemTemplate">
                 <Grid>
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Holding">
+                            <helpers:OpenMenuFlyoutAction />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" 
+                                        Command="{Binding DataContext.PlayNow, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddToNowPlaying, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -145,7 +177,20 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="SongItemTemplate">
-                <Grid>                    
+                <Grid>
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Holding">
+                            <helpers:OpenMenuFlyoutAction />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddToNowPlaying, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>

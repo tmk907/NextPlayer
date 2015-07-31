@@ -150,7 +150,7 @@ namespace NextPlayer.View
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
             Count2.Text = "0";
-            Count2.Visibility = Visibility.Visible;
+            //Count2.Visibility = Visibility.Visible;
 
             var progressIndicator = new Progress<int>(ReportProgressUpdate);
             await MediaImport.ImportAndUpdateDatabase(progressIndicator);

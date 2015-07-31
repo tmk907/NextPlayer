@@ -49,7 +49,7 @@
                     </ListView>
                 </SemanticZoom.ZoomedOutView>
                 <SemanticZoom.ZoomedInView>
-                    <ListView x:Name="ZoomedInListView"   
+                    <ListView x:Name="SongsListView"   
                               IsHoldingEnabled="True" 
                               ItemsSource="{Binding Source={StaticResource cvs}}"
                               
@@ -69,7 +69,7 @@
                                 <core:InvokeCommandAction
                                     Command="{Binding ScrollListView, Mode=TwoWay}"
                                     InputConverter="{StaticResource GetListView}"
-                                    InputConverterParameter="{Binding ElementName=ZoomedInListView}" />
+                                    InputConverterParameter="{Binding ElementName=SongsListView}" />
                             </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                         <ListView.ItemContainerStyle>

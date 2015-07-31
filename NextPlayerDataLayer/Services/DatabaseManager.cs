@@ -172,6 +172,7 @@ namespace NextPlayerDataLayer.Services
                 Title = song.Title,
             };
             await conn.InsertAsync(newSong);
+            NPChange.SendMessageNPChanged();
         }
 
         public async static Task AddToNowPlayingAsync(IEnumerable<SongItem> songList)
@@ -193,6 +194,8 @@ namespace NextPlayerDataLayer.Services
                 count++;
             }
             await conn.InsertAllAsync(list2);
+            NPChange.SendMessageNPChanged();
+
         }
 
         public static void AddSongToPlaylist(int songId, int playlistId)
@@ -247,13 +250,14 @@ namespace NextPlayerDataLayer.Services
             conn.InsertAll(list);
         }
 
-        public async static Task AddAlbumToPlaylistAsync(string album, int playlistId)
+        public async static Task AddAlbumToPlaylistAsync(string album, string artist, int playlistId)
         {
             var conn = ConnectionDb();
+            var songs = GetSongItemsFromAlbum(album, artist);
             var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Album.Equals(album)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
-            foreach (var item in query)
+            foreach (var item in songs)
             {
                 lastPosition++;
                 var newEntry = new PlainPlaylistEntryTable()
@@ -312,6 +316,8 @@ namespace NextPlayerDataLayer.Services
         public static void ClearNowPlaying()
         {
             ConnectionDb().DeleteAll<NowPlayingTable>();
+            NPChange.SendMessageNPChanged();
+
         }
 
         #endregion
@@ -567,6 +573,28 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
+        public static ObservableCollection<SongItem> GetSongItemsFromArtist(string artist)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(a => a.Artist.Equals(artist)).ToList();
+            foreach (var item in query)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromArtistAsync(string artist)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(a=>a.Artist.Equals(artist)).ToListAsync();
+            foreach (var item in query)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
+        }
+
         public static ObservableCollection<SongItem> GetSongItemsFromPlainPlaylist(int id)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
@@ -578,7 +606,7 @@ namespace NextPlayerDataLayer.Services
                 //            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
                 //            where e.PlaylistId.Equals(id)
                 //            select s;
-                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId order by PlainPlaylistEntryTable.Place");
+                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId where PlainPlaylistEntryTable.PlaylistId = ? order by PlainPlaylistEntryTable.Place",id);
 
 
                 foreach (var item in list)
@@ -875,14 +903,16 @@ namespace NextPlayerDataLayer.Services
 
         #region Other
 
-        public async static Task<int> IsSongInDB(string _path, ulong size)
+        public static int IsSongInDB(string path)
         {
-            long s = (long )size;
-            var result = await AsyncConnectionDb().Table<SongsTable>().Where(e => e.Path.Equals(_path)).FirstOrDefaultAsync();
+            //long s = (long )size;
+            var result = ConnectionDb().Table<SongsTable>().Where(e => e.Path.Equals(path)).FirstOrDefault();
 
             if (result == null) return -1;
-            else if (result.FileSize.Equals(s)) return 0;
-            else return result.SongId;
+            else return 0;
+            //else if (result.FileSize.Equals(s)) return 0;
+            //else return result.SongId;
+
             //nieistnieje => -1
             //istnieje => 0
             //istnieje o innym rozmiarze => id

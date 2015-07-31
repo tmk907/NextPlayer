@@ -96,6 +96,46 @@ namespace NextPlayer.ViewModel
             }
         }
 
+
+        private RelayCommand<SongItem> addToNowPlaying;
+
+        /// <summary>
+        /// Gets the AddToNowPlaying.
+        /// </summary>
+        public RelayCommand<SongItem> AddToNowPlaying
+        {
+            get
+            {
+                return addToNowPlaying
+                    ?? (addToNowPlaying = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        Library.Current.AddToNowPlaying(item);
+                    }));
+            }
+        }
+
+        private RelayCommand<SongItem> addToPlaylist;
+
+        /// <summary>
+        /// Gets the AddToPlaylist.
+        /// </summary>
+        public RelayCommand<SongItem> AddToPlaylist
+        {
+            get
+            {
+                return addToPlaylist
+                    ?? (addToPlaylist = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "song";
+                        s[1] = item.SongId.ToString();
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
         private RelayCommand<SongItem> itemClicked;
 
         /// <summary>

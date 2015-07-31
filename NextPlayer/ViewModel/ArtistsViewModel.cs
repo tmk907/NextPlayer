@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
 using NextPlayer.Converters;
+using NextPlayerDataLayer.Helpers;
 
 namespace NextPlayer.ViewModel
 {
@@ -24,6 +25,12 @@ namespace NextPlayer.ViewModel
         public ArtistsViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+        }
+
+        private void OnLibraryUpdated(string s)
+        {
+            LoadArtists();
         }
 
         /// <summary>
@@ -71,6 +78,70 @@ namespace NextPlayer.ViewModel
 
                 artists = value;
                 RaisePropertyChanged(ArtistsPropertyName);
+            }
+        }
+
+        private RelayCommand<ArtistItem> playNow;
+
+        /// <summary>
+        /// Gets the PlayNow.
+        /// </summary>
+        public RelayCommand<ArtistItem> PlayNow
+        {
+            get
+            {
+                return playNow
+                    ?? (playNow = new RelayCommand<ArtistItem>(
+                    item =>
+                    {
+                        var g = DatabaseManager.GetSongItemsFromArtist(item.Artist);
+                        Library.Current.SetNowPlayingList(g);
+                        ApplicationSettingsHelper.SaveSongIndex(0);
+                        navigationService.NavigateTo(ViewNames.NowPlayingView);
+                    }));
+            }
+        }
+
+        private RelayCommand<ArtistItem> addToNowPlaying;
+
+        /// <summary>
+        /// Gets the AddToNowPlaying.
+        /// </summary>
+        public RelayCommand<ArtistItem> AddToNowPlaying
+        {
+            get
+            {
+                return addToNowPlaying
+                    ?? (addToNowPlaying = new RelayCommand<ArtistItem>(
+                    item =>
+                    {
+                        AddToNowPlayingAsync(item);
+                    }));
+            }
+        }
+        public async void AddToNowPlayingAsync(ArtistItem item)
+        {
+            var g = await DatabaseManager.GetSongItemsFromArtistAsync(item.Artist);
+            Library.Current.AddToNowPlaying(g);
+        }
+        private RelayCommand<ArtistItem> addToPlaylist;
+
+        /// <summary>
+        /// Gets the AddToPlaylist.
+        /// </summary>
+        public RelayCommand<ArtistItem> AddToPlaylist
+        {
+            get
+            {
+                return addToPlaylist
+                    ?? (addToPlaylist = new RelayCommand<ArtistItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "artist";
+                        s[1] = item.Artist;
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
             }
         }
 
@@ -129,6 +200,7 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
+
 
         private RelayCommand<object> scrollListView;
 

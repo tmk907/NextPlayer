@@ -127,6 +127,7 @@ namespace NextPlayer.View
         #endregion
         async private void ShowLyrics()
         {
+            statusTextBlock.Text = loader.GetString("Connecting") + "...";
             string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
@@ -134,20 +135,31 @@ namespace NextPlayer.View
                 statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 return;
             }
-            JsonValue jsonList = JsonValue.Parse(result);
-            address = jsonList.GetObject().GetNamedString("url");
-
-            try
+            JsonValue jsonList;
+            bool isJson = JsonValue.TryParse(result,out jsonList);
+            if (isJson)
             {
-                System.Uri a = new Uri(address);
-                webView1.Navigate(a);
-                webView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            }
-            catch (FormatException e)
-            {
+                address = jsonList.GetObject().GetNamedString("url");
 
+                try
+                {
+                    System.Uri a = new Uri(address);
+                    webView1.Navigate(a);
+                    webView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                }
+                catch (FormatException e)
+                {
+                    statusTextBlock.Text = loader.GetString("ConnectionError");
+                    statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
             }
+            else
+            {
+                statusTextBlock.Text = loader.GetString("ConnectionError");
+                statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+            
         }
 
         async private Task<string> ReadDataFromWeb(string a)

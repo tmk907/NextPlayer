@@ -138,7 +138,6 @@ namespace NextPlayer.View
         #region Slider 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-
             PointerEventHandler pointerpressedhandler = new PointerEventHandler(slider_PointerEntered);
             progressbar.AddHandler(Control.PointerPressedEvent, pointerpressedhandler, true);
 

@@ -24,6 +24,12 @@ namespace NextPlayer.ViewModel
         public GenresViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+        }
+
+        private void OnLibraryUpdated(string s)
+        {
+            LoadGenres();
         }
 
         /// <summary>
@@ -45,9 +51,9 @@ namespace NextPlayer.ViewModel
                 {
                     if (IsInDesignMode)
                     {
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 10; i++)
                         {
-                            genres.Add(new GenreItem(TimeSpan.Zero, i.ToString(), i));
+                            genres.Add(new GenreItem(TimeSpan.Zero,"genreaaaaa fghfghfh dfg asdasd" + i.ToString(), i));
                         }
                     }
                     else
@@ -137,21 +143,49 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
-       
-        public async void AddToNowPlaying(RoutedEventArgs e)
+
+        private RelayCommand<GenreItem> addToNowPlaying;
+
+        /// <summary>
+        /// Gets the AddToNowPlaying.
+        /// </summary>
+        public RelayCommand<GenreItem> AddToNowPlaying
         {
-            GenreItem item = (e.OriginalSource as FrameworkElement).DataContext as GenreItem;
-            var g = await DatabaseManager.GetSongItemsFromGenreAsync(item.Genre);
-            Library.Current.AddToNowPlaying(g);
+            get
+            {
+                return addToNowPlaying
+                    ?? (addToNowPlaying = new RelayCommand<GenreItem>(
+                    item =>
+                    {
+                        AddToNowPlayingAsync(item);
+                    }));
+            }
         }
 
-        public void AddToPlaylist(RoutedEventArgs e)
+        private RelayCommand<GenreItem> addToPlaylist;
+
+        /// <summary>
+        /// Gets the AddToPlaylist.
+        /// </summary>
+        public RelayCommand<GenreItem> AddToPlaylist
         {
-            GenreItem item = (e.OriginalSource as FrameworkElement).DataContext as GenreItem;
-            String[] s = new String[2];
-            s[0] = "genre";
-            s[1] = item.Genre;
-            navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+            get
+            {
+                return addToPlaylist
+                    ?? (addToPlaylist = new RelayCommand<GenreItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "genre";
+                        s[1] = item.Genre;
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+        public async void AddToNowPlayingAsync(GenreItem item)
+        {
+            var g = await DatabaseManager.GetSongItemsFromGenreAsync(item.Genre);
+            Library.Current.AddToNowPlaying(g);
         }
 
         private async void LoadGenres()

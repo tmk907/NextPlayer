@@ -116,16 +116,5 @@ namespace NextPlayer.View
 
         #endregion
 
-        private void AddToNP_Click(object sender, RoutedEventArgs e)
-        {
-            GenresViewModel ViewModel = (GenresViewModel)DataContext;
-            ViewModel.AddToNowPlaying(e);
-        }
-
-        private void AddToPlaylist(object sender, RoutedEventArgs e)
-        {
-            GenresViewModel ViewModel = (GenresViewModel)DataContext;
-            ViewModel.AddToPlaylist(e);
-        }
     }
 }

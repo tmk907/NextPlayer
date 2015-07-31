@@ -26,43 +26,15 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
-        public async static Task ImportAndUpdateDatabase()
-        {
-            IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-
-            foreach (var file in list)
-            {
-                Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
-                // Sprawdzanie rozmiaru nie działa
-                int i = await DatabaseManager.IsSongInDB(file.Path, bp.Size);
-                if (i == -1)
-                {
-                    SongData song = await CreateSongFromFile(file);
-                    await DatabaseManager.InsertSong(song);
-                }
-                else if (i == 0)
-                {
-                    //istnieje taka sama
-                }
-                else if (i > 0)
-                {
-                    SongData song = await CreateSongFromFile(file);
-                    await DatabaseManager.UpdateSongData(song, i);
-                }
-                else { };
-            }
-            OnMediaImported("Update");
-        }
-
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
             IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
             int count = 1;
             foreach (var file in list)
             {
-                Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+                //Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
                 // Sprawdzanie rozmiaru nie działa
-                int i = await DatabaseManager.IsSongInDB(file.Path, bp.Size);
+                int i = DatabaseManager.IsSongInDB(file.Path);
                 if (i == -1)
                 {
                     SongData song = await CreateSongFromFile(file);
@@ -78,24 +50,14 @@ namespace NextPlayerDataLayer.Services
                     await DatabaseManager.UpdateSongData(song, i);
                 }
                 else { };
-                progress.Report(count);
+                if (count % 500 == 0)//!!!
+                {
+                    progress.Report(count);
+                }
                 count++;
             }
             OnMediaImported("Update");
-        }
-
-        public async static Task ImportAndCreateNewDatabase()
-        {
-            DatabaseManager.ResetSongsTable();
-
-            IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-
-            foreach (var file in list)
-            {
-                SongData song = await CreateSongFromFile(file);
-                await DatabaseManager.InsertSong(song);
-            }
-            OnMediaImported("NewDatabase");
+            SendToast();
         }
 
         public async static Task ImportAndCreateNewDatabase(IProgress<int> progress)
@@ -231,5 +193,48 @@ namespace NextPlayerDataLayer.Services
             ToastNotification toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
+
+        //public async static Task ImportAndUpdateDatabase()
+        //{
+        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+
+        //    foreach (var file in list)
+        //    {
+        //        Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+        //        // Sprawdzanie rozmiaru nie działa
+        //        int i = await DatabaseManager.IsSongInDB(file.Path, bp.Size);
+        //        if (i == -1)
+        //        {
+        //            SongData song = await CreateSongFromFile(file);
+        //            await DatabaseManager.InsertSong(song);
+        //        }
+        //        else if (i == 0)
+        //        {
+        //            //istnieje taka sama
+        //        }
+        //        else if (i > 0)
+        //        {
+        //            SongData song = await CreateSongFromFile(file);
+        //            await DatabaseManager.UpdateSongData(song, i);
+        //        }
+        //        else { };
+        //    }
+        //    OnMediaImported("Update");
+        //}
+
+        //public async static Task ImportAndCreateNewDatabase()
+        //{
+        //    DatabaseManager.ResetSongsTable();
+
+        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+
+        //    foreach (var file in list)
+        //    {
+        //        SongData song = await CreateSongFromFile(file);
+        //        await DatabaseManager.InsertSong(song);
+        //    }
+        //    OnMediaImported("NewDatabase");
+        //}
+
     }
 }

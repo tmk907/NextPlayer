@@ -72,9 +72,17 @@ namespace NextPlayerDataLayer.Services
 
         private async Task LoadSong()
         {
-            StorageFile file = await StorageFile.GetFileFromPathAsync(songList.ElementAt<NowPlayingSong>(currentSongIndex).Path);
-            mediaPlayer.AutoPlay = false;
-            mediaPlayer.SetFileSource(file);
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(songList.ElementAt<NowPlayingSong>(currentSongIndex).Path);
+                mediaPlayer.AutoPlay = false;
+                mediaPlayer.SetFileSource(file);
+            }
+            catch (Exception e)
+            {
+                SendSkipNext();
+            }
+            
         }
 
         public void StartPlaying(int index)

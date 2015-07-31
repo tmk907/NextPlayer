@@ -35,7 +35,7 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListView x:Name="SongsList"  
+            <ListView x:Name="SongsListView"  
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemsSource="{Binding Playlist}"

@@ -22,8 +22,10 @@
                 </i:Interaction.Behaviors>
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click"/>
-                        <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" Click="AddToPlaylist" />
+                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddToNowPlaying, ElementName=listView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=listView}" CommandParameter="{Binding}"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <Grid.RowDefinitions>
@@ -38,13 +40,13 @@
                     <TextBlock Text="{Binding Genre}"
                                TextWrapping="NoWrap" 
                                TextTrimming="CharacterEllipsis" 
-                               FontSize="21" 
-                               FontWeight="SemiBold"
+                               FontSize="24" 
+                               FontWeight="Normal"
                                Margin="0,0,0,0"/>
                 </Border>
                 <Border Grid.Column="1" VerticalAlignment="Bottom"  >
                     <TextBlock Text="{Binding SongsNumber}" 
-                               FontSize="17" 
+                               FontSize="20" 
                                FontWeight="SemiBold" 
                                Margin="4.5,0,4.5,0" 
                                HorizontalAlignment="Right"/>

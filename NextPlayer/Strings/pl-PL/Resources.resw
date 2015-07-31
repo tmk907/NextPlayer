@@ -150,41 +150,41 @@
   <data name="Connecting" xml:space="preserve">
     <value>Łączę</value>
   </data>
-  <data name="Connection error" xml:space="preserve">
+  <data name="ConnectionError" xml:space="preserve">
     <value>Błąd połączenia</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Contains</value>
+    <value>Zawiera</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value> Date added</value>
+    <value>Darta dodania</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Usuń</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value />
+    <value>Czy na pewno chcesz usunąć tę playlistę?</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Does not contain</value>
+    <value>Nie zawiera</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Duration</value>
+    <value>Długość</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Ends With</value>
+    <value>Kończy się na</value>
   </data>
   <data name="FilePath" xml:space="preserve">
-    <value>File path</value>
+    <value>Ścieżka pliku</value>
   </data>
   <data name="Genre" xml:space="preserve">
-    <value>Genre</value>
+    <value>Gatunek</value>
   </data>
   <data name="GenresPageTitle.Text" xml:space="preserve">
     <value>gatunki</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Highest Rating</value>
+    <value>Najwyższa ocena</value>
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Godziny</value>
@@ -193,34 +193,34 @@
     <value>Utwórz bibliotekę</value>
   </data>
   <data name="Is" xml:space="preserve">
-    <value>Is</value>
+    <value>Jest równe</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Is Greater</value>
+    <value>Jest większy</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Is Less</value>
+    <value>Jest mniejszy</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>Is Not</value>
+    <value>Jest różne od</value>
   </data>
   <data name="LastPlayed" xml:space="preserve">
-    <value>Last played</value>
+    <value>Ostatnio odtwarzane</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Least often played</value>
+    <value>Najrzadziej odtwarzane</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Least recently added</value>
+    <value>Najdawniej dodane</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Least recently played</value>
+    <value>Najdawniej odtwarzane</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
     <value>Biblioteka zaktualizowana.</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Lowest Rating</value>
+    <value>Najniższa ocena</value>
   </data>
   <data name="LyricsButton.Content" xml:space="preserve">
     <value>Lyrics</value>
@@ -253,13 +253,13 @@
     <value>Minuty</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Most often played</value>
+    <value>Najczęściej odtwarzane</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Most recently added</value>
+    <value>Ostatnio dodane</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Most recently played</value>
+    <value>Ostatnio odtwarzane</value>
   </data>
   <data name="NajczesciejOdtwarzane" xml:space="preserve">
     <value>Najczęściej odtwarzane</value>
@@ -289,13 +289,13 @@
     <value>Ostatnio odtwarzane</value>
   </data>
   <data name="PlayCount" xml:space="preserve">
-    <value>Play count</value>
+    <value>Liczba odtworzeń</value>
   </data>
   <data name="PlaylistsPageTitle.Text" xml:space="preserve">
     <value>playlisty</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>Ocena</value>
   </data>
   <data name="Save.Content" xml:space="preserve">
     <value>Zapisz</value>
@@ -313,10 +313,10 @@
     <value>utwory</value>
   </data>
   <data name="StartsWith" xml:space="preserve">
-    <value>Starts With</value>
+    <value>Zaczyna się od</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Tytuł</value>
   </data>
   <data name="UpdateMediaButton.Content" xml:space="preserve">
     <value>Aktualizuj bibliotekę</value>

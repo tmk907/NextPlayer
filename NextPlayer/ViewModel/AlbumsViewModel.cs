@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using NextPlayerDataLayer.Common;
 using NextPlayer.Converters;
+using NextPlayerDataLayer.Helpers;
 
 namespace NextPlayer.ViewModel
 {
@@ -28,6 +29,78 @@ namespace NextPlayer.ViewModel
             this.navigationService = navigationService;
             index = 0;
             artist = null;
+            MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+        }
+
+        private void OnLibraryUpdated(string s)
+        {
+            LoadAlbums();
+        }
+
+        private RelayCommand<AlbumItem> playNow;
+
+        /// <summary>
+        /// Gets the PlayNow.
+        /// </summary>
+        public RelayCommand<AlbumItem> PlayNow
+        {
+            get
+            {
+                return playNow
+                    ?? (playNow = new RelayCommand<AlbumItem>(
+                    item =>
+                    {
+                        var g = DatabaseManager.GetSongItemsFromAlbum(item.Album, item.Artist);
+                        Library.Current.SetNowPlayingList(g);
+                        ApplicationSettingsHelper.SaveSongIndex(0);
+                        navigationService.NavigateTo(ViewNames.NowPlayingView);
+                    }));
+            }
+        }
+
+        private RelayCommand<AlbumItem> addToNowPlaying;
+
+        /// <summary>
+        /// Gets the AddToNowPlaying.
+        /// </summary>
+        public RelayCommand<AlbumItem> AddToNowPlaying
+        {
+            get
+            {
+                return addToNowPlaying
+                    ?? (addToNowPlaying = new RelayCommand<AlbumItem>(
+                    item =>
+                    {
+                        AddToNowPlayingAsync(item);
+                    }));
+            }
+        }
+        public async void AddToNowPlayingAsync(AlbumItem item)
+        {
+            var g = DatabaseManager.GetSongItemsFromAlbum(item.Album,item.Artist);
+            Library.Current.AddToNowPlaying(g);
+        }
+        private RelayCommand<AlbumItem> addToPlaylist;
+
+        /// <summary>
+        /// Gets the AddToPlaylist.
+        /// </summary>
+        public RelayCommand<AlbumItem> AddToPlaylist
+        {
+            get
+            {
+                return addToPlaylist
+                    ?? (addToPlaylist = new RelayCommand<AlbumItem>(
+                    item =>
+                    {
+                        String[] s = new String[4];
+                        s[0] = "album";
+                        s[1] = item.Album;
+                        s[2] = "artist";
+                        s[3] = item.Artist;
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
         }
 
         private RelayCommand<object> scrollListView;
@@ -158,15 +231,20 @@ namespace NextPlayer.ViewModel
                     ?? (loadItems = new RelayCommand(
                     () =>
                     {
-                        if (artist == null)
-                        {
-                            Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(), x => x.Album);
-                        }
-                        else
-                        {
-                            Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artist), x => x.Album);
-                        }
+                        LoadAlbums();
                     }));
+            }
+        }
+
+        private void LoadAlbums()
+        {
+            if (artist == null)
+            {
+                Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(), x => x.Album);
+            }
+            else
+            {
+                Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artist), x => x.Album);
             }
         }
 

@@ -261,6 +261,7 @@ namespace NextPlayerDataLayer.Services
         //{
         //    NowPlayingList = DatabaseManager.SelectAllSongItemsFromNowPlaying();
         //}
+
         
 
         public void AddToNowPlaying(SongItem song)

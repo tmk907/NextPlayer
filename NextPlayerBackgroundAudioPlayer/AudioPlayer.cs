@@ -207,16 +207,16 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void HandlePropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
         {
-            if (sender.SoundLevel == SoundLevel.Muted)
-            {
-                Pause();
-                muted = true;
-            }
-            else if (muted && sender.SoundLevel != SoundLevel.Muted)
-            {
-                Play();
-                muted = false;
-            }
+            //if (sender.SoundLevel == SoundLevel.Muted)
+            //{
+            //    Pause();
+            //    muted = true;
+            //}
+            //else if (muted && sender.SoundLevel != SoundLevel.Muted)
+            //{
+            //    Play();
+            //    muted = false;
+            //}
         }
 
         private void BGCurrentStateChanged(MediaPlayer sender, object args)

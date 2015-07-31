@@ -92,6 +92,7 @@
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Enums\SmartPlaylistEnums.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
+    <Compile Include="Helpers\NPChange.cs" />
     <Compile Include="Helpers\Repeat.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\PerfTests.cs" />

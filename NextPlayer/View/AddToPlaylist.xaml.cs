@@ -95,6 +95,7 @@ namespace NextPlayer.View
                 else if (s[0] == "album")
                 {
                     album = s[1];
+                    artist = s[3];
                 }
             }
         }
@@ -151,7 +152,7 @@ namespace NextPlayer.View
             }
             else if (album != null)
             {
-                DatabaseManager.AddAlbumToPlaylistAsync(album, p.Id);
+                DatabaseManager.AddAlbumToPlaylistAsync(album, artist, p.Id);
             }
             else if (songId > -1)
             {

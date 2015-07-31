@@ -620,6 +620,10 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            App.Current.Suspending += ForegroundApp_Suspending;
+            App.Current.Resuming += ForegroundApp_Resuming;
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
+
             index = CurrentSongIndex;
             if (index > -1)
             {
@@ -639,6 +643,7 @@ namespace NextPlayer.ViewModel
 
                 if (IsMyBackgroundTaskRunning)
                 {
+                    AddMediaPlayerEventHandlers();
                     if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("lyrics");
@@ -670,6 +675,12 @@ namespace NextPlayer.ViewModel
 
         public void Deactivate(Dictionary<string, object> state)
         {
+            App.Current.Suspending -= ForegroundApp_Suspending;
+            App.Current.Resuming -= ForegroundApp_Resuming;
+
+            RemoveMediaPlayerEventHandlers();
+
+            StopTimer();
         }
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
@@ -684,7 +695,11 @@ namespace NextPlayer.ViewModel
         void ForegroundApp_Resuming(object sender, object e)
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
-
+            SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+            SetCover(song.Path);
+            Artist = song.Artist;
+            Album = song.Album;
+            Title = song.Title;
             // Verify if the task was running before
             if (IsMyBackgroundTaskRunning)
             {
@@ -704,11 +719,7 @@ namespace NextPlayer.ViewModel
                 {
                     PlayButtonContent = "\uE17e\uE102";//play
                 }
-                SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
-                SetCover(song.Path);
-                Artist = song.Artist;
-                Album = song.Album;
-                Title = song.Title;
+                
             }
             else
             {
@@ -768,7 +779,7 @@ namespace NextPlayer.ViewModel
                 }
                 else
                 {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, false);
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
                     throw new Exception("Background Audio Task didn't start in expected time");
                 }
             }
@@ -986,7 +997,7 @@ namespace NextPlayer.ViewModel
         #endregion
 
 
-        private void SendMessage(string constants)
+        private void SendMessage(string constants)// SendMessage(constants,"")
         {
             var value = new ValueSet();
             value.Add(constants, "");

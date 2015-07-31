@@ -31,6 +31,12 @@ namespace NextPlayer.ViewModel
             PageTitle = loader.GetString("SongsPageTitle");
             index = 0;
             genre = null;
+            MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+        }
+
+        private void OnLibraryUpdated(string s)
+        {
+            LoadSongs();
         }
 
         public string PageTitle
@@ -82,6 +88,45 @@ namespace NextPlayer.ViewModel
 
                 songs = value;
                 RaisePropertyChanged(SongsPropertyName);
+            }
+        }
+
+        private RelayCommand<SongItem> addToNowPlaying;
+
+        /// <summary>
+        /// Gets the AddToNowPlaying.
+        /// </summary>
+        public RelayCommand<SongItem> AddToNowPlaying
+        {
+            get
+            {
+                return addToNowPlaying
+                    ?? (addToNowPlaying = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        Library.Current.AddToNowPlaying(item);
+                    }));
+            }
+        }
+
+        private RelayCommand<SongItem> addToPlaylist;
+
+        /// <summary>
+        /// Gets the AddToPlaylist.
+        /// </summary>
+        public RelayCommand<SongItem> AddToPlaylist
+        {
+            get
+            {
+                return addToPlaylist
+                    ?? (addToPlaylist = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "song";
+                        s[1] = item.SongId.ToString();
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
             }
         }
 
