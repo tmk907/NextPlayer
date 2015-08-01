@@ -118,15 +118,23 @@ namespace NextPlayer.View
 
         private void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
         {
+            playlistNameTextBox.Text = "";
             FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["NewPlaylistFlyout"]);
             FlyoutBase.ShowAttachedFlyout(this);
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-            ViewModel.AddPlainPlaylist(playlistNameTextBox.Text);
-            FlyoutBase.GetAttachedFlyout(this).Hide();
+            if (playlistNameTextBox.Text == "")
+            {
+                playlistNameTextBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+            }
+            else
+            {
+                PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
+                ViewModel.AddPlainPlaylist(playlistNameTextBox.Text);
+                FlyoutBase.GetAttachedFlyout(this).Hide();
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

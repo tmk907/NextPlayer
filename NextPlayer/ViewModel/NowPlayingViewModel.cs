@@ -30,6 +30,7 @@ namespace NextPlayer.ViewModel
         private INavigationService navigationService;
         private int songId;
         private int index;
+        private bool fromDB = false;
         private bool IsMyBackgroundTaskRunning
         {
             get
@@ -312,6 +313,43 @@ namespace NextPlayer.ViewModel
 
                 cover = value;
                 RaisePropertyChanged(CoverPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Rating" /> property's name.
+        /// </summary>
+        public const string RatingPropertyName = "Rating";
+
+        private int rating = 0;
+
+        /// <summary>
+        /// Sets and gets the Rating property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int Rating
+        {
+            get
+            {
+                return rating;
+            }
+
+            set
+            {
+                if (rating == value)
+                {
+                    return;
+                }
+                if (value == 0 || value == 1 || value == 2 || value == 3 || value == 4 || value == 5)
+                {
+                    rating = value;
+                    if (!fromDB)
+                    {
+                        UpdateRating();
+                    }
+                    fromDB = false;
+                    RaisePropertyChanged(RatingPropertyName);
+                }
             }
         }
 
@@ -616,6 +654,29 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
+
+        private RelayCommand goToNowPlayingList;
+
+        /// <summary>
+        /// Gets the GoToNowPlayingList.
+        /// </summary>
+        public RelayCommand GoToNowPlayingList
+        {
+            get
+            {
+                return goToNowPlayingList
+                    ?? (goToNowPlayingList = new RelayCommand(
+                    () =>
+                    {
+                        if (!NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("nplist"))
+                        {
+                            NextPlayer.Common.SuspensionManager.SessionState.Add("nplist", true);
+                        }
+                        navigationService.NavigateTo(ViewNames.PlaylistView);
+                    }));
+            }
+        }
+
         #endregion
 
         public void Activate(object parameter, Dictionary<string, object> state)
@@ -630,9 +691,12 @@ namespace NextPlayer.ViewModel
                 SongItem song = Library.Current.NowPlayingList.ElementAt(index);
                 CurrentNr = index + 1;
                 SongsCount = Library.Current.NowPlayingList.Count;
+                songId = song.SongId;
                 Title = song.Title;
                 Artist = song.Artist;
                 Album = song.Album;
+                fromDB = true;
+                Rating = song.Rating;
                 SetCover(song.Path);
                 SetupTimer();
                 StartTimer();
@@ -647,6 +711,10 @@ namespace NextPlayer.ViewModel
                     if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("lyrics");
+                    }
+                    else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("nplist"))//mozna chyba zmienic na Dict<> state
+                    {
+                        NextPlayer.Common.SuspensionManager.SessionState.Remove("nplist");
                     }
                     else
                     {
@@ -696,10 +764,13 @@ namespace NextPlayer.ViewModel
         {
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+            songId = song.SongId;
             SetCover(song.Path);
             Artist = song.Artist;
             Album = song.Album;
             Title = song.Title;
+            fromDB = true;
+            Rating = song.Rating;
             // Verify if the task was running before
             if (IsMyBackgroundTaskRunning)
             {
@@ -852,10 +923,13 @@ namespace NextPlayer.ViewModel
                             CurrentNr = Int32.Parse(e.Data[key].ToString()) + 1;
                             CurrentSongIndex = Int32.Parse(e.Data[key].ToString());
                             SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                            songId = song.SongId;
                             SetCover(song.Path);
                             Artist = song.Artist;
                             Album = song.Album;
                             Title = song.Title;
+                            fromDB = true;
+                            Rating = song.Rating;
                         });
                         break;
                     case AppConstants.MediaOpened:
@@ -1014,6 +1088,12 @@ namespace NextPlayer.ViewModel
         private async void SetCover(string path)
         {
             Cover = await Library.Current.GetCover(path);
+        }
+
+        private void UpdateRating()
+        {
+            DatabaseManager.UpdateSongRating(songId, rating);
+            Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
         }
     }
 }

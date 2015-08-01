@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddToNowPlaying" xml:space="preserve">
-    <value>Dodaj do teraz odtwarzane</value>
+  <data name="AddPlaylist.Label" xml:space="preserve">
+    <value>Dodaj playlistę</value>
   </data>
-  <data name="AddToPlaylist" xml:space="preserve">
+  <data name="AddSmartPlaylist.Label" xml:space="preserve">
+    <value>Dodaj smart playlistę</value>
+  </data>
+  <data name="AddToNowPlaying.Text" xml:space="preserve">
+    <value>Dodaj do teraz odtwarzne</value>
+  </data>
+  <data name="AddToPlaylist.Text" xml:space="preserve">
     <value>Dodaj do playlisty</value>
   </data>
   <data name="Album" xml:space="preserve">
@@ -141,8 +147,11 @@
   <data name="ArtistsPageTitle.Text" xml:space="preserve">
     <value>artyści</value>
   </data>
-  <data name="Cancel.Content" xml:space="preserve">
+  <data name="ButtonCancel.Content" xml:space="preserve">
     <value>Anuluj</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>Usuń</value>
   </data>
   <data name="Cancel.Label" xml:space="preserve">
     <value>Anuluj</value>
@@ -159,11 +168,14 @@
   <data name="DateAdded" xml:space="preserve">
     <value>Darta dodania</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="Delete.Text" xml:space="preserve">
     <value>Usuń</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
     <value>Czy na pewno chcesz usunąć tę playlistę?</value>
+  </data>
+  <data name="DeleteRule.Content" xml:space="preserve">
+    <value>Usuń regułę</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>Nie zawiera</value>
@@ -273,6 +285,9 @@
   <data name="NajrzadziejOdtwarzane" xml:space="preserve">
     <value>Najrzadziej odtwarzane</value>
   </data>
+  <data name="NewRule.Content" xml:space="preserve">
+    <value>Dodaj regułę</value>
+  </data>
   <data name="NewSPPageTitle.Text" xml:space="preserve">
     <value>new smart playlist</value>
   </data>
@@ -294,8 +309,14 @@
   <data name="PlaylistsPageTitle.Text" xml:space="preserve">
     <value>playlisty</value>
   </data>
+  <data name="PlayNow.Text" xml:space="preserve">
+    <value>Odtwórz teraz</value>
+  </data>
   <data name="Rating" xml:space="preserve">
     <value>Ocena</value>
+  </data>
+  <data name="Rules.Text" xml:space="preserve">
+    <value>Reguły</value>
   </data>
   <data name="Save.Content" xml:space="preserve">
     <value>Zapisz</value>
@@ -311,6 +332,15 @@
   </data>
   <data name="SongsPageTitle" xml:space="preserve">
     <value>utwory</value>
+  </data>
+  <data name="SPName.Text" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="SPSongsNumber.Text" xml:space="preserve">
+    <value>Liczba utworów</value>
+  </data>
+  <data name="SPSortBy.Text" xml:space="preserve">
+    <value>Sortuj wg</value>
   </data>
   <data name="StartsWith" xml:space="preserve">
     <value>Zaczyna się od</value>

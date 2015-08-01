@@ -119,22 +119,6 @@ namespace NextPlayer.View
 
         #endregion
 
-
-
-        private void Repeat_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Shuffle_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ShowLyrics_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         #region Slider 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -197,5 +181,24 @@ namespace NextPlayer.View
             viewModel.Play();
         }
         #endregion
+    }
+    public class SizeNotifyPanel : ContentPresenter
+    {
+        public static DependencyProperty SizeProperty =
+            DependencyProperty.Register("Size",
+                                        typeof(Size),
+                                        typeof(SizeNotifyPanel),
+                                        null);
+
+        public Size Size
+        {
+            get { return (Size)GetValue(SizeProperty); }
+            set { SetValue(SizeProperty, value); }
+        }
+
+        public SizeNotifyPanel()
+        {
+            SizeChanged += (s, e) => Size = e.NewSize;
+        }
     }
 }

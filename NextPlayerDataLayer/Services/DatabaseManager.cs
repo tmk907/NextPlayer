@@ -894,6 +894,11 @@ namespace NextPlayerDataLayer.Services
             int i = await conn.ExecuteAsync("UPDATE SongsTable SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?",DateTime.Now ,count, id);
         }
 
+        public static void UpdateSongRating(int songId, int rating)
+        {
+            ConnectionDb().Execute("UPDATE SongsTable SET Rating = ? WHERE SongId = ?",rating,songId);
+        }
+
         private static void testUpdate(int id)
         {
             var a = ConnectionDb().Table<SongsTable>().Where(i => i.SongId.Equals(id)).FirstOrDefault();
@@ -959,7 +964,7 @@ namespace NextPlayerDataLayer.Services
 
         private static SongItem CreateSongItem(SongsTable q)
         {
-            return new SongItem(q.Album, q.Artist, q.Duration, q.Path, q.SongId, q.Title,(int) q.TrackNumber);
+            return new SongItem(q.Album, q.Artist, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.TrackNumber);
         }
 
         #endregion

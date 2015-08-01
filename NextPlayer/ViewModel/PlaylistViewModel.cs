@@ -157,7 +157,15 @@ namespace NextPlayer.ViewModel
                         }
                         ApplicationSettingsHelper.SaveSongIndex(index);
                         Library.Current.SetNowPlayingList(Playlist);
-                        navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
+                        if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("nplist"))
+                        {
+                            NextPlayer.Common.SuspensionManager.SessionState.Remove("nplist");
+                            navigationService.GoBack();
+                        }
+                        else
+                        {
+                            navigationService.NavigateTo(ViewNames.NowPlayingView, item.SongId);
+                        }
                     }));
             }
         }

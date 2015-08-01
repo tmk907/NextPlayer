@@ -45,6 +45,22 @@ namespace NextPlayerDataLayer.Model
         public TimeSpan Duration { get { return duration; } }
         private string path;
         public string Path { get { return path; } }
+        private int rating;
+        public int Rating
+        {
+            get
+            {
+                return rating;
+            }
+            set
+            {
+                if (value != rating)
+                {
+                    rating = value;
+                    onPropertyChanged(this, "Rating");
+                }
+            }
+        }
         private int songId;
         public int SongId { get { return songId; } }
         private string title;
@@ -87,15 +103,17 @@ namespace NextPlayerDataLayer.Model
             album = "Unknown Album";
             duration = TimeSpan.Zero;
             this.path = "";
+            rating = 0;
             songId = -1;
         }
 
-        public SongItem(string album, string artist, TimeSpan duration, string path, int songid, string title, int trackumber)
+        public SongItem(string album, string artist, TimeSpan duration, string path, int rating, int songid, string title, int trackumber)
         {
             this.album = album;
             this.artist = artist;
             this.duration = duration;
             this.path = path;
+            this.rating = rating;
             this.songId = songid;
             this.title = title;
             this.trackNumber = trackumber;

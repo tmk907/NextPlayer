@@ -30,19 +30,16 @@
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <ComboBox Grid.Row="1" Grid.Column="0" 
-                          x:Name="itemBox1" 
                           Margin="9.5,0,0,9.5"
                           HorizontalAlignment="Stretch"
                           FontSize="25" 
                           ItemsSource="{Binding SortBy}"/>
                 <ComboBox Grid.Row="1" Grid.Column="1" 
-                          x:Name="compareBox1" 
                           Margin="9.5,0,0,9.5"
                           HorizontalAlignment="Stretch"
                           FontSize="25" 
                           ItemsSource="{Binding SortBy}"/>
                 <TextBox Grid.Row="2" Grid.ColumnSpan="2"
-                         x:Name="valueTextBox1"
                          Margin="9.5,0,0,9.5"
                          />
             </Grid>
@@ -100,6 +97,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" 
+                           x:Uid="SPName"
                            Text="Name" 
                            VerticalAlignment="Center"
                            FontSize="25"/>
@@ -111,6 +109,7 @@
                          FontSize="25"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" 
+                           x:Uid="SPSongsNumber"
                            Text="Songs number" 
                            VerticalAlignment="Center"
                            
@@ -122,6 +121,7 @@
                          FontSize="25"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" 
+                           x:Uid="SPSortBy"
                            Text="Sort by" 
                            FontSize="25"
                            VerticalAlignment="Center"
@@ -167,6 +167,7 @@
                           SelectedValue="{Binding SelectedComparison, Mode=TwoWay}"
                           SelectedValuePath="Value"/>
                 <DatePicker Grid.Row="1" Grid.ColumnSpan="2" 
+                            Margin="9.5,0,0,9.5"
                             Visibility="{Binding DatePickerVisibility,Converter={StaticResource BoolToVisibilityConverter} }" 
                             Date="{Binding Date, Converter={StaticResource DateTimeToDateTimeOffsetConverter},Mode=TwoWay}"/>
                 <TextBox Grid.Row="1" 
@@ -208,6 +209,12 @@
             <Button Grid.Row="3" x:Uid="NewRule"
                         Content="New rule" 
                         HorizontalAlignment="Center"
+                    Visibility="Collapsed"
+                        />
+            <Button Grid.Row="3" x:Uid="DeleteRule"
+                        Content="Delete rule" 
+                        HorizontalAlignment="Center"
+                    Visibility="Collapsed"
                         />
             <!--Click="NewRule_Click"-->
             
