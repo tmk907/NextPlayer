@@ -336,17 +336,12 @@ namespace NextPlayer.ViewModel
 
             set
             {
-                if (rating == value)
-                {
-                    return;
-                }
                 if (value == 0 || value == 1 || value == 2 || value == 3 || value == 4 || value == 5)
                 {
                     rating = value;
-                    if (!fromDB)
-                    {
-                        UpdateRating();
-                    }
+
+                    UpdateRating();
+
                     fromDB = false;
                     RaisePropertyChanged(RatingPropertyName);
                 }
@@ -716,10 +711,21 @@ namespace NextPlayer.ViewModel
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("nplist");
                     }
+                    else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))//mozna chyba zmienic na Dict<> state
+                    {
+                        NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
+                    }
                     else
                     {
-                        SendMessage(AppConstants.NowPlayingListChanged);
-                        SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
+                        if (resumed)
+                        {
+                            resumed = false;
+                        }
+                        else
+                        {
+                            SendMessage(AppConstants.NowPlayingListChanged);
+                            SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
+                        }
                     }
                 }
                 else
@@ -754,7 +760,7 @@ namespace NextPlayer.ViewModel
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
         }
-
+        private bool resumed = false;
         #region Foreground App Lifecycle Handlers
         /// <summary>
         /// Sends message to background informing app has resumed
@@ -774,7 +780,7 @@ namespace NextPlayer.ViewModel
             // Verify if the task was running before
             if (IsMyBackgroundTaskRunning)
             {
-
+                resumed = true;
                 //if yes, reconnect to media play handlers
                 AddMediaPlayerEventHandlers();
 
@@ -1022,7 +1028,6 @@ namespace NextPlayer.ViewModel
         {
             if (!sliderpressed)
             {
-
                 ProgressBarValue = BackgroundMediaPlayer.Current.Position.TotalSeconds;
                 CurrentTime = BackgroundMediaPlayer.Current.Position;
             }
@@ -1090,10 +1095,14 @@ namespace NextPlayer.ViewModel
             Cover = await Library.Current.GetCover(path);
         }
 
-        private void UpdateRating()
+        private async void UpdateRating()
         {
-            DatabaseManager.UpdateSongRating(songId, rating);
-            Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
+            if (!fromDB)
+            {
+                Library.Current.ChangeRating(rating, CurrentSongIndex);
+                //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
+                await DatabaseManager.UpdateSongRating(songId, rating);
+            }
         }
     }
 }

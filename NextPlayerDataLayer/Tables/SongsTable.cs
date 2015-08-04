@@ -30,7 +30,10 @@ namespace NextPlayerDataLayer.Tables
         public DateTime LastPlayed { get; set; }
         public DateTime DateAdded { get; set; }
         public uint PlayCount { get; set; }
-        
+
+        [Indexed]
+        public int IsAvailable { get; set; }
+
         public string Lyrics { get; set; }
     }
 }

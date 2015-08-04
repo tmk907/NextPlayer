@@ -56,7 +56,7 @@ namespace NextPlayerDataLayer.Helpers
         {
             int i = -1;
             object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongIndex);
-            if (value != null) Int32.Parse(value.ToString());
+            if (value != null) i = Int32.Parse(value.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PrevSongIndex, i);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, index);
         }

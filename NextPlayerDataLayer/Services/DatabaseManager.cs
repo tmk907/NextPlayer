@@ -31,6 +31,16 @@ namespace NextPlayerDataLayer.Services
             return conn;
         }
 
+        private static SQLite.TableQuery<SongsTable> SongsConn()
+        {
+            return ConnectionDb().Table<SongsTable>().Where(available => available.IsAvailable > 0);
+        }
+
+        private static SQLite.AsyncTableQuery<SongsTable> SongsConnAsync()
+        {
+            return AsyncConnectionDb().Table<SongsTable>().Where(available => available.IsAvailable > 0);
+        }
+
         public async static Task DeleteDatabase()
         {
             await AsyncConnectionDb().DropTableAsync<SongsTable>();
@@ -121,6 +131,7 @@ namespace NextPlayerDataLayer.Services
                 Filename = _song.Filename,
                 FileSize = (long) _song.FileSize,
                 Genre = _song.Genre,
+                IsAvailable = _song.IsAvailable,
                 LastPlayed = _song.LastPlayed,
                 Lyrics = _song.Lyrics,
                 Path = _song.Path,
@@ -135,6 +146,38 @@ namespace NextPlayerDataLayer.Services
 
             await AsyncConnectionDb().InsertAsync(newSong);
             return newSong.SongId;
+        }
+
+        public async static Task InsertSongsAsync(IEnumerable<SongData> list)
+        {
+            List<SongsTable> newSongs = new List<SongsTable>();
+            foreach (var item in list)
+            {
+                newSongs.Add(new SongsTable() 
+                {
+                    Album = item.Album,
+                    AlbumArtist = item.AlbumArtist,
+                    Artist = item.Artist,
+                    Bitrate = item.Bitrate,
+                    DateAdded = item.DateAdded,
+                    Duration = item.Duration,
+                    Filename = item.Filename,
+                    FileSize = (long)item.FileSize,
+                    Genre = item.Genre,
+                    IsAvailable = item.IsAvailable,
+                    LastPlayed = item.LastPlayed,
+                    Lyrics = item.Lyrics,
+                    Path = item.Path,
+                    PlayCount = item.PlayCount,
+                    Publisher = item.Publisher,
+                    Rating = item.Rating,
+                    Subtitle = item.Subtitle,
+                    Title = item.Title,
+                    TrackNumber = item.TrackNumber,
+                    Year = item.Year,
+                });
+            }
+            await AsyncConnectionDb().InsertAllAsync(newSongs);
         }
 
         public static void InsertNewNowPlayingPlaylist(IEnumerable<SongItem> list)
@@ -213,7 +256,7 @@ namespace NextPlayerDataLayer.Services
         public async static Task AddGenreToPlaylistAsync(string genre, int playlistId)
         {
             var conn = ConnectionDb();
-            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Genre.Equals(genre)).ToListAsync();
+            var query = await SongsConnAsync().Where(s => s.Genre.Equals(genre)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
             foreach (var item in query)
@@ -233,7 +276,7 @@ namespace NextPlayerDataLayer.Services
         public async static Task AddArtistToPlaylistAsync(string artist, int playlistId)
         {
             var conn = ConnectionDb();
-            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Artist.Equals(artist)).ToListAsync();
+            var query = await SongsConnAsync().Where(s => s.Artist.Equals(artist)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
             foreach (var item in query)
@@ -254,7 +297,7 @@ namespace NextPlayerDataLayer.Services
         {
             var conn = ConnectionDb();
             var songs = GetSongItemsFromAlbum(album, artist);
-            var query = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.Album.Equals(album)).ToListAsync();
+            var query = await SongsConnAsync().Where(s => s.Album.Equals(album)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
             foreach (var item in songs)
@@ -327,7 +370,7 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<ArtistItem> GetArtistItems()
         {
             ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Artist).GroupBy(s => s.Artist).ToList();
+            var query = SongsConn().OrderBy(s => s.Artist).GroupBy(s => s.Artist).ToList();
             foreach (var artist in query)
             {
                 ArtistItem artistItem = new ArtistItem();
@@ -351,7 +394,7 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task<ObservableCollection<ArtistItem>> GetArtistItemsAsync()
         {
-            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Artist).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(s => s.Artist).ToListAsync();
             ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
             var result = query.GroupBy(s => s.Artist);
             foreach (var artist in result)
@@ -378,7 +421,7 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<AlbumItem> GetAlbumItems()
         {
             ObservableCollection<AlbumItem> collection = new ObservableCollection<AlbumItem>();
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(a => a.Album).GroupBy(g => g.Album).ToList();
+            var query = SongsConn().OrderBy(a => a.Album).GroupBy(g => g.Album).ToList();
             foreach (var item in query)
             {
                 TimeSpan duration = TimeSpan.Zero;
@@ -399,7 +442,7 @@ namespace NextPlayerDataLayer.Services
         public static List<AlbumItem> GetAlbumItems(string artist)
         {
             List<AlbumItem> collection = new List<AlbumItem>();
-            var query = ConnectionDb().Table<SongsTable>().Where(a => a.Artist.Equals(artist)).OrderBy(o => o.Album).GroupBy(g => g.Album).ToList();
+            var query = SongsConn().Where(a => a.Artist.Equals(artist)).OrderBy(o => o.Album).GroupBy(g => g.Album).ToList();
             foreach (var item in query)
             {
                 TimeSpan duration = TimeSpan.Zero;
@@ -419,11 +462,11 @@ namespace NextPlayerDataLayer.Services
             List<SongsTable> query;
             if (artist == null ||  artist.Equals(""))
             {
-                query = ConnectionDb().Table<SongsTable>().Where(a => a.Album.Equals(album)).ToList();
+                query = SongsConn().Where(a => a.Album.Equals(album)).ToList();
             }
             else
             {
-                query = ConnectionDb().Table<SongsTable>().Where(a => a.Album.Equals(album)).Where(b => b.Artist.Equals(artist)).ToList();
+                query = SongsConn().Where(a => a.Album.Equals(album)).Where(b => b.Artist.Equals(artist)).ToList();
             }
             
             TimeSpan duration = TimeSpan.Zero;
@@ -442,7 +485,7 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<GenreItem> GetGenreItems()
         {
             ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(g => g.Genre).GroupBy(e => e.Genre).ToList();
+            var query = SongsConn().OrderBy(g => g.Genre).GroupBy(e => e.Genre).ToList();
             foreach (var item in query)
             {
                 TimeSpan duration = TimeSpan.Zero;
@@ -460,7 +503,7 @@ namespace NextPlayerDataLayer.Services
         public async static Task<ObservableCollection<GenreItem>> GetGenreItemsAsync()
         {
             ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
-            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(g => g.Genre).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(g => g.Genre).ToListAsync();
             var result = query.GroupBy(x => x.Genre);
             foreach (var item in result)
             {
@@ -507,7 +550,7 @@ namespace NextPlayerDataLayer.Services
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title);
+            var query = SongsConn().OrderBy(s => s.Title);
             var result = query.ToList();
             foreach (var item in result)
             {
@@ -520,7 +563,7 @@ namespace NextPlayerDataLayer.Services
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            var result = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).ToListAsync();
+            var result = await SongsConnAsync().OrderBy(s => s.Title).ToListAsync();
             foreach (var item in result)
             {
                 songs.Add(CreateSongItem(item));
@@ -534,7 +577,7 @@ namespace NextPlayerDataLayer.Services
 
             if (artist == null || artist.Equals(""))
             {
-                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.TrackNumber).Where(a => a.Album.Equals(album)).ToList();
+                var query = SongsConn().OrderBy(s => s.TrackNumber).Where(a => a.Album.Equals(album)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));
@@ -542,7 +585,7 @@ namespace NextPlayerDataLayer.Services
             }
             else
             {
-                var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.TrackNumber).Where(w => w.Artist.Equals(artist)).Where(a => a.Album.Equals(album)).ToList();
+                var query = SongsConn().OrderBy(s => s.TrackNumber).Where(w => w.Artist.Equals(artist)).Where(a => a.Album.Equals(album)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));
@@ -554,7 +597,7 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<SongItem> GetSongItemsFromGenre(string genre)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(g => g.Genre.Equals(genre)).ToList();
+            var query = SongsConn().OrderBy(s => s.Title).Where(g => g.Genre.Equals(genre)).ToList();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -565,7 +608,7 @@ namespace NextPlayerDataLayer.Services
         public async static Task<ObservableCollection<SongItem>> GetSongItemsFromGenreAsync(string genre)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(g => g.Genre.Equals(genre)).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(s => s.Title).Where(g => g.Genre.Equals(genre)).ToListAsync();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -576,7 +619,7 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<SongItem> GetSongItemsFromArtist(string artist)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = ConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(a => a.Artist.Equals(artist)).ToList();
+            var query = SongsConn().OrderBy(s => s.Title).Where(a => a.Artist.Equals(artist)).ToList();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -587,7 +630,7 @@ namespace NextPlayerDataLayer.Services
         public async static Task<ObservableCollection<SongItem>> GetSongItemsFromArtistAsync(string artist)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = await AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.Title).Where(a=>a.Artist.Equals(artist)).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(s => s.Title).Where(a=>a.Artist.Equals(artist)).ToListAsync();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -606,7 +649,7 @@ namespace NextPlayerDataLayer.Services
                 //            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
                 //            where e.PlaylistId.Equals(id)
                 //            select s;
-                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId where PlainPlaylistEntryTable.PlaylistId = ? order by PlainPlaylistEntryTable.Place",id);
+                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId where PlainPlaylistEntryTable.PlaylistId = ?  AND SongsTable.IsAvailable = 1 order by PlainPlaylistEntryTable.Place", id);//available
 
 
                 foreach (var item in list)
@@ -787,7 +830,7 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task<SongData> SelectSongData(int _songId)
         {
-            var q = await AsyncConnectionDb().Table<SongsTable>().Where(e => e.SongId.Equals(_songId)).FirstOrDefaultAsync();
+            var q = await SongsConnAsync().Where(e => e.SongId.Equals(_songId)).FirstOrDefaultAsync();
             SongData s = CreateSongData(q);
             return s;
         }
@@ -817,11 +860,13 @@ namespace NextPlayerDataLayer.Services
 
         public static ObservableCollection<SongItem> SelectAllSongItemsFromNowPlaying()
         {
-            var query = ConnectionDb().Table<NowPlayingTable>().OrderBy(e => e.Position).ToList();
+            var conn = ConnectionDb();
+            var query = conn.Table<NowPlayingTable>().OrderBy(e => e.Position).ToList();
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
+            var conn2 = SongsConn();
             foreach (var e in query)
             {
-                var query2 = ConnectionDb().Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
+                var query2 = conn2.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
                 list.Add(CreateSongItem(query2));
             }
             return list;
@@ -833,7 +878,7 @@ namespace NextPlayerDataLayer.Services
             ObservableCollection<SongItem> list = new ObservableCollection<SongItem>();
             foreach (var e in query)
             {
-                var query2 = await AsyncConnectionDb().Table<SongsTable>().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefaultAsync();
+                var query2 = await SongsConnAsync().Where(x => x.SongId.Equals(e.SongId)).FirstOrDefaultAsync();
                 list.Add(CreateSongItem(query2));
             }
             return list;
@@ -871,6 +916,7 @@ namespace NextPlayerDataLayer.Services
                 Filename = _song.Filename,
                 FileSize = (long)_song.FileSize,
                 Genre = _song.Genre,
+                IsAvailable = _song.IsAvailable,
                 LastPlayed = _song.LastPlayed,
                 Lyrics = _song.Lyrics,
                 Path = _song.Path,
@@ -894,14 +940,14 @@ namespace NextPlayerDataLayer.Services
             int i = await conn.ExecuteAsync("UPDATE SongsTable SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?",DateTime.Now ,count, id);
         }
 
-        public static void UpdateSongRating(int songId, int rating)
+        public async static Task UpdateSongRating(int songId, int rating)
         {
-            ConnectionDb().Execute("UPDATE SongsTable SET Rating = ? WHERE SongId = ?",rating,songId);
+            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Rating = ? WHERE SongId = ?",rating,songId);
         }
 
         private static void testUpdate(int id)
         {
-            var a = ConnectionDb().Table<SongsTable>().Where(i => i.SongId.Equals(id)).FirstOrDefault();
+            var a = SongsConn().Where(i => i.SongId.Equals(id)).FirstOrDefault();
         }
 
         #endregion
@@ -923,6 +969,27 @@ namespace NextPlayerDataLayer.Services
             //istnieje o innym rozmiarze => id
         }
 
+        public static Dictionary<string, Tuple<int,int>> GetFilePaths()
+        {
+            Dictionary<string, Tuple<int,int>> dict = new Dictionary<string, Tuple<int,int>>();
+            var result = ConnectionDb().Table<SongsTable>().ToList();
+            foreach (var x in result)
+            {
+                dict.Add(x.Path, new Tuple<int,int>(x.IsAvailable,x.SongId));
+            }
+            return dict;
+        }
+
+        public static void ChangeAvailability(IEnumerable<int> toAvailable)
+        {
+            var conn = ConnectionDb();
+            conn.Execute("UPDATE SongsTable SET IsAvailable = 0");
+            foreach (int id in toAvailable)
+            {
+                conn.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?",id);
+            }
+        }
+
         private static SongData CreateSongData(SongsTable q)
         {
             SongData s = new SongData()
@@ -936,6 +1003,7 @@ namespace NextPlayerDataLayer.Services
                 Filename = q.Filename,
                 FileSize = (ulong)q.FileSize,
                 Genre = q.Genre,
+                IsAvailable = q.IsAvailable,
                 LastPlayed = q.LastPlayed,
                 Lyrics = q.Lyrics,
                 Path = q.Path,
@@ -976,7 +1044,7 @@ namespace NextPlayerDataLayer.Services
         {
             List<int> list = new List<int>();
 
-            var query = AsyncConnectionDb().Table<SongsTable>().OrderBy(s => s.SongId);
+            var query = SongsConnAsync().OrderBy(s => s.SongId);
             var result = await query.ToListAsync();
 
             foreach (var x in result)

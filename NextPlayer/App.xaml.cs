@@ -40,9 +40,19 @@ namespace NextPlayer
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
 
+            if (FirstRun())
+            {
+                Library.Current.SetDB();
+            }
 
-            if (FirstRun()) Library.Current.SetDB();
+            UnhandledException += App_UnhandledException;
+        }
+
+        void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
         }
 
         /// <summary>

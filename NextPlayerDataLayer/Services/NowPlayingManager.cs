@@ -28,6 +28,8 @@ namespace NextPlayerDataLayer.Services
         TimeSpan startPosition = TimeSpan.FromSeconds(0);
         private List<int> shuffleSongIndexes = new List<int>();
         int prevSongIndex = -1;
+        private int currentSongId = -1;
+
 
         public NowPlayingManager()
         {
@@ -77,6 +79,7 @@ namespace NextPlayerDataLayer.Services
                 StorageFile file = await StorageFile.GetFileFromPathAsync(songList.ElementAt<NowPlayingSong>(currentSongIndex).Path);
                 mediaPlayer.AutoPlay = false;
                 mediaPlayer.SetFileSource(file);
+                currentSongId = songList.ElementAt(currentSongIndex).SongId;
             }
             catch (Exception e)
             {
@@ -87,6 +90,7 @@ namespace NextPlayerDataLayer.Services
 
         public void StartPlaying(int index)
         {
+            UpdateSongStatistics();
             paused = false;
             currentSongIndex = index;
             LoadSong();
@@ -107,6 +111,8 @@ namespace NextPlayerDataLayer.Services
 
         public void Next()
         {
+            UpdateSongStatistics();
+
             if (isShuffleOn)
             {
                 prevSongIndex = currentSongIndex;
@@ -137,6 +143,8 @@ namespace NextPlayerDataLayer.Services
 
         public void Previous()
         {
+            UpdateSongStatistics();
+
             if (isShuffleOn)
             {
                 //currentSongIndex = shuffleSongIndexes.Last();
@@ -245,9 +253,13 @@ namespace NextPlayerDataLayer.Services
             songList = DatabaseManager.SelectAllSongsFromNowPlaying();
         }
 
-        private void UpdateSongStatistics()
+        public void UpdateSongStatistics()
         {
-            DatabaseManager.UpdateSongStatistics(songList.ElementAt(currentSongIndex).SongId);
+            if (currentSongId>0 &&  BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
+            {
+                DatabaseManager.UpdateSongStatistics(currentSongId);
+
+            }
         }
 
         #region MediaPlayer Handlers
@@ -261,7 +273,6 @@ namespace NextPlayerDataLayer.Services
             if (!paused)
             {
                 sender.Play();
-                UpdateSongStatistics();
             }
         }
 

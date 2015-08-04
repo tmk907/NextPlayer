@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace NextPlayerDataLayer.Helpers
@@ -49,7 +50,11 @@ namespace NextPlayerDataLayer.Helpers
         {
             if (CurrentState())
             {
-                return new SolidColorBrush(Windows.UI.Colors.White);
+                if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                {
+                    return new SolidColorBrush(Windows.UI.Colors.White);
+                }
+                else return new SolidColorBrush(Windows.UI.Colors.Black);
             }
             else
             {

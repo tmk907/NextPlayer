@@ -216,7 +216,11 @@ namespace NextPlayer.ViewModel
         }
         private async void LoadNowPlayingPlaylist()
         {
-            Playlist = Library.Current.NowPlayingList;
+            foreach (var x in Library.Current.NowPlayingList)
+            {
+                Playlist.Add(x);
+            }
+            //Playlist = Library.Current.NowPlayingList;
             //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlayingAsync();
         }
         private async void LoadGenrePlaylist()

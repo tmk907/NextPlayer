@@ -139,7 +139,7 @@
     <value>albums</value>
   </data>
   <data name="AppName.Text" xml:space="preserve">
-    <value>NEXTPLAYER</value>
+    <value>NEXT PLAYER</value>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
@@ -171,7 +171,7 @@
   <data name="Delete.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+  <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
     <value>Are you sure you want to delete this playlist?</value>
   </data>
   <data name="DeleteRule.Content" xml:space="preserve">
@@ -353,5 +353,8 @@
   </data>
   <data name="Year" xml:space="preserve">
     <value>Year</value>
+  </data>
+  <data name="WaitFewMinutes.Text" xml:space="preserve">
+    <value>This may take a few minutes</value>
   </data>
 </root>

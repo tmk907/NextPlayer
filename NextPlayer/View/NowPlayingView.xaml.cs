@@ -296,7 +296,7 @@ namespace NextPlayer.View
                 {
                     PlayButton.Content = "\uE17e\uE102";//play
                 }
-                this.defaultViewModel["Song"] = Library.Current.GetFromNowPlaying(CurrentSongIndex);
+                //this.defaultViewModel["Song"] = Library.Current.GetFromNowPlaying(CurrentSongIndex);
             }
             else
             {

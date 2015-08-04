@@ -1,4 +1,5 @@
-﻿using NextPlayer.Common;
+﻿using GalaSoft.MvvmLight.Threading;
+using NextPlayer.Common;
 using NextPlayer.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            //DispatcherHelper.Initialize();
         }
 
         /// <summary>
@@ -104,5 +107,11 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        private void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            MainPageViewModel viewModel = (MainPageViewModel)DataContext;
+            viewModel.Play();
+        }
     }
 }

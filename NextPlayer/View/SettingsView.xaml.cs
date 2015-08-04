@@ -1,5 +1,7 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.ViewModel;
+using NextPlayerDataLayer.Constants;
+using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -70,6 +73,11 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var a = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.MediaScan);
+            if (a != null)
+            {
+                DisableControls();
+            }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
@@ -117,27 +125,27 @@ namespace NextPlayer.View
 
         #endregion
 
-        private void ImportMedia_Click(object sender, RoutedEventArgs e)
-        {
-            ImportMedia();
-        }
+        //private void ImportMedia_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ImportMedia();
+        //}
 
-        private async Task ImportMedia()
-        {
-            DisableControls();
-            ProgressRing1.IsActive = true;
-            ProgressRing1.Visibility = Visibility.Visible;
-            Count.Text = "0";
-            Count.Visibility = Visibility.Visible;
+        //private async Task ImportMedia()
+        //{
+        //    DisableControls();
+        //    ProgressRing1.IsActive = true;
+        //    ProgressRing1.Visibility = Visibility.Visible;
+        //    Count.Text = "0";
+        //    Count.Visibility = Visibility.Visible;
 
-            var progressIndicator = new Progress<int>(ReportProgress);
-            await MediaImport.ImportAndCreateNewDatabase(progressIndicator);
+        //    var progressIndicator = new Progress<int>(ReportProgress);
+        //    await MediaImport.ImportAndCreateNewDatabase(progressIndicator);
 
-            ProgressRing1.IsActive = false;
-            ProgressRing1.Visibility = Visibility.Collapsed;
-            Count.Visibility = Visibility.Collapsed;
-            EnableControls();
-        }
+        //    ProgressRing1.IsActive = false;
+        //    ProgressRing1.Visibility = Visibility.Collapsed;
+        //    Count.Visibility = Visibility.Collapsed;
+        //    EnableControls();
+        //}
 
         private void UpdateLibrary_Click(object sender, RoutedEventArgs e)
         {
@@ -150,11 +158,13 @@ namespace NextPlayer.View
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
             Count2.Text = "0";
-            //Count2.Visibility = Visibility.Visible;
+            Count2.Visibility = Visibility.Visible;
+            WaitFewMinutes.Visibility = Visibility.Visible;
 
             var progressIndicator = new Progress<int>(ReportProgressUpdate);
             await MediaImport.ImportAndUpdateDatabase(progressIndicator);
 
+            WaitFewMinutes.Visibility = Visibility.Collapsed;
             Count2.Visibility = Visibility.Collapsed;
             ProgressRing2.IsActive = false;
             ProgressRing2.Visibility = Visibility.Collapsed;
@@ -163,20 +173,20 @@ namespace NextPlayer.View
 
         private void DisableControls()
         {
-            ImportMediaButton.IsEnabled = false;
+            //ImportMediaButton.IsEnabled = false;
             UpdateMediaButton.IsEnabled = false;
         }
 
         private void EnableControls()
         {
-            ImportMediaButton.IsEnabled = true;
+            //ImportMediaButton.IsEnabled = true;
             UpdateMediaButton.IsEnabled = true;
         }
 
-        void ReportProgress(int value)
-        {
-            Count.Text = value.ToString();
-        }
+        //void ReportProgress(int value)
+        //{
+        //    Count.Text = value.ToString();
+        //}
 
         void ReportProgressUpdate(int value)
         {

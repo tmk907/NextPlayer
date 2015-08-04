@@ -115,4 +115,19 @@ namespace NextPlayer.View
 
         #endregion
     }
+    //public class SizeNotifyPanel2 : ContentPresenter
+    //{
+    //    public static DependencyProperty SizeProperty = DependencyProperty.Register("Size", typeof(Size), typeof(SizeNotifyPanel2), null);
+
+    //    public Size Size
+    //    {
+    //        get { return (Size)GetValue(SizeProperty); }
+    //        set { SetValue(SizeProperty, value); }
+    //    }
+
+    //    public SizeNotifyPanel2()
+    //    {
+    //        SizeChanged += (s, e) => Size = e.NewSize;
+    //    }
+    //}
 }

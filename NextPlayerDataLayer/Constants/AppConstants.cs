@@ -5,6 +5,7 @@ namespace NextPlayerDataLayer.Constants
     {
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
+        public const string MediaScan = "mediascan";
         public const string NowPlayingListChanged = "nplistchanged";
         public const string SongId = "songid";
         public const string SongIndex = "songindex";
@@ -18,6 +19,7 @@ namespace NextPlayerDataLayer.Constants
         public const string Repeat = "repeat";
         public const string Shuffle = "shuffle";
         public const string MediaOpened = "mediaopened";
+        public const string UpdateSongStatistics = "updatesongstatistics";
 
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string BackgroundTaskRunning = "BackgroundTaskRunning";

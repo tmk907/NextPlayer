@@ -30,16 +30,15 @@
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Uid="ImportMediaButton" x:Name="ImportMediaButton" Content="Add songs to library" Click="ImportMedia_Click" Width="200"/>
-                    <ProgressRing x:Name="ProgressRing1" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
-                    <TextBlock x:Name="Count" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton" Content="Update Library" Click="UpdateLibrary_Click" Width="200"/>
+                        <ProgressRing x:Name="ProgressRing2" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
+                        <TextBlock x:Name="Count2" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
+                    </StackPanel>
+                    <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes" Visibility="Collapsed" FontSize="24"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton" Content="Update Library" Click="UpdateLibrary_Click" Width="200"/>
-                    <ProgressRing x:Name="ProgressRing2" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
-                    <TextBlock x:Name="Count2" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
-                </StackPanel>
+                
 
             </StackPanel>
         </Grid>

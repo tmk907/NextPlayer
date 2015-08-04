@@ -29,6 +29,8 @@ namespace NextPlayerDataLayer.Model
         public DateTime DateAdded { get; set; }
         public uint PlayCount { get; set; }
 
+        public int IsAvailable { get; set; }
+
         public string Lyrics { get; set; }
     }
 }

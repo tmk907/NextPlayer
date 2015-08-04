@@ -184,11 +184,7 @@ namespace NextPlayer.View
     }
     public class SizeNotifyPanel : ContentPresenter
     {
-        public static DependencyProperty SizeProperty =
-            DependencyProperty.Register("Size",
-                                        typeof(Size),
-                                        typeof(SizeNotifyPanel),
-                                        null);
+        public static DependencyProperty SizeProperty = DependencyProperty.Register("Size", typeof(Size), typeof(SizeNotifyPanel), null);
 
         public Size Size
         {

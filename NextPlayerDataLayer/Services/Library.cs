@@ -17,14 +17,15 @@ using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Enums;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Model;
+using System.ComponentModel;
 
 namespace NextPlayerDataLayer.Services
 {
-    
+
 
     public sealed class Library
     {
-        private static readonly Library instance = new Library();
+        private static Library instance = null;
         private Library()
         {
             MediaImport.MediaImported += new MediaImportedHandler(UpdateLibrary);
@@ -34,6 +35,10 @@ namespace NextPlayerDataLayer.Services
         {
             get
             {
+                if (instance == null)
+                {
+                    instance = new Library();
+                }
                 return instance;
             }
         }
@@ -224,8 +229,6 @@ namespace NextPlayerDataLayer.Services
         //}
 
         
-        public const string NowPlayingListPropertyName = "NowPlayingList";
-
         private ObservableCollection<SongItem> nowPlayingList = new ObservableCollection<SongItem>();
       
         public ObservableCollection<SongItem> NowPlayingList
@@ -235,34 +238,7 @@ namespace NextPlayerDataLayer.Services
                 if (nowPlayingList.Count == 0) nowPlayingList = DatabaseManager.SelectAllSongItemsFromNowPlaying();
                 return nowPlayingList;
             }
-
-            set
-            {
-                if (nowPlayingList == value)
-                {
-                    return;
-                }
-                nowPlayingList = value;
-                //RaisePropertyChanged(NowPlayingListPropertyName);
-            }
         }
-
-        //private ObservableCollection<SongItem> _nowPlayingList = new ObservableCollection<SongItem>();
-        //public ObservableCollection<SongItem> NowPlayingList
-        //{
-        //    get
-        //    {
-        //        if (_nowPlayingList.Count == 0) GetNowPlayingListFromDB();
-        //        return _nowPlayingList;
-        //    }
-
-        //}
-        //private void GetNowPlayingListFromDB()
-        //{
-        //    NowPlayingList = DatabaseManager.SelectAllSongItemsFromNowPlaying();
-        //}
-
-        
 
         public void AddToNowPlaying(SongItem song)
         {
@@ -299,9 +275,14 @@ namespace NextPlayerDataLayer.Services
             SaveNowPlayingInDB();
         }
 
-        public SongItem GetFromNowPlaying(int index)
+        //public SongItem GetFromNowPlaying(int index)
+        //{
+        //    return NowPlayingList[index];
+        //}
+
+        public void ChangeRating(int rating, int songId)
         {
-            return NowPlayingList[index];
+            nowPlayingList.ElementAt(songId).Rating = rating;
         }
 
         //public void SaveCurrentSongIndex(int id)
@@ -381,7 +362,7 @@ namespace NextPlayerDataLayer.Services
             }
             if (bitmap.PixelHeight == 0)
             {
-                var uri = new System.Uri("ms-appx:///Assets/SongCover.jpg");
+                var uri = new System.Uri("ms-appx:///Assets/SongCover.png");
                 var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
                 using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
@@ -394,6 +375,70 @@ namespace NextPlayerDataLayer.Services
         public async Task<BitmapImage> GetCurrentCover(int index)
         {
             return await GetCover(NowPlayingList.ElementAt(index).Path);
+        }
+
+        public async Task<BitmapImage> GetCoverSmall(string path)
+        {
+            BitmapImage bitmap = new BitmapImage();
+            int a = 0;
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                Stream fileStream = await file.OpenStreamForReadAsync();
+                var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                a = tagFile.Tag.Pictures.Length;
+                //}
+                //catch(Exception e){
+
+                //}
+                if (a > 0)
+                {
+                    IPicture pic = tagFile.Tag.Pictures[0];
+                    MemoryStream stream = new MemoryStream(pic.Data.Data);
+                    Windows.Storage.Streams.IRandomAccessStream istream = stream.AsRandomAccessStream();
+                    
+                    await bitmap.SetSourceAsync(istream);
+                }
+                else
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
+                    try
+                    {
+                        IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+                        if (files.Count > 0)
+                        {
+                            foreach (var x in files)
+                            {
+                                if (x.Path.EndsWith("jpg"))
+                                {
+                                    using (IRandomAccessStream stream = await x.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                                    {
+                                        await bitmap.SetSourceAsync(stream);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            if (bitmap.PixelHeight == 0)
+            {
+                var uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
+                var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+                using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                {
+                    await bitmap.SetSourceAsync(stream);
+                }
+            }
+            return bitmap;
         }
 
         //public async Task<BitmapImage> GetAlbumCover(string album)

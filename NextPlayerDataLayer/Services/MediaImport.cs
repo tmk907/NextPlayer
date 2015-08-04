@@ -9,6 +9,9 @@ using Windows.Storage;
 using TagLib;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
+using System.Diagnostics;
+using NextPlayerDataLayer.Helpers;
+using NextPlayerDataLayer.Constants;
 
 namespace NextPlayerDataLayer.Services
 {
@@ -28,34 +31,59 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+            
             int count = 1;
+            Tuple<int, int> tuple;
+            Dictionary<string, Tuple<int, int>> dict = DatabaseManager.GetFilePaths();
+
+            List<int> toAvailable = new List<int>();//lista songId
+            List<SongData> newSongs = new List<SongData>();
+
             foreach (var file in list)
             {
                 //Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
                 // Sprawdzanie rozmiaru nie działa
-                int i = DatabaseManager.IsSongInDB(file.Path);
-                if (i == -1)
+                if (dict.TryGetValue(file.Path, out tuple))
+                {
+                    if (tuple.Item1 == 0)//zaznaczony jako niedostepny
+                    {
+                        toAvailable.Add(tuple.Item2);
+                    }
+                    else//zaznaczony jako dostepny
+                    {
+                        toAvailable.Add(tuple.Item2);
+                    }
+                }
+                else
                 {
                     SongData song = await CreateSongFromFile(file);
-                    await DatabaseManager.InsertSong(song);
+                    newSongs.Add(song);
                 }
-                else if (i == 0)
-                {
-                    //istnieje taka sama
-                }
-                else if (i > 0)
-                {
-                    SongData song = await CreateSongFromFile(file);
-                    await DatabaseManager.UpdateSongData(song, i);
-                }
-                else { };
-                if (count % 500 == 0)//!!!
+                
+                //if (i == 0)
+                //{
+                //    //istnieje taka sama
+                //}
+                //else if (i > 0)
+                //{
+                //    SongData song = await CreateSongFromFile(file);
+                //    await DatabaseManager.UpdateSongData(song, i);
+                //}
+                //else { };
+
+                if (count % 10 == 0)//!!!
                 {
                     progress.Report(count);
                 }
                 count++;
             }
+
+            DatabaseManager.ChangeAvailability(toAvailable);
+            await DatabaseManager.InsertSongsAsync(newSongs);
+
+            ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
         }
@@ -79,9 +107,11 @@ namespace NextPlayerDataLayer.Services
 
         private async static Task<SongData> CreateSongFromFile(StorageFile file)
         {
-            Windows.Storage.FileProperties.MusicProperties mp = await file.Properties.GetMusicPropertiesAsync();
-            Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+            //var w1 = Stopwatch.StartNew();
 
+            //Windows.Storage.FileProperties.MusicProperties mp = await file.Properties.GetMusicPropertiesAsync();
+            Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+           
             SongData song = new SongData();
 
             song.DateAdded = DateTime.Now;
@@ -90,34 +120,31 @@ namespace NextPlayerDataLayer.Services
             song.Path = file.Path;
             song.PlayCount = 0;
             song.LastPlayed = DateTime.MinValue;
+            song.IsAvailable = 1;
 
-            song.Album = mp.Album;
-            song.AlbumArtist = mp.AlbumArtist;
-            song.Artist = mp.Artist;
+            //song.Album = mp.Album;
+            //song.AlbumArtist = mp.AlbumArtist;
+            //song.Artist = mp.Artist;
             //song.Bitrate = mp.Bitrate;
             
-            song.Duration = TimeSpan.FromMilliseconds(mp.Duration.Ticks);
-            List<string> l1 = new List<string>();
-            foreach(var l2 in mp.Genre){
-                l1.Add(l2);
-            }
+            //song.Duration = TimeSpan.FromMilliseconds(mp.Duration.Ticks);
 
             //song.Genre = mp.Genre.FirstOrDefault();
             //song.Lyrics = ""; //jak odczytac?
-            song.Title = mp.Title;
-            song.TrackNumber = mp.TrackNumber;
+            //song.Title = mp.Title;
+            //song.TrackNumber = mp.TrackNumber;
             //song.Year = mp.Year;
 
-            song.Publisher = mp.Publisher;
-            song.Rating = mp.Rating;
-            song.Subtitle = mp.Subtitle;
-
+            song.Publisher = "";
+            song.Rating = 0;
+            song.Subtitle = "";
+            
             if (Path.GetExtension(file.Path).ToLower().Equals(".aac"))
             {
 
             }
             Stream fileStream = await file.OpenStreamForReadAsync();
-
+           
             try
             {
                 var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
@@ -142,7 +169,7 @@ namespace NextPlayerDataLayer.Services
                 song.AlbumArtist = tags.FirstAlbumArtist ?? "";
                 song.Artist = tags.FirstPerformer ?? "Unknown";
                 song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
-                //song.Duration = tagFile.Properties.Duration;
+                song.Duration = tagFile.Properties.Duration;
                 song.Genre = tags.FirstGenre ?? "Unknown";
                 song.Lyrics = tags.Lyrics ?? "";
                 song.Title = tags.Title ?? file.DisplayName;
@@ -154,7 +181,7 @@ namespace NextPlayerDataLayer.Services
                 song.Album = "Unknown";
                 song.AlbumArtist = "";
                 song.Artist = "Unknown";
-                song.Bitrate = mp.Bitrate;
+                song.Bitrate = 0;
                 song.Duration = TimeSpan.Zero;
                 song.Genre = "Unknown";
                 song.Lyrics = "";
@@ -162,8 +189,6 @@ namespace NextPlayerDataLayer.Services
                 song.TrackNumber = 0;
                 song.Year = 0;
             }
-            
-            
 
             //if (tags.Year == null)
             //{
@@ -178,8 +203,7 @@ namespace NextPlayerDataLayer.Services
             //{
 
             //}
-
-
+          
             return song;
         }
 

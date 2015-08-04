@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace NextPlayerDataLayer.Helpers
@@ -65,9 +66,17 @@ namespace NextPlayerDataLayer.Helpers
                 case RepeatEnum.NoRepeat:
                     return new SolidColorBrush(Windows.UI.Colors.Gray);
                 case RepeatEnum.RepeatOnce:
-                    return new SolidColorBrush(Windows.UI.Colors.White);
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                    {
+                        return new SolidColorBrush(Windows.UI.Colors.White);
+                    }
+                    else return new SolidColorBrush(Windows.UI.Colors.Black);
                 case RepeatEnum.RepeatPlaylist:
-                    return new SolidColorBrush(Windows.UI.Colors.White);
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                    {
+                        return new SolidColorBrush(Windows.UI.Colors.White);
+                    }
+                    else return new SolidColorBrush(Windows.UI.Colors.Black);
                 default:
                     return new SolidColorBrush(Windows.UI.Colors.Gray);
             }

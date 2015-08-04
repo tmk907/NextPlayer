@@ -44,6 +44,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
+                if (IsInDesignMode) album = "nazwa albumu dluuuuuuuuuga";
                 return album;
             }
 
@@ -74,6 +75,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
+                if (IsInDesignMode) artist = "nazwa artysty dluuuuuuuuuga";
                 return artist;
             }
 
