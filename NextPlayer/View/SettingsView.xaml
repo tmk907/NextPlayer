@@ -38,8 +38,6 @@
                     </StackPanel>
                     <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes" Visibility="Collapsed" FontSize="24"/>
                 </StackPanel>
-                
-
             </StackPanel>
         </Grid>
     </Grid>

@@ -125,28 +125,6 @@ namespace NextPlayer.View
 
         #endregion
 
-        //private void ImportMedia_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ImportMedia();
-        //}
-
-        //private async Task ImportMedia()
-        //{
-        //    DisableControls();
-        //    ProgressRing1.IsActive = true;
-        //    ProgressRing1.Visibility = Visibility.Visible;
-        //    Count.Text = "0";
-        //    Count.Visibility = Visibility.Visible;
-
-        //    var progressIndicator = new Progress<int>(ReportProgress);
-        //    await MediaImport.ImportAndCreateNewDatabase(progressIndicator);
-
-        //    ProgressRing1.IsActive = false;
-        //    ProgressRing1.Visibility = Visibility.Collapsed;
-        //    Count.Visibility = Visibility.Collapsed;
-        //    EnableControls();
-        //}
-
         private void UpdateLibrary_Click(object sender, RoutedEventArgs e)
         {
             UpdateLibrary();
@@ -173,24 +151,19 @@ namespace NextPlayer.View
 
         private void DisableControls()
         {
-            //ImportMediaButton.IsEnabled = false;
             UpdateMediaButton.IsEnabled = false;
         }
 
         private void EnableControls()
         {
-            //ImportMediaButton.IsEnabled = true;
             UpdateMediaButton.IsEnabled = true;
         }
-
-        //void ReportProgress(int value)
-        //{
-        //    Count.Text = value.ToString();
-        //}
 
         void ReportProgressUpdate(int value)
         {
             Count2.Text = value.ToString();
         }
+
+        
     }
 }

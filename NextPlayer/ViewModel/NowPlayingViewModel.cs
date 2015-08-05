@@ -694,7 +694,7 @@ namespace NextPlayer.ViewModel
                 Rating = song.Rating;
                 SetCover(song.Path);
                 SetupTimer();
-                StartTimer();
+                
 
                 RepeatButtonContent = Repeat.CurrentStateContent();
                 RepeatButtonForeground = Repeat.CurrentStateColor();
@@ -714,6 +714,12 @@ namespace NextPlayer.ViewModel
                     else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))//mozna chyba zmienic na Dict<> state
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
+
+                        TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
+                        double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                        ProgressBarMaxValue = absvalue;
+                        EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+
                     }
                     else
                     {
@@ -732,6 +738,7 @@ namespace NextPlayer.ViewModel
                 {
                     StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }
+                StartTimer();
             }
             else
             {

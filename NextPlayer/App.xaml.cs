@@ -1,4 +1,5 @@
-﻿using NextPlayer.Common;
+﻿using GalaSoft.MvvmLight.Threading;
+using NextPlayer.Common;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
@@ -129,6 +130,7 @@ namespace NextPlayer
 
             // Ensure the current window is active
             Window.Current.Activate();
+            DispatcherHelper.Initialize();
         }
 
         /// <summary>

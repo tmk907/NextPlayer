@@ -116,6 +116,7 @@
                            FontSize="25"/>
                 <TextBox Grid.Row="1" Grid.Column="1" 
                          Margin="9.5,9.5,0,9.5"
+                         InputScope="Number"
                          Text="{Binding SongsNumber, Mode=TwoWay}"
                          HorizontalAlignment="Stretch"
                          FontSize="25"/>

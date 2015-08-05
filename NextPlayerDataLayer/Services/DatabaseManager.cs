@@ -534,10 +534,25 @@ namespace NextPlayerDataLayer.Services
                 }
                 else
                 {
-                    collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                    //collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
                 }
                 
             }
+            query1 = ConnectionDb().Table<SmartPlaylistsTable>().OrderBy(p => p.Name).ToList();
+            foreach (var item in query1)
+            {
+                if (ids.TryGetValue(item.SmartPlaylistId, out name))
+                {
+                    //collection.Add(new PlaylistItem(item.SmartPlaylistId, true, loader.GetString(name)));
+                }
+                else
+                {
+                    collection.Add(new PlaylistItem(item.SmartPlaylistId, true, item.Name));
+                }
+
+            }
+
+
             var query = ConnectionDb().Table<PlainPlaylistsTable>().OrderBy(p => p.Name).ToList();
             foreach (var item in query)
             {

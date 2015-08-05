@@ -169,7 +169,7 @@ namespace NextPlayerDataLayer.Services
                 song.AlbumArtist = tags.FirstAlbumArtist ?? "";
                 song.Artist = tags.FirstPerformer ?? "Unknown";
                 song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
-                song.Duration = tagFile.Properties.Duration;
+                song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
                 song.Genre = tags.FirstGenre ?? "Unknown";
                 song.Lyrics = tags.Lyrics ?? "";
                 song.Title = tags.Title ?? file.DisplayName;
