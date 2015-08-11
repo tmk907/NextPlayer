@@ -51,6 +51,12 @@
                     <core:EventTriggerBehavior EventName="Loaded">
                         <core:InvokeCommandAction Command="{Binding LoadItems}" />
                     </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="Loaded">
+                        <core:InvokeCommandAction
+                                    Command="{Binding ScrollListView, Mode=TwoWay}"
+                                    InputConverter="{StaticResource GetListView}"
+                                    InputConverterParameter="{Binding ElementName=SongsListView}" />
+                    </core:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>
         </Grid>

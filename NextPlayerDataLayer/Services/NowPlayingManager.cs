@@ -40,11 +40,11 @@ namespace NextPlayerDataLayer.Services
             if (currentIndex == null) currentSongIndex = 0;
             else currentSongIndex = Int32.Parse(currentIndex.ToString());
             startPosition = TimeSpan.Zero;
-            if (prevIndex != null && Int32.Parse(prevIndex.ToString()) == currentSongIndex)
-            {
-                object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
-                if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
-            }
+            //if (prevIndex != null && Int32.Parse(prevIndex.ToString()) == currentSongIndex)
+            //{
+            //    object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
+            //    if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
+            //}
 
             //Shuffle
             isShuffleOn = Shuffle.CurrentState();
@@ -87,12 +87,20 @@ namespace NextPlayerDataLayer.Services
             }
             
         }
-
+        
         public void StartPlaying(int index)
         {
             UpdateSongStatistics();
             paused = false;
             currentSongIndex = index;
+            LoadSong();
+        }
+
+        public void ResumePlayback()
+        {
+            paused = false;
+            object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
+            if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
             LoadSong();
         }
 
@@ -251,6 +259,10 @@ namespace NextPlayerDataLayer.Services
         public void UpdateNowPlayingList()
         {
             songList = DatabaseManager.SelectAllSongsFromNowPlaying();
+            if (currentSongIndex >= songList.Count)
+            {
+                currentSongIndex = songList.Count - 1;
+            }
         }
 
         public void UpdateSongStatistics()
@@ -273,6 +285,11 @@ namespace NextPlayerDataLayer.Services
             if (!paused)
             {
                 sender.Play();
+                if (!startPosition.Equals(TimeSpan.Zero))
+                {
+                    sender.Position = startPosition;
+                    startPosition = TimeSpan.Zero;
+                }
             }
         }
 

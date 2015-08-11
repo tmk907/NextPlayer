@@ -23,7 +23,7 @@ namespace NextPlayer.ViewModel
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)
-        {
+        {            
         }
 
         public void Deactivate(Dictionary<string, object> state)

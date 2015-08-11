@@ -79,12 +79,17 @@
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
                             HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center">
-                        <TextBlock Grid.Row="0" Grid.Column="1"
-                               Text="{Binding Title}"
-                               TextTrimming="CharacterEllipsis"
-                               FontSize="18"
-                               VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Padding="4,0,4,0"
+                            >
+                        <TextBlock
+                                   Text="{Binding Title}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="18"
+                            VerticalAlignment="Top"
+                            Margin="0,0,0,-4"
+                                   Height="40"
                         />
                     </Button>
                     
@@ -93,12 +98,15 @@
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
                             HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center">
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Padding="4,0,4,0">
                         <TextBlock 
                                Text="{Binding Artist}"
                                TextTrimming="CharacterEllipsis"
                                FontSize="16"
                                VerticalAlignment="Center"
+                               Height="25"
                         />
                     </Button>
                     

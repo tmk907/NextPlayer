@@ -47,13 +47,28 @@ namespace NextPlayer
             {
                 Library.Current.SetDB();
             }
-
+            //Read();
             UnhandledException += App_UnhandledException;
+        }
+
+        private async void Read()
+        {
+            string s = await NextPlayerDataLayer.Diagnostics.Logger.ReadAll();
+            //NextPlayerDataLayer.Diagnostics.Logger.Clear();
         }
 
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            //NextPlayerDataLayer.Diagnostics.Logger.Save(Library.Current.Read());
+            //NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception + " " + e.Message);
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
+            ApplicationSettingsHelper.SaveSongIndex(-1);
+            if (Library.Current.NowPlayingList.Count >= 0)
+            {
+                ApplicationSettingsHelper.SaveSongIndex(0);
+            }
         }
 
         /// <summary>
@@ -91,6 +106,10 @@ namespace NextPlayer
                     // Restore the saved session state only when appropriate.
                     try
                     {
+                        
+                        //NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
+                        //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
                         await SuspensionManager.RestoreAsync();
                     }
                     catch (SuspensionManagerException)
@@ -155,7 +174,8 @@ namespace NextPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-
+            //NextPlayerDataLayer.Diagnostics.Logger.Save("on suspending"+Library.Current.Read());
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             await SuspensionManager.SaveAsync();
             deferral.Complete();
         }

@@ -65,7 +65,9 @@ namespace NextPlayer.ViewModel
             this.navigationService = navigationService;
             SererInitialized = new AutoResetEvent(false);
             _timer = new DispatcherTimer();
-            
+            //Library.Current.Save("NPVM konstruktor");
+            App.Current.Suspending += ForegroundApp_Suspending;
+            App.Current.Resuming += ForegroundApp_Resuming;
         }
 
         #region Properties
@@ -676,8 +678,16 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
-            App.Current.Suspending += ForegroundApp_Suspending;
-            App.Current.Resuming += ForegroundApp_Resuming;
+            //if (parameter != null)
+            //{
+            //    Library.Current.Save("NPVM Activate " + CurrentSongIndex.ToString() + "," + parameter.ToString());
+            //}
+            //else
+            //{
+            //    Library.Current.Save("NPVM Activate " + CurrentSongIndex.ToString());
+            //}
+            //App.Current.Suspending += ForegroundApp_Suspending;
+            //App.Current.Resuming += ForegroundApp_Resuming;
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
 
             index = CurrentSongIndex;
@@ -693,8 +703,8 @@ namespace NextPlayer.ViewModel
                 fromDB = true;
                 Rating = song.Rating;
                 SetCover(song.Path);
-                SetupTimer();
                 
+                SetupTimer();
 
                 RepeatButtonContent = Repeat.CurrentStateContent();
                 RepeatButtonForeground = Repeat.CurrentStateColor();
@@ -702,7 +712,15 @@ namespace NextPlayer.ViewModel
 
                 if (IsMyBackgroundTaskRunning)
                 {
+                    //Library.Current.Save("BG running");
+
                     AddMediaPlayerEventHandlers();
+
+                    if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
+                    {
+                        PlayButtonContent = "\uE17e\uE103";//pause
+                    }
+
                     if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("lyrics");
@@ -713,30 +731,36 @@ namespace NextPlayer.ViewModel
                     }
                     else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))//mozna chyba zmienic na Dict<> state
                     {
+                        //Library.Current.Save("from mainpage");
+
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
 
                         TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
                         double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                         ProgressBarMaxValue = absvalue;
                         EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
-
                     }
                     else
                     {
-                        if (resumed)
-                        {
-                            resumed = false;
-                        }
-                        else
-                        {
-                            SendMessage(AppConstants.NowPlayingListChanged);
-                            SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
-                        }
+                        SendMessage(AppConstants.NowPlayingListChanged);
+                        SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
                     }
                 }
                 else
                 {
-                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                    if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))
+                    {
+                        NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
+                    }
+                    object r =  ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.ResumePlayback);
+                    if (r != null)
+                    {
+                        StartBackgroundAudioTask(AppConstants.ResumePlayback, CurrentSongIndex);
+                    }
+                    else
+                    {
+                        StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                    }
                 }
                 StartTimer();
             }
@@ -756,27 +780,26 @@ namespace NextPlayer.ViewModel
 
         public void Deactivate(Dictionary<string, object> state)
         {
-            App.Current.Suspending -= ForegroundApp_Suspending;
-            App.Current.Resuming -= ForegroundApp_Resuming;
-
             RemoveMediaPlayerEventHandlers();
-
+            
             StopTimer();
         }
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
         }
-        private bool resumed = false;
         #region Foreground App Lifecycle Handlers
         /// <summary>
         /// Sends message to background informing app has resumed
         /// Subscribe to MediaPlayer events
         /// </summary>
-        void ForegroundApp_Resuming(object sender, object e)
+        public void ForegroundApp_Resuming(object sender, object e)
         {
+            //Library.Current.Save("foreground resumed");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
+
             SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+            CurrentNr = CurrentSongIndex + 1;
             songId = song.SongId;
             SetCover(song.Path);
             Artist = song.Artist;
@@ -784,16 +807,13 @@ namespace NextPlayer.ViewModel
             Title = song.Title;
             fromDB = true;
             Rating = song.Rating;
-            // Verify if the task was running before
+
             if (IsMyBackgroundTaskRunning)
             {
-                resumed = true;
-                //if yes, reconnect to media play handlers
                 AddMediaPlayerEventHandlers();
-
-                //send message to background task that app is resumed, so it can start sending notifications
+                StartTimer();
+                
                 SendMessage(AppConstants.AppResumed, DateTime.Now.ToString());
-
 
                 if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
                 {
@@ -803,26 +823,27 @@ namespace NextPlayer.ViewModel
                 {
                     PlayButtonContent = "\uE17e\uE102";//play
                 }
-                
             }
             else
             {
                 PlayButtonContent = "\uE17e\uE102";//play
             }
-
         }
         /// <summary>
         /// Send message to Background process that app is to be suspended
         /// Stop clock and slider when suspending
         /// Unsubscribe handlers for MediaPlayer events
         /// </summary>
-        void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        public void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             StopTimer();
-            var deferral = e.SuspendingOperation.GetDeferral();
-            SendMessage(AppConstants.AppSuspended, DateTime.Now.ToString());
             RemoveMediaPlayerEventHandlers();
+            var deferral = e.SuspendingOperation.GetDeferral();
+            //Library.Current.Save("suspending");
+            
+            SendMessage(AppConstants.AppSuspended, DateTime.Now.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppSuspended);
+
             deferral.Complete();
         }
         #endregion

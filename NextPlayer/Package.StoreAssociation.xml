@@ -184,23 +184,13 @@
     <Language Code="vi-vn" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>60490polApki.NextPlayer</MainPackageIdentityName>
+    <MainPackageIdentityName>60490polApki.279685DD06499</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>Next Player</ReservedName>
-      <ReservedName>Next Player beta</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
-  <AccountPackageIdentityNames />
-  <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGH1RL75">
-    <PackageInfo>
-      <OsMinVersion>6.3.1.0</OsMinVersion>
-      <PackageArchitecture>Arm</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.804.1944.4647</PackageMaxArchitectureVersion>
-    </PackageInfo>
-    <PackageInfo>
-      <OsMinVersion>6.3.1.0</OsMinVersion>
-      <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.804.1944.4647</PackageMaxArchitectureVersion>
-    </PackageInfo>
-  </PackageInfoList>
+  <AccountPackageIdentityNames>
+    <MainPackageIdentityName>60490polApki.NextPlayer</MainPackageIdentityName>
+  </AccountPackageIdentityNames>
+  <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGH1XMTZ" />
 </StoreAssociation>

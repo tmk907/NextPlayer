@@ -20,6 +20,7 @@ namespace NextPlayerDataLayer.Constants
         public const string Shuffle = "shuffle";
         public const string MediaOpened = "mediaopened";
         public const string UpdateSongStatistics = "updatesongstatistics";
+        public const string ResumePlayback = "resumeplayback";
 
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string BackgroundTaskRunning = "BackgroundTaskRunning";

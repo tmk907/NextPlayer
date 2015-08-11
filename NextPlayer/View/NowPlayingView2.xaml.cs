@@ -73,7 +73,7 @@ namespace NextPlayer.View
         {
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
-                navigableViewModel.Activate(e.NavigationParameter, e.PageState);
+                navigableViewModel.Activate(e.NavigationParameter, e.PageState);          
         }
 
         /// <summary>

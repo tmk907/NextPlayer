@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Common\Grouped.cs" />
     <Compile Include="Constants\AppConstants.cs" />
+    <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Enums\SmartPlaylistEnums.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\NPChange.cs" />

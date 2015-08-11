@@ -81,6 +81,7 @@ namespace NextPlayerDataLayer.Services
             }
 
             DatabaseManager.ChangeAvailability(toAvailable);
+            Library.Current.CheckNPAfterUpdate(toAvailable);
             await DatabaseManager.InsertSongsAsync(newSongs);
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);

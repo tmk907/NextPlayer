@@ -52,6 +52,8 @@ namespace NextPlayer.ViewModel
         public MainPageViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            App.Current.Suspending += ForegroundApp_Suspending;
+            App.Current.Resuming += ForegroundApp_Resuming;
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public const string TitlePropertyName = "Title";
 
-        private string title = "title";
+        private string title = "titleyjlÓ";
 
         /// <summary>
         /// Sets and gets the Title property.
@@ -119,7 +121,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public const string ArtistPropertyName = "Artist";
 
-        private string artist = "artist asrtist bbncmnvbcmnvbcm";
+        private string artist = "artist asrtistÓ yyjilmnvbcmnvbcm";
 
         /// <summary>
         /// Sets and gets the Artist property.
@@ -406,7 +408,7 @@ namespace NextPlayer.ViewModel
             {
                 Title = "-";
                 Artist = "-";
-                SetCover("abc");
+                SetDefaultCover();
             }
             
 
@@ -429,6 +431,19 @@ namespace NextPlayer.ViewModel
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             
+        }
+
+        public void ForegroundApp_Resuming(object sender, object e)
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                AddMediaPlayerEventHandlers();
+            }
+        }
+
+        public void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            RemoveMediaPlayerEventHandlers();
         }
 
         private void RemoveMediaPlayerEventHandlers()
@@ -505,7 +520,7 @@ namespace NextPlayer.ViewModel
                 {
                     if (CurrentSongIndex > -1)
                     {
-                        navigationService.NavigateTo(ViewNames.NowPlayingView);
+                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                     }
                 }
             }
@@ -513,7 +528,7 @@ namespace NextPlayer.ViewModel
             {
                 if (CurrentSongIndex > -1)
                 {
-                    navigationService.NavigateTo(ViewNames.NowPlayingView);
+                    navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                 }
             }
         }
@@ -526,7 +541,10 @@ namespace NextPlayer.ViewModel
             }
             else
             {
-                navigationService.NavigateTo(ViewNames.NowPlayingView);
+                if (CurrentSongIndex > -1)
+                {
+                    navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                }
             }
         }
 
@@ -547,6 +565,11 @@ namespace NextPlayer.ViewModel
         private async void SetCover(string path)
         {
             Cover = await Library.Current.GetCoverSmall(path);
+        }
+
+        private async void SetDefaultCover()
+        {
+            Cover = await Library.Current.GetDefaultSmallCover();
         }
     }
 }

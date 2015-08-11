@@ -97,7 +97,7 @@ namespace NextPlayer.ViewModel
                         var g = DatabaseManager.GetSongItemsFromArtist(item.Artist);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
-                        navigationService.NavigateTo(ViewNames.NowPlayingView);
+                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                     }));
             }
         }

@@ -261,9 +261,26 @@ namespace NextPlayerDataLayer.Services
             nowPlayingList.Clear();
         }
 
+        public void CheckNPAfterUpdate(IEnumerable<int> toAvailable)
+        {
+            List<SongItem> list = new List<SongItem>();
+            foreach (var song in nowPlayingList)
+            {
+                if (toAvailable.Contains(song.SongId))
+                {
+                    list.Add(song);
+                }
+            }
+            if (list.Count <= ApplicationSettingsHelper.ReadSongIndex())
+            {
+                ApplicationSettingsHelper.SaveSongIndex(list.Count - 1);
+            }
+            SetNowPlayingList(list);
+        }
+
         private void SaveNowPlayingInDB()
         {
-            DatabaseManager.InsertNewNowPlayingPlaylist(NowPlayingList);
+            DatabaseManager.InsertNewNowPlayingPlaylist(nowPlayingList);
         }
 
         public void SetNowPlayingList(IEnumerable<SongItem> npList)
@@ -377,6 +394,18 @@ namespace NextPlayerDataLayer.Services
             return await GetCover(NowPlayingList.ElementAt(index).Path);
         }
 
+        public async Task<BitmapImage> GetDefaultSmallCover()
+        {
+            BitmapImage bitmap = new BitmapImage();
+            var uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
+            var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            {
+                await bitmap.SetSourceAsync(stream);
+            }
+            return bitmap;
+        }
+
         public async Task<BitmapImage> GetCoverSmall(string path)
         {
             BitmapImage bitmap = new BitmapImage();
@@ -479,6 +508,22 @@ namespace NextPlayerDataLayer.Services
             i = await DatabaseManager.InsertSmartPlaylist("Najgorzej oceniane", 50, SPUtility.SortBy.LowestRating);
             await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
+        }
+
+
+
+        private string log = "";
+
+        public void Save(string data)
+        {
+            log += DateTime.Now.TimeOfDay.ToString() + " " + data + "&";
+        }
+
+        public string Read()
+        {
+            string a = log;
+            log = "";
+            return a;
         }
     }
 }

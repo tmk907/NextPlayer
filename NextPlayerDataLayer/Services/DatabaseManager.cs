@@ -706,7 +706,7 @@ namespace NextPlayerDataLayer.Services
             if (query.Count != 0)
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append("select * from SongsTable where ");
+                builder.Append("select * from SongsTable where IsAvailable > 0 AND ");
 
                 foreach (var x in query) //x = condition
                 {
@@ -779,7 +779,7 @@ namespace NextPlayerDataLayer.Services
             if (query.Count > 0)
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append("select * from SongsTable where ");
+                builder.Append("select * from SongsTable where IsAvailable > 0 AND ");
 
                 foreach (var x in query) //x = condition
                 {

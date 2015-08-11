@@ -86,7 +86,7 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void HandleTaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            //BackgroundMediaPlayer.Shutdown();
+           // BackgroundMediaPlayer.Shutdown();
             deferral.Complete();
         }
 
@@ -132,6 +132,10 @@ namespace NextPlayerBackgroundAudioPlayer
                 {
                     case AppConstants.StartPlayback:
                         nowPlayingManager.StartPlaying(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
+                        UpdateUVCOnNewTrack();
+                        break;
+                    case AppConstants.ResumePlayback:
+                        nowPlayingManager.ResumePlayback();
                         UpdateUVCOnNewTrack();
                         break;
                     case AppConstants.SkipNext:

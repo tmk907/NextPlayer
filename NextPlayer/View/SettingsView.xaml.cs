@@ -73,6 +73,9 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            //string s = Library.Current.Read();
+            //NextPlayerDataLayer.Diagnostics.Logger.Save("settings"+s);
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             var a = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.MediaScan);
             if (a != null)
             {

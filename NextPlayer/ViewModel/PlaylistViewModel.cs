@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NextPlayerDataLayer.Helpers;
 using NextPlayer.Converters;
+using Windows.UI.Xaml.Controls;
 
 namespace NextPlayer.ViewModel
 {
@@ -23,6 +24,7 @@ namespace NextPlayer.ViewModel
         private bool isSmart;
         private int id;
         private bool isNowPlaying;
+        private int index;
 
         public PlaylistViewModel(INavigationService navigationService)
         {
@@ -136,6 +138,34 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand<object> scrollListView;
+
+        /// <summary>
+        /// Gets the ScrollListView.
+        /// </summary>
+        public RelayCommand<object> ScrollListView
+        {
+            get
+            {
+                return scrollListView
+                    ?? (scrollListView = new RelayCommand<object>(
+                    p =>
+                    {
+                        ListView l = (ListView)p;
+
+                        if (l.Items.Count > 0 && index > 0)
+                        {
+                            SemanticZoomLocation loc = new SemanticZoomLocation();
+                            l.SelectedIndex = index;
+                            loc.Item = l.SelectedItem;
+                            l.UpdateLayout();
+                            l.MakeVisible(loc);
+                            l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
+                        }
+                    }));
+            }
+        }
+
         private RelayCommand<SongItem> itemClicked;
 
         /// <summary>
@@ -243,6 +273,7 @@ namespace NextPlayer.ViewModel
             isNowPlaying = true;
             id = 0;
             name = "";
+            index = 0;
             if (parameter != null)
             {
                 if (parameter.GetType() == typeof(string))
@@ -260,6 +291,10 @@ namespace NextPlayer.ViewModel
                     }
                     isNowPlaying = false;
                 }
+            }
+            if (isNowPlaying)
+            {
+                index = ApplicationSettingsHelper.ReadSongIndex();
             }
         }
 
