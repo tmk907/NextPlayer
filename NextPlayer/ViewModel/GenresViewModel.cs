@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using NextPlayer.Converters;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
+using NextPlayerDataLayer.Helpers;
 
 namespace NextPlayer.ViewModel
 {
@@ -140,6 +141,27 @@ namespace NextPlayer.ViewModel
                     () =>
                     {
                         Genres = DatabaseManager.GetGenreItems();
+                    }));
+            }
+        }
+
+        private RelayCommand<GenreItem> playNow;
+
+        /// <summary>
+        /// Gets the PlayNow.
+        /// </summary>
+        public RelayCommand<GenreItem> PlayNow
+        {
+            get
+            {
+                return playNow
+                    ?? (playNow = new RelayCommand<GenreItem>(
+                    item =>
+                    {
+                        var g = DatabaseManager.GetSongItemsFromGenre(item.Genre);
+                        Library.Current.SetNowPlayingList(g);
+                        ApplicationSettingsHelper.SaveSongIndex(0);
+                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                     }));
             }
         }

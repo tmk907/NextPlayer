@@ -22,6 +22,8 @@
                 </i:Interaction.Behaviors>
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" 
+                                        Command="{Binding DataContext.PlayNow, ElementName=listView}" CommandParameter="{Binding}"/>
                         <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
                                         Command="{Binding DataContext.AddToNowPlaying, ElementName=listView}" CommandParameter="{Binding}"/>
                         <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 

@@ -9,7 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding MainVM, Mode=OneWay, Source={StaticResource Locator}}">
 
+    <Page.Resources>
+        <Thickness x:Key="TopMargin">0,0,0,8</Thickness>
+        <Thickness x:Key="LeftMargin">0,0,4,8</Thickness>
 
+        <Thickness x:Key="RightMargin">4,0,0,8</Thickness>
+            
+    </Page.Resources>
+    
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -21,6 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -30,51 +38,98 @@
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <Grid>
+        <!--<Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            
+            
+        </Grid>-->
+        <Grid Grid.Row="1" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <!--<RowDefinition Height="80"/>-->
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition/>
-                    <RowDefinition Height="80"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <!--<RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>-->
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Uid="MenuNowPlayingPlaylist"
+                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                            Content="Now Playing List"                              
+                            Command="{Binding GoToNowPlayingListPage}" 
+                        Margin="{StaticResource TopMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuSongs" 
+                            Grid.Row="2" Grid.Column="2" 
+                            Content="Songs" 
+                            Command="{Binding GoToSongsPage}" 
+                            Margin="{StaticResource RightMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}">
+                </Button>
+                <Button x:Uid="MenuAlbums" 
+                        Grid.Row="1" Grid.Column="1" 
+                            Content="Albums" 
+                            Command="{Binding GoToAlbumsPage}" 
+                        Margin="{StaticResource LeftMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuArtists" 
+                        Grid.Row="1" Grid.Column="2" 
+                            Content="Artists" 
+                            Command="{Binding GoToArtistsPage}" 
+                        Margin="{StaticResource RightMargin}"
+                            Style="{StaticResource ButtonStyleMainPage}"/>
+                <!--<Button x:Uid="MenuFolders" Grid.Row="4" Content="Folders" Command="{Binding GoToFoldersPage}" HorizontalAlignment="Center"/>-->
+                <Button x:Uid="MenuGenres" 
+                        Grid.Row="2" Grid.Column="1" 
+                            Content="Genres" 
+                            Command="{Binding GoToGenresPage}"
+                        Margin="{StaticResource LeftMargin}"
+                            Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuPlaylists" 
+                        Grid.Row="3" Grid.Column="2" 
+                            Content="Playlists" 
+                            Command="{Binding GoToPlaylistsPage}"
+                        Margin="{StaticResource RightMargin}"
+                            Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuSettings" 
+                        Grid.Row="3" Grid.Column="1" 
+                            Content="Settings" 
+                            Command="{Binding GoToSettingsPage}" 
+                        Margin="{StaticResource LeftMargin}"
+                            Style="{StaticResource ButtonStyleMainPage}"/>
 
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Button x:Uid="MenuNowPlayingPlaylist" Grid.Row="0" Content="Now Playing List" Background="{StaticResource PhoneAccentBrush}" Command="{Binding GoToNowPlayingListPage}" HorizontalAlignment="Center"/>
-                    <Button x:Uid="MenuSongs" Grid.Row="1" Content="Songs" Command="{Binding GoToSongsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                    <Button x:Uid="MenuAlbums" Grid.Row="2" Content="Albums" Command="{Binding GoToAlbumsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                    <Button x:Uid="MenuArtists" Grid.Row="3" Content="Artists" Command="{Binding GoToArtistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                    <!--<Button x:Uid="MenuFolders" Grid.Row="4" Content="Folders" Command="{Binding GoToFoldersPage}" HorizontalAlignment="Center"/>-->
-                    <Button x:Uid="MenuGenres" Grid.Row="4" Content="Genres" Command="{Binding GoToGenresPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                    <Button x:Uid="MenuPlaylists" Grid.Row="5" Content="Playlists" Command="{Binding GoToPlaylistsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
-                    <Button x:Uid="MenuSettings" Grid.Row="6" Content="Settings" Command="{Binding GoToSettingsPage}" Background="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Center"/>
+            </Grid>
 
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="80"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    
-                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+        </Grid>
+        <Grid Grid.Row="2" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                            Width="80"
                            Height="80"
                            Source="{Binding Cover}"
                            DoubleTapped="Image_DoubleTapped"
                            />
-                    <Button Grid.Row="0" Grid.Column="1"
+            <Button Grid.Row="0" Grid.Column="1"
                             Command="{Binding GoToNowPlaying}"
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
@@ -84,16 +139,15 @@
                             Padding="4,0,4,0"
                             >
                         <TextBlock
-                                   Text="{Binding Title}"
-                                   TextTrimming="CharacterEllipsis"
-                                   FontSize="18"
-                            VerticalAlignment="Top"
-                            Margin="0,0,0,-4"
-                                   Height="40"
+                            Text="{Binding Title}"
+                            TextTrimming="CharacterEllipsis"
+                            FontSize="18"
+                            VerticalAlignment="Center"
+                            Height="Auto"
                         />
-                    </Button>
-                    
-                    <Button Grid.Row="1" Grid.Column="1"
+            </Button>
+
+            <Button Grid.Row="1" Grid.Column="1"
                             Command="{Binding GoToNowPlaying}"
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
@@ -102,22 +156,23 @@
                             VerticalContentAlignment="Center"
                             Padding="4,0,4,0">
                         <TextBlock 
-                               Text="{Binding Artist}"
-                               TextTrimming="CharacterEllipsis"
-                               FontSize="16"
-                               VerticalAlignment="Center"
-                               Height="25"
+                            Text="{Binding Artist}"
+                            TextTrimming="CharacterEllipsis"
+                            FontSize="16"
+                            VerticalAlignment="Center"
+                            Height="Auto"
                         />
-                    </Button>
-                    
-                    <Button Grid.RowSpan="2" Grid.Column="2"
+            </Button>
+
+            <Button Grid.RowSpan="2" Grid.Column="2"
                             Command="{Binding NextClick}"
                             Style="{StaticResource ButtonStyleEmpty}"
                             Content="&#xE17e;&#xE101;" 
                             Foreground="{StaticResource PhoneAccentBrush}"
                             FontFamily="Segoe UI Symbol" 
-                            FontSize="32"
+                            FontSize="34"
                             VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
                             HorizontalAlignment="Center"
                             MinWidth="80"
                             MinHeight="80"
@@ -125,8 +180,6 @@
                             Height="80"
                         />
 
-                </Grid>
-            </Grid>
         </Grid>
     </Grid>
 </Page>

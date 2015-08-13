@@ -47,7 +47,7 @@ namespace NextPlayer
             {
                 Library.Current.SetDB();
             }
-            Read();
+            //Read();
             UnhandledException += App_UnhandledException;
         }
 
@@ -107,8 +107,8 @@ namespace NextPlayer
                     try
                     {
 
-                        NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
-                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                        //NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
+                        //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                         ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
                         await SuspensionManager.RestoreAsync();
                     }
@@ -174,8 +174,8 @@ namespace NextPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            NextPlayerDataLayer.Diagnostics.Logger.Save("on suspending" + Library.Current.Read());
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            //NextPlayerDataLayer.Diagnostics.Logger.Save("on suspending" + Library.Current.Read());
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             await SuspensionManager.SaveAsync();
             deferral.Complete();
         }

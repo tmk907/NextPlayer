@@ -121,7 +121,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public const string ArtistPropertyName = "Artist";
 
-        private string artist = "artist asrtistÓ yyjilmnvbcmnvbcm";
+        private string artist = "artist asrtistÓ mnvbcmnvbcm";
 
         /// <summary>
         /// Sets and gets the Artist property.
