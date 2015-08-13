@@ -98,9 +98,23 @@ namespace NextPlayerDataLayer.Services
 
         public void ResumePlayback()
         {
+            NextPlayerDataLayer.Diagnostics.Logger.Save("resume playback 1");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            
+            if (mediaPlayer.CurrentState == MediaPlayerState.Playing || mediaPlayer.CurrentState == MediaPlayerState.Paused)
+            {
+                SendPosition();
+                return;
+            }
+            NextPlayerDataLayer.Diagnostics.Logger.Save("resume playback 3");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            
             paused = false;
             object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
-            if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
+            if (value2 != null)
+            {
+                startPosition = TimeSpan.Parse(value2.ToString());
+            }
             LoadSong();
         }
 
@@ -108,7 +122,7 @@ namespace NextPlayerDataLayer.Services
         {
             paused = false;
             mediaPlayer.Play();
-            SendPosition();
+            //SendPosition();
         }
 
         public void Pause()

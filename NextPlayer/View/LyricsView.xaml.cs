@@ -128,7 +128,9 @@ namespace NextPlayer.View
         async private void ShowLyrics()
         {
             statusTextBlock.Text = loader.GetString("Connecting") + "...";
-            string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?artist=" + artist + "&song=" + title + "&fmt=realjson");
+            statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            webView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
                 statusTextBlock.Text = loader.GetString("ConnectionError");

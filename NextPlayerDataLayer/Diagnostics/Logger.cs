@@ -20,11 +20,18 @@ namespace NextPlayerDataLayer.Diagnostics
             temp = "";
             // saves the string 'content' to a file 'filename' in the app's local storage folder
             byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
+            try
+            {
+                // create a file with the given filename in the local folder; replace any existing file with the same name
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
 
-            // create a file with the given filename in the local folder; replace any existing file with the same name
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
-
-            await FileIO.AppendTextAsync(file, content);
+                await FileIO.AppendTextAsync(file, content);
+            }
+            catch (Exception e)
+            {
+                Logger.Save("error log");
+            }
+           
         }
 
         public static void Save(string data)
@@ -35,16 +42,12 @@ namespace NextPlayerDataLayer.Diagnostics
         public async static Task<string> ReadAll()
         {
             string text;
-            // reads the contents of file 'filename' in the app's local storage folder and returns it as a string
-
-            // access the local folder
+            
             StorageFolder local = ApplicationData.Current.LocalFolder;
-            // open the file 'filename' for reading
             try
             {
                 Stream stream = await local.OpenStreamForReadAsync(filename);
 
-                // copy the file contents into the string 'text'
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     text = reader.ReadToEnd();

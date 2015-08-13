@@ -721,7 +721,16 @@ namespace NextPlayer.ViewModel
                         PlayButtonContent = "\uE17e\uE103";//pause
                     }
 
-                    if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
+                    object r = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.ResumePlayback);
+                    if (r != null)
+                    {
+                        SendMessage(AppConstants.ResumePlayback);
+                        TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
+                        double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                        ProgressBarMaxValue = absvalue;
+                        EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                    }
+                    else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
                     {
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("lyrics");
                     }
@@ -731,8 +740,6 @@ namespace NextPlayer.ViewModel
                     }
                     else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))//mozna chyba zmienic na Dict<> state
                     {
-                        //Library.Current.Save("from mainpage");
-
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
 
                         TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
@@ -811,8 +818,14 @@ namespace NextPlayer.ViewModel
             if (IsMyBackgroundTaskRunning)
             {
                 AddMediaPlayerEventHandlers();
+
                 StartTimer();
                 
+                TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
+                double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
+                ProgressBarMaxValue = absvalue;
+                EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+
                 SendMessage(AppConstants.AppResumed, DateTime.Now.ToString());
 
                 if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
