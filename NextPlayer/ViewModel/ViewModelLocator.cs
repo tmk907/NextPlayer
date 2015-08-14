@@ -41,6 +41,8 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<PlaylistViewModel>();
             SimpleIoc.Default.Register<NowPlayingViewModel>();
             SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();
+            SimpleIoc.Default.Register<SearchViewModel>();
+            SimpleIoc.Default.Register<FoldersViewModel>();
         }
 
         private static INavigationService CreateNavigationService()
@@ -61,7 +63,7 @@ namespace NextPlayer.ViewModel
             navigationService.Configure(ViewNames.PlaylistView, typeof(PlaylistView));
             navigationService.Configure(ViewNames.SettingsView, typeof(SettingsView));
             navigationService.Configure(ViewNames.SongsView, typeof(SongView));
-
+            navigationService.Configure(ViewNames.SearchView, typeof(SearchView));
             // navigationService.Configure("key2", typeof(OtherPage2));
             //HardwareButtons.BackPressed += (sender, args) =>
             //{
@@ -118,6 +120,15 @@ namespace NextPlayer.ViewModel
                 return ServiceLocator.Current.GetInstance<ArtistsViewModel>();
             }
         }
+
+        public FoldersViewModel FoldersVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FoldersViewModel>(); 
+            }
+        }
+
         public GenresViewModel GenresVM
         {
             get
@@ -139,6 +150,14 @@ namespace NextPlayer.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+            }
+        }
+
+        public SearchViewModel SearchVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SearchViewModel>();
             }
         }
 

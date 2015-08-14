@@ -84,6 +84,7 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
+            var s = Windows.Media.Devices.MediaDevice.GetAudioRenderSelector();
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace NextPlayer.View
             DisableControls();
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
-            Count2.Text = "0";
+            Count2.Text = "";
             Count2.Visibility = Visibility.Visible;
             WaitFewMinutes.Visibility = Visibility.Visible;
 
@@ -149,7 +150,7 @@ namespace NextPlayer.View
             Count2.Visibility = Visibility.Collapsed;
             ProgressRing2.IsActive = false;
             ProgressRing2.Visibility = Visibility.Collapsed;
-            EnableControls();
+            EnableControls();          
         }
 
         private void DisableControls()
@@ -167,6 +168,15 @@ namespace NextPlayer.View
             Count2.Text = value.ToString();
         }
 
+        private void Rate_Click(object sender, RoutedEventArgs e)
+        {
+            Rate();
+        }
+
+        private async void Rate()
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + "7a609088-e51a-458e-a8ca-5f13fc9ea5a8")); 
+        }
         
     }
 }

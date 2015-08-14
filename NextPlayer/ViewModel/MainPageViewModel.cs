@@ -262,9 +262,7 @@ namespace NextPlayer.ViewModel
                     ?? (goToFoldersPage = new RelayCommand(
                     () =>
                     {
-                        //NextPlayerDataLayer.Helpers.PerfTests s = new NextPlayerDataLayer.Helpers.PerfTests();
-                        //s.Run();
-                        //navigationService.NavigateTo(ViewNames.NowPlayingView);
+                        navigationService.NavigateTo(ViewNames.FoldersView);
                     }));
             }
         }
@@ -319,6 +317,24 @@ namespace NextPlayer.ViewModel
                     () =>
                     {
                         navigationService.NavigateTo(ViewNames.SettingsView);
+                    }));
+            }
+        }
+
+        private RelayCommand goToSearchPage;
+
+        /// <summary>
+        /// Gets the GoToSearchPage.
+        /// </summary>
+        public RelayCommand GoToSearchPage
+        {
+            get
+            {
+                return goToSearchPage
+                    ?? (goToSearchPage = new RelayCommand(
+                    () =>
+                    {
+                         navigationService.NavigateTo(ViewNames.SearchView);
                     }));
             }
         }

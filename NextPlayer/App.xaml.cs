@@ -47,7 +47,7 @@ namespace NextPlayer
             {
                 Library.Current.SetDB();
             }
-            //Read();
+            Read();
             UnhandledException += App_UnhandledException;
         }
 
@@ -60,7 +60,7 @@ namespace NextPlayer
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             //NextPlayerDataLayer.Diagnostics.Logger.Save(Library.Current.Read());
-            NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception + " " + e.Message);
+            NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception + "Message:" + e.Message);
             NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);

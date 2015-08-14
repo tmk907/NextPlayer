@@ -31,6 +31,7 @@ namespace NextPlayer.View
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private string genre;
+        private string directory;
         private int songId;
         private string artist;
         private string album;
@@ -83,6 +84,10 @@ namespace NextPlayer.View
                 if (s[0] == "genre")
                 {
                     genre = s[1];
+                }
+                else if (s[0] == "folder")
+                {
+                    directory = s[2];
                 }
                 else if (s[0] == "song")
                 {
@@ -145,6 +150,10 @@ namespace NextPlayer.View
             if (genre != null)
             {
                 DatabaseManager.AddGenreToPlaylistAsync(genre, p.Id);
+            }
+            else if (directory != null)
+            {
+                DatabaseManager.AddFolderToPlaylistAsync(directory,p.Id);
             }
             else if (artist != null)
             {

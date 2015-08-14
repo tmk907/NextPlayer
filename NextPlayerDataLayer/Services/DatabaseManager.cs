@@ -253,6 +253,29 @@ namespace NextPlayerDataLayer.Services
             conn.Insert(item);
         }
 
+        public async static Task AddFolderToPlaylistAsync(string directory, int playlistId)
+        {
+            var conn = ConnectionDb();
+            var query = await SongsConnAsync().OrderBy(s=>s.Title).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            foreach (var item in query)
+            {
+                if (Path.GetDirectoryName(item.Path).Equals(directory))
+                {
+                    lastPosition++;
+                    var newEntry = new PlainPlaylistEntryTable()
+                    {
+                        PlaylistId = playlistId,
+                        SongId = item.SongId,
+                        Place = lastPosition,
+                    };
+                    list.Add(newEntry);
+                }
+            }
+            conn.InsertAll(list);
+        }
+
         public async static Task AddGenreToPlaylistAsync(string genre, int playlistId)
         {
             var conn = ConnectionDb();
@@ -482,6 +505,58 @@ namespace NextPlayerDataLayer.Services
             return albumItem;
         }
 
+        public static ObservableCollection<FolderItem> GetFolderItems()
+        {
+            List<FolderItem> collection = new List<FolderItem>();
+            var query = SongsConn().GroupBy(e => Path.GetDirectoryName(e.Path)).ToList();
+            foreach (var item in query)
+            {
+                int songs = 0;
+                foreach (var song in item)
+                {
+                    songs++;
+                }
+                string path = item.FirstOrDefault().Path;
+                string dir = (Path.GetDirectoryName(path));
+                string name = Path.GetFileName(dir);
+                if (name == "") name = dir;
+                //string b = Path.GetDirectoryName(path);
+                collection.Add(new FolderItem(name, dir, songs));
+            }
+            ObservableCollection<FolderItem> result = new ObservableCollection<FolderItem>();
+            foreach (var x in collection.OrderBy(f => f.Directory.ToLower()))
+            {
+                result.Add(x);
+            }
+            return result;
+        }
+
+        public async static Task<ObservableCollection<FolderItem>> GetFolderItemsAsync()
+        {
+            var query = await SongsConnAsync().ToListAsync();
+            List<FolderItem> list = new List<FolderItem>();
+            ObservableCollection<FolderItem> collection = new ObservableCollection<FolderItem>();
+            var result = query.GroupBy(e => Path.GetDirectoryName(e.Path));
+            foreach (var item in result)
+            {
+                int songs = 0;
+                foreach (var song in item)
+                {
+                    songs++;
+                }
+                string path = item.FirstOrDefault().Path;
+                string dir = (Path.GetDirectoryName(path));
+                string name = Path.GetFileName(dir);
+                if (name == "") name = dir;
+                list.Add(new FolderItem(name, dir, songs));
+            }
+            foreach (var x in list.OrderBy(f => f.Directory.ToLower()))
+            {
+                collection.Add(x);
+            }
+            return collection;
+        }
+
         public static ObservableCollection<GenreItem> GetGenreItems()
         {
             ObservableCollection<GenreItem> collection = new ObservableCollection<GenreItem>();
@@ -607,6 +682,34 @@ namespace NextPlayerDataLayer.Services
                 }
             }
             return songs;
+        }
+
+        public static ObservableCollection<SongItem> GetSongItemsFromFolder(string directory)
+        {
+            ObservableCollection<SongItem> folders = new ObservableCollection<SongItem>();
+            var query = SongsConn().OrderBy(s => s.Title).ToList();
+            foreach (var item in query)
+            {
+                if (Path.GetDirectoryName(item.Path).Equals(directory))
+                {
+                    folders.Add(CreateSongItem(item));
+                }
+            }
+            return folders;
+        }
+
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromFolderAsync(string directory)
+        {
+            ObservableCollection<SongItem> folders = new ObservableCollection<SongItem>();
+            var query = await SongsConnAsync().OrderBy(s => s.Title).ToListAsync();
+            foreach (var item in query)
+            {
+                if (Path.GetDirectoryName(item.Path).Equals(directory))
+                {
+                    folders.Add(CreateSongItem(item));
+                }
+            }
+            return folders;
         }
 
         public static ObservableCollection<SongItem> GetSongItemsFromGenre(string genre)
@@ -882,7 +985,10 @@ namespace NextPlayerDataLayer.Services
             foreach (var e in query)
             {
                 var query2 = conn2.Where(x => x.SongId.Equals(e.SongId)).FirstOrDefault();
-                list.Add(CreateSongItem(query2));
+                if (query2 != null)
+                {
+                    list.Add(CreateSongItem(query2));
+                }
             }
             return list;
         }
@@ -963,6 +1069,22 @@ namespace NextPlayerDataLayer.Services
         private static void testUpdate(int id)
         {
             var a = SongsConn().Where(i => i.SongId.Equals(id)).FirstOrDefault();
+        }
+
+        #endregion
+
+        #region Search
+
+        public static async Task<ObservableCollection<SongItem>> SearchSongs(string value)
+        {
+            ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
+            var result = await SongsConnAsync().Where(t => (t.Title.Contains(value) || t.Artist.Contains(value) || t.Album.Contains(value) || t.Filename.Contains(value))).OrderBy(s => s.Title).ToListAsync();
+            
+            foreach (var item in result)
+            {
+                songs.Add(CreateSongItem(item));
+            }
+            return songs;
         }
 
         #endregion

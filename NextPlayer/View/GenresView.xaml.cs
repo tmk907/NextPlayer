@@ -86,7 +86,6 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Deactivate(e.PageState);
-
         }
 
         #region NavigationHelper registration

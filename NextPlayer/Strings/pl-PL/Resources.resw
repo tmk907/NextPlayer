@@ -355,6 +355,21 @@
     <value>Rok</value>
   </data>
   <data name="WaitFewMinutes.Text" xml:space="preserve">
-    <value>To może zająć kilka minut</value>
+    <value>Proszę nie zamykaj tej strony podczas skanowania.</value>
+  </data>
+  <data name="MenuSearch.Content" xml:space="preserve">
+    <value>Szukaj</value>
+  </data>
+  <data name="SearchPageTitle.Text" xml:space="preserve">
+    <value>szukaj</value>
+  </data>
+  <data name="FoldersPageTitle.Text" xml:space="preserve">
+    <value>foldery</value>
+  </data>
+  <data name="RateButton.Content" xml:space="preserve">
+    <value>Oceń</value>
+  </data>
+  <data name="SPErrorText.Text" xml:space="preserve">
+    <value>Uzupełnij prawidłowo wszystkie pola.</value>
   </data>
 </root>

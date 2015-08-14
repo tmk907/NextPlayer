@@ -10,10 +10,10 @@
     DataContext="{Binding MainVM, Mode=OneWay, Source={StaticResource Locator}}">
 
     <Page.Resources>
-        <Thickness x:Key="TopMargin">0,0,0,8</Thickness>
-        <Thickness x:Key="LeftMargin">0,0,4,8</Thickness>
-
-        <Thickness x:Key="RightMargin">4,0,0,8</Thickness>
+        <Thickness x:Key="TopMargin">4,0,4,8</Thickness>
+        <Thickness x:Key="LeftMargin">4,0,4,8</Thickness>
+        <Thickness x:Key="MiddleMargin">4,0,4,8</Thickness>
+        <Thickness x:Key="RightMargin">4,0,4,8</Thickness>
             
     </Page.Resources>
     
@@ -59,55 +59,68 @@
                     <RowDefinition/>-->
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Uid="MenuNowPlayingPlaylist"
-                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                            Content="Now Playing List"                              
-                            Command="{Binding GoToNowPlayingListPage}" 
+                        Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                        Content="Now Playing List"    
+                        Command="{Binding GoToNowPlayingListPage}" 
                         Margin="{StaticResource TopMargin}"
                         Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuSongs" 
-                            Grid.Row="2" Grid.Column="2" 
-                            Content="Songs" 
-                            Command="{Binding GoToSongsPage}" 
-                            Margin="{StaticResource RightMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
-                </Button>
+                
                 <Button x:Uid="MenuAlbums" 
-                        Grid.Row="1" Grid.Column="1" 
-                            Content="Albums" 
-                            Command="{Binding GoToAlbumsPage}" 
+                        Grid.Row="1" Grid.Column="2" 
+                        Content="Albums" 
+                        Command="{Binding GoToAlbumsPage}" 
                         Margin="{StaticResource LeftMargin}"
                         Style="{StaticResource ButtonStyleMainPage}"/>
                 <Button x:Uid="MenuArtists" 
-                        Grid.Row="1" Grid.Column="2" 
-                            Content="Artists" 
-                            Command="{Binding GoToArtistsPage}" 
-                        Margin="{StaticResource RightMargin}"
-                            Style="{StaticResource ButtonStyleMainPage}"/>
-                <!--<Button x:Uid="MenuFolders" Grid.Row="4" Content="Folders" Command="{Binding GoToFoldersPage}" HorizontalAlignment="Center"/>-->
+                        Grid.Row="1" Grid.Column="3" 
+                        Content="Artists" 
+                        Command="{Binding GoToArtistsPage}" 
+                        Margin="{StaticResource MiddleMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuFolders" 
+                        Grid.Row="2" Grid.Column="3" 
+                        Content="Folders" 
+                        Command="{Binding GoToFoldersPage}"
+                        Margin="{StaticResource MiddleMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
                 <Button x:Uid="MenuGenres" 
-                        Grid.Row="2" Grid.Column="1" 
-                            Content="Genres" 
-                            Command="{Binding GoToGenresPage}"
+                        Grid.Row="2" Grid.Column="2" 
+                        Content="Genres" 
+                        Command="{Binding GoToGenresPage}"
                         Margin="{StaticResource LeftMargin}"
-                            Style="{StaticResource ButtonStyleMainPage}"/>
+                        Style="{StaticResource ButtonStyleMainPage}"/>
                 <Button x:Uid="MenuPlaylists" 
                         Grid.Row="3" Grid.Column="2" 
-                            Content="Playlists" 
-                            Command="{Binding GoToPlaylistsPage}"
-                        Margin="{StaticResource RightMargin}"
-                            Style="{StaticResource ButtonStyleMainPage}"/>
+                        Content="Playlists" 
+                        Command="{Binding GoToPlaylistsPage}"
+                        Margin="{StaticResource MiddleMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuSongs" 
+                        Grid.Row="3" Grid.Column="3" 
+                        Content="Songs" 
+                        Command="{Binding GoToSongsPage}" 
+                        Margin="{StaticResource MiddleMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}">
+                </Button>
                 <Button x:Uid="MenuSettings" 
                         Grid.Row="3" Grid.Column="1" 
-                            Content="Settings" 
-                            Command="{Binding GoToSettingsPage}" 
+                        Content="Settings" 
+                        Command="{Binding GoToSettingsPage}" 
                         Margin="{StaticResource LeftMargin}"
-                            Style="{StaticResource ButtonStyleMainPage}"/>
+                        Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuSearch" 
+                        Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+                        Content="Search" 
+                        Command="{Binding GoToSearchPage}" 
+                        Margin="{StaticResource RightMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
 

@@ -29,16 +29,50 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton" Content="Update Library" Click="UpdateLibrary_Click" Width="200"/>
-                        <ProgressRing x:Name="ProgressRing2" Visibility="Collapsed" IsActive="False" Margin="10,0,10,0"/>
-                        <TextBlock x:Name="Count2" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20"/>
-                    </StackPanel>
-                    <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes" Visibility="Collapsed" FontSize="24"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="210"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="60"/>
+                    <RowDefinition Height="Auto" MinHeight="20"/>
+                    <RowDefinition Height="Auto" MinHeight="60"/>
+                    <RowDefinition/>
+
+                </Grid.RowDefinitions>
+
+                <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton"
+                        Grid.Row="0" Grid.Column="0"
+                        Content="Update Library" 
+                        Click="UpdateLibrary_Click" 
+                        Width="200"/>
+                
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0" Grid.Column="1">
+                    <ProgressRing x:Name="ProgressRing2" 
+                                Visibility="Collapsed" 
+                                IsActive="False" 
+                                Margin="8,0,8,0"/>
+                    <TextBlock x:Name="Count2" 
+                                Visibility="Collapsed" 
+                                VerticalAlignment="Center" 
+                                FontSize="20"
+                               Margin="8,0,8,0"/>
                 </StackPanel>
-            </StackPanel>
+                
+                <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes"
+                           Grid.Row="1" Grid.ColumnSpan="2"
+                           Visibility="Collapsed" 
+                           TextWrapping="WrapWholeWords" 
+                           FontSize="18"/>
+
+                <Button x:Uid="RateButton" 
+                        Grid.Row="2" Grid.Column="0"
+                        Content="Rate" 
+                        Click="Rate_Click" 
+                        Width="200"/>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

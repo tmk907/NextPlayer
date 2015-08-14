@@ -355,6 +355,21 @@
     <value>Year</value>
   </data>
   <data name="WaitFewMinutes.Text" xml:space="preserve">
-    <value>This may take a few minutes</value>
+    <value>Please do not close this page while scanning.</value>
+  </data>
+  <data name="MenuSearch.Content" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchPageTitle.Text" xml:space="preserve">
+    <value>search</value>
+  </data>
+  <data name="FoldersPageTitle.Text" xml:space="preserve">
+    <value>folders</value>
+  </data>
+  <data name="RateButton.Content" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="SPErrorText.Text" xml:space="preserve">
+    <value>Please complete all fields correctly.</value>
   </data>
 </root>

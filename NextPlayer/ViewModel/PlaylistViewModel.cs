@@ -20,6 +20,8 @@ namespace NextPlayer.ViewModel
     {
         private INavigationService navigationService;
         private string genre;
+        private string folderName;
+        private string directory;
         private string name;
         private bool isSmart;
         private int id;
@@ -223,7 +225,7 @@ namespace NextPlayer.ViewModel
                         }
                         else
                         {
-                            if (genre == null)
+                            if (genre == null && folderName==null)
                             {
                                 if (isSmart) 
                                 {
@@ -235,10 +237,15 @@ namespace NextPlayer.ViewModel
                                 }
                                 PageTitle = name.ToLower();
                             }
-                            else
+                            else if (genre!=null)
                             {
                                 LoadGenrePlaylist();   
                                 PageTitle = genre.ToLower();
+                            }
+                            else if (folderName != null)
+                            {
+                                LoadFolderPlaylist();
+                                PageTitle = folderName.ToLower();
                             }
                         }
                     }));
@@ -252,6 +259,10 @@ namespace NextPlayer.ViewModel
             }
             //Playlist = Library.Current.NowPlayingList;
             //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlayingAsync();
+        }
+        private async void LoadFolderPlaylist()
+        {
+            Playlist = await DatabaseManager.GetSongItemsFromFolderAsync(directory);
         }
         private async void LoadGenrePlaylist()
         {
@@ -269,6 +280,8 @@ namespace NextPlayer.ViewModel
         {
             Playlist.Clear();
             genre = null;
+            directory = null;
+            folderName = null;
             isSmart = false;
             isNowPlaying = true;
             id = 0;
@@ -280,10 +293,15 @@ namespace NextPlayer.ViewModel
                 {
                     String[] s = ParamConvert.ToStringArray(parameter as string);
                     if (s.Length >= 2 && s[0].Equals("genre")) genre = s[1];
+                    else if (s.Length >= 3 && s[0].Equals("folder"))
+                    {
+                        folderName = s[1];
+                        directory = s[2];
+                    }
                     else
                     {
                         if (s.Length >= 2 && s[0].Equals("smart")) isSmart = true;
-                        if (s.Length >= 3 && (s[0].Equals("smart") || s[0].Equals("plain"))) 
+                        if (s.Length >= 3 && (s[0].Equals("smart") || s[0].Equals("plain")))
                         {
                             id = Int32.Parse(s[1]);
                             name = s[2];
