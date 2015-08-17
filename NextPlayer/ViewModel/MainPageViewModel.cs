@@ -405,6 +405,25 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
+
+        private RelayCommand stop;
+
+        /// <summary>
+        /// Gets the Stop.
+        /// </summary>
+        public RelayCommand Stop
+        {
+            get
+            {
+                return stop
+                    ?? (stop = new RelayCommand(
+                    () =>
+                    {
+                        BackgroundMediaPlayer.Shutdown();
+                    }));
+            }
+        }
+
         #endregion
 
 

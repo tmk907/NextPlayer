@@ -43,6 +43,7 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<NewSmartPlaylistViewModel>();
             SimpleIoc.Default.Register<SearchViewModel>();
             SimpleIoc.Default.Register<FoldersViewModel>();
+            SimpleIoc.Default.Register<FileInfoViewModel>();
         }
 
         private static INavigationService CreateNavigationService()
@@ -64,6 +65,7 @@ namespace NextPlayer.ViewModel
             navigationService.Configure(ViewNames.SettingsView, typeof(SettingsView));
             navigationService.Configure(ViewNames.SongsView, typeof(SongView));
             navigationService.Configure(ViewNames.SearchView, typeof(SearchView));
+            navigationService.Configure(ViewNames.FileInfoView, typeof(FileInfoView));
             // navigationService.Configure("key2", typeof(OtherPage2));
             //HardwareButtons.BackPressed += (sender, args) =>
             //{
@@ -118,6 +120,14 @@ namespace NextPlayer.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<ArtistsViewModel>();
+            }
+        }
+
+        public FileInfoViewModel FileInfoVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FileInfoViewModel>();
             }
         }
 

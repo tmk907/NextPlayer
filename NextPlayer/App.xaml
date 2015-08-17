@@ -189,6 +189,8 @@
                                         Command="{Binding DataContext.AddToNowPlaying, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
+                                        Command="{Binding DataContext.ShowDetails, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
@@ -230,6 +232,8 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
             <converters:GetListViewConverter x:Key="GetListView"/>
+            <converters:SizeToStringConverter x:Key="SizeToStringConverter"/>
+            <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
             
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>

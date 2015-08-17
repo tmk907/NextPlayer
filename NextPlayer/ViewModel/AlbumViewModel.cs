@@ -230,6 +230,24 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand<SongItem> showDetails;
+
+        /// <summary>
+        /// Gets the ShowDetails.
+        /// </summary>
+        public RelayCommand<SongItem> ShowDetails
+        {
+            get
+            {
+                return showDetails
+                    ?? (showDetails = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        navigationService.NavigateTo(ViewNames.FileInfoView, item.SongId);
+                    }));
+            }
+        }
+
         private RelayCommand<SongItem> itemClicked;
 
         /// <summary>

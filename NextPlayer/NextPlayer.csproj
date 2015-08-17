@@ -104,9 +104,11 @@
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="Converters\DateTimeToStringConverter.cs" />
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
+    <Compile Include="Converters\SizeToStringConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\OpenMenuFlyoutAction.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="ViewModel\AlbumsViewModel.cs" />
     <Compile Include="ViewModel\AlbumViewModel.cs" />
     <Compile Include="ViewModel\ArtistsViewModel.cs" />
+    <Compile Include="ViewModel\FileInfoViewModel.cs" />
     <Compile Include="ViewModel\FoldersViewModel.cs" />
     <Compile Include="ViewModel\GenresViewModel.cs" />
     <Compile Include="ViewModel\INavigable.cs" />
@@ -137,6 +140,9 @@
     </Compile>
     <Compile Include="View\ArtistsView.xaml.cs">
       <DependentUpon>ArtistsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FileInfoView.xaml.cs">
+      <DependentUpon>FileInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FoldersView.xaml.cs">
       <DependentUpon>FoldersView.xaml</DependentUpon>
@@ -210,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ArtistsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FileInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

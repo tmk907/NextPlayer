@@ -372,4 +372,46 @@
   <data name="SPErrorText.Text" xml:space="preserve">
     <value>Please complete all fields correctly.</value>
   </data>
+  <data name="ShowDetails.Text" xml:space="preserve">
+    <value>Show details</value>
+  </data>
+  <data name="MenuStop.Content" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TBAlbum.Text" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="TBArtist.Text" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="TBBitrate.Text" xml:space="preserve">
+    <value>Bitrate</value>
+  </data>
+  <data name="TBDateAdded.Text" xml:space="preserve">
+    <value>Date added</value>
+  </data>
+  <data name="TBFilePath.Text" xml:space="preserve">
+    <value>File path</value>
+  </data>
+  <data name="TBFileSize.Text" xml:space="preserve">
+    <value>File size</value>
+  </data>
+  <data name="TBLastTimePlayed.Text" xml:space="preserve">
+    <value>Last time played</value>
+  </data>
+  <data name="TBPlayCount.Text" xml:space="preserve">
+    <value>PlayCount</value>
+  </data>
+  <data name="TBRating.Text" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="TBTitle.Text" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="TBTrackNumber.Text" xml:space="preserve">
+    <value>Track number</value>
+  </data>
+  <data name="TBYear.Text" xml:space="preserve">
+    <value>Year</value>
+  </data>
 </root>

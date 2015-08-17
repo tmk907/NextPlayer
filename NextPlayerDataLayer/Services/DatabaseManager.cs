@@ -28,6 +28,7 @@ namespace NextPlayerDataLayer.Services
         private static SQLiteConnection ConnectionDb()
         {
             var conn = new SQLite.SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
+            conn.BusyTimeout = TimeSpan.FromSeconds(2);
             return conn;
         }
 
@@ -1078,12 +1079,13 @@ namespace NextPlayerDataLayer.Services
         public static async Task<ObservableCollection<SongItem>> SearchSongs(string value)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var result = await SongsConnAsync().Where(t => (t.Title.Contains(value) || t.Artist.Contains(value) || t.Album.Contains(value) || t.Filename.Contains(value))).OrderBy(s => s.Title).ToListAsync();
+            var result = await SongsConnAsync().Where(t => (t.Title.Contains(value) || t.Artist.Contains(value) || t.Album.Contains(value) || t.Filename.Contains(value))).ToListAsync();
             
             foreach (var item in result)
             {
                 songs.Add(CreateSongItem(item));
             }
+
             return songs;
         }
 
@@ -1170,6 +1172,26 @@ namespace NextPlayerDataLayer.Services
         private static SongItem CreateSongItem(SongsTable q)
         {
             return new SongItem(q.Album, q.Artist, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.TrackNumber);
+        }
+
+        public static FileInfo GetFileInfo(int songId)
+        {
+            var q = SongsConn().Where(s => s.SongId.Equals(songId)).FirstOrDefault();
+            FileInfo info = new FileInfo()
+            {
+                Album = q.Album,
+                Artist = q.Artist,
+                Bitrate = (int)q.Bitrate,
+                DateAdded = q.DateAdded,
+                FilePath =q.Path,
+                FileSize = (int)q.FileSize,
+                LastTimePlayed = q.LastPlayed,
+                PlayCount = (int)q.PlayCount,
+                Title = q.Title,
+                TrackNumber = (int)q.TrackNumber,
+                Year = (int)q.Year,
+            };
+            return info;
         }
 
         #endregion

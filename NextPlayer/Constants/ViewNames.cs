@@ -7,6 +7,7 @@ namespace NextPlayer.Constants
         public static readonly string AlbumView = "AlbumView";
         public static readonly string AlbumsView = "AlbumsView";
         public static readonly string ArtistsView = "ArtistsView";
+        public static readonly string FileInfoView = "FileInfoView";
         public static readonly string FoldersView = "FoldersView";
         public static readonly string GenresView = "GenresVview";
         public static readonly string LyricsView = "LyricsView";

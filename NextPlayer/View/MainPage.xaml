@@ -39,13 +39,11 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <!--<Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            
-            
         </Grid>-->
+        
         <Grid Grid.Row="1" Margin="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <!--<RowDefinition Height="80"/>-->
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -54,9 +52,6 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <!--<RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>-->
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20"/>
@@ -121,15 +116,21 @@
                         Command="{Binding GoToSearchPage}" 
                         Margin="{StaticResource RightMargin}"
                         Style="{StaticResource ButtonStyleMainPage}"/>
+                <Button x:Uid="MenuStop" 
+                        Grid.Row="0" Grid.Column="1"
+                        Content="Stop" 
+                        Command="{Binding Stop}" 
+                        Margin="{StaticResource RightMargin}"
+                        Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
 
         </Grid>
         <Grid Grid.Row="2" Margin="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="104"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="104"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -137,6 +138,7 @@
             </Grid.RowDefinitions>
 
             <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                   Margin="24,0,0,0"
                            Width="80"
                            Height="80"
                            Source="{Binding Cover}"
@@ -185,12 +187,13 @@
                             FontFamily="Segoe UI Symbol" 
                             FontSize="34"
                             VerticalAlignment="Center"
-                    VerticalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
                             HorizontalAlignment="Center"
                             MinWidth="80"
                             MinHeight="80"
                             Width="80"
                             Height="80"
+                    Margin="0,0,24,0"
                         />
 
         </Grid>

@@ -99,6 +99,7 @@
     <Compile Include="Helpers\PerfTests.cs" />
     <Compile Include="Model\AlbumItem.cs" />
     <Compile Include="Model\ArtistItem.cs" />
+    <Compile Include="Model\FileInfo.cs" />
     <Compile Include="Model\FolderItem.cs" />
     <Compile Include="Model\GenreItem.cs" />
     <Compile Include="Model\NowPlayingSong.cs" />
