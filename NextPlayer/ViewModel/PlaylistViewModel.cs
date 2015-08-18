@@ -25,8 +25,8 @@ namespace NextPlayer.ViewModel
         private string name;
         private bool isSmart;
         private int id;
-        private bool isNowPlaying;
         private int index;
+        private bool ascending;
 
         public PlaylistViewModel(INavigationService navigationService)
         {
@@ -100,6 +100,65 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="IsNowPlaying" /> property's name.
+        /// </summary>
+        public const string IsNowPlayingPropertyName = "IsNowPlaying";
+
+        private bool isNowPlaying = false;
+
+        /// <summary>
+        /// Sets and gets the IsNowPlaying property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsNowPlaying
+        {
+            get
+            {
+                return isNowPlaying;
+            }
+
+            set
+            {
+                if (isNowPlaying == value)
+                {
+                    return;
+                }
+
+                isNowPlaying = value;
+                RaisePropertyChanged(IsNowPlayingPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsDeletable" /> property's name.
+        /// </summary>
+        public const string IsDeletablePropertyName = "IsDeletable";
+
+        private bool isDeletable = false;
+
+        /// <summary>
+        /// Sets and gets the IsDeletable property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsDeletable
+        {
+            get
+            {
+                return isDeletable;
+            }
+
+            set
+            {
+                if (isDeletable == value)
+                {
+                    return;
+                }
+
+                isDeletable = value;
+                RaisePropertyChanged(IsDeletablePropertyName);
+            }
+        }
 
         private RelayCommand<SongItem> addToNowPlaying;
 
@@ -136,6 +195,44 @@ namespace NextPlayer.ViewModel
                         s[0] = "song";
                         s[1] = item.SongId.ToString();
                         navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
+        private RelayCommand<SongItem> deleteFromPlaylist;
+
+        /// <summary>
+        /// Gets the DeleteFromPlaylist.
+        /// </summary>
+        public RelayCommand<SongItem> DeleteFromPlaylist
+        {
+            get
+            {
+                return deleteFromPlaylist
+                    ?? (deleteFromPlaylist = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        if (genre == null && folderName == null && isSmart == false)//jest np lub plain
+                        {
+                            if (isNowPlaying)
+                            {
+                                int i = playlist.IndexOf(item);
+                                if (i <= index)
+                                {
+                                    index--;
+                                    ApplicationSettingsHelper.SaveSongIndex(index);
+                                }
+                                Playlist.Remove(item);
+                                Library.Current.SetNowPlayingList(Playlist);
+                                NPChange.SendMessageNPSorted();
+                            }
+                            else//plain playlist
+                            {
+                                Playlist.Remove(item);
+                                DatabaseManager.DeletePlainPlaylistEntryById(item.SongId);
+                            }
+                        }
+                        
                     }));
             }
         }
@@ -182,6 +279,121 @@ namespace NextPlayer.ViewModel
                             l.MakeVisible(loc);
                             l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
                         }
+                    }));
+            }
+        }
+
+        private RelayCommand<string> sortBy;
+
+        /// <summary>
+        /// Gets the SortBy.
+        /// </summary>
+        public RelayCommand<string> SortBy
+        {
+            get
+            {
+                return sortBy
+                    ?? (sortBy = new RelayCommand<string>(
+                    item =>
+                    {
+                        ascending = true;
+                        switch (item)
+                        {
+                            case "Title":
+                                Sort(s => s.Title);
+                                break;
+                            case "Artist":
+                                Sort(s => s.Artist);
+                                break;
+                            case "Album":
+                                Sort(s => s.Album);
+                                break;
+                            case "Track":
+                                Sort(s => s.TrackNumber);
+                                break;
+                            case "Rating":
+                                Sort(s => s.Rating);
+                                break;
+                            case "Duration":
+                                Sort(s => s.Duration);
+                                break;
+                        }
+                    }));
+            }
+        }
+
+        private RelayCommand changeOrder;
+
+        /// <summary>
+        /// Gets the ChangeOrder.
+        /// </summary>
+        public RelayCommand ChangeOrder
+        {
+            get
+            {
+                return changeOrder
+                    ?? (changeOrder = new RelayCommand(
+                    () =>
+                    {
+                        ascending = !ascending;
+                        Playlist = new ObservableCollection<SongItem>(playlist.Reverse());
+                        if (isNowPlaying)
+                        {
+                            index = (playlist.Count - 1) - index;
+                            ApplicationSettingsHelper.SaveSongIndex(index);
+                            Library.Current.SetNowPlayingList(Playlist);
+                            NPChange.SendMessageNPSorted();
+                        }
+                    }));
+            }
+        }
+
+        private void Sort(Func<SongItem, object> selector)
+        {
+            int id = -1;
+            if (isNowPlaying)
+            {
+                id = playlist.ElementAt(index).SongId;
+            }
+            if (ascending)
+            {
+                Playlist = new ObservableCollection<SongItem>(playlist.OrderBy(selector));
+            }
+            else
+            {
+                Playlist = new ObservableCollection<SongItem>(playlist.OrderByDescending(selector));
+            }
+            if (isNowPlaying)
+            {
+                int i = 0;
+                foreach (var item in playlist)
+                {
+                    if (item.SongId==id) break;
+                    i++;
+                }
+                index = i;
+                ApplicationSettingsHelper.SaveSongIndex(index);
+                Library.Current.SetNowPlayingList(Playlist);
+                NPChange.SendMessageNPSorted();
+            }
+        }
+
+        private RelayCommand saveAsPlaylist;
+
+        /// <summary>
+        /// Gets the SaveAsPlaylist.
+        /// </summary>
+        public RelayCommand SaveAsPlaylist
+        {
+            get
+            {
+                return saveAsPlaylist
+                    ?? (saveAsPlaylist = new RelayCommand(
+                    () =>
+                    {
+                        String[] s = new String[1];
+                        s[0] = "nowPlaying";
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
                     }));
             }
         }
@@ -296,12 +508,14 @@ namespace NextPlayer.ViewModel
         }
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            ascending = true;
             Playlist.Clear();
             genre = null;
             directory = null;
             folderName = null;
             isSmart = false;
-            isNowPlaying = true;
+            IsNowPlaying = true;
+            IsDeletable = true;
             id = 0;
             name = "";
             index = 0;
@@ -310,22 +524,31 @@ namespace NextPlayer.ViewModel
                 if (parameter.GetType() == typeof(string))
                 {
                     String[] s = ParamConvert.ToStringArray(parameter as string);
-                    if (s.Length >= 2 && s[0].Equals("genre")) genre = s[1];
+                    if (s.Length >= 2 && s[0].Equals("genre"))
+                    {
+                        genre = s[1];
+                        IsDeletable = false;
+                    }
                     else if (s.Length >= 3 && s[0].Equals("folder"))
                     {
                         folderName = s[1];
                         directory = s[2];
+                        IsDeletable = false;
                     }
                     else
                     {
-                        if (s.Length >= 2 && s[0].Equals("smart")) isSmart = true;
+                        if (s.Length >= 2 && s[0].Equals("smart"))
+                        {
+                            isSmart = true;
+                            IsDeletable = false;
+                        }
                         if (s.Length >= 3 && (s[0].Equals("smart") || s[0].Equals("plain")))
                         {
                             id = Int32.Parse(s[1]);
                             name = s[2];
                         }
                     }
-                    isNowPlaying = false;
+                    IsNowPlaying = false;
                 }
             }
             if (isNowPlaying)

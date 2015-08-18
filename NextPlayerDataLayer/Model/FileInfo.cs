@@ -12,6 +12,7 @@ namespace NextPlayerDataLayer.Model
         public string Album { get; set; }
         public int TrackNumber { get; set; }
         public int Year { get; set; }
+        public int Rating { get; set; }
         public int PlayCount { get; set; }
         public DateTime LastTimePlayed { get; set; }
         public DateTime DateAdded { get; set; }

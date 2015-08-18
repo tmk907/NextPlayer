@@ -372,6 +372,9 @@
   <data name="ShowDetails.Text" xml:space="preserve">
     <value>Pokaż szczegóły</value>
   </data>
+  <data name="DeleteFromPlaylist.Text" xml:space="preserve">
+    <value>Usuń z playlisty</value>
+  </data>
   <data name="MenuStop.Content" xml:space="preserve">
     <value>Stop</value>
   </data>
@@ -413,5 +416,32 @@
   </data>
   <data name="TBYear.Text" xml:space="preserve">
     <value>Rok</value>
+  </data>
+  <data name="AppBarOrder.Label" xml:space="preserve">
+    <value>Kolejność</value>
+  </data>
+  <data name="AppBarSave.Label" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="AppBarSort.Label" xml:space="preserve">
+    <value>Sortuj</value>
+  </data>
+  <data name="MFIAlbum.Text" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="MFIArtist.Text" xml:space="preserve">
+    <value>Artysta</value>
+  </data>
+  <data name="MFIDuration.Text" xml:space="preserve">
+    <value>Długość</value>
+  </data>
+  <data name="MFIRating.Text" xml:space="preserve">
+    <value>Ocena</value>
+  </data>
+  <data name="MFITitle.Text" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="MFITrackNumber.Text" xml:space="preserve">
+    <value>Numer utworu</value>
   </data>
 </root>

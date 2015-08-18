@@ -159,7 +159,7 @@ namespace NextPlayer.ViewModel
                     }
                     else
                     {
-
+                        LoadAlbums();
                     }
                 }
                 

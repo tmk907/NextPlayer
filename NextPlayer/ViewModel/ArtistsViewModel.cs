@@ -95,6 +95,7 @@ namespace NextPlayer.ViewModel
                     item =>
                     {
                         var g = DatabaseManager.GetSongItemsFromArtist(item.Artist);
+                        g.OrderBy(s => s.Album).ThenBy(t=>t.TrackNumber);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
                         navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
@@ -122,6 +123,7 @@ namespace NextPlayer.ViewModel
         public async void AddToNowPlayingAsync(ArtistItem item)
         {
             var g = await DatabaseManager.GetSongItemsFromArtistAsync(item.Artist);
+            g.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber);
             Library.Current.AddToNowPlaying(g);
         }
         private RelayCommand<ArtistItem> addToPlaylist;

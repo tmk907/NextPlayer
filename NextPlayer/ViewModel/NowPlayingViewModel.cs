@@ -68,6 +68,7 @@ namespace NextPlayer.ViewModel
             //Library.Current.Save("NPVM konstruktor");
             App.Current.Suspending += ForegroundApp_Suspending;
             App.Current.Resuming += ForegroundApp_Resuming;
+            //SetupTimer();
         }
 
         #region Properties
@@ -703,7 +704,7 @@ namespace NextPlayer.ViewModel
                 fromDB = true;
                 Rating = song.Rating;
                 SetCover(song.Path);
-                
+
                 SetupTimer();
 
                 RepeatButtonContent = Repeat.CurrentStateContent();
@@ -902,6 +903,7 @@ namespace NextPlayer.ViewModel
                 }
             }
             );
+            //StartTimer();
             //backgroundtaskinitializationresult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
         }
 
@@ -943,15 +945,25 @@ namespace NextPlayer.ViewModel
 
                     });
                     break;
-                case MediaPlayerState.Stopped:
-                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                    {
-                        StopTimer();
-                        ProgressBarValue = 0.0;
-                        CurrentTime = TimeSpan.Zero;
-                        EndTime = TimeSpan.Zero;
-                    });
-                    break;
+                //case MediaPlayerState.Stopped:
+                //    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                //    {
+                //        StopTimer();
+                //        ProgressBarValue = 0.0;
+                //        CurrentTime = TimeSpan.Zero;
+                //        EndTime = TimeSpan.Zero;
+                //    });
+                //    break;
+                //case MediaPlayerState.Closed:
+                //    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                //    {
+                //        StopTimer();
+                //        ProgressBarValue = 0.0;
+                //        CurrentTime = TimeSpan.Zero;
+                //        //EndTime = TimeSpan.Zero;
+                //        PlayButtonContent = "\uE17e\uE102"; 
+                //    });
+                //    break;
             }
         }
 
@@ -998,6 +1010,16 @@ namespace NextPlayer.ViewModel
                             ProgressBarValue = result.Seconds;
                             CurrentTime = result;
                             EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                        });
+                        break;
+                    case AppConstants.PlayerClosed:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            StopTimer();
+                            //ProgressBarValue = 0.0;
+                            //CurrentTime = TimeSpan.Zero;
+                            //EndTime = TimeSpan.Zero;
+                            //PlayButtonContent = "\uE17e\uE102";
                         });
                         break;
                     case AppConstants.BackgroundTaskStarted:
@@ -1063,6 +1085,7 @@ namespace NextPlayer.ViewModel
         private void SetupTimer()
         {
             _timer.Interval = TimeSpan.FromSeconds(0.5);
+            //_timer.Tick += _timer_Tick;
         }
 
         private void _timer_Tick(object sender, object e)

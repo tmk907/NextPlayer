@@ -56,42 +56,13 @@ namespace NextPlayer.ViewModel
             App.Current.Resuming += ForegroundApp_Resuming;
         }
 
-        /// <summary>
-        /// The <see cref="PlayButtonContent" /> property's name.
-        /// </summary>
-        public const string PlayButtonContentPropertyName = "PlayButtonContent";
-
-        private string playButtonContent = "\uE17e\uE102";
-
-        /// <summary>
-        /// Sets and gets the PlayButtonContent property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public string PlayButtonContent
-        {
-            get
-            {
-                return playButtonContent;
-            }
-
-            set
-            {
-                if (playButtonContent == value)
-                {
-                    return;
-                }
-
-                playButtonContent = value;
-                RaisePropertyChanged(PlayButtonContentPropertyName);
-            }
-        }
-
+        #region Properties
         /// <summary>
         /// The <see cref="Title" /> property's name.
         /// </summary>
         public const string TitlePropertyName = "Title";
 
-        private string title = "titleyjlÓ";
+        private string title = "-";
 
         /// <summary>
         /// Sets and gets the Title property.
@@ -121,7 +92,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public const string ArtistPropertyName = "Artist";
 
-        private string artist = "artist asrtistÓ mnvbcmnvbcm";
+        private string artist = "-";
 
         /// <summary>
         /// Sets and gets the Artist property.
@@ -175,8 +146,8 @@ namespace NextPlayer.ViewModel
                 RaisePropertyChanged(CoverPropertyName);
             }
         }
-
-        #region Commands
+        #endregion
+        #region CommandsGoTo
         private RelayCommand goToNowPlayingListPage;
 
         /// <summary>
@@ -339,6 +310,10 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        
+        #endregion
+        #region Commands
+
         private RelayCommand goToNowPlaying;
 
         /// <summary>
@@ -354,11 +329,19 @@ namespace NextPlayer.ViewModel
                     {
                         if (CurrentSongIndex > -1)
                         {
-                            if (!NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))
+                            if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
                             {
-                                NextPlayer.Common.SuspensionManager.SessionState.Add("mainpage", true);
+                                navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                             }
-                            navigationService.NavigateTo(ViewNames.NowPlayingView);
+                            else
+                            {
+                                if (!NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("mainpage"))
+                                {
+                                    NextPlayer.Common.SuspensionManager.SessionState.Add("mainpage", true);
+                                }
+                                navigationService.NavigateTo(ViewNames.NowPlayingView);
+                            }
+                            
                         }
                     }));
             }
@@ -446,14 +429,9 @@ namespace NextPlayer.ViewModel
                 SetDefaultCover();
             }
             
-
             if (IsMyBackgroundTaskRunning)
             {
                 AddMediaPlayerEventHandlers();
-                if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
-                {
-                    PlayButtonContent = "\uE17e\uE103";
-                }
             }
             
         }
@@ -465,7 +443,6 @@ namespace NextPlayer.ViewModel
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
-            
         }
 
         public void ForegroundApp_Resuming(object sender, object e)
@@ -483,41 +460,15 @@ namespace NextPlayer.ViewModel
 
         private void RemoveMediaPlayerEventHandlers()
         {
-            //BackgroundMediaPlayer.Current.CurrentStateChanged -= this.MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromBackground -= this.BackgroundMediaPlayer_MessageReceivedFromBackground;
         }
 
         
         private void AddMediaPlayerEventHandlers()
         {
-            //BackgroundMediaPlayer.Current.CurrentStateChanged += this.MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
         }
-
        
-        //async void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
-        //{
-        //    switch (sender.CurrentState)
-        //    {
-        //        case MediaPlayerState.Playing:
-        //            DispatcherHelper.CheckBeginInvokeOnUI(() =>
-        //            {
-        //                PlayButtonContent = "\uE17e\uE103";// Change to pause button
-
-        //            });
-        //            break;
-        //        case MediaPlayerState.Paused:
-        //            DispatcherHelper.CheckBeginInvokeOnUI(() =>
-        //            {
-        //                PlayButtonContent = "\uE17e\uE102";     // Change to play button
-
-        //            });
-        //            break;
-        //        case MediaPlayerState.Stopped:
-        //            break;
-        //    }
-        //}
-
         async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             foreach (string key in e.Data.Keys)
@@ -532,6 +483,12 @@ namespace NextPlayer.ViewModel
                             SetCover(song.Path);
                             Artist = song.Artist;
                             Title = song.Title;
+                        });
+                        break;
+                    case AppConstants.PlayerClosed:
+                        DispatcherHelper.CheckBeginInvokeOnUI(() => 
+                        {
+                            RemoveMediaPlayerEventHandlers();
                         });
                         break;
                 }
@@ -572,7 +529,21 @@ namespace NextPlayer.ViewModel
         {
             if (IsMyBackgroundTaskRunning)
             {
-                SendMessage(AppConstants.SkipNext);
+                if (MediaPlayerState.Playing == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    SendMessage(AppConstants.SkipNext);
+                }
+                else if (MediaPlayerState.Paused == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    SendMessage(AppConstants.SkipNext);
+                }
+                else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
+                {
+                    if (CurrentSongIndex > -1)
+                    {
+                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                    }
+                }
             }
             else
             {

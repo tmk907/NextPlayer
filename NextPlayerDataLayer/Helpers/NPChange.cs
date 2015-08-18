@@ -37,5 +37,15 @@ namespace NextPlayerDataLayer.Helpers
                 BackgroundMediaPlayer.SendMessageToBackground(value);
             }
         }
+
+        public static void SendMessageNPSorted()
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                var value = new ValueSet();
+                value.Add(AppConstants.NowPlayingListSorted, "");
+                BackgroundMediaPlayer.SendMessageToBackground(value);
+            }
+        }
     }
 }

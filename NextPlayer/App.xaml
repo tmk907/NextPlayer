@@ -226,6 +226,59 @@
                     </Border>
                 </Grid>
             </DataTemplate>
+            <DataTemplate x:Key="PlaylistSongItemTemplate">
+                <Grid>
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Holding">
+                            <helpers:OpenMenuFlyoutAction />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddToNowPlaying, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="DeleteFromPlaylist" Text="Delete from playlist" 
+                                        Visibility="{Binding DataContext.IsDeletable, ElementName=PlaylistSongsListView, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Command="{Binding DataContext.DeleteFromPlaylist, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
+                                        Command="{Binding DataContext.ShowDetails, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="5*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding Title}" 
+                                   TextWrapping="NoWrap" 
+                                   TextTrimming="CharacterEllipsis" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,0,0"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
+                        <TextBlock Text="{Binding Artist}" 
+                                   TextWrapping="NoWrap" 
+                                   TextTrimming="CharacterEllipsis" 
+                                   FontSize="17" 
+                                   FontWeight="Normal" 
+                                   Margin="0,0,4.5,0"/>
+                    </Border>
+                    <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
+                        <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" 
+                                   FontSize="17" 
+                                   FontWeight="Normal" 
+                                   Margin="4.5,9.5,0,0"  
+                                   HorizontalAlignment="Right"/>
+                    </Border>
+                </Grid>
+            </DataTemplate>
             
             <converters:TimeSpanToStringConverter x:Key="TimeSpanToString"/>
             <converters:IntToSongsConverter x:Key="IntToSongsConverter"/>
@@ -234,6 +287,7 @@
             <converters:GetListViewConverter x:Key="GetListView"/>
             <converters:SizeToStringConverter x:Key="SizeToStringConverter"/>
             <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+            <converters:IntToBitrateConverter x:Key="IntToBitrateConverter"/>
             
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>

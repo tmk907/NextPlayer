@@ -55,6 +55,9 @@ namespace NextPlayerBackgroundAudioPlayer
             systemControls.IsPreviousEnabled = true;
             systemControls.IsNextEnabled = true;
 
+            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
+            taskInstance.Task.Completed += HandleTaskCompleted;
+
             var value = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.AppState);
             if (value == null)
                 foregroundTaskStatus = ForegroundTaskStatus.Unknown;
@@ -66,8 +69,7 @@ namespace NextPlayerBackgroundAudioPlayer
 
             BackgroundMediaPlayer.MessageReceivedFromForeground += MessageReceivedFromForeground;
 
-            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
-            taskInstance.Task.Completed += HandleTaskCompleted;
+            
             //taskInstance.Task.Progress += HandleTaskProgress;
 
             if (foregroundTaskStatus != ForegroundTaskStatus.Suspended)
@@ -96,7 +98,7 @@ namespace NextPlayerBackgroundAudioPlayer
             //Debug.WriteLine("MyBackgroundAudioTask " + sender.Task.TaskId + " Cancel Requested...");
             try
             {
-                BackgroundMediaPlayer.Current.Pause();
+                //BackgroundMediaPlayer.Current.Pause();
                 //save state
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, nowPlayingManager.currentSongIndex);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
@@ -108,6 +110,10 @@ namespace NextPlayerBackgroundAudioPlayer
                 systemControls.ButtonPressed -= HandleButtonPressed;
                 systemControls.PropertyChanged -= HandlePropertyChanged;
                 
+                ValueSet message = new ValueSet();
+                message.Add(AppConstants.PlayerClosed, "");
+                BackgroundMediaPlayer.SendMessageToForeground(message);
+
                 //Playlist.TrackChanged -= playList_TrackChanged;
 
                 //clear objects task cancellation can happen uninterrupted
@@ -169,6 +175,9 @@ namespace NextPlayerBackgroundAudioPlayer
                         break;
                     case AppConstants.Position:
                         BackgroundMediaPlayer.Current.Position = TimeSpan.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString());
+                        break;
+                    case AppConstants.NowPlayingListSorted:
+                        nowPlayingManager.UpdateNowPlayingList2();
                         break;
                 }
             }
@@ -260,7 +269,6 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void UpdateUVCOnNewTrack()
         {
-            //systemControls.PlaybackStatus = MediaPlaybackStatus.Playing;
             systemControls.DisplayUpdater.Type = MediaPlaybackType.Music;
             systemControls.DisplayUpdater.MusicProperties.Title = nowPlayingManager.GetTitle();
             systemControls.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();

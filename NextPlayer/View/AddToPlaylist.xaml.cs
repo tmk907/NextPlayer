@@ -35,6 +35,7 @@ namespace NextPlayer.View
         private int songId;
         private string artist;
         private string album;
+        private string nowPlaying;
 
         public AddToPlaylist()
         {
@@ -102,6 +103,10 @@ namespace NextPlayer.View
                     album = s[1];
                     artist = s[3];
                 }
+                else if (s[0] == "nowPlaying")
+                {
+                    nowPlaying = s[0];
+                }
             }
         }
 
@@ -166,6 +171,10 @@ namespace NextPlayer.View
             else if (songId > -1)
             {
                 DatabaseManager.AddSongToPlaylist(songId, p.Id);
+            }
+            else if (nowPlaying != null)
+            {
+                DatabaseManager.AddNowPlayingToPlaylist(p.Id);
             }
             Frame.GoBack();
         }

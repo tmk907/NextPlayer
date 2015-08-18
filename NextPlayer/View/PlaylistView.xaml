@@ -14,6 +14,36 @@
     <!--<Page.Resources>
         <CollectionViewSource x:Name="cvs" Source="{Binding Playlist}" IsSourceGrouped="False"/>
     </Page.Resources>-->
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Uid="AppBarSort" Icon="Sort" Label="Sort" IsCompact="True">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="MFITitle" Text="Title"
+                            Command="{Binding SortBy}" CommandParameter="Title"/>
+                        <MenuFlyoutItem x:Uid="MFIArtist" Text="Artist"
+                            Command="{Binding SortBy}" CommandParameter="Artist"/>
+                        <MenuFlyoutItem x:Uid="MFIAlbum" Text="Album"
+                            Command="{Binding SortBy}" CommandParameter="Album"/>
+                        <MenuFlyoutItem x:Uid="MFITrackNumber" Text="Track number"
+                            Command="{Binding SortBy}" CommandParameter="Track"/>
+                        <MenuFlyoutItem x:Uid="MFIRating" Text="Rating"
+                            Command="{Binding SortBy}" CommandParameter="Rating"/>
+                        <MenuFlyoutItem x:Uid="MFIDuration" Text="Duration"
+                            Command="{Binding SortBy}" CommandParameter="Duration"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </AppBarButton>
+            <AppBarButton x:Uid="AppBarOrder" Icon="Priority" Label="Order" 
+                          IsCompact="True" 
+                          Command="{Binding ChangeOrder}">
+            </AppBarButton>
+            <AppBarButton x:Uid="AppBarSave" Icon="Save" Label="Save" IsCompact="True" 
+                          Visibility="{Binding IsNowPlaying, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Command="{Binding SaveAsPlaylist}" />
+        </CommandBar>
+        
+    </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -35,13 +65,13 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListView x:Name="SongsListView"  
+            <ListView x:Name="PlaylistSongsListView"  
                 SelectionMode="None"
                 IsItemClickEnabled="True"
                 ItemsSource="{Binding Playlist}"
                 ContinuumNavigationTransitionInfo.ExitElementContainer="True"
                 helpers:ItemClickCommand.Command="{Binding ItemClicked}"
-                ItemTemplate="{StaticResource SongItemTemplate}">
+                ItemTemplate="{StaticResource PlaylistSongItemTemplate}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -55,7 +85,7 @@
                         <core:InvokeCommandAction
                                     Command="{Binding ScrollListView, Mode=TwoWay}"
                                     InputConverter="{StaticResource GetListView}"
-                                    InputConverterParameter="{Binding ElementName=SongsListView}" />
+                                    InputConverterParameter="{Binding ElementName=PlaylistSongsListView}" />
                     </core:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>

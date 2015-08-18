@@ -303,6 +303,7 @@ namespace NextPlayerDataLayer.Services
             var query = await SongsConnAsync().Where(s => s.Artist.Equals(artist)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            query.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber);
             foreach (var item in query)
             {
                 lastPosition++;
@@ -321,7 +322,27 @@ namespace NextPlayerDataLayer.Services
         {
             var conn = ConnectionDb();
             var songs = GetSongItemsFromAlbum(album, artist);
-            var query = await SongsConnAsync().Where(s => s.Album.Equals(album)).ToListAsync();
+            var query = await SongsConnAsync().Where(s => s.Album.Equals(album)).OrderBy(t=>t.TrackNumber).ToListAsync();
+            List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
+            int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
+            foreach (var item in songs)
+            {
+                lastPosition++;
+                var newEntry = new PlainPlaylistEntryTable()
+                {
+                    PlaylistId = playlistId,
+                    SongId = item.SongId,
+                    Place = lastPosition,
+                };
+                list.Add(newEntry);
+            }
+            conn.InsertAll(list);
+        }
+
+        public static async Task AddNowPlayingToPlaylist(int playlistId)
+        {
+            var conn = ConnectionDb();
+            var songs = await AsyncConnectionDb().Table<NowPlayingTable>().ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
             foreach (var item in songs)
@@ -354,8 +375,14 @@ namespace NextPlayerDataLayer.Services
 
         public static void DeletePlainPlaylistEntry(int primaryId)
         {
-            //var entry = ConnectionDb().Table<PlainPlaylistEntryTable>().Where(e => e.SongId.Equals(_songId)).FirstOrDefault();
             ConnectionDb().Delete<PlainPlaylistEntryTable>(primaryId);
+        }
+
+        public static void DeletePlainPlaylistEntryById(int songId)
+        {
+            var conn = ConnectionDb();
+            var item = conn.Table<PlainPlaylistEntryTable>().Where(s=>s.SongId==songId).FirstOrDefault();
+            conn.Delete<PlainPlaylistEntryTable>(item.Id);
         }
 
         public async static void DeleteSmartPlaylist(int id)
@@ -1187,6 +1214,7 @@ namespace NextPlayerDataLayer.Services
                 FileSize = (int)q.FileSize,
                 LastTimePlayed = q.LastPlayed,
                 PlayCount = (int)q.PlayCount,
+                Rating = (int)q.Rating,
                 Title = q.Title,
                 TrackNumber = (int)q.TrackNumber,
                 Year = (int)q.Year,

@@ -57,7 +57,7 @@ namespace NextPlayerDataLayer.Services
             mediaPlayer = BackgroundMediaPlayer.Current;
             mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
-            mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
+            //mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
             mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
         }
 
@@ -273,6 +273,16 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
+        public void UpdateNowPlayingList2()
+        {
+            songList = DatabaseManager.SelectAllSongsFromNowPlaying();
+            currentSongIndex = ApplicationSettingsHelper.ReadSongIndex();
+            if (currentSongIndex >= songList.Count)
+            {
+                currentSongIndex = songList.Count - 1;
+            }
+        }
+
         public void UpdateSongStatistics()
         {
             if (currentSongId>0 &&  BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
@@ -346,19 +356,19 @@ namespace NextPlayerDataLayer.Services
             //Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
         }
 
-        private void mediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
-        {
+        //private void mediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
+        //{
 
-            //if (sender.CurrentState == MediaPlayerState.Playing && startPosition != TimeSpan.FromSeconds(0))
-            //{
-            //    // if the start position is other than 0, then set it now
-            //    sender.Position = startPosition;
-            //    sender.Volume = 1.0;
-            //    startPosition = TimeSpan.FromSeconds(0);
-            //    sender.PlaybackMediaMarkers.Clear();
-            //    paused = false;
-            //}
-        }
+        //    //if (sender.CurrentState == MediaPlayerState.Playing && startPosition != TimeSpan.FromSeconds(0))
+        //    //{
+        //    //    // if the start position is other than 0, then set it now
+        //    //    sender.Position = startPosition;
+        //    //    sender.Volume = 1.0;
+        //    //    startPosition = TimeSpan.FromSeconds(0);
+        //    //    sender.PlaybackMediaMarkers.Clear();
+        //    //    paused = false;
+        //    //}
+        //}
         #endregion
 
     }

@@ -105,6 +105,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="Converters\DateTimeToStringConverter.cs" />
+    <Compile Include="Converters\IntToBitrateConverter.cs" />
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
@@ -158,9 +159,6 @@
     </Compile>
     <Compile Include="View\NewSmartPlaylistView.xaml.cs">
       <DependentUpon>NewSmartPlaylistView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NowPlayingView.xaml.cs">
-      <DependentUpon>NowPlayingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NowPlayingView2.xaml.cs">
       <DependentUpon>NowPlayingView2.xaml</DependentUpon>
@@ -240,10 +238,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\NewSmartPlaylistView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\NowPlayingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

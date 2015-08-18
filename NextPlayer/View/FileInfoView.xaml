@@ -73,23 +73,12 @@
                     Text="File path"
                     Style="{StaticResource DescriptionStyle}"
                     />
-                <TextBlock
+                    <TextBlock
                     Grid.Row="0" Grid.Column="1"
-                    Text="skjdfbskjdbfskdjfbskjdfb skdjfbskjdfb skjdfskjdbf ksdjfb"
+                    Text="{Binding File.FilePath}"
                     Style="{StaticResource ValueStyle}"
                     />
-                <TextBlock
-                    Grid.Row="3" Grid.Column="0"
-                    x:Uid="Title"
-                    Text="TBTitle"
-                    Style="{StaticResource DescriptionStyle}"
-                    />
-                <TextBlock
-                    Grid.Row="3" Grid.Column="1"
-                    Text="{Binding File.Title}"
-                    Style="{StaticResource ValueStyle}"
-                    />
-                <TextBlock
+                    <TextBlock
                     Grid.Row="1" Grid.Column="0"
                     Text="Bitrate"
                     x:Uid="TBBitrate"
@@ -97,7 +86,7 @@
                     />
                 <TextBlock
                     Grid.Row="1" Grid.Column="1"
-                    Text="{Binding File.Bitrate}"
+                    Text="{Binding File.Bitrate, Converter={StaticResource IntToBitrateConverter}}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
@@ -109,6 +98,17 @@
                 <TextBlock
                     Grid.Row="2" Grid.Column="1"
                     Text="{Binding File.FileSize, Converter={StaticResource SizeToStringConverter}}"
+                    Style="{StaticResource ValueStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="3" Grid.Column="0"
+                    x:Uid="TBTitle"
+                    Text="Title"
+                    Style="{StaticResource DescriptionStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="3" Grid.Column="1"
+                    Text="{Binding File.Title}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock

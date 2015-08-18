@@ -7,6 +7,7 @@ namespace NextPlayerDataLayer.Constants
         public const string FirstRun = "firstrun";
         public const string MediaScan = "mediascan";
         public const string NowPlayingListChanged = "nplistchanged";
+        public const string NowPlayingListSorted = "nplistsorted";
         public const string SongId = "songid";
         public const string SongIndex = "songindex";
         public const string PrevSongIndex = "prevsongindex";
@@ -19,6 +20,7 @@ namespace NextPlayerDataLayer.Constants
         public const string Repeat = "repeat";
         public const string Shuffle = "shuffle";
         public const string MediaOpened = "mediaopened";
+        public const string PlayerClosed = "playerclosed";
         public const string UpdateSongStatistics = "updatesongstatistics";
         public const string ResumePlayback = "resumeplayback";
 

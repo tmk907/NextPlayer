@@ -47,7 +47,7 @@ namespace NextPlayer
             {
                 Library.Current.SetDB();
             }
-            Read();
+            //Read();
             UnhandledException += App_UnhandledException;
         }
 
