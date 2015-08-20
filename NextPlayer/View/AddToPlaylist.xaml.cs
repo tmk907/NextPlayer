@@ -1,9 +1,11 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.Converters;
+using NextPlayer.ViewModel;
 using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -36,6 +38,7 @@ namespace NextPlayer.View
         private string artist;
         private string album;
         private string nowPlaying;
+        private ObservableCollection<PlaylistItem> collection;
 
         public AddToPlaylist()
         {
@@ -80,7 +83,8 @@ namespace NextPlayer.View
             if (e.NavigationParameter != null)
             {
                 List<PlaylistItem> list = DatabaseManager.SelectPlainPlaylists();
-                DataContext = list;
+                collection = new ObservableCollection<PlaylistItem>(list);
+                DataContext = collection;
                 String[] s = ParamConvert.ToStringArray(e.NavigationParameter as string);
                 if (s[0] == "genre")
                 {
@@ -177,6 +181,32 @@ namespace NextPlayer.View
                 DatabaseManager.AddNowPlayingToPlaylist(p.Id);
             }
             Frame.GoBack();
+        }
+
+        private void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            playlistNameTextBox.Text = "";
+            FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["NewPlaylistFlyout"]);
+            FlyoutBase.ShowAttachedFlyout(this);
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if (playlistNameTextBox.Text == "")
+            {
+                playlistNameTextBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+            }
+            else
+            {
+                int id = DatabaseManager.InsertPlainPlaylist(playlistNameTextBox.Text);
+                collection.Add(new PlaylistItem(id, false, playlistNameTextBox.Text));
+                FlyoutBase.GetAttachedFlyout(this).Hide();
+            }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.GetAttachedFlyout(this).Hide();
         }
     }
 }

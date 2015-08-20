@@ -204,7 +204,7 @@ namespace NextPlayer.View
             artist = editArtist.Text;
             title = editTitle.Text;
             FlyoutBase.GetAttachedFlyout(this).Hide();
-            if (artist!="" && title!="") ShowLyrics();
+            ShowLyrics();
         }
 
         private void edit_Click(object sender, RoutedEventArgs e)

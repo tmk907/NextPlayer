@@ -175,7 +175,9 @@ namespace NextPlayer.View
 
         private async void Rate()
         {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + "7a609088-e51a-458e-a8ca-5f13fc9ea5a8")); 
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            settings.Values[AppConstants.IsReviewed] = -1;
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId)); 
         }
         
     }

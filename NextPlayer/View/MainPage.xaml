@@ -34,7 +34,7 @@
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="main page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="MainPageTitle" Text="main page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
@@ -54,11 +54,11 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="16"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="16"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Uid="MenuNowPlayingPlaylist"
                         Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
@@ -114,13 +114,13 @@
                         Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
                         Content="Search" 
                         Command="{Binding GoToSearchPage}" 
-                        Margin="{StaticResource RightMargin}"
+                        Margin="{StaticResource LeftMargin}"
                         Style="{StaticResource ButtonStyleMainPage}"/>
                 <Button x:Uid="MenuStop" 
                         Grid.Row="0" Grid.Column="1"
                         Content="Stop" 
                         Command="{Binding Stop}" 
-                        Margin="{StaticResource RightMargin}"
+                        Margin="{StaticResource LeftMargin}"
                         Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
@@ -128,9 +128,9 @@
         </Grid>
         <Grid Grid.Row="2" Margin="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="104"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="104"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -138,7 +138,7 @@
             </Grid.RowDefinitions>
 
             <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                   Margin="24,0,0,0"
+                   Margin="20,0,0,0"
                            Width="80"
                            Height="80"
                            Source="{Binding Cover}"
@@ -193,7 +193,7 @@
                             MinHeight="80"
                             Width="80"
                             Height="80"
-                    Margin="0,0,24,0"
+                    Margin="0,0,20,4"
                         />
 
         </Grid>

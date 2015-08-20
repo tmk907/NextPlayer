@@ -301,7 +301,7 @@
             <Style x:Key="ButtonStyle1" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource PhoneForegroundBrush}"/>
-                <Setter Property="Foreground" Value="{ThemeResource PhoneForegroundBrush}"/>
+                <Setter Property="Foreground" Value="{ThemeResource PhoneAccentBrush}"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="FontFamily" Value="{ThemeResource PhoneFontFamilyNormal}"/>
                 <Setter Property="FontWeight" Value="{ThemeResource PhoneButtonFontWeight}"/>
@@ -339,9 +339,7 @@
                                         <VisualState x:Name="Pressed">
                                             <Storyboard>
                                                 <PointerDownThemeAnimation Storyboard.TargetName="Grid"/>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
-                                                </ObjectAnimationUsingKeyFrames>
+                                                
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
                                                 </ObjectAnimationUsingKeyFrames>

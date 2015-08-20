@@ -130,6 +130,8 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private ObservableCollection<GroupedOC<AlbumItem>> allAlbums = new ObservableCollection<GroupedOC<AlbumItem>>();
+
         /// <summary>
         /// The <see cref="Albums" /> property's name.
         /// </summary>
@@ -145,24 +147,16 @@ namespace NextPlayer.ViewModel
         {
             get
             {
-                if (albums.Count == 0)
+                if (IsInDesignMode)
                 {
-                    if (IsInDesignMode)
-                    {
-                        ObservableCollection<AlbumItem> a = new ObservableCollection<AlbumItem>();
+                    ObservableCollection<AlbumItem> a = new ObservableCollection<AlbumItem>();
 
-                        for (int i = 0; i < 5; i++)
-                        {
-                            a.Add(new AlbumItem());
-                        }
-                        albums = Grouped.CreateGrouped<AlbumItem>(a, x => x.Album);
-                    }
-                    else
+                    for (int i = 0; i < 5; i++)
                     {
-                        LoadAlbums();
+                        a.Add(new AlbumItem());
                     }
+                    albums = Grouped.CreateGrouped<AlbumItem>(a, x => x.Album);
                 }
-                
                 return albums;
             }
 
@@ -240,7 +234,11 @@ namespace NextPlayer.ViewModel
         {
             if (artist == null)
             {
-                Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(), x => x.Album);
+                if (allAlbums.Count == 0)
+                {
+                    allAlbums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(), x => x.Album);
+                }
+                Albums = allAlbums;
             }
             else
             {

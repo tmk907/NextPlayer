@@ -18,6 +18,7 @@ using NextPlayerDataLayer.Enums;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Model;
 using System.ComponentModel;
+using Windows.UI.Xaml;
 
 namespace NextPlayerDataLayer.Services
 {
@@ -380,6 +381,17 @@ namespace NextPlayerDataLayer.Services
             if (bitmap.PixelHeight == 0)
             {
                 var uri = new System.Uri("ms-appx:///Assets/SongCover.png");
+                //Random rnd = new Random();
+                //int i = rnd.Next(1,10);
+                //var uri = new System.Uri("ms-appx:///Assets/Cover/"+i.ToString()+"Cover.jpg");
+                //if (Application.Current.RequestedTheme == ApplicationTheme.Light)
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover.png");
+                //}
+                //if (Application.Current)
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover.png");
+                //}
                 var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
                 using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
@@ -461,6 +473,10 @@ namespace NextPlayerDataLayer.Services
             if (bitmap.PixelHeight == 0)
             {
                 var uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
+                //if (Application.Current.RequestedTheme == ApplicationTheme.Light)
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover192.png");
+                //}
                 var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
                 using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {

@@ -3,8 +3,11 @@ namespace NextPlayerDataLayer.Constants
 {
     public sealed class AppConstants
     {
+        public const string AppId = "7a609088-e51a-458e-a8ca-5f13fc9ea5a8";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
+        public const string IsReviewed = "isreviewed5";
+        public const string LastReviewRemind = "lastreviewremind5";
         public const string MediaScan = "mediascan";
         public const string NowPlayingListChanged = "nplistchanged";
         public const string NowPlayingListSorted = "nplistsorted";

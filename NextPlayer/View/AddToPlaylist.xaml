@@ -7,7 +7,31 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.Resources>
+        <Flyout x:Key="NewPlaylistFlyout">
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="playlistNameTextBox" Text="" Margin="4,0,4,4"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button  x:Uid="ButtonSave" 
+                             Content="Save" 
+                             Margin="4,4,4,4" 
+                             Click="Save_Click"/>
+                    <Button  x:Uid="ButtonCancel"
+                             Content="Cancel" 
+                             Margin="4,4,4,4"
+                             Click="Cancel_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar x:Name="myCommandBar" ClosedDisplayMode="Compact">
+                <AppBarButton x:Uid="AddPlaylist"
+                              Label="Add playlist" 
+                              Icon="Add"
+                              Click="newPlainPlaylist_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -23,12 +47,9 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="SelectPlaylist" 
-                   Text="Select playlist:"
-                   FontSize="32"
-                   Margin="0,12,0,0"/>
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="SelectPlaylist" Text="Select playlist" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <ListView 

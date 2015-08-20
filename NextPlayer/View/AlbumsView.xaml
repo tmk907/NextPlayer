@@ -59,9 +59,9 @@
                               helpers:ItemClickCommand.Command="{Binding ItemClicked}"
                               ItemTemplate="{StaticResource AlbumItemTemplate}">
                         <i:Interaction.Behaviors>
-                            <!--<core:EventTriggerBehavior EventName="Loaded">
+                            <core:EventTriggerBehavior EventName="Loaded">
                                 <core:InvokeCommandAction Command="{Binding LoadItems}" />
-                            </core:EventTriggerBehavior>-->
+                            </core:EventTriggerBehavior>
                             <core:EventTriggerBehavior EventName="Loaded">
                                 <core:InvokeCommandAction
                                     Command="{Binding ScrollListView, Mode=TwoWay}"

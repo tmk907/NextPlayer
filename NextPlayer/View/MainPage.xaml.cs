@@ -1,14 +1,17 @@
 ﻿using GalaSoft.MvvmLight.Threading;
 using NextPlayer.Common;
 using NextPlayer.ViewModel;
+using NextPlayerDataLayer.Constants;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,7 +39,6 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-
             //DispatcherHelper.Initialize();
         }
 
@@ -64,6 +66,9 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
+            reviewfunction();
+
+            
         }
 
         /// <summary>
@@ -113,5 +118,53 @@ namespace NextPlayer.View
             MainPageViewModel viewModel = (MainPageViewModel)DataContext;
             viewModel.Play();
         }
+
+        public async void reviewfunction()
+        {
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
+            {
+                settings.Values.Add(AppConstants.IsReviewed, 0);
+                settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+            }
+            else
+            {
+                int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
+                long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
+                TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
+                if (isReviewed>=0 && isReviewed<5 && TimeSpan.FromDays(5)<=elapsed)//!!!!!!!!! <=
+                {
+                    settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
+                    settings.Values[AppConstants.IsReviewed] = isReviewed++;
+                    ResourceLoader loader = new ResourceLoader();
+
+                    MessageDialog mydial = new MessageDialog(loader.GetString("RateAppMsg"));
+                    mydial.Title = loader.GetString("RateAppTitle");
+                    mydial.Commands.Add(new UICommand(
+                        loader.GetString("Yes"),
+                        new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick)));
+                    mydial.Commands.Add(new UICommand(
+                       loader.GetString("Later"),
+                       new UICommandInvokedHandler(this.CommandInvokedHandler_noclick)));
+                    await mydial.ShowAsync();
+                }
+            }
+        }
+
+        private void CommandInvokedHandler_noclick(IUICommand command)
+        {
+
+        }
+
+        private async void CommandInvokedHandler_yesclick(IUICommand command)
+        {
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            settings.Values[AppConstants.IsReviewed] = -1;
+
+            //add your app id here
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId));
+        }
+
     }
 }
