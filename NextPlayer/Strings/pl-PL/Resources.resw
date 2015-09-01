@@ -471,4 +471,7 @@
   <data name="Yes" xml:space="preserve">
     <value>Oceń</value>
   </data>
+  <data name="AppBarSaveLyrics.Label" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
 </root>

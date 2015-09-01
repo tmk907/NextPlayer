@@ -10,6 +10,7 @@
     <Page.BottomAppBar>
         <CommandBar IsOpen="False" ClosedDisplayMode="Minimal">
             <AppBarButton x:Uid="AppBarEdit" Label="Edit" Icon="Edit" Click="edit_Click"/>
+            <AppBarButton x:Uid="AppBarSaveLyrics" x:Name="appBarSave" Label="Save" Icon="Save" Click="save_Click"/>
         </CommandBar>
     </Page.BottomAppBar>
     <Page.Resources>
@@ -52,7 +53,63 @@
         </Flyout>
     </Page.Resources>
     <Grid x:Name="LayoutRoot">
-        <TextBlock x:Name="statusTextBlock" Text="Connecting..." FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <WebView x:Name="webView1" Visibility="Collapsed"/>
+        <Grid x:Name="LyricsGrid" Margin="0,12,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="40"/>
+                <RowDefinition Height="Auto" MinHeight="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" 
+                       x:Name="titleTB"
+                       Text="Song Title"
+                       FontSize="26"
+                       FontWeight="Medium"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       TextWrapping="WrapWholeWords"
+                       TextAlignment="Center"
+                       />
+            <TextBlock Grid.Row="1" 
+                       x:Name="artistTB"
+                       Text="Artist"
+                       FontSize="24"
+                       FontWeight="Medium"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       TextWrapping="WrapWholeWords"
+                       TextAlignment="Center"
+                       />
+
+            <ScrollViewer Grid.Row="2" 
+                          Height="Auto">
+                <TextBlock x:Name="lyricsTB"
+                       Text="Lyrics Lyrics Lyrics Lyrics 
+                           Lyrics Lyrics Lyrics 
+                           Lyrics Lyrics Lyrics Lyrics 
+                           Lyrics Lyrics 
+                           Lyrics 
+                           Lyrics Lyrics Lyrics "
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Center"
+                        Margin="12,12,12,0"
+                        FontSize="20"
+                        TextAlignment="Center"
+                   />
+            </ScrollViewer>
+        </Grid>
+        <Grid x:Name="WebGrid">
+            <TextBlock x:Name="statusTextBlock" 
+                   Text="Connecting..." 
+                   FontSize="30" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"
+                   Visibility="Collapsed"/>
+            <WebView x:Name="webView1" Visibility="Collapsed"/>
+        </Grid>
+        
     </Grid>
 </Page>

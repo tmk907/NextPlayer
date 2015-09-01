@@ -3,14 +3,21 @@ namespace NextPlayerDataLayer.Constants
 {
     public sealed class AppConstants
     {
+        //App
         public const string AppId = "7a609088-e51a-458e-a8ca-5f13fc9ea5a8";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
+
+        //Review
         public const string IsReviewed = "isreviewed5";
         public const string LastReviewRemind = "lastreviewremind5";
+
+        //BGMessages
         public const string MediaScan = "mediascan";
         public const string NowPlayingListChanged = "nplistchanged";
         public const string NowPlayingListSorted = "nplistsorted";
+
+        
         public const string SongId = "songid";
         public const string SongIndex = "songindex";
         public const string PrevSongIndex = "prevsongindex";
@@ -26,6 +33,13 @@ namespace NextPlayerDataLayer.Constants
         public const string PlayerClosed = "playerclosed";
         public const string UpdateSongStatistics = "updatesongstatistics";
         public const string ResumePlayback = "resumeplayback";
+        public const string SetTimer = "settimer";
+        public const string CancelTimer = "canceltimer";
+
+        //Timer
+        public const string TimerOn = "TimerOn";
+        public const string TimerTime = "TimerTime";
+        public const string TimerTaskName = "BackgroundTimer";
 
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string BackgroundTaskRunning = "BackgroundTaskRunning";
@@ -40,7 +54,7 @@ namespace NextPlayerDataLayer.Constants
         public const string CurrentTrack = "trackname";
         public const string Trackchanged = "songchanged";
 
-
+        //Default smart playlist names
         public const string OstatnioDodane = "OstatnioDodane";
         public const string OstatnioOdtwarzane = "OstatnioOdtwarzane";
         public const string NajlepiejOceniane = "NajlepiejOceniane";

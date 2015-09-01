@@ -403,7 +403,7 @@
     <value>Last time played</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>PlayCount</value>
+    <value>Play count</value>
   </data>
   <data name="TBRating.Text" xml:space="preserve">
     <value>Rating</value>
@@ -470,5 +470,8 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Rate</value>
+  </data>
+  <data name="AppBarSaveLyrics.Label" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

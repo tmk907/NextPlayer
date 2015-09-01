@@ -43,7 +43,12 @@
                     <Image x:Name="albumCover" Width="150" Height="150" Source="{Binding Cover}"/>
                     <StackPanel Orientation="Vertical" Height="150" Width="210">
                         <StackPanel Height="120" VerticalAlignment="Stretch" >
-                            <TextBlock Text="{Binding Album}" MaxHeight="60" FontSize="21" FontWeight="Medium" TextWrapping="WrapWholeWords"  Padding="10,5,5,5"/>
+                            <TextBlock Text="{Binding Album}" 
+                                       MaxHeight="60" 
+                                       FontSize="21" 
+                                       FontWeight="Medium" 
+                                       TextWrapping="WrapWholeWords"  
+                                       Padding="10,5,5,5"/>
                             <TextBlock Text="{Binding Artist}" MaxHeight="60" FontSize="21" FontWeight="Medium" TextWrapping="WrapWholeWords"  Padding="10,5,5,5"/>
                         </StackPanel>
                         <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" Height="30" FontSize="20" FontWeight="Normal"  HorizontalAlignment="Right" Padding="5,0,0,15"/>

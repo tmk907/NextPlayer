@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.Media.Playback;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,6 +34,8 @@ namespace NextPlayer.View
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        bool isTimerOn;
+        bool loading;
 
         public SettingsView()
         {
@@ -80,6 +83,34 @@ namespace NextPlayer.View
             if (a != null)
             {
                 DisableControls();
+            }
+            var d = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            
+            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
+            if (t == null)
+            {
+                isTimerOn = false;
+            }
+            else
+            {
+                isTimerOn = (bool)t;
+            }
+            
+            if (isTimerOn)
+            {
+                timerPicker.IsEnabled = true;
+                timerToggleSwitch.IsOn = true;
+
+                if (d != null)
+                {
+                    loading = true;
+                    timerPicker.Time = TimeSpan.FromTicks((long)d);
+                }
+            }
+            else
+            {
+                timerPicker.IsEnabled = false;
+                timerToggleSwitch.IsOn = false;
             }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
@@ -179,6 +210,77 @@ namespace NextPlayer.View
             settings.Values[AppConstants.IsReviewed] = -1;
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId)); 
         }
-        
+
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                timerPicker.IsEnabled = true;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, timerPicker.Time.Ticks);
+                SendMessage(AppConstants.SetTimer);
+            }
+            else
+            {
+                timerPicker.IsEnabled = false;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+                SendMessage(AppConstants.CancelTimer);
+            }
+        }
+
+        private void TimePicker_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
+        {
+            if (loading)
+            {
+                loading = false;
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, timerPicker.Time.Ticks);
+                TimeSpan t1 = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+                long l1 = t1.Ticks;
+                long l2 = timerPicker.Time.Ticks;
+                TimeSpan t2 = TimeSpan.FromTicks(l2 - l1);
+                if (t2 <= TimeSpan.Zero) return;
+                else
+                {
+                    SendMessage(AppConstants.SetTimer);
+                }
+            }
+        }
+
+        private void SendMessage(string s)
+        {
+            object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundTaskState);
+            if (value == null)
+            {
+                return;
+            }
+            else
+            {
+                bool run = ((String)value).Equals(AppConstants.BackgroundTaskRunning);
+                if (run)
+                {
+                    var msg = new ValueSet();
+                    msg.Add(s, "");
+                    BackgroundMediaPlayer.SendMessageToBackground(msg);
+                }
+            }
+        }
+
+        private void OnCompleted(IBackgroundTaskRegistration task, BackgroundTaskCompletedEventArgs args)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            UpdateUI();
+        }
+
+        private async void UpdateUI()
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                timerToggleSwitch.IsOn = false;
+                timerPicker.IsEnabled = false;
+            });
+        }
     }
 }

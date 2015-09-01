@@ -162,7 +162,6 @@ namespace NextPlayer.View
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
             settings.Values[AppConstants.IsReviewed] = -1;
 
-            //add your app id here
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId));
         }
 

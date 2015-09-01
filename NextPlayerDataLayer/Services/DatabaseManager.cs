@@ -969,6 +969,13 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
+
+        public async static Task<string> GetLyrics(int id)
+        {
+            var result = await SongsConnAsync().Where(s => s.SongId.Equals(id)).ToListAsync();
+            return result.FirstOrDefault().Lyrics;
+        }
+
         #endregion
 
 
@@ -1097,6 +1104,11 @@ namespace NextPlayerDataLayer.Services
         private static void testUpdate(int id)
         {
             var a = SongsConn().Where(i => i.SongId.Equals(id)).FirstOrDefault();
+        }
+
+        public async static Task UpdateLyricsAsync(int id, string lyrics)
+        {
+            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
         }
 
         #endregion

@@ -14,6 +14,7 @@ using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
+using Windows.System.Threading;
 
 namespace NextPlayerBackgroundAudioPlayer
 {
@@ -41,6 +42,9 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private NowPlayingManager nowPlayingManager;
         private bool muted = false;
+
+        ThreadPoolTimer timer = null;
+        bool timerIsSet = false;
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -179,6 +183,12 @@ namespace NextPlayerBackgroundAudioPlayer
                     case AppConstants.NowPlayingListSorted:
                         nowPlayingManager.UpdateNowPlayingList2();
                         break;
+                    case AppConstants.SetTimer:
+                        SetTimer();
+                        break;
+                    case AppConstants.CancelTimer:
+                        TimerCancel();
+                        break;
                 }
             }
         }
@@ -273,6 +283,47 @@ namespace NextPlayerBackgroundAudioPlayer
             systemControls.DisplayUpdater.MusicProperties.Title = nowPlayingManager.GetTitle();
             systemControls.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();
             systemControls.DisplayUpdater.Update();
+        }
+
+        private void SetTimer()
+        {
+            var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
+            long tt = 0;
+            if (t != null)
+            {
+                tt = (long)t;
+            }
+
+            TimeSpan t1 = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
+            long ct = t1.Ticks;
+
+            TimeSpan delay = TimeSpan.FromTicks(tt - ct);
+            if (delay > TimeSpan.Zero)
+            {
+                if (timerIsSet)
+                {
+                    TimerCancel();
+                }
+                timer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(TimerCallback), delay);
+                timerIsSet = true;
+            }
+        }
+
+        private void TimerCallback(ThreadPoolTimer timer)
+        {
+            BackgroundMediaPlayer.Shutdown();
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
+            TimerCancel();
+        }
+
+        private void TimerCancel()
+        {
+            timerIsSet = false;
+            if (timer != null)
+            {
+                timer.Cancel();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.Converters;
+using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,9 @@ namespace NextPlayer.View
         string address;
         string artist;
         string title;
+        int songId;
+        string lyrics;
+        bool original;
         Windows.ApplicationModel.Resources.ResourceLoader loader;
 
         public LyricsView()
@@ -80,13 +84,17 @@ namespace NextPlayer.View
             statusTextBlock.Text = loader.GetString("Connecting") + "...";
             webView1.ContentLoading += webView1_ContentLoading;
             webView1.NavigationStarting += webView1_NavigationStarting;
-            //webView1.FrameNavigationCompleted += webView1_FrameNavigationCompleted;
+            webView1.DOMContentLoaded += webView1_DOMContentLoaded;
             string[] array = ParamConvert.ToStringArray((string)e.NavigationParameter);
             artist = array[0];
             title = array[1];
-            ShowLyrics();
+            songId = Int32.Parse(array[2]);
+            original = true;
+            appBarSave.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            LoadLyrics();
         }
 
+       
         /// <summary>
         /// Preserves state associated with this page in case the application is suspended or the
         /// page is discarded from the navigation cache.  Values must conform to the serialization
@@ -125,6 +133,25 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        private async void LoadLyrics()
+        {
+            lyrics = await DatabaseManager.GetLyrics(songId);
+            if (string.IsNullOrEmpty(lyrics))
+            {
+                WebVisibility(true);
+                ShowLyrics();
+            }
+            else
+            {
+                original = false;
+                WebVisibility(false);
+                titleTB.Text = title;
+                artistTB.Text = artist;
+                lyricsTB.Text = lyrics;
+            }
+        }
+
         async private void ShowLyrics()
         {
             statusTextBlock.Text = loader.GetString("Connecting") + "...";
@@ -142,7 +169,7 @@ namespace NextPlayer.View
             if (isJson)
             {
                 address = jsonList.GetObject().GetNamedString("url");
-
+                address += "?useskin=wikiamobile";
                 try
                 {
                     System.Uri a = new Uri(address);
@@ -191,6 +218,48 @@ namespace NextPlayer.View
             }
         }
 
+        void webView1_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        {
+            if (original)
+            {
+                ParseLyrics();
+                original = false;
+            }
+        }
+
+        private async void ParseLyrics()
+        {
+            try
+            {
+                string html = await webView1.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
+                int i0 = html.IndexOf("Tap what's hiding behind");
+                if (i0 < 0)
+                {
+                    int i1 = html.IndexOf("div class=\"lyricbox");
+                    if (i1 > 0)
+                    {
+                        int i2 = html.IndexOf("</script>", i1) + "</script>".Length;
+                        int i3 = html.IndexOf("<script>", i2);
+
+                        string text = html.Substring(i2, i3 - i2);
+                        lyrics = text.Replace("<br>", "\n").Replace("<b>", "").Replace("</b>", "").Replace("&amp;", "&");
+                        artistTB.Text = artist;
+                        titleTB.Text = title;
+                        lyricsTB.Text = lyrics;
+
+                        SaveLyrics();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private async void SaveLyrics()
+        {
+            await DatabaseManager.UpdateLyricsAsync(songId, lyrics);
+        }
         //private void webView1_FrameNavigationCompleted(WebView sender, WebViewContentLoadingEventArgs args)
         //{
         //    if (args.Uri != null)
@@ -204,6 +273,8 @@ namespace NextPlayer.View
             artist = editArtist.Text;
             title = editTitle.Text;
             FlyoutBase.GetAttachedFlyout(this).Hide();
+            WebVisibility(true);
+            appBarSave.Visibility = Windows.UI.Xaml.Visibility.Visible;
             ShowLyrics();
         }
 
@@ -215,6 +286,24 @@ namespace NextPlayer.View
             FlyoutBase.ShowAttachedFlyout(this);
         }
 
+        private void WebVisibility(bool visible)
+        {
+            if (visible)
+            {
+                WebGrid.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                LyricsGrid.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
+            else
+            {
+                WebGrid.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                LyricsGrid.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+        }
+
+        private void save_Click(object sender, RoutedEventArgs e)
+        {
+            ParseLyrics();
+        }
 
     }
 }

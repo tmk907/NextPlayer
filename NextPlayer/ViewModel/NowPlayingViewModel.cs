@@ -645,9 +645,10 @@ namespace NextPlayer.ViewModel
                         {
                             NextPlayer.Common.SuspensionManager.SessionState.Add("lyrics", true);
                         }
-                        String[] s = new String[2];
+                        String[] s = new String[3];
                         s[0] = Artist;
                         s[1] = Title;
+                        s[2] = songId.ToString();
                         navigationService.NavigateTo(ViewNames.LyricsView, ParamConvert.ToString(s));
                     }));
             }
@@ -776,14 +777,14 @@ namespace NextPlayer.ViewModel
             {
                 navigationService.NavigateTo(ViewNames.MainView);
             }
-            if (parameter != null)
-            {
+            //if (parameter != null)
+            //{
                 
-                if (parameter.GetType() == typeof(int))
-                {
-                    songId = (int)parameter;
-                }
-            }
+            //    if (parameter.GetType() == typeof(int))
+            //    {
+            //        songId = (int)parameter;
+            //    }
+            //}
         }
 
         public void Deactivate(Dictionary<string, object> state)
