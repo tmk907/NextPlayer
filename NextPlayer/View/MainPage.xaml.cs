@@ -130,7 +130,7 @@ namespace NextPlayer.View
                 int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
                 long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
                 TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-                if (isReviewed>=0 && isReviewed<5 && TimeSpan.FromDays(5)<=elapsed)//!!!!!!!!! <=
+                if (isReviewed>=0 && isReviewed<8 && TimeSpan.FromDays(5)<=elapsed)//!!!!!!!!! <=
                 {
                     settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
                     settings.Values[AppConstants.IsReviewed] = isReviewed++;

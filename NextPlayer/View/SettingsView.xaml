@@ -123,7 +123,9 @@
                         Grid.Row="6" Grid.Column="0"
                         Content="Show Log" 
                         Click="ShowLog_Click" 
-                        Width="200"/>
+                        Width="200"
+                        Visibility="Collapsed"
+                        />
                 <ScrollViewer Grid.Row="7" Grid.ColumnSpan="2">
                     <TextBlock x:Name="logTB"
                                FontSize="14"

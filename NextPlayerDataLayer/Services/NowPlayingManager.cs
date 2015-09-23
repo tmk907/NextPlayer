@@ -117,6 +117,7 @@ namespace NextPlayerDataLayer.Services
             }
             paused = false;
             object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
+            ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongId);
             if (value2 != null)
             {
                 startPosition = TimeSpan.Parse(value2.ToString());
@@ -320,8 +321,8 @@ namespace NextPlayerDataLayer.Services
 
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
-            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG media opened");
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG media opened");
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
 
             // wait for media to be ready
             ValueSet message = new ValueSet();
@@ -340,8 +341,8 @@ namespace NextPlayerDataLayer.Services
 
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
-            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG NP ended");
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG NP ended");
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
 
             if (repeat.Equals(RepeatEnum.NoRepeat))
             {

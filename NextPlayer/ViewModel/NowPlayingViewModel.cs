@@ -758,14 +758,14 @@ namespace NextPlayer.ViewModel
                         NextPlayer.Common.SuspensionManager.SessionState.Remove("mainpage");
                     }
                     object r =  ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.ResumePlayback);
-                    if (r != null)
-                    {
-                        StartBackgroundAudioTask(AppConstants.ResumePlayback, CurrentSongIndex);
-                    }
-                    else
-                    {
+                    //if (r != null)
+                    //{
+                    //    StartBackgroundAudioTask(AppConstants.ResumePlayback, CurrentSongIndex);
+                    //}
+                    //else
+                    //{
                         StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
-                    }
+                    //}
                 }
                 StartTimer();
             }
