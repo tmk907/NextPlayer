@@ -14,6 +14,12 @@ using Windows.UI.Xaml.Controls;
 using NextPlayerDataLayer.Common;
 using NextPlayer.Converters;
 using NextPlayerDataLayer.Helpers;
+using Windows.UI.StartScreen;
+using NextPlayerDataLayer.Constants;
+using Windows.ApplicationModel.Resources;
+using Windows.Data.Xml.Dom;
+using Windows.UI.Notifications;
+using Windows.Storage;
 
 namespace NextPlayer.ViewModel
 {
@@ -245,6 +251,106 @@ namespace NextPlayer.ViewModel
                 Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artist), x => x.Album);
             }
         }
+
+        private RelayCommand<AlbumItem> pinAlbum;
+
+        /// <summary>
+        /// Gets the PinAlbum.
+        /// </summary>
+        public RelayCommand<AlbumItem> PinAlbum
+        {
+            get
+            {
+                return pinAlbum
+                    ?? (pinAlbum = new RelayCommand<AlbumItem>(
+                    p =>
+                    {
+                        Pin(p);
+                    }));
+            }
+        }
+
+        public async void Pin(AlbumItem p)
+        {
+            int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
+            string tileId = AppConstants.TileId + id.ToString();
+            ApplicationSettingsHelper.SaveTileIdValue(id);
+            
+            if (!SecondaryTile.Exists(tileId))
+            {
+                string imageName = await Library.Current.SaveAlbumCover(p.Album, artist, tileId);
+                string displayName = "Next Player";
+                string tileActivationArguments = ParamConvert.ToString(new string[] { "album", p.Album, artist });
+                Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
+
+                SecondaryTile secondaryTile = new SecondaryTile(tileId,
+                                                    displayName,
+                                                    tileActivationArguments,
+                                                    square150x150Logo,
+                                                    TileSize.Square150x150);
+                secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/AppImages/WideLogo/WideLogo.png");
+                secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/AppImages/Square71x71Logo/Square71x71LogoTr.png");
+
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileId, tileId);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ParamConvert.ToString(new string[]{p.Album,p.Artist}));
+                ResourceLoader loader = new ResourceLoader();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Album"));
+                if (imageName.Contains(tileId))
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileImage, "yes");
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileImage, "no");
+                }
+
+                App.OnNewTilePinned = UpdateNewSecondaryTile;
+
+                await secondaryTile.RequestCreateAsync();
+            }
+        }
+
+        public async void UpdateNewSecondaryTile()
+        {
+            string name = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileName) as string;
+            string[] s = ParamConvert.ToStringArray(name);
+            string id = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileId) as string;
+            string type = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileType) as string;
+            string hasImage = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileImage) as string;
+
+            XmlDocument tileXml;
+            //XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text02);
+            //string imagePath = "ms-appx:///Assets/AppImages/Logo/Logo.png";
+            
+            if (hasImage=="no")
+            {
+                tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text02);
+            }
+            else
+            {
+                tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150PeekImageAndText02);
+                var tileImageAttributes = tileXml.GetElementsByTagName("image");
+                tileImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appdata:///local/" + id + ".jpg";
+                //tileImageAttributes[0].Attributes.GetNamedItem("alt").NodeValue = "album cover";
+            }
+
+            XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
+            tileTextAttributes[0].InnerText = type;
+            tileTextAttributes[1].InnerText = s[0] + "\n" + s[1];
+
+
+            XmlDocument wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text09);
+            XmlNodeList textAttr = wideTile.GetElementsByTagName("text");
+            textAttr[0].InnerText = type;
+            textAttr[1].InnerText = s[0] + "\n" + s[1];
+
+            IXmlNode node = tileXml.ImportNode(wideTile.GetElementsByTagName("binding").Item(0), true);
+            tileXml.GetElementsByTagName("visual").Item(0).AppendChild(node);
+
+            TileNotification tileNotification = new TileNotification(tileXml);
+            TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
+        }
+
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {

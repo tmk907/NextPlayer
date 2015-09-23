@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Threading;
 using NextPlayer.Common;
+using NextPlayer.Converters;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
@@ -13,6 +14,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -47,7 +50,9 @@ namespace NextPlayer
             {
                 Library.Current.SetDB();
             }
+            ManageSecondaryTileImages();
             //Read();
+            //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
         }
 
@@ -60,7 +65,7 @@ namespace NextPlayer
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             //NextPlayerDataLayer.Diagnostics.Logger.Save(Library.Current.Read());
-            NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception + "Message:" + e.Message);
+            NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception.ToString() + "\nMessage:\n" + e.Message);
             NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
@@ -85,9 +90,47 @@ namespace NextPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             Frame rootFrame = Window.Current.Content as Frame;
+            
+            bool fromTile = false;
+            if (e.TileId.Contains(AppConstants.TileId))
+            {
+                string[] s = ParamConvert.ToStringArray(e.Arguments);
 
+                if (s[0].Equals("album"))
+                {
+                    var a = DatabaseManager.GetSongItemsFromAlbum(s[1], s[2]);
+                    Library.Current.SetNowPlayingList(a);
+                }
+                else if (s[0].Equals("playlist"))
+                {
+                    if (s[2].Equals(true.ToString()))
+                    {
+                        Library.Current.SetNowPlayingList(DatabaseManager.GetSongItemsFromSmartPlaylist(Int32.Parse(s[1])));
+                    }
+                    else
+                    {
+                        Library.Current.SetNowPlayingList(DatabaseManager.GetSongItemsFromPlainPlaylist(Int32.Parse(s[1])));
+                    }
+                }
+                else if (s[0].Equals("artist"))
+                {
+                    Library.Current.SetNowPlayingList(DatabaseManager.GetSongItemsFromArtist(s[1]));
+                }
+                else if (s[0].Equals("genre"))
+                {
+                    Library.Current.SetNowPlayingList(DatabaseManager.GetSongItemsFromGenre(s[1]));
+                }
+                else if (s[0].Equals("folder"))
+                {
+                    Library.Current.SetNowPlayingList(DatabaseManager.GetSongItemsFromFolder(s[1])); 
+                }
+                ApplicationSettingsHelper.SaveSongIndex(0);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TilePlay, true);
+                rootFrame = null;
+                fromTile = true;
+            }
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -96,26 +139,33 @@ namespace NextPlayer
                 rootFrame = new Frame();
 
                 // Associate the frame with a SuspensionManager key.
+                if (fromTile)
+                {
+                    SuspensionManager.SessionState.Clear();
+                }
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
                 // TODO: change this value to a cache size that is appropriate for your application
                 rootFrame.CacheSize = 1;
-
+                
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // Restore the saved session state only when appropriate.
-                    try
+                    if (!fromTile)
                     {
+                        try
+                        {
 
-                        //NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
-                        //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
-                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
-                        await SuspensionManager.RestoreAsync();
-                    }
-                    catch (SuspensionManagerException)
-                    {
-                        // Something went wrong restoring state.
-                        // Assume there is no state and continue.
+                            //NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
+                            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
+                            await SuspensionManager.RestoreAsync();
+                        }
+                        catch (SuspensionManagerException)
+                        {
+                            // Something went wrong restoring state.
+                            // Assume there is no state and continue.
+                        }
                     }
                 }
 
@@ -177,6 +227,16 @@ namespace NextPlayer
             //NextPlayerDataLayer.Diagnostics.Logger.Save("on suspending" + Library.Current.Read());
             //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             await SuspensionManager.SaveAsync();
+
+            if (OnNewTilePinned != null)
+            {
+                // Perform the action.
+                OnNewTilePinned();
+
+                // Clear the action when finished. 
+                OnNewTilePinned = null;
+            }
+
             deferral.Complete();
         }
 
@@ -206,5 +266,33 @@ namespace NextPlayer
                 return false;
             }
         }
+
+        private async void ManageSecondaryTileImages()
+        {
+            var tiles = await SecondaryTile.FindAllAsync();
+            StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            var files = await localFolder.GetFilesAsync();
+            bool exist;
+            foreach(var file in files)
+            {
+                // image name = id + ".jpg"
+                // secondary tile id = AppConstants.TileId + id.ToString()
+                if (file.FileType.Equals(".jpg") && file.DisplayName.StartsWith(AppConstants.TileId))
+                {
+                    exist = false;
+                    foreach (var tile in tiles)
+                    {
+                        if (tile.TileId == file.DisplayName) exist = true;
+                    }
+                    if (!exist)
+                    {
+                        await file.DeleteAsync(StorageDeleteOption.Default);
+                    }
+                }
+            }
+
+        }
+
+        public static Action OnNewTilePinned { get; set; }
     }
 }

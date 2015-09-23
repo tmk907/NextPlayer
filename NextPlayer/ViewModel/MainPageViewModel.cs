@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -48,12 +49,17 @@ namespace NextPlayer.ViewModel
                 ApplicationSettingsHelper.SaveSongIndex((int)value);
             }
         }
+        private AutoResetEvent SererInitialized;
 
         public MainPageViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            SererInitialized = new AutoResetEvent(false);
+
             App.Current.Suspending += ForegroundApp_Suspending;
             App.Current.Resuming += ForegroundApp_Resuming;
+
+            
         }
 
         #region Properties
@@ -331,6 +337,8 @@ namespace NextPlayer.ViewModel
                         {
                             if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
                             {
+                                //NextPlayerDataLayer.Diagnostics.Logger.Save("FG Main closed");
+                                //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                                 navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
                             }
                             else
@@ -339,9 +347,11 @@ namespace NextPlayer.ViewModel
                                 {
                                     NextPlayer.Common.SuspensionManager.SessionState.Add("mainpage", true);
                                 }
+                                //NextPlayerDataLayer.Diagnostics.Logger.Save("FG Main not closed");
+                                //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                                 navigationService.NavigateTo(ViewNames.NowPlayingView);
                             }
-                            
+
                         }
                     }));
             }
@@ -402,7 +412,12 @@ namespace NextPlayer.ViewModel
                     ?? (stop = new RelayCommand(
                     () =>
                     {
-                        BackgroundMediaPlayer.Shutdown();
+                        if (IsMyBackgroundTaskRunning)
+                        {
+                            //SendMessage(AppConstants.ShutdownBGPlayer);
+                            //RemoveMediaPlayerEventHandlers();
+                            SendMessage(AppConstants.ShutdownBGPlayer);
+                        }
                     }));
             }
         }
@@ -414,8 +429,10 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            //NextPlayerDataLayer.Diagnostics.Logger.Save("FG Main activate");
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             int index = CurrentSongIndex;
-            if (index > -1)
+            if (index > -1 && Library.Current.NowPlayingList.Count > 0)
             {
                 SongItem song = Library.Current.NowPlayingList.ElementAt(index);
                 Title = song.Title;
@@ -428,12 +445,28 @@ namespace NextPlayer.ViewModel
                 Artist = "-";
                 SetDefaultCover();
             }
-            
+            //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
             if (IsMyBackgroundTaskRunning)
             {
                 AddMediaPlayerEventHandlers();
             }
-            
+            else
+            {
+                //StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+            }
+
+            if (ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TilePlay) != null)
+            {
+                if (IsMyBackgroundTaskRunning)
+                {
+                    SendMessage(AppConstants.NowPlayingListChanged);
+                    SendMessage(AppConstants.StartPlayback, 0);
+                }
+                else
+                {
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
+                }
+            }
         }
 
         public void Deactivate(Dictionary<string, object> state)
@@ -455,7 +488,10 @@ namespace NextPlayer.ViewModel
 
         public void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
-            RemoveMediaPlayerEventHandlers();
+            if (IsMyBackgroundTaskRunning)
+            {
+                RemoveMediaPlayerEventHandlers();
+            }
         }
 
         private void RemoveMediaPlayerEventHandlers()
@@ -463,13 +499,12 @@ namespace NextPlayer.ViewModel
             BackgroundMediaPlayer.MessageReceivedFromBackground -= this.BackgroundMediaPlayer_MessageReceivedFromBackground;
         }
 
-        
         private void AddMediaPlayerEventHandlers()
         {
             BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
         }
-       
-        async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+
+        void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             foreach (string key in e.Data.Keys)
             {
@@ -479,17 +514,29 @@ namespace NextPlayer.ViewModel
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
                             CurrentSongIndex = Int32.Parse(e.Data[key].ToString());
-                            SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
-                            SetCover(song.Path);
-                            Artist = song.Artist;
-                            Title = song.Title;
+                            try
+                            {
+                                SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                                SetCover(song.Path);
+                                Artist = song.Artist;
+                                Title = song.Title;
+                            }
+                            catch (System.IndexOutOfRangeException)
+                            {
+                                SetDefaultCover();
+                                Artist = "-";
+                                Title = "-";
+                            }
                         });
                         break;
-                    case AppConstants.PlayerClosed:
-                        DispatcherHelper.CheckBeginInvokeOnUI(() => 
-                        {
-                            RemoveMediaPlayerEventHandlers();
-                        });
+                    //case AppConstants.PlayerClosed://! mozna usunac
+                    //    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    //    {
+                    //        RemoveMediaPlayerEventHandlers();
+                    //    });
+                    //    break;
+                    case AppConstants.BackgroundTaskStarted:
+                        SererInitialized.Set();
                         break;
                 }
             }
@@ -510,17 +557,18 @@ namespace NextPlayer.ViewModel
                 }
                 else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
                 {
-                    if (CurrentSongIndex > -1)
+                    if (CurrentSongIndex > -1 && CurrentSongIndex < Library.Current.NowPlayingList.Count)
                     {
-                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                        SendMessage(AppConstants.NowPlayingListChanged);
+                        SendMessage(AppConstants.StartPlayback, CurrentSongIndex);
                     }
                 }
             }
             else
             {
-                if (CurrentSongIndex > -1)
+                if (CurrentSongIndex > -1 && CurrentSongIndex < Library.Current.NowPlayingList.Count)
                 {
-                    navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }
             }
         }
@@ -539,17 +587,19 @@ namespace NextPlayer.ViewModel
                 }
                 else if (MediaPlayerState.Closed == BackgroundMediaPlayer.Current.CurrentState)
                 {
-                    if (CurrentSongIndex > -1)
+                    if (CurrentSongIndex > -1 && CurrentSongIndex < Library.Current.NowPlayingList.Count)
                     {
-                        navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                        RemoveMediaPlayerEventHandlers();
+                        AddMediaPlayerEventHandlers();
+                        SendMessage(AppConstants.SkipNext);
                     }
                 }
             }
             else
             {
-                if (CurrentSongIndex > -1)
+                if (CurrentSongIndex > -1 && CurrentSongIndex < Library.Current.NowPlayingList.Count)
                 {
-                    navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
+                    StartBackgroundAudioTask(AppConstants.StartPlayback, CurrentSongIndex);
                 }
             }
         }
@@ -577,5 +627,24 @@ namespace NextPlayer.ViewModel
         {
             Cover = await Library.Current.GetDefaultSmallCover();
         }
+
+        private void StartBackgroundAudioTask(string s, object o)
+        {
+            BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+            var backgroundtaskinitializationresult = Windows.ApplicationModel.Core.CoreApplication.MainView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                bool result = SererInitialized.WaitOne(10000);
+                if (result == true)
+                {
+                    SendMessage(s, o);
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
+                    throw new Exception("Background Audio Task didn't start in expected time");
+                }
+            });
+        }
+
     }
 }

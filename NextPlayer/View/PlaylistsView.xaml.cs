@@ -166,5 +166,12 @@ namespace NextPlayer.View
            ViewModel.AddToNowPlaying(item);
         }
 
+        private void Pin_Click(object sender, RoutedEventArgs e)
+        {
+            PlaylistItem item = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
+            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
+            ViewModel.PinPlaylist(item);
+        }
+
     }
 }

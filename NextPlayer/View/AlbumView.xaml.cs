@@ -32,6 +32,7 @@ namespace NextPlayer.View
         public AlbumView()
         {
             this.InitializeComponent();
+            ContentRoot.Width = Windows.UI.Xaml.Window.Current.Bounds.Width - 2 * 19;
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;

@@ -18,9 +18,9 @@ namespace NextPlayerDataLayer.Helpers
 
     public class Repeat
     {
-        public static readonly string NoRepeat = "\uE17e\uE1cd";
-        public static readonly string RepeatOnce = "\uE17e\uE1cc";
-        public static readonly string RepeatPlaylist = "\uE17e\uE1cd";
+        public static readonly string NoRepeat = "\uE1cd";//\uE17e
+        public static readonly string RepeatOnce = "\uE1cc";
+        public static readonly string RepeatPlaylist = "\uE1cd";
 
         public static RepeatEnum Next(RepeatEnum e)
         {

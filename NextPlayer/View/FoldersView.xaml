@@ -28,6 +28,8 @@
                                         Command="{Binding DataContext.AddToNowPlaying, ElementName=listView}" CommandParameter="{Binding}"/>
                         <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=listView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
+                                        Command="{Binding DataContext.PinFolder, ElementName=listView}" CommandParameter="{Binding}"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <Grid.RowDefinitions>

@@ -366,6 +366,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
+                if (IsInDesignMode) progressBarValue = 40.0;
                 return progressBarValue;
             }
 
@@ -396,6 +397,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
+                if (IsInDesignMode) progressBarValue = 80.0;
                 return progressBarMaxValue;
             }
 
@@ -446,7 +448,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public const string RepeatButtonContentPropertyName = "RepeatButtonContent";
 
-        private string repeatButtonContent = "\uE17e\uE1cd";
+        private string repeatButtonContent = "\uE1cd";
 
         /// <summary>
         /// Sets and gets the RepeatButtonContent property.
@@ -456,6 +458,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
+                if (IsInDesignMode) repeatButtonContent = "&#xE1cd;";
                 return repeatButtonContent;
             }
 
@@ -680,18 +683,11 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
-            //if (parameter != null)
-            //{
-            //    Library.Current.Save("NPVM Activate " + CurrentSongIndex.ToString() + "," + parameter.ToString());
-            //}
-            //else
-            //{
-            //    Library.Current.Save("NPVM Activate " + CurrentSongIndex.ToString());
-            //}
+            
             //App.Current.Suspending += ForegroundApp_Suspending;
             //App.Current.Resuming += ForegroundApp_Resuming;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
-
+            
+            
             index = CurrentSongIndex;
             if (index > -1)
             {
@@ -789,8 +785,10 @@ namespace NextPlayer.ViewModel
 
         public void Deactivate(Dictionary<string, object> state)
         {
-            RemoveMediaPlayerEventHandlers();
-            
+            if (IsMyBackgroundTaskRunning)
+            {
+                RemoveMediaPlayerEventHandlers();
+            }
             StopTimer();
         }
 
@@ -852,7 +850,10 @@ namespace NextPlayer.ViewModel
         public void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             StopTimer();
-            RemoveMediaPlayerEventHandlers();
+            if (IsMyBackgroundTaskRunning)
+            {
+                RemoveMediaPlayerEventHandlers();
+            }
             var deferral = e.SuspendingOperation.GetDeferral();
             //Library.Current.Save("suspending");
             
@@ -887,37 +888,55 @@ namespace NextPlayer.ViewModel
         /// </summary>
         private void StartBackgroundAudioTask(string s, object o)
         {
-            AddMediaPlayerEventHandlers();
             //IAsyncAction backgroundtaskinitializationresult = ;
-            Task.Run(() =>
-            {
-                bool result = SererInitialized.WaitOne(10000);
-                //Send message to initiate playback
-                if (result == true)
+            BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+            var backgroundtaskinitializationresult = Windows.ApplicationModel.Core.CoreApplication.MainView.Dispatcher.RunAsync( CoreDispatcherPriority.Normal,() =>
                 {
-                    SendMessage(s, o);
-                }
-                else
-                {
-                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
-                    throw new Exception("Background Audio Task didn't start in expected time");
-                }
-            }
-            );
+                    bool result = SererInitialized.WaitOne(10000);
+                    if (result == true)
+                    {
+                        SendMessage(s, o);
+                        BackgroundMediaPlayer.MessageReceivedFromBackground -= this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+                        AddMediaPlayerEventHandlers();
+                    }
+                    else
+                    {
+                        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
+                        throw new Exception("Background Audio Task didn't start in expected time");
+                    }
+                });
+            
+            //Task.Run(() =>
+            //{
+            //    bool result = SererInitialized.WaitOne(10000);
+            //    if (result == true)
+            //    {
+            //        SendMessage(s, o);
+            //        BackgroundMediaPlayer.MessageReceivedFromBackground -= this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+            //        AddMediaPlayerEventHandlers();
+            //    }
+            //    else
+            //    {
+            //        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
+            //        throw new Exception("Background Audio Task didn't start in expected time");
+            //    }
+            //}
+            //);
             //StartTimer();
-            //backgroundtaskinitializationresult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
+            backgroundtaskinitializationresult.Completed = BackgroundTaskInitializationCompleted;
         }
 
         private void BackgroundTaskInitializationCompleted(IAsyncAction action, AsyncStatus status)
         {
             if (status == AsyncStatus.Completed)
             {
-                //Debug.WriteLine("Background Audio Task initialized");
+                NextPlayerDataLayer.Diagnostics.Logger.Save("Background Audio Task initialized");
             }
             else if (status == AsyncStatus.Error)
             {
-                //Debug.WriteLine("Background Audio Task could not initialized due to an error ::" + action.ErrorCode.ToString());
+                NextPlayerDataLayer.Diagnostics.Logger.Save("Background Audio Task could not initialized due to an error ::" + action.ErrorCode.ToString());
             }
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
         }
         #endregion
 
@@ -928,7 +947,7 @@ namespace NextPlayer.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        async void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
+        void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
             switch (sender.CurrentState)
             {
@@ -971,7 +990,7 @@ namespace NextPlayer.ViewModel
         /// <summary>
         /// This event fired when a message is recieved from Background Process
         /// </summary>
-        async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+        void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             foreach (string key in e.Data.Keys)
             {
@@ -1017,6 +1036,7 @@ namespace NextPlayer.ViewModel
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
                             StopTimer();
+                            RemoveMediaPlayerEventHandlers();
                             //ProgressBarValue = 0.0;
                             //CurrentTime = TimeSpan.Zero;
                             //EndTime = TimeSpan.Zero;
@@ -1119,7 +1139,6 @@ namespace NextPlayer.ViewModel
         {
             // get HRESULT from event args 
             string hr = GetHresultFromErrorMessage(e);
-
             // Handle media failed event appropriately 
         }
 

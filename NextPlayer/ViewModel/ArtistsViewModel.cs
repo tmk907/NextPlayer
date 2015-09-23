@@ -14,6 +14,11 @@ using NextPlayerDataLayer.Common;
 using Windows.UI.Xaml.Controls;
 using NextPlayer.Converters;
 using NextPlayerDataLayer.Helpers;
+using NextPlayerDataLayer.Constants;
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
+using Windows.ApplicationModel.Resources;
+using Windows.UI.StartScreen;
 
 namespace NextPlayer.ViewModel
 {
@@ -145,6 +150,75 @@ namespace NextPlayer.ViewModel
                         navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
                     }));
             }
+        }
+
+        private RelayCommand<ArtistItem> pinArtist;
+
+        /// <summary>
+        /// Gets the PinArtist.
+        /// </summary>
+        public RelayCommand<ArtistItem> PinArtist
+        {
+            get
+            {
+                return pinArtist
+                    ?? (pinArtist = new RelayCommand<ArtistItem>(
+                    p =>
+                    {
+                        Pin(p);
+                    }));
+            }
+        }
+        public async void Pin(ArtistItem artist)
+        {
+            int id = ApplicationSettingsHelper.ReadTileIdValue() + 1;
+            string tileId = AppConstants.TileId + id.ToString();
+            ApplicationSettingsHelper.SaveTileIdValue(id);
+
+            string displayName = "Next Player";
+            string tileActivationArguments = ParamConvert.ToString(new string[] { "artist", artist.Artist});
+            Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
+
+            SecondaryTile secondaryTile = new SecondaryTile(tileId,
+                                                displayName,
+                                                tileActivationArguments,
+                                                square150x150Logo,
+                                                TileSize.Wide310x150);
+            secondaryTile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/AppImages/WideLogo/WideLogo.png");
+            secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/AppImages/Square71x71Logo/Square71x71LogoTr.png");
+
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileId, tileId);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, artist.Artist);
+            ResourceLoader loader = new ResourceLoader();
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Artist"));
+
+            App.OnNewTilePinned = UpdateNewSecondaryTile;
+
+            await secondaryTile.RequestCreateAsync();
+        }
+
+        public void UpdateNewSecondaryTile()
+        {
+            string name = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileName) as string;
+            string id = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileId) as string;
+            string type = ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.TileType) as string;
+
+            XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text02);
+            XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
+            tileTextAttributes[0].InnerText = type;
+            tileTextAttributes[1].InnerText = name;
+
+            XmlDocument wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text09);
+            XmlNodeList textAttr = wideTile.GetElementsByTagName("text");
+            textAttr[0].InnerText = type;
+            textAttr[1].InnerText = name;
+
+            IXmlNode node = tileXml.ImportNode(wideTile.GetElementsByTagName("binding").Item(0), true);
+            tileXml.GetElementsByTagName("visual").Item(0).AppendChild(node);
+
+            TileNotification tileNotification = new TileNotification(tileXml);
+            TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
         }
 
         private RelayCommand<ArtistItem> itemClicked;

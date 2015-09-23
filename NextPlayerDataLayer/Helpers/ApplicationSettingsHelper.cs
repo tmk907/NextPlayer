@@ -82,5 +82,24 @@ namespace NextPlayerDataLayer.Helpers
             ids.Add((int)ReadSettingsValue(AppConstants.NajrzadziejOdtwarzane), AppConstants.NajrzadziejOdtwarzane);
             return ids;
         }
+
+        public static int ReadTileIdValue()
+        {
+            object value = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileIdValue);
+            if (value != null)
+            {
+                return Int32.Parse(value.ToString());
+            }
+            else
+            {
+                SaveTileIdValue(1);
+                return 1;
+            }
+        }
+
+        public static void SaveTileIdValue(int id)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileIdValue,id);
+        }
     }
 }

@@ -486,11 +486,81 @@ namespace NextPlayerDataLayer.Services
             return bitmap;
         }
 
-        //public async Task<BitmapImage> GetAlbumCover(string album)
-        //{
-        //    string path = Songs.Where(s => s.Album.Equals(album)).Select(p => p.Path).FirstOrDefault();
-        //    return await GetCover(path);
-        //}
+        public async Task<string> SaveAlbumCover(string album, string artist, string tileId)
+        {
+            string path = DatabaseManager.GetSongItemsFromAlbum(album, artist).FirstOrDefault().Path;
+            string name = await SaveSongCover(path,tileId);
+            return name;
+        }
+
+        public async Task<string> SaveSongCover(string path, string fileName)
+        {
+            string imagePath = "";
+            
+            int a = 0;
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                Stream fileStream = await file.OpenStreamForReadAsync();
+                var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                a = tagFile.Tag.Pictures.Length;
+               
+                if (a > 0)
+                {
+                    IPicture pic = tagFile.Tag.Pictures[0];
+                    MemoryStream stream = new MemoryStream(pic.Data.Data);
+
+                    StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                    StorageFile storageFile = await localFolder.CreateFileAsync(fileName+".jpg", CreationCollisionOption.ReplaceExisting);
+                    imagePath = "ms-appdata:///local/" + fileName + ".jpg";
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (Stream outputStream = await storageFile.OpenStreamForWriteAsync())
+                    {
+                        stream.CopyTo(outputStream);
+                    }
+                }
+                else
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
+                    try
+                    {
+                        IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+                        if (files.Count > 0)
+                        {
+                            foreach (var x in files)
+                            {
+                                if (x.Path.EndsWith("jpg"))
+                                {
+                                    StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                                    StorageFile storageFile = await localFolder.CreateFileAsync(fileName+".jpg", CreationCollisionOption.ReplaceExisting);
+                                    imagePath = "ms-appdata:///local/"+ fileName + ".jpg";
+                                    using (Stream stream = await x.OpenStreamForReadAsync())
+                                    {
+                                        using (Stream outputStream = await storageFile.OpenStreamForWriteAsync())
+                                        {
+                                            stream.CopyTo(outputStream);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            if (imagePath=="")
+            {
+                imagePath = "ms-appx:///Assets/AppImages/Logo/Logo.png";
+            }
+            return imagePath;
+        }
 
         private void UpdateLibrary(string s)
         {

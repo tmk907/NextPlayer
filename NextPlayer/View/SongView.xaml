@@ -72,11 +72,11 @@
                                     InputConverterParameter="{Binding ElementName=SongsListView}" />
                             </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                        <ListView.ItemContainerStyle>
+                        <!--<ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
-                        </ListView.ItemContainerStyle>
+                        </ListView.ItemContainerStyle>-->
                         <ListView.GroupStyle>
                             <GroupStyle HidesIfEmpty="True" HeaderTemplate="{StaticResource ZoomedInHeaderTemplate}"/>
                         </ListView.GroupStyle>

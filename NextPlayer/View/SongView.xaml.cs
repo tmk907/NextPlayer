@@ -28,11 +28,14 @@ namespace NextPlayer.View
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
+        private double width;
         public SongView()
         {
+            //var scaleFactor = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+            //width = Windows.UI.Xaml.Window.Current.Bounds.Width;
             this.InitializeComponent();
-
+            //width = width * scaleFactor;
+            ContentRoot.Width = Windows.UI.Xaml.Window.Current.Bounds.Width - 2 * 19;
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
@@ -71,6 +74,7 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
+
         }
 
         /// <summary>

@@ -83,7 +83,19 @@ namespace NextPlayerDataLayer.Services
             }
             catch (Exception e)
             {
-                SendSkipNext();
+                if (currentSongIndex >= 0 && currentSongIndex < songList.Count)
+                {
+                    if (!paused)
+                    {
+                        SendSkipNext();
+                    }
+                }
+                else
+                {
+                    ValueSet message = new ValueSet();
+                    message.Add(AppConstants.ShutdownBGPlayer, "");
+                    BackgroundMediaPlayer.SendMessageToBackground(message);
+                }
             }
             
         }
@@ -228,6 +240,10 @@ namespace NextPlayerDataLayer.Services
 
         private int GetRandomNumber()
         {
+            if (songList.Count == 1)
+            {
+                return 0;
+            }
             Random rnd = new Random();
             int r = rnd.Next(songList.Count);
             while (r == currentSongIndex)
@@ -256,12 +272,20 @@ namespace NextPlayerDataLayer.Services
 
         public string GetTitle()
         {
-            return songList.ElementAt(currentSongIndex).Title;
+            if (currentSongIndex < songList.Count && currentSongIndex >= 0)
+            {
+                return songList.ElementAt(currentSongIndex).Title;
+            }
+            else return "-";
         }
 
         public string GetArtist()
         {
-            return songList.ElementAt(currentSongIndex).Artist;
+            if (currentSongIndex < songList.Count && currentSongIndex >= 0)
+            {
+                return songList.ElementAt(currentSongIndex).Artist;
+            }
+            else return "-";
         }
 
         public void UpdateNowPlayingList()
@@ -296,6 +320,9 @@ namespace NextPlayerDataLayer.Services
 
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG media opened");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+
             // wait for media to be ready
             ValueSet message = new ValueSet();
             message.Add(AppConstants.MediaOpened,"");
@@ -313,6 +340,9 @@ namespace NextPlayerDataLayer.Services
 
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG NP ended");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+
             if (repeat.Equals(RepeatEnum.NoRepeat))
             {
                 SendSkipNext();
@@ -354,6 +384,15 @@ namespace NextPlayerDataLayer.Services
         private void mediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
             //Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
+        }
+
+        public void RemoveHandlers()
+        {
+            mediaPlayer.MediaOpened -= MediaPlayer_MediaOpened;
+            mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
+            //mediaPlayer.CurrentStateChanged -= mediaPlayer_CurrentStateChanged;
+            mediaPlayer.MediaFailed -= mediaPlayer_MediaFailed;
+            mediaPlayer = null;
         }
 
         //private void mediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)

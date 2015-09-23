@@ -11,8 +11,10 @@ namespace NextPlayerDataLayer.Diagnostics
     public class Logger
     {
         private const string filename = "log1.txt";
+        private const string filenameBG = "logBG1.txt";
 
         private static string temp = "";
+        private static string tempBG = "";
 
         public async static void SaveToFile()
         {
@@ -29,16 +31,17 @@ namespace NextPlayerDataLayer.Diagnostics
             }
             catch (Exception e)
             {
-                Logger.Save("error log");
+                Logger.Save("error log\n"+content+"\n");
             }
            
         }
 
         public static void Save(string data)
         {
-            temp += DateTime.Now.TimeOfDay.ToString() + " " + data + "&";
+            temp += DateTime.Now.ToString() + " " + data + "\n"+System.Environment.NewLine;
         }
 
+        
         public async static Task<string> ReadAll()
         {
             string text;
@@ -63,7 +66,31 @@ namespace NextPlayerDataLayer.Diagnostics
 
         public async static void Clear()
         {
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.ReplaceExisting);
         }
+
+        public async static void SaveToFileBG()
+        {
+            string content = tempBG;
+            tempBG = "";
+            byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
+            try
+            {
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.OpenIfExists);
+
+                await FileIO.AppendTextAsync(file, content);
+            }
+            catch (Exception e)
+            {
+                Logger.SaveBG("error log\n"+content+"\n");
+            }
+
+        }
+        public static void SaveBG(string data)
+        {
+            tempBG += DateTime.Now.ToString() + " " + data + "\n" + System.Environment.NewLine;
+        }
+
     }
 }

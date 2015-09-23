@@ -40,8 +40,9 @@
                     <RowDefinition Height="Auto" MinHeight="60"/>
                     <RowDefinition Height="Auto" MinHeight="60"/>
                     <RowDefinition Height="Auto" MinHeight="60"/>
-
-                    <RowDefinition/>
+                    <RowDefinition Height="Auto" MinHeight="60"/>
+                    <RowDefinition Height="Auto" MinHeight="60"/>
+                    <RowDefinition />
 
                 </Grid.RowDefinitions>
 
@@ -96,13 +97,42 @@
                             IsEnabled="False"
                             TimeChanged="TimePicker_TimeChanged"
                             />
-                
+                <Border Grid.Column="0" Grid.Row="4"
+                        Height="50"
+                        VerticalAlignment="Bottom">
+                    <TextBlock x:Uid="TBTransparentTile"
+                           Text="Transparent tile"
+                           FontSize="26"
+                           VerticalAlignment="Center"
+                           />
+                </Border>
+
+                <ToggleSwitch 
+                    x:Name="transparentToggleSwitch"
+                        Grid.Row="4" Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Toggled="transparentToggleSwitch_Toggled"/>
                 <Button x:Uid="RateButton" 
-                        Grid.Row="4" Grid.Column="0"
+                        Grid.Row="5" Grid.Column="0"
                         Content="Rate" 
                         Click="Rate_Click" 
                         Width="200"/>
-                </Grid>
+
+                <Button x:Uid="ShowLog" 
+                        Grid.Row="6" Grid.Column="0"
+                        Content="Show Log" 
+                        Click="ShowLog_Click" 
+                        Width="200"/>
+                <ScrollViewer Grid.Row="7" Grid.ColumnSpan="2">
+                    <TextBlock x:Name="logTB"
+                               FontSize="14"
+                               Width="350"
+                               TextWrapping="Wrap"
+                           />
+                </ScrollViewer>
+                
+            </Grid>
         </Grid>
     </Grid>
 </Page>

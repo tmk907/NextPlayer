@@ -48,6 +48,9 @@ namespace NextPlayerBackgroundAudioPlayer
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Task Started");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+
             nowPlayingManager = new NowPlayingManager();
 
             systemControls = SystemMediaTransportControls.GetForCurrentView();
@@ -68,12 +71,9 @@ namespace NextPlayerBackgroundAudioPlayer
             else
                 foregroundTaskStatus = (ForegroundTaskStatus)Enum.Parse(typeof(ForegroundTaskStatus), value.ToString());
 
-
             BackgroundMediaPlayer.Current.CurrentStateChanged += BGCurrentStateChanged;
-
             BackgroundMediaPlayer.MessageReceivedFromForeground += MessageReceivedFromForeground;
 
-            
             //taskInstance.Task.Progress += HandleTaskProgress;
 
             if (foregroundTaskStatus != ForegroundTaskStatus.Suspended)
@@ -82,55 +82,65 @@ namespace NextPlayerBackgroundAudioPlayer
                 message.Add(AppConstants.BackgroundTaskStarted, "");
                 BackgroundMediaPlayer.SendMessageToForeground(message);
             }
-            
+           
             backgroundTaskStarted.Set();
             backgroundTaskStatus = true;
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskRunning);
-
+            shutdown = false;
             deferral = taskInstance.GetDeferral();
         }
 
         private void HandleTaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-           // BackgroundMediaPlayer.Shutdown();
+            //BackgroundMediaPlayer.Shutdown();
             deferral.Complete();
         }
 
         private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
-            // You get some time here to save your state before process and resources are reclaimed
-            //Debug.WriteLine("MyBackgroundAudioTask " + sender.Task.TaskId + " Cancel Requested...");
             try
             {
-                //BackgroundMediaPlayer.Current.Pause();
-                //save state
+                BackgroundMediaPlayer.Current.Pause();
+                NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Before Cancel");
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                BackgroundMediaPlayer.MessageReceivedFromForeground -= MessageReceivedFromForeground;
+                //ValueSet message = new ValueSet();
+                //message.Add(AppConstants.PlayerClosed, "");
+                //BackgroundMediaPlayer.SendMessageToForeground(message);
+
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, nowPlayingManager.currentSongIndex);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
+                if (shutdown)
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
+                }
+                else
+                {
+                    ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
+                }
+
+                nowPlayingManager.RemoveHandlers();
+                nowPlayingManager = null;
+
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundTaskState, AppConstants.BackgroundTaskCancelled);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, Enum.GetName(typeof(ForegroundTaskStatus), foregroundTaskStatus));
                 backgroundTaskStatus = false;
-                //unsubscribe event handlers
                 
+                //unsubscribe event handlers
                 systemControls.ButtonPressed -= HandleButtonPressed;
                 systemControls.PropertyChanged -= HandlePropertyChanged;
-                
-                ValueSet message = new ValueSet();
-                message.Add(AppConstants.PlayerClosed, "");
-                BackgroundMediaPlayer.SendMessageToForeground(message);
+                if (!shutdown)
+                {
+                    BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
 
-                //Playlist.TrackChanged -= playList_TrackChanged;
-
-                //clear objects task cancellation can happen uninterrupted
-                //playlistManager.ClearPlaylist();
-                //playlistManager = null;
-                BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
+                }
             }
             catch (Exception ex)
             {
 
             }
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG After Cancel");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             deferral.Complete(); // signals task completion. 
-            //Debug.WriteLine("MyBackgroundAudioTask Cancel complete...");
         }
 
 
@@ -189,6 +199,10 @@ namespace NextPlayerBackgroundAudioPlayer
                     case AppConstants.CancelTimer:
                         TimerCancel();
                         break;
+                    case AppConstants.ShutdownBGPlayer:
+                        ShutdownPlayer();
+                        //ClearPlayer();
+                        break;
                 }
             }
         }
@@ -202,7 +216,11 @@ namespace NextPlayerBackgroundAudioPlayer
                     {
                         bool result = backgroundTaskStarted.WaitOne(2000);
                         if (!result)
+                        {
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG not initialized, UVCO play button");
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                             throw new Exception("Background Task didnt initialize in time");
+                        }
                     }
                     Play();
 
@@ -254,7 +272,6 @@ namespace NextPlayerBackgroundAudioPlayer
             }
         }
 
-
         private void Play()
         {
             nowPlayingManager.Play();
@@ -279,10 +296,29 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void UpdateUVCOnNewTrack()
         {
+            //if (!systemControls.IsEnabled) systemControls.IsEnabled = true;
             systemControls.DisplayUpdater.Type = MediaPlaybackType.Music;
             systemControls.DisplayUpdater.MusicProperties.Title = nowPlayingManager.GetTitle();
             systemControls.DisplayUpdater.MusicProperties.Artist = nowPlayingManager.GetArtist();
             systemControls.DisplayUpdater.Update();
+        }
+        bool shutdown;
+        private void ShutdownPlayer()
+        {
+            //Pause();
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Shutdown");
+            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+            shutdown = true;
+            BackgroundMediaPlayer.Shutdown();
+        }
+
+        private void ClearPlayer()
+        {
+            Pause();
+            BackgroundMediaPlayer.Current.Position = TimeSpan.Zero;
+            ApplicationSettingsHelper.SaveSongIndex(nowPlayingManager.currentSongIndex);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
+            systemControls.IsEnabled = false;
         }
 
         private void SetTimer()
@@ -294,10 +330,10 @@ namespace NextPlayerBackgroundAudioPlayer
                 tt = (long)t;
             }
 
-            TimeSpan t1 = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute);
-            long ct = t1.Ticks;
+            TimeSpan currentTime = TimeSpan.FromHours(DateTime.Now.Hour) + TimeSpan.FromMinutes(DateTime.Now.Minute) + TimeSpan.FromSeconds(DateTime.Now.Second);
+            long currentTimeTicks = currentTime.Ticks;
 
-            TimeSpan delay = TimeSpan.FromTicks(tt - ct);
+            TimeSpan delay = TimeSpan.FromTicks(tt - currentTimeTicks);
             if (delay > TimeSpan.Zero)
             {
                 if (timerIsSet)
@@ -311,8 +347,9 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void TimerCallback(ThreadPoolTimer timer)
         {
-            BackgroundMediaPlayer.Shutdown();
-
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Timer Cancel");
+            //ShutdownPlayer();
+            ClearPlayer();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             TimerCancel();
         }

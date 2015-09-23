@@ -474,4 +474,13 @@
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="PinToStart.Text" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
 </root>

@@ -28,7 +28,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -40,10 +39,11 @@
         <!--TODO: Content should be placed within the following grid-->
         <!--<Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
         </Grid>-->
-        
-        <Grid Grid.Row="1" Margin="0,0,0,0">
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="0,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -124,27 +124,25 @@
                         Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
+            <Grid Grid.Row="1" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
 
-        </Grid>
-        <Grid Grid.Row="2" Margin="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                    Margin="20,0,0,0"
                            Width="80"
                            Height="80"
                            Source="{Binding Cover}"
                            DoubleTapped="Image_DoubleTapped"
                            />
-            <Button Grid.Row="0" Grid.Column="1"
+                <Button Grid.Row="0" Grid.Column="1"
                             Command="{Binding GoToNowPlaying}"
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
@@ -153,16 +151,16 @@
                             VerticalContentAlignment="Center"
                             Padding="4,0,4,0"
                             >
-                        <TextBlock
+                    <TextBlock
                             Text="{Binding Title}"
                             TextTrimming="CharacterEllipsis"
                             FontSize="18"
                             VerticalAlignment="Center"
                             Height="Auto"
                         />
-            </Button>
+                </Button>
 
-            <Button Grid.Row="1" Grid.Column="1"
+                <Button Grid.Row="1" Grid.Column="1"
                             Command="{Binding GoToNowPlaying}"
                             Style="{StaticResource ButtonStyleEmpty}"
                             MinHeight="40"
@@ -170,32 +168,41 @@
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             Padding="4,0,4,0">
-                        <TextBlock 
+                    <TextBlock 
                             Text="{Binding Artist}"
                             TextTrimming="CharacterEllipsis"
                             FontSize="16"
                             VerticalAlignment="Center"
                             Height="Auto"
                         />
-            </Button>
+                </Button>
 
-            <Button Grid.RowSpan="2" Grid.Column="2"
+                <Button Grid.RowSpan="2" Grid.Column="2"
                             Command="{Binding NextClick}"
-                            Style="{StaticResource ButtonStyleEmpty}"
-                            Content="&#xE17e;&#xE101;" 
+                            Style="{StaticResource ButtonStyleEmptyN}"
                             Foreground="{StaticResource PhoneAccentBrush}"
+                            Content="&#xE101;"
                             FontFamily="Segoe UI Symbol" 
-                            FontSize="34"
-                            VerticalAlignment="Center"
+                            FontSize="36"
+                            VerticalAlignment="Top"
                             VerticalContentAlignment="Center"
                             HorizontalAlignment="Center"
-                            MinWidth="80"
-                            MinHeight="80"
-                            Width="80"
-                            Height="80"
-                    Margin="0,0,20,4"
-                        />
+                            MinWidth="72"
+                            MinHeight="72"
+                            Width="72"
+                            Height="72"
+                            Margin="0,0,20,0"
+                            Padding="0"
+                        >
+                    <!--<Image Source="/Assets/Buttons/Dark/MainNextButton.png" Height="80" Width="80"/>-->
+                </Button>
+                <!--<Image Grid.RowSpan="2" Grid.Column="2" 
+                       Margin="0,0,20,0"
+                       
+                       Source="/Assets/Buttons/Dark/MainNextButton.png" Height="80" Width="80"/>-->
 
+            </Grid>
         </Grid>
+        
     </Grid>
 </Page>

@@ -35,11 +35,21 @@ namespace NextPlayerDataLayer.Constants
         public const string ResumePlayback = "resumeplayback";
         public const string SetTimer = "settimer";
         public const string CancelTimer = "canceltimer";
+        public const string ShutdownBGPlayer = "shutdown";
 
         //Timer
         public const string TimerOn = "TimerOn";
         public const string TimerTime = "TimerTime";
         public const string TimerTaskName = "BackgroundTimer";
+
+        //Tiles
+        public const string TileName = "TileName";
+        public const string TilePlay = "tileplay";
+        public const string TileId = "TileId";
+        public const string TileType = "TileType";
+        public const string TileIdValue = "TileIdValue";
+        public const string TileImage = "TileImage";
+        public const string TileAppTransparent = "isapptiletransparent";
 
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string BackgroundTaskRunning = "BackgroundTaskRunning";

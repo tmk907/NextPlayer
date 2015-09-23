@@ -14,7 +14,7 @@
     
     <Page.Resources>
         <DataTemplate x:Key="GenreItemTemplate">
-            <Grid >
+            <Grid Width="{Binding Width, ElementName=ContentRoot}">
                 <i:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="Holding">
                         <helpers:OpenMenuFlyoutAction />
@@ -28,6 +28,8 @@
                                         Command="{Binding DataContext.AddToNowPlaying, ElementName=listView}" CommandParameter="{Binding}"/>
                         <MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=listView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
+                                        Command="{Binding DataContext.PinGenre, ElementName=listView}" CommandParameter="{Binding}"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <Grid.RowDefinitions>

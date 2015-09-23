@@ -10,10 +10,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Media.Playback;
+using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -111,6 +113,11 @@ namespace NextPlayer.View
             {
                 timerPicker.IsEnabled = false;
                 timerToggleSwitch.IsOn = false;
+            }
+            string isTr = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileAppTransparent) as string;
+            if (isTr == "yes")
+            {
+                transparentToggleSwitch.IsOn = true;
             }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
@@ -281,6 +288,50 @@ namespace NextPlayer.View
                 timerToggleSwitch.IsOn = false;
                 timerPicker.IsEnabled = false;
             });
+        }
+
+        private async void ShowLog_Click(object sender, RoutedEventArgs e)
+        {
+            logTB.Text = await NextPlayerDataLayer.Diagnostics.Logger.ReadAll();
+        }
+
+        private void transparentToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                UpdateAppTile(true);
+            }
+            else
+            {
+                UpdateAppTile(false);
+            }
+        }
+
+        public async void UpdateAppTile(bool isTransparent)
+        {
+            
+            XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Image);
+            XmlDocument wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Image);
+            var tileImageAttributes = tileXml.GetElementsByTagName("image");
+            var wideImageAttributes = wideTile.GetElementsByTagName("image");
+            if (isTransparent)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
+                tileImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appx:///Assets/AppImages/Logo/LogoTr.png";
+                wideImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appx:///Assets/AppImages/WideLogo/WideLogoTr.png";
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "no");
+                tileImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appx:///Assets/AppImages/Logo/Logo.png";
+                wideImageAttributes[0].Attributes.GetNamedItem("src").NodeValue = "ms-appx:///Assets/AppImages/WideLogo/WideLogo.png";
+            }
+
+            IXmlNode node = tileXml.ImportNode(wideTile.GetElementsByTagName("binding").Item(0), true);
+            tileXml.GetElementsByTagName("visual").Item(0).AppendChild(node);
+
+            TileNotification tileNotification = new TileNotification(tileXml);
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
     }
 }

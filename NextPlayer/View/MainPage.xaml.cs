@@ -39,7 +39,6 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-            //DispatcherHelper.Initialize();
         }
 
         /// <summary>
@@ -67,8 +66,6 @@ namespace NextPlayer.View
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
             reviewfunction();
-
-            
         }
 
         /// <summary>
