@@ -348,8 +348,8 @@ namespace NextPlayerBackgroundAudioPlayer
         private void TimerCallback(ThreadPoolTimer timer)
         {
             //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Timer Cancel");
-            //ShutdownPlayer();
-            ClearPlayer();
+            ShutdownPlayer();
+            //ClearPlayer();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             TimerCancel();
         }
