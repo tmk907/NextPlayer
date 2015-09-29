@@ -42,6 +42,10 @@ namespace NextPlayerDataLayer.Constants
         public const string TimerTime = "TimerTime";
         public const string TimerTaskName = "BackgroundTimer";
 
+        //Toasts
+        public const string FilesSharedOK = "FilesSharedOK";
+        public const string FilesSharedError = "FilesSharedError";
+
         //Tiles
         public const string TileName = "TileName";
         public const string TilePlay = "tileplay";

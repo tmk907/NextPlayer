@@ -248,6 +248,27 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand<SongItem> share;
+
+        /// <summary>
+        /// Gets the Share.
+        /// </summary>
+        public RelayCommand<SongItem> Share
+        {
+            get
+            {
+                return share
+                    ?? (share = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "song";
+                        s[1] = item.SongId.ToString();
+                        navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
         private RelayCommand<SongItem> itemClicked;
 
         /// <summary>

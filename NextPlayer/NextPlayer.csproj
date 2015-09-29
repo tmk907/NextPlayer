@@ -117,6 +117,7 @@
     <Compile Include="ViewModel\AlbumsViewModel.cs" />
     <Compile Include="ViewModel\AlbumViewModel.cs" />
     <Compile Include="ViewModel\ArtistsViewModel.cs" />
+    <Compile Include="ViewModel\BluetoothShareViewModel.cs" />
     <Compile Include="ViewModel\FileInfoViewModel.cs" />
     <Compile Include="ViewModel\FoldersViewModel.cs" />
     <Compile Include="ViewModel\GenresViewModel.cs" />
@@ -141,6 +142,9 @@
     </Compile>
     <Compile Include="View\ArtistsView.xaml.cs">
       <DependentUpon>ArtistsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BluetoothShareView.xaml.cs">
+      <DependentUpon>BluetoothShareView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FileInfoView.xaml.cs">
       <DependentUpon>FileInfoView.xaml</DependentUpon>
@@ -177,6 +181,9 @@
     </Compile>
     <Compile Include="View\SongView.xaml.cs">
       <DependentUpon>SongView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\testBT.xaml.cs">
+      <DependentUpon>testBT.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +230,9 @@
     <Content Include="Assets\SongCover192.scale-140.png" />
     <Content Include="Assets\SongCover192.scale-240.png" />
     <None Include="Package.StoreAssociation.xml" />
+    <PRIResource Include="Strings\it-IT\Resources.resw" />
+    <PRIResource Include="Strings\cs-CZ\Resources.resw" />
+    <PRIResource Include="Strings\fr-FR\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -242,6 +252,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ArtistsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BluetoothShareView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -293,8 +307,24 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\testBT.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Bluetooth.Core.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Core.Services.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bluetooth.Core.Sockets, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Core.Sockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bluetooth.Services.Obex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Services.Obex.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bratched.Tools.RatingControl_ua81, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BratchedTools.RatingControl.1.0.0\lib\wpa81\Bratched.Tools.RatingControl_ua81.dll</HintPath>
       <Private>True</Private>

@@ -92,6 +92,8 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void HandleTaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
+            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG HandleTaskCompleted");
+            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             //BackgroundMediaPlayer.Shutdown();
             deferral.Complete();
         }
@@ -136,7 +138,8 @@ namespace NextPlayerBackgroundAudioPlayer
             }
             catch (Exception ex)
             {
-
+                NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player OnCanceled " + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             }
             NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG After Cancel");
             NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
@@ -217,7 +220,7 @@ namespace NextPlayerBackgroundAudioPlayer
                         bool result = backgroundTaskStarted.WaitOne(2000);
                         if (!result)
                         {
-                            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG not initialized, UVCO play button");
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Play" + "\n" + "Background Task didnt initialize in time" + "Button: " + args.Button + "\n" + "Status: " + sender.PlaybackStatus.ToString());
                             NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                             throw new Exception("Background Task didnt initialize in time");
                         }
@@ -232,14 +235,31 @@ namespace NextPlayerBackgroundAudioPlayer
                     }
                     catch (Exception ex)
                     {
-                        //Debug.WriteLine(ex.ToString());
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Pause" + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                     }
                     break;
                 case SystemMediaTransportControlsButton.Next:
-                    Next();
+                    try
+                    {
+                        Next();
+                    }
+                    catch (Exception ex)
+                    {
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Next" + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    }
                     break;
                 case SystemMediaTransportControlsButton.Previous:
-                    Previous();
+                    try
+                    {
+                        Previous();
+                    }
+                    catch (Exception ex)
+                    {
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Previous" + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    }
                     break;
                 default:
                     break;

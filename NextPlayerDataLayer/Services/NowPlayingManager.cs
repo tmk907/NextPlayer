@@ -370,7 +370,11 @@ namespace NextPlayerDataLayer.Services
                     }
                     else
                     {
-                        StartPlaying(0);
+                        ValueSet message = new ValueSet();
+                        message.Add(AppConstants.StartPlayback, 0);
+                        BackgroundMediaPlayer.SendMessageToBackground(message);
+                        //StartPlaying(0);
+                        currentSongIndex = 0;//trzeba ustawic wczesniej, poniewaz SendIndex() moze byc wykonane przed StartPlaying()
                         SendIndex();
                     }
                     isPlaylistRepeated = !isPlaylistRepeated;

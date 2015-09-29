@@ -62,10 +62,19 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Uid="MenuNowPlayingPlaylist"
                         Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
-                        Content="Now Playing List"    
+                        
                         Command="{Binding GoToNowPlayingListPage}" 
                         Margin="{StaticResource TopMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="MenuNowPlayingPlaylistTB"
+                                Text="Now playing playlist"
+                                       TextWrapping="WrapWholeWords"
+                                       TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
                 
                 <Button x:Uid="MenuAlbums" 
                         Grid.Row="1" Grid.Column="2" 

@@ -118,16 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddPlaylist.Label" xml:space="preserve">
-    <value>Dodaj playlistę</value>
+    <value>Aggiungi playlist</value>
   </data>
   <data name="AddSmartPlaylist.Label" xml:space="preserve">
-    <value>Dodaj smart playlistę</value>
+    <value>Aggiungi playlist intelligente</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Dodaj do teraz odtwarzne</value>
+    <value>Aggiungi a adesso in riproduzione</value>
   </data>
   <data name="AddToPlaylist.Text" xml:space="preserve">
-    <value>Dodaj do playlisty</value>
+    <value>Aggiungi alla playlist</value>
   </data>
   <data name="Album" xml:space="preserve">
     <value>Album</value>
@@ -136,381 +136,360 @@
     <value>album</value>
   </data>
   <data name="AlbumsPageTitle.Text" xml:space="preserve">
-    <value>albumy</value>
+    <value>album</value>
   </data>
   <data name="AppName.Text" xml:space="preserve">
     <value>NEXT PLAYER</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artysta</value>
+    <value>Artista</value>
   </data>
   <data name="ArtistsPageTitle.Text" xml:space="preserve">
-    <value>artyści</value>
+    <value>artisti</value>
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
-    <value>Anuluj</value>
+    <value>Annulla</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
-    <value>Usuń</value>
+    <value>Cancella</value>
   </data>
   <data name="Cancel.Label" xml:space="preserve">
-    <value>Anuluj</value>
+    <value>Annulla</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>Łączę</value>
+    <value>In connessione</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
-    <value>Błąd połączenia</value>
+    <value>Errore di connessione</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Zawiera</value>
+    <value>Contiene</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Data dodania</value>
+    <value>Data di aggiunta</value>
   </data>
   <data name="Delete.Text" xml:space="preserve">
-    <value>Usuń</value>
+    <value>Cancella</value>
   </data>
   <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
-    <value>Czy na pewno chcesz usunąć tę playlistę?</value>
+    <value>Sei sicuro di voler cancellare questa playlist?</value>
   </data>
   <data name="DeleteRule.Content" xml:space="preserve">
-    <value>Usuń regułę</value>
+    <value>Delete rule</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Nie zawiera</value>
+    <value>Non contiene</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Długość</value>
+    <value>Durata</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Kończy się na</value>
+    <value>Finisce Con</value>
   </data>
   <data name="FilePath" xml:space="preserve">
-    <value>Ścieżka pliku</value>
+    <value>Percorso file</value>
   </data>
   <data name="Genre" xml:space="preserve">
-    <value>Gatunek</value>
+    <value>Genere</value>
   </data>
   <data name="GenresPageTitle.Text" xml:space="preserve">
-    <value>gatunki</value>
+    <value>generi</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Najwyższa ocena</value>
+    <value>Valutazione Più Alta</value>
   </data>
   <data name="Hours" xml:space="preserve">
-    <value>Godziny</value>
+    <value>Ore</value>
   </data>
   <data name="ImportMediaButton.Content" xml:space="preserve">
-    <value>Utwórz bibliotekę</value>
+    <value>Aggiungi canzoni alla libreria</value>
   </data>
   <data name="Is" xml:space="preserve">
-    <value>Jest równe</value>
+    <value>È</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Jest większy</value>
+    <value>È Maggiore</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Jest mniejszy</value>
+    <value>È Minore</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>Jest różne od</value>
+    <value>Non È</value>
   </data>
   <data name="LastPlayed" xml:space="preserve">
-    <value>Ostatnio odtwarzane</value>
+    <value>Ultima riprodotta</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Najrzadziej odtwarzane</value>
+    <value>Riprodotta di meno</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Najdawniej dodane</value>
+    <value>Aggiunta meno di recente</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Najdawniej odtwarzane</value>
+    <value>Riprodotta meno di recente</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
-    <value>Biblioteka zaktualizowana.</value>
+    <value>Libreria aggiornata.</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Najniższa ocena</value>
+    <value>Valutazione Più Bassa</value>
   </data>
   <data name="LyricsButton.Content" xml:space="preserve">
-    <value>Lyrics</value>
+    <value>Testo</value>
   </data>
   <data name="MenuAlbums.Content" xml:space="preserve">
-    <value>Albumy</value>
+    <value>Album</value>
   </data>
   <data name="MenuArtists.Content" xml:space="preserve">
-    <value>Artyści</value>
+    <value>Artisti</value>
   </data>
   <data name="MenuFolders.Content" xml:space="preserve">
-    <value>Foldery</value>
+    <value>Cartelle</value>
   </data>
   <data name="MenuGenres.Content" xml:space="preserve">
-    <value>Gatunki</value>
+    <value>Generi</value>
   </data>
   <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>Lista Teraz Odtwarzane</value>
+    <value>Playlist In Riproduzione</value>
   </data>
   <data name="MenuPlaylists.Content" xml:space="preserve">
-    <value>Playlisty</value>
+    <value>Playlist</value>
   </data>
   <data name="MenuSettings.Content" xml:space="preserve">
-    <value>Ustawienia</value>
+    <value>Impostazioni</value>
   </data>
   <data name="MenuSongs.Content" xml:space="preserve">
-    <value>Utwory</value>
+    <value>Canzoni</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Minuty</value>
+    <value>Minuti</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Najczęściej odtwarzane</value>
+    <value>Riprodotta più spesso</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Ostatnio dodane</value>
+    <value>Aggiunta più di recente</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Ostatnio odtwarzane</value>
+    <value>Riprodotta più di recente</value>
   </data>
   <data name="NajczesciejOdtwarzane" xml:space="preserve">
-    <value>Najczęściej odtwarzane</value>
+    <value>Riprodotta più spesso</value>
   </data>
   <data name="NajgorzejOceniane" xml:space="preserve">
-    <value>Najgorzej oceniane</value>
+    <value>Valutazione più bassa</value>
   </data>
   <data name="NajlepiejOceniane" xml:space="preserve">
-    <value>Najlepiej oceniane</value>
+    <value>Valutazione più alta</value>
   </data>
   <data name="NajrzadziejOdtwarzane" xml:space="preserve">
-    <value>Najrzadziej odtwarzane</value>
+    <value>Riprodotta di meno</value>
   </data>
   <data name="NewRule.Content" xml:space="preserve">
-    <value>Dodaj regułę</value>
+    <value>Add rule</value>
   </data>
   <data name="NewSPPageTitle.Text" xml:space="preserve">
-    <value>new smart playlist</value>
+    <value>nuova playlist intelligente</value>
   </data>
   <data name="NowPlayingPageTitle.Text" xml:space="preserve">
-    <value>teraz odtwarzane</value>
+    <value>in riproduzione</value>
   </data>
   <data name="NowPlayingPlaylistPageTitle" xml:space="preserve">
-    <value>teraz odtwarzane</value>
+    <value>in riproduzione</value>
   </data>
   <data name="OstatnioDodane" xml:space="preserve">
-    <value>Ostatnio dodane</value>
+    <value>Ultima aggiunta</value>
   </data>
   <data name="OstatnioOdtwarzane" xml:space="preserve">
-    <value>Ostatnio odtwarzane</value>
+    <value>Ultima riprodotta</value>
+  </data>
+  <data name="PlayCount" xml:space="preserve">
+    <value>Contatore riproduzioni</value>
   </data>
   <data name="PlaylistsPageTitle.Text" xml:space="preserve">
-    <value>playlisty</value>
+    <value>playlist</value>
   </data>
   <data name="PlayNow.Text" xml:space="preserve">
-    <value>Odtwórz teraz</value>
+    <value>Riproduci ora</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Ocena</value>
+    <value>Valutazione</value>
   </data>
   <data name="Rules.Text" xml:space="preserve">
-    <value>Reguły</value>
+    <value>Rules</value>
   </data>
   <data name="Save.Content" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Salva</value>
   </data>
   <data name="Save.Label" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Salva</value>
   </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Sekundy</value>
+    <value>Secondi</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>ustawienia</value>
+    <value>impostazioni</value>
   </data>
   <data name="SongsPageTitle" xml:space="preserve">
-    <value>utwory</value>
+    <value>canzoni</value>
   </data>
   <data name="SPName.Text" xml:space="preserve">
-    <value>Nazwa</value>
+    <value>Nome</value>
   </data>
   <data name="SPSongsNumber.Text" xml:space="preserve">
-    <value>Liczba utworów</value>
+    <value>Numero canzoni</value>
   </data>
   <data name="SPSortBy.Text" xml:space="preserve">
-    <value>Sortuj wg</value>
+    <value>Ordina per</value>
   </data>
   <data name="StartsWith" xml:space="preserve">
-    <value>Zaczyna się od</value>
+    <value>Comincia con</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Tytuł</value>
+    <value>Titolo</value>
   </data>
   <data name="UpdateMediaButton.Content" xml:space="preserve">
-    <value>Aktualizuj bibliotekę</value>
+    <value>Aggiorna libreria</value>
   </data>
   <data name="Year" xml:space="preserve">
-    <value>Rok</value>
+    <value>Anno</value>
   </data>
   <data name="WaitFewMinutes.Text" xml:space="preserve">
-    <value>Proszę nie zamykaj tej strony podczas skanowania.</value>
+    <value>Per favore non chiudere questa pagina durante la lettura.</value>
   </data>
   <data name="MenuSearch.Content" xml:space="preserve">
-    <value>Szukaj</value>
+    <value>Cerca</value>
   </data>
   <data name="SearchPageTitle.Text" xml:space="preserve">
-    <value>szukaj</value>
+    <value>cerca</value>
   </data>
   <data name="FoldersPageTitle.Text" xml:space="preserve">
-    <value>foldery</value>
+    <value>cartelle</value>
   </data>
   <data name="RateButton.Content" xml:space="preserve">
-    <value>Oceń</value>
+    <value>Valuta</value>
   </data>
   <data name="SPErrorText.Text" xml:space="preserve">
-    <value>Uzupełnij prawidłowo wszystkie pola.</value>
+    <value>Per favore completa tutti i campi correttamente.</value>
   </data>
   <data name="ShowDetails.Text" xml:space="preserve">
-    <value>Pokaż szczegóły</value>
+    <value>Mostra dettagli</value>
   </data>
   <data name="DeleteFromPlaylist.Text" xml:space="preserve">
-    <value>Usuń z playlisty</value>
+    <value>Cancella dalla playlist</value>
   </data>
   <data name="MenuStop.Content" xml:space="preserve">
     <value>Stop</value>
-  </data>
-  <data name="PlayCount" xml:space="preserve">
-    <value>Liczba odtworzeń</value>
   </data>
   <data name="TBAlbum.Text" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="TBArtist.Text" xml:space="preserve">
-    <value>Artysta</value>
+    <value>Artista</value>
   </data>
   <data name="TBBitrate.Text" xml:space="preserve">
     <value>Bitrate</value>
   </data>
   <data name="TBDateAdded.Text" xml:space="preserve">
-    <value>Data dodania</value>
+    <value>Data di aggiunta</value>
   </data>
   <data name="TBFilePath.Text" xml:space="preserve">
-    <value>Ścieżka pliku</value>
+    <value>Percorso file</value>
   </data>
   <data name="TBFileSize.Text" xml:space="preserve">
-    <value>Rozmiar pliku</value>
+    <value>Dimensione file</value>
   </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
-    <value>Ostatnio odtwarzane</value>
+    <value>Riprodotto ultima volta</value>
   </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>Liczba odtworzeń</value>
+    <value>Contatore riproduzioni</value>
   </data>
   <data name="TBRating.Text" xml:space="preserve">
-    <value>Ocena</value>
+    <value>Valutazione</value>
   </data>
   <data name="TBTitle.Text" xml:space="preserve">
-    <value>Tytuł</value>
+    <value>Titolo</value>
   </data>
   <data name="TBTrackNumber.Text" xml:space="preserve">
-    <value>Numer utworu</value>
+    <value>Numero traccia</value>
   </data>
   <data name="TBYear.Text" xml:space="preserve">
-    <value>Rok</value>
+    <value>Anno</value>
   </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>Kolejność</value>
+    <value>Inverti</value>
   </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Salva</value>
   </data>
   <data name="AppBarSort.Label" xml:space="preserve">
-    <value>Sortuj</value>
+    <value>Ordina per</value>
   </data>
   <data name="MFIAlbum.Text" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="MFIArtist.Text" xml:space="preserve">
-    <value>Artysta</value>
+    <value>Artista</value>
   </data>
   <data name="MFIDuration.Text" xml:space="preserve">
-    <value>Długość</value>
+    <value>Durata</value>
   </data>
   <data name="MFIRating.Text" xml:space="preserve">
-    <value>Ocena</value>
+    <value>Valutazione</value>
   </data>
   <data name="MFITitle.Text" xml:space="preserve">
-    <value>Tytuł</value>
+    <value>Titolo</value>
   </data>
   <data name="MFITrackNumber.Text" xml:space="preserve">
-    <value>Numer utworu</value>
+    <value>Numero traccia</value>
   </data>
   <data name="ButtonSave.Content" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Salva</value>
   </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>Edytuj</value>
+    <value>Modifica</value>
   </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
-    <value>Szukaj</value>
+    <value>Cerca</value>
   </data>
   <data name="Later" xml:space="preserve">
-    <value>Później</value>
+    <value>Più tardi</value>
   </data>
   <data name="MainPageTitle.Text" xml:space="preserve">
-    <value>strona główna</value>
+    <value>pagina principale</value>
   </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>Jeżeli podoba Ci się korzystanie z Next player, może zechciałbyś poświęcić chwilę czasu, aby ocenić aplikację?</value>
+    <value>Se ti piace utilizzare Next player, ti dispiacerebbe perdere un momento per valutarla? Non ci vorrà più di un minuto. Grazie del tuo supporto!</value>
   </data>
   <data name="RateAppTitle" xml:space="preserve">
-    <value>Oceń aplikację</value>
+    <value>Valuta l'app</value>
   </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>Wybierz playlistę</value>
+    <value>Scegli playlist</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Oceń</value>
+    <value>Valuta</value>
   </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Salva</value>
   </data>
   <data name="Playlist" xml:space="preserve">
-    <value>Playlista</value>
+    <value>Playlist</value>
   </data>
   <data name="PinToStart.Text" xml:space="preserve">
-    <value>Przypnij</value>
-  </data>
-  <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Pin</value>
   </data>
   <data name="HeaderTransparentTile.Header" xml:space="preserve">
-    <value>Przezroczysty kafelek</value>
+    <value>Transparency tile</value>
   </data>
   <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
-    <value>Lista Teraz Odtwarzane</value>
+    <value>Playlist In Riproduzione</value>
   </data>
   <data name="TBTransparentTile.Text" xml:space="preserve">
-    <value>Przezroczysty kafelek</value>
+    <value>Transparency tile</value>
   </data>
   <data name="UpdateMediaTB.Text" xml:space="preserve">
-    <value>Aktualizuj bibliotekę</value>
-  </data>
-  <data name="FilesSharedError" xml:space="preserve">
-    <value>Niektóre pliki nie zostały wysłane.</value>
-  </data>
-  <data name="FilesSharedOK" xml:space="preserve">
-    <value>Wszystkie pliki zostały wysłane.</value>
-  </data>
-  <data name="BTSharePageTitle.Text" xml:space="preserve">
-    <value>udostępnij</value>
-  </data>
-  <data name="MFIShare.Text" xml:space="preserve">
-    <value>Udostępnij</value>
-  </data>
-  <data name="TBDevices.Text" xml:space="preserve">
-    <value>Urządzenia</value>
-  </data>
-  <data name="TBFiles.Text" xml:space="preserve">
-    <value>Pliki</value>
+    <value>Aggiorna libreria</value>
   </data>
 </root>

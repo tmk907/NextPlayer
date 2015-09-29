@@ -286,7 +286,26 @@ namespace NextPlayer.ViewModel
             TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
         }
 
+        private RelayCommand<FolderItem> share;
 
+        /// <summary>
+        /// Gets the Share.
+        /// </summary>
+        public RelayCommand<FolderItem> Share
+        {
+            get
+            {
+                return share
+                    ?? (share = new RelayCommand<FolderItem>(
+                    item =>
+                    {
+                        String[] s = new String[3];
+                        s[0] = "folder";
+                        s[1] = item.Directory;
+                        navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
+                    }));
+            }
+        }
 
         private async void LoadFolders()
         {

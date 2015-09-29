@@ -285,6 +285,26 @@ namespace NextPlayer.ViewModel
             TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
         }
 
+        private RelayCommand<GenreItem> share;
+
+        /// <summary>
+        /// Gets the Share.
+        /// </summary>
+        public RelayCommand<GenreItem> Share
+        {
+            get
+            {
+                return share
+                    ?? (share = new RelayCommand<GenreItem>(
+                    item =>
+                    {
+                        String[] s = new String[3];
+                        s[0] = "genre";
+                        s[1] = item.Genre;
+                        navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
+                    }));
+            }
+        }
 
         private async void LoadGenres()
         {

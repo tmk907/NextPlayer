@@ -483,4 +483,34 @@
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="HeaderTransparentTile.Header" xml:space="preserve">
+    <value>Transparent tile</value>
+  </data>
+  <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
+    <value>Now Playing Playlist</value>
+  </data>
+  <data name="TBTransparentTile.Text" xml:space="preserve">
+    <value>Transparent tile</value>
+  </data>
+  <data name="UpdateMediaTB.Text" xml:space="preserve">
+    <value>Update library</value>
+  </data>
+  <data name="FilesSharedError" xml:space="preserve">
+    <value>Some files could not be shared successfully.</value>
+  </data>
+  <data name="FilesSharedOK" xml:space="preserve">
+    <value>All files shared successfully.</value>
+  </data>
+  <data name="BTSharePageTitle.Text" xml:space="preserve">
+    <value>share</value>
+  </data>
+  <data name="MFIShare.Text" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="TBDevices.Text" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="TBFiles.Text" xml:space="preserve">
+    <value>Files</value>
+  </data>
 </root>

@@ -31,7 +31,7 @@
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="210"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -48,9 +48,18 @@
 
                 <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton"
                         Grid.Row="0" Grid.Column="0"
-                        Content="Update Library" 
-                        Click="UpdateLibrary_Click" 
-                        Width="200"/>
+                        Click="UpdateLibrary_Click"
+                        Width="200">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="UpdateMediaTB"
+                            Text="Update library" 
+                            TextAlignment="Center" 
+                            TextWrapping="WrapWholeWords"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                    
+                </Button>
                 
                 <StackPanel Orientation="Horizontal"
                             Grid.Row="0" Grid.Column="1">
@@ -71,7 +80,7 @@
                            TextWrapping="WrapWholeWords" 
                            FontSize="18"/>
                 
-                <Border Grid.Column="0" Grid.Row="2"
+                <!--<Border Grid.Column="0" Grid.Row="2"
                         Height="50"
                         VerticalAlignment="Bottom">
                     <TextBlock x:Uid="TBTimer"
@@ -79,14 +88,16 @@
                            FontSize="26"
                            VerticalAlignment="Center"
                            />
-                </Border>
+                </Border>-->
                 
                 <ToggleSwitch 
                     x:Name="timerToggleSwitch"
-                        Grid.Row="2" Grid.Column="1"
-                        HorizontalAlignment="Center"
+                        Grid.Row="2" Grid.ColumnSpan="2"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
-                        Toggled="ToggleSwitch_Toggled"/>
+                        Header="Timer"
+                        Toggled="ToggleSwitch_Toggled"
+                   />
                 <TimePicker Grid.ColumnSpan="2" Grid.Row="3" 
                             x:Name="timerPicker"
                             ClockIdentifier="24HourClock"
@@ -97,21 +108,24 @@
                             IsEnabled="False"
                             TimeChanged="TimePicker_TimeChanged"
                             />
-                <Border Grid.Column="0" Grid.Row="4"
-                        Height="50"
+                <!--<Border Grid.Column="0" Grid.Row="4"
+                        MinHeight="50"
                         VerticalAlignment="Bottom">
                     <TextBlock x:Uid="TBTransparentTile"
                            Text="Transparent tile"
+                               TextWrapping="WrapWholeWords"
                            FontSize="26"
                            VerticalAlignment="Center"
                            />
-                </Border>
+                </Border>-->
 
                 <ToggleSwitch 
                     x:Name="transparentToggleSwitch"
-                        Grid.Row="4" Grid.Column="1"
-                        HorizontalAlignment="Center"
+                    x:Uid="HeaderTransparentTile"
+                        Grid.Row="4" Grid.ColumnSpan="2"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
+                        Header="Transparent tile"
                         Toggled="transparentToggleSwitch_Toggled"/>
                 <Button x:Uid="RateButton" 
                         Grid.Row="5" Grid.Column="0"
@@ -119,9 +133,9 @@
                         Click="Rate_Click" 
                         Width="200"/>
 
-                <Button x:Uid="ShowLog" 
+                <Button x:Uid="MailMeButton" 
                         Grid.Row="6" Grid.Column="0"
-                        Content="Show Log" 
+                        Content="Mail me" 
                         Click="ShowLog_Click" 
                         Width="200"
                         Visibility="Collapsed"
@@ -133,6 +147,7 @@
                                TextWrapping="Wrap"
                            />
                 </ScrollViewer>
+                <!--<Button Content="bluetooth" Grid.Row="8" Click="gotobl"/>-->
                 
             </Grid>
         </Grid>

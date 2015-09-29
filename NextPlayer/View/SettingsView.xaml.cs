@@ -333,5 +333,10 @@ namespace NextPlayer.View
             TileNotification tileNotification = new TileNotification(tileXml);
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
+
+        private void gotobl(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(testBT));
+        }
     }
 }

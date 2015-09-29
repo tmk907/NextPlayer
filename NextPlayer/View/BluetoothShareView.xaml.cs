@@ -1,6 +1,5 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.ViewModel;
-using NextPlayerDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,12 +24,12 @@ namespace NextPlayer.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PlaylistsView : Page
+    public sealed partial class BluetoothShareView : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public PlaylistsView()
+        public BluetoothShareView()
         {
             this.InitializeComponent();
 
@@ -115,70 +114,5 @@ namespace NextPlayer.View
         }
 
         #endregion
-
-        private void newPlainPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            playlistNameTextBox.Text = "";
-            FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["NewPlaylistFlyout"]);
-            FlyoutBase.ShowAttachedFlyout(this);
-        }
-
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            if (playlistNameTextBox.Text == "")
-            {
-                playlistNameTextBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-            }
-            else
-            {
-                PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-                ViewModel.AddPlainPlaylist(playlistNameTextBox.Text);
-                FlyoutBase.GetAttachedFlyout(this).Hide();
-            }
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.GetAttachedFlyout(this).Hide();
-        }
-
-        private PlaylistItem p;
-        private void Delete_Click(object sender, RoutedEventArgs e)
-        {
-            p = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
-            
-            FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["DeletePlaylistFlyout"]);
-            FlyoutBase.ShowAttachedFlyout(this);
-        }
-
-        private void DeleteConfirm_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-            ViewModel.DeletePlaylist(p);
-            
-            FlyoutBase.GetAttachedFlyout(this).Hide();
-        }
-
-        private void AddToNP_Click(object sender, RoutedEventArgs e)
-        {
-           PlaylistItem item = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
-           PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-           ViewModel.AddToNowPlaying(item);
-        }
-
-        private void Pin_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistItem item = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
-            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-            ViewModel.PinPlaylist(item);
-        }
-
-        private void PlayNow_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistItem item = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
-            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-            ViewModel.PlayNow(item);
-        }
-
     }
 }

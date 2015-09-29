@@ -1,0 +1,119 @@
+﻿<Page
+    x:Class="NextPlayer.View.BluetoothShareView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayer.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:NextPlayer.Helpers"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding BluetoothShareVM, Mode=OneWay, Source={StaticResource Locator}}">
+    <Page.Resources>
+        <DataTemplate x:Key="FileItemTemplate">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                        Text="{Binding FileName}" 
+                        TextWrapping="NoWrap" 
+                        TextTrimming="CharacterEllipsis" 
+                        FontSize="24" 
+                        Margin="0,4,0,0"/>
+                    <TextBlock Grid.Row="1"
+                        Text="{Binding ShareStatus}" 
+                        TextWrapping="NoWrap" 
+                        TextTrimming="CharacterEllipsis" 
+                        FontSize="16" 
+                        Margin="0,0,4,4"/>
+                    <ProgressBar Grid.Row="2"
+                        Maximum="{Binding FileSize}"
+                        Value="{Binding Progress}"
+                        />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="DeviceItemTemplate">
+            <TextBlock Text="{Binding FriendlyName}"
+                       FontSize="24"
+                       TextWrapping="NoWrap"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,4,0,0"/>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="BTSharePageTitle" Text="share" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid Visibility="{Binding DeviceListVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           x:Uid="TBDevices"
+                           Text="Devices" 
+                           FontSize="30"
+                           Margin="0,0,0,12"/>
+                <ListView Grid.Row="1"
+                          IsItemClickEnabled="True"
+                          helpers:ItemClickCommand.Command="{Binding ItemClicked}"
+                          DataContext="{Binding }"
+                          ItemsSource="{Binding DeviceList}"
+                          ItemTemplate="{StaticResource DeviceItemTemplate}"
+                          >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+            <Grid Visibility="{Binding FileListVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           Text="Files"
+                           x:Uid="TBFiles"
+                           FontSize="30"
+                           Margin="0"/>
+                <ListView Grid.Row="1"
+                          IsItemClickEnabled="False"
+                          DataContext="{Binding }"
+                          ItemsSource="{Binding FilesToShare}"
+                          ItemTemplate="{StaticResource FileItemTemplate}"
+                          >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

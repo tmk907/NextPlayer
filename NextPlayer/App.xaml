@@ -72,6 +72,8 @@
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
                                         Command="{Binding DataContext.PinAlbum, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
@@ -129,6 +131,8 @@
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
                                         Command="{Binding DataContext.PinArtist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
@@ -195,6 +199,8 @@
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
                                         Command="{Binding DataContext.ShowDetails, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>
@@ -248,6 +254,8 @@
                                         Command="{Binding DataContext.DeleteFromPlaylist, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
                                         Command="{Binding DataContext.ShowDetails, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                     <Grid.RowDefinitions>

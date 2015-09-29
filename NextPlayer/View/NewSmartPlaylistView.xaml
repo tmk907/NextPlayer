@@ -111,6 +111,7 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" 
                            x:Uid="SPSongsNumber"
                            Text="Songs number" 
+                           TextWrapping="WrapWholeWords"
                            VerticalAlignment="Center"
                            
                            FontSize="25"/>
