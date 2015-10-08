@@ -75,18 +75,19 @@
         </DataTemplate>
     </Page.Resources>
     <Grid x:Name="LayoutRoot">
-
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <!--<Image 
+            Grid.RowSpan="2"
+            x:Name="imageBG"
+            Stretch="UniformToFill"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Source="/Assets/BG/wallpaper 18.jpg"
+            />
+        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName"  Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
@@ -95,6 +96,12 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            
             <ListView x:Name="listView"
                       SelectionMode="None"
                       IsItemClickEnabled="True"

@@ -109,8 +109,8 @@ namespace NextPlayer.Common
 
         #region Navigation support
 
-        RelayCommand _goBackCommand;
-        RelayCommand _goForwardCommand;
+        RelayCommandDefault _goBackCommand;
+        RelayCommandDefault _goForwardCommand;
 
         /// <summary>
         /// <see cref="RelayCommand"/> used to bind to the back Button's Command property
@@ -120,13 +120,13 @@ namespace NextPlayer.Common
         /// The <see cref="RelayCommand"/> is set up to use the virtual method <see cref="GoBack"/>
         /// as the Execute Action and <see cref="CanGoBack"/> for CanExecute.
         /// </summary>
-        public RelayCommand GoBackCommand
+        public RelayCommandDefault GoBackCommand
         {
             get
             {
                 if (_goBackCommand == null)
                 {
-                    _goBackCommand = new RelayCommand(
+                    _goBackCommand = new RelayCommandDefault(
                         () => this.GoBack(),
                         () => this.CanGoBack());
                 }
@@ -144,13 +144,13 @@ namespace NextPlayer.Common
         /// The <see cref="RelayCommand"/> is set up to use the virtual method <see cref="GoForward"/>
         /// as the Execute Action and <see cref="CanGoForward"/> for CanExecute.
         /// </summary>
-        public RelayCommand GoForwardCommand
+        public RelayCommandDefault GoForwardCommand
         {
             get
             {
                 if (_goForwardCommand == null)
                 {
-                    _goForwardCommand = new RelayCommand(
+                    _goForwardCommand = new RelayCommandDefault(
                         () => this.GoForward(),
                         () => this.CanGoForward());
                 }

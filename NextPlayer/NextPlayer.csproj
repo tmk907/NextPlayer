@@ -83,6 +83,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\BackgroundNetworkTask\BackgroundNetworkTask.csproj">
+      <Project>{4bfd246e-b36d-46ba-a9f0-b3b4a0d262a9}</Project>
+      <Name>BackgroundNetworkTask</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NextPlayerBackgroundAudioPlayer\NextPlayerBackgroundAudioPlayer.csproj">
       <Project>{d19a8fbe-67b7-4c75-8721-0ecfcbe05668}</Project>
       <Name>NextPlayerBackgroundAudioPlayer</Name>
@@ -97,6 +101,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\NavigationServiceEx.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Converters\GetListViewConverter.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
     <Compile Include="Converters\SizeToStringConverter.cs" />
+    <Compile Include="Converters\StringToInputScopeConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\OpenMenuFlyoutAction.cs" />
@@ -182,9 +188,6 @@
     <Compile Include="View\SongView.xaml.cs">
       <DependentUpon>SongView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\testBT.xaml.cs">
-      <DependentUpon>testBT.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -219,6 +222,31 @@
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-100.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-140.png" />
     <Content Include="Assets\AppImages\WideLogo\WideLogoTr.scale-240.png" />
+    <Content Include="Assets\BG\wallpaper 1.jpg" />
+    <Content Include="Assets\BG\wallpaper 10.jpg" />
+    <Content Include="Assets\BG\wallpaper 11.jpg" />
+    <Content Include="Assets\BG\wallpaper 12.jpg" />
+    <Content Include="Assets\BG\wallpaper 13.jpg" />
+    <Content Include="Assets\BG\wallpaper 14.jpg" />
+    <Content Include="Assets\BG\wallpaper 15.jpg" />
+    <Content Include="Assets\BG\wallpaper 16.jpg" />
+    <Content Include="Assets\BG\wallpaper 17.jpg" />
+    <Content Include="Assets\BG\wallpaper 18.jpg" />
+    <Content Include="Assets\BG\wallpaper 19.jpg" />
+    <Content Include="Assets\BG\wallpaper 2.jpg" />
+    <Content Include="Assets\BG\wallpaper 20.jpg" />
+    <Content Include="Assets\BG\wallpaper 21.jpg" />
+    <Content Include="Assets\BG\wallpaper 22.jpg" />
+    <Content Include="Assets\BG\wallpaper 23.jpg" />
+    <Content Include="Assets\BG\wallpaper 24.jpg" />
+    <Content Include="Assets\BG\wallpaper 25.jpg" />
+    <Content Include="Assets\BG\wallpaper 3.jpg" />
+    <Content Include="Assets\BG\wallpaper 4.jpg" />
+    <Content Include="Assets\BG\wallpaper 5.jpg" />
+    <Content Include="Assets\BG\wallpaper 6.jpg" />
+    <Content Include="Assets\BG\wallpaper 7.jpg" />
+    <Content Include="Assets\BG\wallpaper 8.jpg" />
+    <Content Include="Assets\BG\wallpaper 9.jpg" />
     <Content Include="Assets\Buttons\Dark\MainNextButton.scale-100.png" />
     <Content Include="Assets\Buttons\Dark\MainNextButton.scale-140.png" />
     <Content Include="Assets\Buttons\Dark\MainNextButton.scale-240.png" />
@@ -304,10 +332,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SongView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\testBT.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

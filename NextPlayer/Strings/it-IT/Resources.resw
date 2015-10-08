@@ -418,13 +418,13 @@
     <value>Anno</value>
   </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>Inverti</value>
+    <value>inverti</value>
   </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>Salva</value>
+    <value>salva</value>
   </data>
   <data name="AppBarSort.Label" xml:space="preserve">
-    <value>Ordina per</value>
+    <value>ordina per</value>
   </data>
   <data name="MFIAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -448,7 +448,7 @@
     <value>Salva</value>
   </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>Modifica</value>
+    <value>modifica</value>
   </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
     <value>Cerca</value>
@@ -472,7 +472,7 @@
     <value>Valuta</value>
   </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Salva</value>
+    <value>salva</value>
   </data>
   <data name="Playlist" xml:space="preserve">
     <value>Playlist</value>

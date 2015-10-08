@@ -68,6 +68,28 @@ namespace NextPlayerDataLayer.Services
             ConnectionDb().CreateTable<SongsTable>();
         }
 
+        // Add composer field
+        public static void UpdateDBToVersion2()
+        {
+            var conn = ConnectionDb();
+            conn.Execute("ALTER TABLE SongsTable ADD COLUMN Composer varchar(63);");
+            conn.Execute("UPDATE SongsTable SET Composer = ''");
+            conn.Execute("ALTER TABLE SongsTable ADD COLUMN Performer varchar(63);");
+            conn.Execute("UPDATE SongsTable SET Performer = ''");
+        }
+        public static void UpdateComposersPerformers(List<Tuple<int, string, string>> newTags)
+        {
+            var conn = ConnectionDb();
+            foreach (var x in newTags)
+            {
+                conn.Execute("UPDATE SongsTable SET Composer = ? WHERE SongId = ?",x.Item2,x.Item1);
+            }
+            foreach (var x in newTags)
+            {
+                conn.Execute("UPDATE SongsTable SET Performer = ? WHERE SongId = ?", x.Item3, x.Item1);
+            }
+        }
+
         #region Insert
 
         public static int InsertPlainPlaylist(string _name)
@@ -127,6 +149,7 @@ namespace NextPlayerDataLayer.Services
                 AlbumArtist = _song.AlbumArtist,
                 Artist = _song.Artist,
                 Bitrate = _song.Bitrate,
+                Composer = _song.Composer,
                 DateAdded = _song.DateAdded,
                 Duration = _song.Duration,
                 Filename = _song.Filename,
@@ -136,6 +159,7 @@ namespace NextPlayerDataLayer.Services
                 LastPlayed = _song.LastPlayed,
                 Lyrics = _song.Lyrics,
                 Path = _song.Path,
+                Performer = _song.Performer,
                 PlayCount = _song.PlayCount,
                 Publisher = _song.Publisher,
                 Rating = _song.Rating,
@@ -160,6 +184,7 @@ namespace NextPlayerDataLayer.Services
                     AlbumArtist = item.AlbumArtist,
                     Artist = item.Artist,
                     Bitrate = item.Bitrate,
+                    Composer = item.Composer,
                     DateAdded = item.DateAdded,
                     Duration = item.Duration,
                     Filename = item.Filename,
@@ -169,6 +194,7 @@ namespace NextPlayerDataLayer.Services
                     LastPlayed = item.LastPlayed,
                     Lyrics = item.Lyrics,
                     Path = item.Path,
+                    Performer = item.Performer,
                     PlayCount = item.PlayCount,
                     Publisher = item.Publisher,
                     Rating = item.Rating,
@@ -239,7 +265,6 @@ namespace NextPlayerDataLayer.Services
             }
             await conn.InsertAllAsync(list2);
             NPChange.SendMessageNPChanged();
-
         }
 
         public static void AddSongToPlaylist(int songId, int playlistId)
@@ -833,6 +858,10 @@ namespace NextPlayerDataLayer.Services
             int maxNumber = q2.SongsNumber;
             string sorting = SPUtility.SPsorting[q2.SortBy];
 
+            string less = null;
+            string greater = null;
+            bool ORcondition;
+
             var query = conn.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToList();
             if (query.Count != 0)
             {
@@ -841,6 +870,7 @@ namespace NextPlayerDataLayer.Services
 
                 foreach (var x in query) //x = condition
                 {
+                    ORcondition = false;
                     string comparison = SPUtility.SPConditionComparison[x.Comparison];
                     string item = SPUtility.SPConditionItem[x.Item];
                     string value = x.Value;
@@ -877,8 +907,28 @@ namespace NextPlayerDataLayer.Services
                     {
                         value = "'" + value + "'";
                     }
+                    else if (x.Comparison.Equals(SPUtility.ComparisonEx.IsGreaterOR))
+                    {
+                        greater = "'" + value + "'";
+                        ORcondition = true;
+                    }
+                    else if (x.Comparison.Equals(SPUtility.ComparisonEx.IsLessOR))
+                    {
+                        less = "'" + value + "'";
+                        ORcondition = true;
+                    }
 
-                    builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+
+                    if (greater != null && less != null)
+                    {
+                        builder.Append("(").Append(item).Append(" < ").Append(less).Append(" OR ").Append(item).Append(" > ").Append(greater).Append(") AND ");
+                        greater = null;
+                        less = null;
+                    }
+                    if (!ORcondition)
+                    {
+                        builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+                    }
                 }
                 builder.Remove(builder.Length - 4, 4);
                 builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
@@ -906,6 +956,10 @@ namespace NextPlayerDataLayer.Services
             int maxNumber = q2.SongsNumber;
             string sorting = SPUtility.SPsorting[q2.SortBy];
 
+            string less = null;
+            string greater = null;
+            bool ORcondition;
+
             var query = await conn.Table<SmartPlaylistEntryTable>().Where(e => e.PlaylistId.Equals(id)).ToListAsync();
             if (query.Count > 0)
             {
@@ -914,6 +968,7 @@ namespace NextPlayerDataLayer.Services
 
                 foreach (var x in query) //x = condition
                 {
+                    ORcondition = false;
                     string comparison = SPUtility.SPConditionComparison[x.Comparison];
                     string item = SPUtility.SPConditionItem[x.Item];
                     string value = x.Value;
@@ -950,8 +1005,28 @@ namespace NextPlayerDataLayer.Services
                     {
                         value = "'" + value + "'";
                     }
+                    else if (x.Comparison.Equals(SPUtility.ComparisonEx.IsGreaterOR))
+                    {
+                        greater = "'" + value + "'";
+                        ORcondition = true;
+                    }
+                    else if (x.Comparison.Equals(SPUtility.ComparisonEx.IsLessOR))
+                    {
+                        less = "'" + value + "'";
+                        ORcondition = true;
+                    }
 
-                    builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+
+                    if (greater != null && less != null)
+                    {
+                        builder.Append("(").Append(item).Append(" < ").Append(less).Append(" OR ").Append(item).Append(" > ").Append(greater).Append(") AND ");
+                        greater = null;
+                        less = null;
+                    }
+                    if (!ORcondition)
+                    {
+                        builder.Append(item).Append(" ").Append(comparison).Append(" ").Append(value).Append(" AND ");
+                    }
                 }
                 builder.Remove(builder.Length - 4, 4);
                 builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
@@ -1067,6 +1142,7 @@ namespace NextPlayerDataLayer.Services
                 AlbumArtist = _song.AlbumArtist,
                 Artist = _song.Artist,
                 Bitrate = _song.Bitrate,
+                Composer = _song.Composer,
                 DateAdded = _song.DateAdded,
                 Duration = _song.Duration,
                 Filename = _song.Filename,
@@ -1076,6 +1152,7 @@ namespace NextPlayerDataLayer.Services
                 LastPlayed = _song.LastPlayed,
                 Lyrics = _song.Lyrics,
                 Path = _song.Path,
+                Performer = _song.Performer,
                 PlayCount = _song.PlayCount,
                 Publisher = _song.Publisher,
                 Rating = _song.Rating,
@@ -1176,6 +1253,7 @@ namespace NextPlayerDataLayer.Services
                 AlbumArtist = q.AlbumArtist,
                 Artist = q.Artist,
                 Bitrate = q.Bitrate,
+                Composer = q.Composer,
                 DateAdded = q.DateAdded,
                 Duration = q.Duration,
                 Filename = q.Filename,
@@ -1185,6 +1263,7 @@ namespace NextPlayerDataLayer.Services
                 LastPlayed = q.LastPlayed,
                 Lyrics = q.Lyrics,
                 Path = q.Path,
+                Performer = q.Performer,
                 PlayCount = q.PlayCount,
                 Publisher = q.Publisher,
                 Rating = q.Rating,
@@ -1220,7 +1299,9 @@ namespace NextPlayerDataLayer.Services
             {
                 Album = q.Album,
                 Artist = q.Artist,
+                AlbumArtist = q.AlbumArtist,
                 Bitrate = (int)q.Bitrate,
+                Composer = q.Composer,
                 DateAdded = q.DateAdded,
                 FilePath =q.Path,
                 FileSize = (int)q.FileSize,
@@ -1253,6 +1334,8 @@ namespace NextPlayerDataLayer.Services
 
             return list;
         }
+
+        
 
         //public async static Task<Dictionary<int, SongData>> SelectAllSongsComplete()
         //{

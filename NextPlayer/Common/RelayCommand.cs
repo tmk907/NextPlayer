@@ -14,7 +14,7 @@ namespace NextPlayer.Common
     /// <see cref="RaiseCanExecuteChanged"/> needs to be called whenever
     /// <see cref="CanExecute"/> is expected to return a different value.
     /// </summary>
-    public class RelayCommand : ICommand
+    public class RelayCommandDefault : ICommand
     {
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
@@ -28,7 +28,7 @@ namespace NextPlayer.Common
         /// Creates a new command that can always execute.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action execute)
+        public RelayCommandDefault(Action execute)
             : this(execute, null)
         {
         }
@@ -38,7 +38,7 @@ namespace NextPlayer.Common
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action execute, Func<bool> canExecute)
+        public RelayCommandDefault(Action execute, Func<bool> canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");

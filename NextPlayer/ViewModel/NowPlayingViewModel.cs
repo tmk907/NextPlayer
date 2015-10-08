@@ -1001,14 +1001,45 @@ namespace NextPlayer.ViewModel
                         {
                             CurrentNr = Int32.Parse(e.Data[key].ToString()) + 1;
                             CurrentSongIndex = Int32.Parse(e.Data[key].ToString());
-                            SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
-                            songId = song.SongId;
-                            SetCover(song.Path);
-                            Artist = song.Artist;
-                            Album = song.Album;
-                            Title = song.Title;
-                            fromDB = true;
-                            Rating = song.Rating;
+                            try
+                            {
+                                SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                                songId = song.SongId;
+                                SetCover(song.Path);
+                                Artist = song.Artist;
+                                Album = song.Album;
+                                Title = song.Title;
+                                fromDB = true;
+                                Rating = song.Rating;
+                            }
+                            catch(System.IndexOutOfRangeException ex)
+                            {
+                                //SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+                                songId = -1;
+                                //SetCover(song.Path);
+                                Artist = "-";
+                                Album = "-";
+                                Title = "-";
+                                fromDB = true;
+                                Rating = 0;
+                                NextPlayerDataLayer.Diagnostics.Logger.Save("NP View MesRecFromBG SongIndex IndexOutOfRangeException" + "\n"
+                                    + ex.Message + "\n"
+                                    + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
+                                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                            }
+                            catch (Exception ex)
+                            {
+                                songId = -1;
+                                Artist = "-";
+                                Album = "-";
+                                Title = "-";
+                                fromDB = true;
+                                Rating = 0;
+                                NextPlayerDataLayer.Diagnostics.Logger.Save("NP View MesRecFromBG SongIndex" + "\n"
+                                    + ex.Message + "\n"
+                                    + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
+                                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                            }
                         });
                         break;
                     case AppConstants.MediaOpened:

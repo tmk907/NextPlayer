@@ -43,6 +43,17 @@
                        Margin="0,4,0,0"/>
         </DataTemplate>
     </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar IsOpen="False" ClosedDisplayMode="Compact"
+                    Visibility="{Binding DeviceListVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+                    >
+            <AppBarButton x:Uid="AppBarScan" 
+                          Icon="Refresh"
+                          Label="Scan" 
+                          IsCompact="True" 
+                          Command="{Binding Scan}"/>
+            </CommandBar>
+    </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -70,8 +81,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
-                           x:Uid="TBDevices"
-                           Text="Devices" 
+                           Text="{Binding ScanResult}" 
                            FontSize="30"
                            Margin="0,0,0,12"/>
                 <ListView Grid.Row="1"
@@ -98,6 +108,7 @@
                            Text="Files"
                            x:Uid="TBFiles"
                            FontSize="30"
+                           TextWrapping="WrapWholeWords"
                            Margin="0"/>
                 <ListView Grid.Row="1"
                           IsItemClickEnabled="False"

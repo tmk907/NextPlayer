@@ -253,6 +253,8 @@ namespace NextPlayer.View
             }
             catch (Exception ex)
             {
+                NextPlayerDataLayer.Diagnostics.Logger.Save("Lyrics ParseLyrics() " + "\n" + address + " " + artist + " " + title + "\n" + ex.Message);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
         }
 

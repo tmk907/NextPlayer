@@ -418,13 +418,13 @@
     <value>Year</value>
   </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>Reverse</value>
+    <value>reverse</value>
   </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>Save</value>
+    <value>save</value>
   </data>
   <data name="AppBarSort.Label" xml:space="preserve">
-    <value>Sort by</value>
+    <value>sort by</value>
   </data>
   <data name="MFIAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -448,7 +448,7 @@
     <value>Save</value>
   </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>Edit</value>
+    <value>edit</value>
   </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
     <value>Search</value>
@@ -472,7 +472,7 @@
     <value>Rate</value>
   </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Save</value>
+    <value>save</value>
   </data>
   <data name="Playlist" xml:space="preserve">
     <value>Playlist</value>
@@ -512,5 +512,32 @@
   </data>
   <data name="TBFiles.Text" xml:space="preserve">
     <value>Files</value>
+  </data>
+  <data name="AppBarScan" xml:space="preserve">
+    <value>scan</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="DevicesNotFound" xml:space="preserve">
+    <value>No Devices could be found.</value>
+  </data>
+  <data name="SearchForDevices" xml:space="preserve">
+    <value>Searching for devices . . .</value>
+  </data>
+  <data name="AppBarSearch.Label" xml:space="preserve">
+    <value>search</value>
+  </data>
+  <data name="AlbumArtist" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="Composer" xml:space="preserve">
+    <value>Composer</value>
+  </data>
+  <data name="TBAlbumArtist.Text" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="TBComposer.Text" xml:space="preserve">
+    <value>Composer</value>
   </data>
 </root>

@@ -14,33 +14,35 @@
         <Thickness x:Key="LeftMargin">4,0,4,8</Thickness>
         <Thickness x:Key="MiddleMargin">4,0,4,8</Thickness>
         <Thickness x:Key="RightMargin">4,0,4,8</Thickness>
-            
     </Page.Resources>
     
     <Grid x:Name="LayoutRoot">
-
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <!--<Image 
+            Grid.RowSpan="2"
+            x:Name="imageBG"
+            Stretch="UniformToFill"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Source="/Assets/BG/wallpaper 7.jpg"
+            />
+        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock x:Uid="MainPageTitle" Text="main page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
-        <!--TODO: Content should be placed within the following grid-->
-        <!--<Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-        </Grid>-->
-
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="0,0,0,0">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="80"/>
@@ -133,7 +135,8 @@
                         Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
-            <Grid Grid.Row="1" Margin="0,0,0,0">
+            <Grid Grid.Row="1" Margin="0,0,0,0"
+                 >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>
@@ -205,11 +208,7 @@
                         >
                     <!--<Image Source="/Assets/Buttons/Dark/MainNextButton.png" Height="80" Width="80"/>-->
                 </Button>
-                <!--<Image Grid.RowSpan="2" Grid.Column="2" 
-                       Margin="0,0,20,0"
-                       
-                       Source="/Assets/Buttons/Dark/MainNextButton.png" Height="80" Width="80"/>-->
-
+                
             </Grid>
         </Grid>
         

@@ -42,7 +42,7 @@ namespace NextPlayerDataLayer.Diagnostics
         }
 
         
-        public async static Task<string> ReadAll()
+        public async static Task<string> Read()
         {
             string text;
             
@@ -64,7 +64,29 @@ namespace NextPlayerDataLayer.Diagnostics
             return text;
         }
 
-        public async static void Clear()
+        public async static Task<string> ReadBG()
+        {
+            string text;
+
+            StorageFolder local = ApplicationData.Current.LocalFolder;
+            try
+            {
+                Stream stream = await local.OpenStreamForReadAsync(filenameBG);
+
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    text = reader.ReadToEnd();
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                text = e.Message;
+            }
+
+            return text;
+        }
+
+        public async static void ClearAll()
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.ReplaceExisting);
@@ -83,7 +105,7 @@ namespace NextPlayerDataLayer.Diagnostics
             }
             catch (Exception e)
             {
-                Logger.SaveBG("error log\n"+content+"\n");
+                Logger.SaveBG("error log\n"+content+"\n"+e.Message);
             }
 
         }

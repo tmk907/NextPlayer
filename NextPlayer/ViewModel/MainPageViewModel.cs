@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
+using NextPlayer.Common;
 using NextPlayer.Constants;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
@@ -521,11 +522,25 @@ namespace NextPlayer.ViewModel
                                 Artist = song.Artist;
                                 Title = song.Title;
                             }
-                            catch (System.IndexOutOfRangeException)
+                            catch (System.IndexOutOfRangeException ex)
                             {
                                 SetDefaultCover();
                                 Artist = "-";
                                 Title = "-";
+                                NextPlayerDataLayer.Diagnostics.Logger.Save("Main Page MesRecFromBG SongIndex IndexOutOfRangeException" + "\n"
+                                    +ex.Message+"\n"
+                                    +"NPList Count "+Library.Current.NowPlayingList.Count+" index "+CurrentSongIndex);
+                                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                            }
+                            catch (Exception ex)
+                            {
+                                SetDefaultCover();
+                                Artist = "-";
+                                Title = "-";
+                                NextPlayerDataLayer.Diagnostics.Logger.Save("Main Page MesRecFromBG SongIndex" + "\n"
+                                    + ex.Message + "\n"
+                                    + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
+                                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                             }
                         });
                         break;

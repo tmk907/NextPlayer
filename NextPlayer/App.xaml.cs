@@ -8,10 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -45,26 +47,25 @@ namespace NextPlayer
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
-
+            
             if (FirstRun())
             {
+                //jesli jest DB jest tworzone po wersji 1.5.1.0 przy tworzeniu bazy trzeba zapisac jej wersje
                 Library.Current.SetDB();
             }
-            ManageSecondaryTileImages();
-            //Read();
+            else
+            {
+                ManageSecondaryTileImages();
+                SendLogs();
+                CheckDBVersion();
+            }
+           
             //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
         }
 
-        private async void Read()
-        {
-            string s = await NextPlayerDataLayer.Diagnostics.Logger.ReadAll();
-            //NextPlayerDataLayer.Diagnostics.Logger.Clear();
-        }
-
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.Save(Library.Current.Read());
             NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception.ToString() + "\nMessage:\n" + e.Message);
             NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
 
@@ -161,10 +162,12 @@ namespace NextPlayer
                             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
                             await SuspensionManager.RestoreAsync();
                         }
-                        catch (SuspensionManagerException)
+                        catch (SuspensionManagerException ex)
                         {
                             // Something went wrong restoring state.
                             // Assume there is no state and continue.
+                            NextPlayerDataLayer.Diagnostics.Logger.Save("App OnLaunched() SuspensionManagerException" + "\n" + ex.Message);
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                         }
                     }
                 }
@@ -196,7 +199,7 @@ namespace NextPlayer
                     throw new Exception("Failed to create initial page");
                 }
             }
-
+            //rootFrame.Background = (ImageBrush)Resources["BgImage"];
             // Ensure the current window is active
             Window.Current.Activate();
             DispatcherHelper.Initialize();
@@ -294,5 +297,93 @@ namespace NextPlayer
         }
 
         public static Action OnNewTilePinned { get; set; }
+
+        private void SendLogs()
+        {
+            try
+            {
+                var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                
+                if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
+                {
+                    settings.Values.Add(AppConstants.DataLastSend, DateTime.Today.Ticks);
+
+                    CreateTask();
+                }
+                else
+                {
+                    long dateticks = (long)(settings.Values[AppConstants.DataLastSend]);
+                    TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
+                    //if (TimeSpan.FromDays(2) <= elapsed)
+                    //{
+                        //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
+                    CreateTask();
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private async void CreateTask()
+        {
+            var taskRegistered = false;
+            var taskName = "LogSenderNetworkTask";
+
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == taskName)
+                {
+                    task.Value.Unregister(true);
+                    //taskRegistered = true;
+                    break;
+                }
+            }
+
+            if (!taskRegistered)
+            {
+                await BackgroundExecutionManager.RequestAccessAsync();
+                var builder = new BackgroundTaskBuilder();
+
+                builder.Name = taskName;
+                builder.TaskEntryPoint = "BackgroundNetworkTask.NetworkTask";
+                builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, true));
+                //new SystemCondition(SystemConditionType.InternetAvailable);
+                BackgroundTaskRegistration task = builder.Register();
+            }
+        }
+
+        async void CheckAppVersion()
+        {
+            String appVersion = String.Format("{0}.{1}.{2}.{3}",
+                    Package.Current.Id.Version.Build,
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Revision);
+
+            if (ApplicationData.Current.LocalSettings.Values["AppVersion"] != appVersion)
+            {
+                // Our app has been updated
+                ApplicationData.Current.LocalSettings.Values["AppVersion"] = appVersion;
+
+                // Call RemoveAccess
+                BackgroundExecutionManager.RemoveAccess();
+            }
+
+            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
+        }
+
+        private void CheckDBVersion()
+        {
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (!settings.Values.ContainsKey(AppConstants.DBVersion))
+            {
+                DatabaseManager.UpdateDBToVersion2();
+                settings.Values.Add(AppConstants.DBVersion, "2notupdated");
+            }
+        }
     }
 }

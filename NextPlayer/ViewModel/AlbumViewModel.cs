@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using NextPlayerDataLayer.Helpers;
 using NextPlayer.Converters;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI;
 
 namespace NextPlayer.ViewModel
 {
@@ -160,7 +161,7 @@ namespace NextPlayer.ViewModel
                 RaisePropertyChanged(SongsPropertyName);
             }
         }
-
+        
         /// <summary>
         /// The <see cref="Cover" /> property's name.
         /// </summary>
@@ -190,7 +191,7 @@ namespace NextPlayer.ViewModel
                 RaisePropertyChanged(CoverPropertyName);
             }
         }
-
+        
         private RelayCommand<SongItem> addToNowPlaying;
 
         /// <summary>
@@ -327,6 +328,7 @@ namespace NextPlayer.ViewModel
         {
             albumParam = null;
             artistParam = null;
+            Cover = new BitmapImage();
             if (parameter != null)
             {
                 if (parameter.GetType() == typeof(string))

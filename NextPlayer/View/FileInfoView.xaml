@@ -65,6 +65,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
                 <TextBlock
@@ -133,74 +135,98 @@
                     Text="{Binding File.Artist}"
                     Style="{StaticResource ValueStyle}"
                     />
-                <TextBlock
+                <TextBlock 
                     Grid.Row="6" Grid.Column="0"
+                    Text="Album artist"
+                    x:Uid="TBAlbumArtist"
+                    Style="{StaticResource DescriptionStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="6" Grid.Column="1"
+                    Text="{Binding File.AlbumArtist}"
+                    Style="{StaticResource ValueStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="7" Grid.Column="0"
+                    Text="Composer"
+                    x:Uid="TBComposer"
+                    Style="{StaticResource DescriptionStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="7" Grid.Column="1"
+                    Text="{Binding File.Composer}"
+                    Style="{StaticResource ValueStyle}"
+                    />
+                <TextBlock
+                    Grid.Row="8" Grid.Column="0"
                     Text="Track number"
                     x:Uid="TBTrackNumber"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="6" Grid.Column="1"
+                    Grid.Row="8" Grid.Column="1"
                     Text="{Binding File.TrackNumber}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
-                    Grid.Row="7" Grid.Column="0"
+                    Grid.Row="9" Grid.Column="0"
                     Text="Year"
                     x:Uid="TBYear"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="7" Grid.Column="1"
+                    Grid.Row="9" Grid.Column="1"
                     Text="{Binding File.Year}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
-                    Grid.Row="8" Grid.Column="0"
+                    Grid.Row="10" Grid.Column="0"
                     Text="Rating"
                     x:Uid="TBRating"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="8" Grid.Column="1"
+                    Grid.Row="10" Grid.Column="1"
                     Text="{Binding File.Rating}"
                    Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
-                    Grid.Row="9" Grid.Column="0"
+                    Grid.Row="11" Grid.Column="0"
                     Text="Play count"
                     x:Uid="TBPlayCount"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="9" Grid.Column="1"
+                    Grid.Row="11" Grid.Column="1"
                     Text="{Binding File.PlayCount}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
-                    Grid.Row="10" Grid.Column="0"
+                    Grid.Row="12" Grid.Column="0"
                     Text="Last time played"
                     x:Uid="TBLastTimePlayed"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="10" Grid.Column="1"
+                    Grid.Row="12" Grid.Column="1"
                     Text="{Binding File.LastTimePlayed, Converter={StaticResource DateTimeToStringConverter}}"
                     Style="{StaticResource ValueStyle}"
                     />
                 <TextBlock
-                    Grid.Row="11" Grid.Column="0"
+                    Grid.Row="13" Grid.Column="0"
                     Text="Date added"
                     x:Uid="TBDateAdded"
                     Style="{StaticResource DescriptionStyle}"
                     />
                 <TextBlock
-                    Grid.Row="11" Grid.Column="1"
+                    Grid.Row="13" Grid.Column="1"
                     Text="{Binding File.DateAdded, Converter={StaticResource DateTimeToStringConverter}}"
                     Style="{StaticResource ValueStyle}"
                     />
                 
-            </Grid>
+                    
+
+                </Grid>
             </ScrollViewer>
         </Grid>
     </Grid>

@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.BottomAppBar>
         <CommandBar IsOpen="False" ClosedDisplayMode="Minimal">
-            <AppBarButton x:Uid="AppBarEdit" Label="Edit" Icon="Edit" Click="edit_Click"/>
+            <AppBarButton x:Uid="AppBarSearch" Label="Search" Icon="Find" Click="edit_Click"/>
             <AppBarButton x:Uid="AppBarSaveLyrics" x:Name="appBarSave" Label="Save" Icon="Save" Click="save_Click"/>
         </CommandBar>
     </Page.BottomAppBar>

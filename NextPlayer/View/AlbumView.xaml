@@ -14,32 +14,41 @@
 
 
     <Grid x:Name="LayoutRoot">
-
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <Image 
+            Grid.RowSpan="2"
+            x:Name="imageBG"
+            Stretch="UniformToFill"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Source="{Binding Cover}"
+            />
+        <Rectangle x:Name="Rect1" Grid.RowSpan="2" Fill="{StaticResource TransparentBGImageColor}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock x:Uid="AlbumPageTitle" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="AppName" Text="NEXT PLAYER" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="AlbumPageTitle" Text="Album" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
+        
         <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+        <Grid Grid.Row="1" x:Name="ContentRoot" 
+              Margin="19,9.5,19,0" 
+              >
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+                
+                <Grid Grid.Row="0" Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
@@ -60,7 +69,8 @@
                             FontSize="21" 
                             FontWeight="Medium" 
                             TextWrapping="WrapWholeWords"  
-                            Padding="10,5,5,5"/>
+                            Padding="10,5,5,5"
+                            Foreground="{StaticResource UserListFontColor}"/>
                         <TextBlock Grid.Row="1"
                             Text="{Binding Artist}" 
                             MaxHeight="60" 
@@ -77,8 +87,11 @@
                             Padding="5,0,0,15"/>
                     </Grid>
                 </Grid>
+                
                 <ListView x:Name="SongsListView"
                     Grid.Row="1" 
+                    
+                    Margin="0,0,0,4"
                     SelectionMode="None"
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Songs}"

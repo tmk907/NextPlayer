@@ -31,6 +31,13 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
+            string dbVersion = Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion].ToString();
+            if (dbVersion.EndsWith("notupdated"))
+            {
+                UpdateComposers(progress);
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
+                return;
+            }
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
             
@@ -89,23 +96,7 @@ namespace NextPlayerDataLayer.Services
             SendToast();
         }
 
-        public async static Task ImportAndCreateNewDatabase(IProgress<int> progress)
-        {
-            DatabaseManager.ResetSongsTable();
-
-            IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-            int count = 1;
-            foreach (var file in list)
-            {
-                SongData song = await CreateSongFromFile(file);
-                await DatabaseManager.InsertSong(song);
-                progress.Report(count);
-                count++;
-            }
-            OnMediaImported("NewDatabase");
-            SendToast();
-        }
-
+        
         private async static Task<SongData> CreateSongFromFile(StorageFile file)
         {
             //var w1 = Stopwatch.StartNew();
@@ -170,6 +161,8 @@ namespace NextPlayerDataLayer.Services
                 song.AlbumArtist = tags.FirstAlbumArtist ?? "";
                 song.Artist = tags.FirstPerformer ?? "Unknown";
                 song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
+                song.Composer = tags.FirstComposer ?? "";
+                song.Performer = tags.FirstPerformer ?? "";
                 song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
                 song.Genre = tags.FirstGenre ?? "Unknown";
                 song.Lyrics = tags.Lyrics ?? "";
@@ -183,29 +176,68 @@ namespace NextPlayerDataLayer.Services
                 song.AlbumArtist = "";
                 song.Artist = "Unknown";
                 song.Bitrate = 0;
+                song.Composer = "";
                 song.Duration = TimeSpan.Zero;
                 song.Genre = "Unknown";
                 song.Lyrics = "";
+                song.Performer = "";
                 song.Title = file.DisplayName;
                 song.TrackNumber = 0;
                 song.Year = 0;
             }
-
-            //if (tags.Year == null)
-            //{
-
-            //}
-            //if (tags.Track != mp.TrackNumber)
-            //{
-
-            //}
-
-            //if (tags.FirstPerformer != tags.FirstAlbumArtist)
-            //{
-
-            //}
           
             return song;
+        }
+
+        // Update composer and performer field
+        public static async void UpdateComposers(IProgress<int> progress)
+        {
+            var list = DatabaseManager.GetSongItems();
+            List<Tuple<int, string,string>> newTags = new List<Tuple<int, string, string>>();
+            int count = 0;
+            foreach (var song in list)
+            {
+                try
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                    Stream fileStream = await file.OpenStreamForReadAsync();
+                    try
+                    {
+                        var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                        Tag tags;
+                        if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                        {
+                            tags = tagFile.GetTag(TagTypes.Id3v2);
+                        }
+                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                        {
+                            tags = tagFile.GetTag(TagTypes.Id3v1);
+                        }
+                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                        {
+                            tags = tagFile.GetTag(TagTypes.Apple);
+                        }
+                        else
+                        {
+                            tags = tagFile.GetTag(tagFile.TagTypes);
+                        }
+                        newTags.Add(new Tuple<int, string, string>(song.SongId, tags.FirstComposer, tags.FirstPerformer));
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                if (count % 10 == 0)//!!!
+                {
+                    progress.Report(count);
+                }
+                count++;
+            }
+            DatabaseManager.UpdateComposersPerformers(newTags);
         }
 
         private static void SendToast()
@@ -260,6 +292,24 @@ namespace NextPlayerDataLayer.Services
         //    }
         //    OnMediaImported("NewDatabase");
         //}
+
+        //public async static Task ImportAndCreateNewDatabase(IProgress<int> progress)
+        //{
+        //    DatabaseManager.ResetSongsTable();
+
+        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+        //    int count = 1;
+        //    foreach (var file in list)
+        //    {
+        //        SongData song = await CreateSongFromFile(file);
+        //        await DatabaseManager.InsertSong(song);
+        //        progress.Report(count);
+        //        count++;
+        //    }
+        //    OnMediaImported("NewDatabase");
+        //    SendToast();
+        //}
+
 
     }
 }

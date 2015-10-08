@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.Views;
 using NextPlayer.Converters;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
+using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.UI.Notifications;
+using Windows.UI.ViewManagement;
 
 namespace NextPlayer.ViewModel
 {
@@ -29,11 +32,15 @@ namespace NextPlayer.ViewModel
         ObexService obexService;
         BluetoothDevice BtDevice;
         private String[] s;
+        StatusBar systemTray;
+        ResourceLoader loader;
 
         public BluetoothShareViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
             songIds = new List<int>();
+            systemTray = StatusBar.GetForCurrentView();
+            loader = new ResourceLoader();
         }
 
         #region Properties
@@ -168,6 +175,36 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="ScanResult" /> property's name.
+        /// </summary>
+        public const string ScanResultPropertyName = "ScanResult";
+
+        private string scanResult = "";
+
+        /// <summary>
+        /// Sets and gets the ScanResult property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string ScanResult
+        {
+            get
+            {
+                return scanResult;
+            }
+
+            set
+            {
+                if (scanResult == value)
+                {
+                    return;
+                }
+
+                scanResult = value;
+                RaisePropertyChanged(ScanResultPropertyName);
+            }
+        }
+
         #endregion
 
         private RelayCommand<BluetoothDevice> itemClicked;
@@ -190,21 +227,48 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand scan;
+
+        /// <summary>
+        /// Gets the Scan.
+        /// </summary>
+        public RelayCommand Scan
+        {
+            get
+            {
+                return scan
+                    ?? (scan = new RelayCommand(
+                    () =>
+                    {
+                        EnumerateDevicesAsync();
+                    }));
+            }
+        }
+
+        #region BT
+
         public async Task EnumerateDevicesAsync()
         {
+            ScanResult = loader.GetString("SearchForDevices");
+            systemTray.ProgressIndicator.Text = loader.GetString("SearchForDevices");
+            await systemTray.ProgressIndicator.ShowAsync();
             BluetoothService btService = BluetoothService.GetDefault();
             btService.SearchForPairedDevicesFailed += btService_SearchForPairedDevicesFailed;
             btService.SearchForPairedDevicesSucceeded += btService_SearchForPairedDevicesSucceeded;
             await btService.SearchForPairedDevicesAsync();
         }
-        void btService_SearchForPairedDevicesSucceeded(object sender, SearchForPairedDevicesSucceededEventArgs e)
+        async void btService_SearchForPairedDevicesSucceeded(object sender, SearchForPairedDevicesSucceededEventArgs e)
         {
+            await systemTray.ProgressIndicator.HideAsync();
+            ScanResult = loader.GetString("Devices");
             (sender as BluetoothService).SearchForPairedDevicesFailed -= btService_SearchForPairedDevicesFailed;
             (sender as BluetoothService).SearchForPairedDevicesSucceeded -= btService_SearchForPairedDevicesSucceeded;
             DeviceList = e.PairedDevices;
         }
-        void btService_SearchForPairedDevicesFailed(object sender, SearchForPairedDevicesFailedEventArgs e)
+        async void btService_SearchForPairedDevicesFailed(object sender, SearchForPairedDevicesFailedEventArgs e)
         {
+            ScanResult = loader.GetString("DevicesNotFound");
+            await systemTray.ProgressIndicator.HideAsync();
             (sender as BluetoothService).SearchForPairedDevicesFailed -= btService_SearchForPairedDevicesFailed;
             (sender as BluetoothService).SearchForPairedDevicesSucceeded -=  btService_SearchForPairedDevicesSucceeded;
             //txtblkErrorBtDevices.Text = e.FailureReason.ToString();
@@ -377,6 +441,8 @@ namespace NextPlayer.ViewModel
             });
         }
 
+        #endregion
+
         private static void SendToast(string message)
         {
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -398,7 +464,11 @@ namespace NextPlayer.ViewModel
                     IStorageFile file = await StorageFile.GetFileFromPathAsync(path);
                     filesToShare.Add(new FileItemToShare(Path.GetFileName(path), path, file));
                 }
-                catch (Exception e) { }
+                catch (Exception e)
+                {
+                    NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                    NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                }
             }
             else if (s[0].Equals("album"))
             {
@@ -411,6 +481,8 @@ namespace NextPlayer.ViewModel
                     }
                     catch (Exception e)
                     {
+                        NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                     }
                 }
             }
@@ -425,6 +497,8 @@ namespace NextPlayer.ViewModel
                     }
                     catch (Exception e)
                     {
+                        NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                     }
                 }
             }
@@ -439,6 +513,8 @@ namespace NextPlayer.ViewModel
                     }
                     catch (Exception e)
                     {
+                        NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                     }
                 }
             }
@@ -453,12 +529,35 @@ namespace NextPlayer.ViewModel
                     }
                     catch (Exception e)
                     {
+                        NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
                     }
                 }
             }
             else if (s[0].Equals("playlist"))
             {
-                
+                var songList = new ObservableCollection<SongItem>();
+                if (s[1].Equals("smart"))
+                {
+                    songList =  DatabaseManager.GetSongItemsFromSmartPlaylist(Int32.Parse(s[2]));
+                }
+                else
+                {
+                    songList = DatabaseManager.GetSongItemsFromPlainPlaylist(Int32.Parse(s[2]));
+                }
+                foreach (var song in songList)
+                {
+                    try
+                    {
+                        IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
+                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                    }
+                    catch (Exception e)
+                    {
+                        NextPlayerDataLayer.Diagnostics.Logger.Save("BT get files" + "\n" + e.Message);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                    }
+                }
             }
             return true;
         }

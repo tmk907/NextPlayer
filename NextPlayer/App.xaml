@@ -14,21 +14,23 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="Assets/HubBackground.png"/>
-                </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="{x:Null}"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
+            <SolidColorBrush x:Key="UserListFontColor" Color="{ThemeResource PhoneForegroundColor}"/>
+            <SolidColorBrush x:Key="TransparentColor" Color="#FF000000"/>
+            <SolidColorBrush x:Key="TransparentBGImageColor" Color="#90141414"/>
+
 
             <vm:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
             <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
             <JumpListItemForegroundConverter x:Key="JumpListItemForegroundConverter"/>
             <DataTemplate x:Key="ZoomedInHeaderTemplate">
-                <Border Background="{StaticResource PhoneAccentBrush}" 
-                        BorderBrush="{StaticResource PhoneAccentBrush}"
+                <Border Background="{StaticResource UserAccentBrush}" 
+                        BorderBrush="{StaticResource UserAccentBrush}"
                         Width="50" 
                         Height="50"
                         Margin="0,9.5,0,9.5">
@@ -217,6 +219,7 @@
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="20" 
                                    FontWeight="SemiBold" 
+                                   Foreground="Red"
                                    Margin="0,0,0,0"/>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
@@ -300,6 +303,7 @@
             <converters:SizeToStringConverter x:Key="SizeToStringConverter"/>
             <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
             <converters:IntToBitrateConverter x:Key="IntToBitrateConverter"/>
+            <converters:StringToInputScopeConverter x:Key="StringToInputScope"/>
             
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>

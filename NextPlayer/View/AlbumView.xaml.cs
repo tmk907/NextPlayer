@@ -69,6 +69,9 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            //Windows.UI.Color currentAccentColorHex = (Windows.UI.Color)Application.Current.Resources["SystemColorControlAccentColor"];
+            //Rect1.Fill = new SolidColorBrush((Windows.UI.Color)Application.Current.Resources["SystemColorControlAccentColor"]);
+             //"#90141414";
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
@@ -115,6 +118,7 @@ namespace NextPlayer.View
         }
 
         #endregion
+
     }
     //public class SizeNotifyPanel2 : ContentPresenter
     //{

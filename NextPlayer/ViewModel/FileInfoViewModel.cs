@@ -203,6 +203,53 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        
+        public const string AlbumArtistPropertyName = "AlbumArtist";
+
+        private string albumArtist = "";
+
+        public string AlbumArtist
+        {
+            get
+            {
+                return albumArtist;
+            }
+
+            set
+            {
+                if (albumArtist == value)
+                {
+                    return;
+                }
+
+                albumArtist = value;
+                RaisePropertyChanged(AlbumArtistPropertyName);
+            }
+        }
+
+        public const string ComposerPropertyName = "Composer";
+
+        private string composer = "";
+
+        public string Composer
+        {
+            get
+            {
+                return composer;
+            }
+
+            set
+            {
+                if (composer == value)
+                {
+                    return;
+                }
+
+                composer = value;
+                RaisePropertyChanged(ComposerPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="TrackNumber" /> property's name.
         /// </summary>
@@ -381,7 +428,6 @@ namespace NextPlayer.ViewModel
                 RaisePropertyChanged(DateAddedPropertyName);
             }
         }
-        #endregion
 
         /// <summary>
         /// The <see cref="File" /> property's name.
@@ -412,6 +458,9 @@ namespace NextPlayer.ViewModel
                 RaisePropertyChanged(FilePropertyName);
             }
         }
+        #endregion
+
+       
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {

@@ -274,13 +274,16 @@ namespace NextPlayer.ViewModel
                 {
                     return;
                 }
+                //default  - number. Year, PlayCount, Rating
                 DatePickerVisibility = false;
                 TextBoxVisibility = true;
                 TimeUnitsVisibility = false;
-                if (value == SPUtility.Item.Album || value == SPUtility.Item.Artist || value == SPUtility.Item.Genre || value == SPUtility.Item.Title || value == SPUtility.Item.FilePath)
+                //ValueInputScope = "Number";
+                if (value == SPUtility.Item.Album || value == SPUtility.Item.Artist || value == SPUtility.Item.Genre || value == SPUtility.Item.Title || value == SPUtility.Item.FilePath || value == SPUtility.Item.AlbumArtist || value == SPUtility.Item.Composer)
                 {
                     comparisonItems.Clear();
                     SetComparisonItems(true);
+                    //ValueInputScope = "String";
                 }
                 else
                 {
@@ -291,12 +294,14 @@ namespace NextPlayer.ViewModel
                         DatePickerVisibility = true;
                         TextBoxVisibility = false;
                         TimeUnitsVisibility = false;
+                        //ValueInputScope = "String";
                     }
                     else if (value == SPUtility.Item.Duration)
                     {
                         DatePickerVisibility = false;
                         TextBoxVisibility = true;
                         TimeUnitsVisibility = true;
+                        //ValueInputScope = "Number";
                     }
 
                 }
@@ -573,6 +578,36 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="ValueInputScope" /> property's name.
+        /// </summary>
+        public const string ValueInputScopePropertyName = "ValueInputScope";
+
+        private string valueInputScope = "Default";
+
+        /// <summary>
+        /// Sets and gets the ValueInputScope property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string ValueInputScope
+        {
+            get
+            {
+                return valueInputScope;
+            }
+
+            set
+            {
+                if (valueInputScope == value)
+                {
+                    return;
+                }
+
+                valueInputScope = value;
+                RaisePropertyChanged(ValueInputScopePropertyName);
+            }
+        }
+
         private void SetComparisonItems(bool stringCompare)
         {
             if (stringCompare)
@@ -617,7 +652,7 @@ namespace NextPlayer.ViewModel
 
         private bool IsStringType(string value)
         {
-            return (value == SPUtility.Item.Album || value == SPUtility.Item.Artist || value == SPUtility.Item.Genre || value == SPUtility.Item.Title || value == SPUtility.Item.FilePath);
+            return (value == SPUtility.Item.Album || value == SPUtility.Item.Artist || value == SPUtility.Item.Genre || value == SPUtility.Item.Title || value == SPUtility.Item.FilePath || value == SPUtility.Item.AlbumArtist || value == SPUtility.Item.Composer);
         }
         private bool IsDateTimeType(string value)
         {
@@ -672,15 +707,93 @@ namespace NextPlayer.ViewModel
             //int number = Int32.Parse(songsNumber);
             int id = await DatabaseManager.InsertSmartPlaylist(playlistName, Int32.Parse(songsNumber), selectedSorting);
             string value = "";
-            if (IsStringType(selectedItem) || IsNumberType(selectedItem)) value = valueTextBox;
-            else if (IsDateTimeType(selectedItem)) value = date.Ticks.ToString();
+            if (IsStringType(selectedItem) || IsNumberType(selectedItem))
+            {
+                value = valueTextBox;
+                await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, selectedComparison, value);
+            }
+            else if (IsDateTimeType(selectedItem))
+            {
+                if (selectedComparison.Equals(SPUtility.Comparison.Is.ToString()))
+                {
+                    // low < date < high
+                    var lowDate = date.Date.Ticks.ToString();
+                    var highDate = (date.Date.AddDays(1).Ticks-1).ToString();
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.Comparison.IsGreater, lowDate);
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.Comparison.IsLess, highDate);
+                }
+                else if (selectedComparison.Equals(SPUtility.Comparison.IsNot.ToString()))//!
+                {
+                    // date < low || date > high
+                    var lowDate = date.Date.Ticks.ToString();
+                    var highDate = (date.Date.AddDays(1).Ticks-1).ToString();
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.ComparisonEx.IsLessOR, lowDate);
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.ComparisonEx.IsGreaterOR, highDate);
+                }
+                else if (selectedComparison.Equals(SPUtility.Comparison.IsGreater.ToString()))
+                {
+                    // high < date
+                    value = date.Date.AddDays(1).Ticks.ToString();
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, selectedComparison, value);
+                }
+                else if (selectedComparison.Equals(SPUtility.Comparison.IsLess.ToString()))
+                {
+                    // date < low
+                    value = date.Date.Ticks.ToString();
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, selectedComparison, value);
+                }
+            }
             else if (IsTimeSpanType(selectedItem))
             {
-                if (selectedTimeUnit == "Seconds") value = (TimeSpan.FromSeconds(Int32.Parse(valueTextBox))).Ticks.ToString();
-                else if (selectedTimeUnit == "Minutes") value = (TimeSpan.FromMinutes(Int32.Parse(valueTextBox))).Ticks.ToString();
-                else if (selectedTimeUnit == "Hours") value = (TimeSpan.FromHours(Int32.Parse(valueTextBox))).Ticks.ToString();
+                TimeSpan time;
+                if (selectedTimeUnit == "Seconds") time = TimeSpan.FromSeconds(Int32.Parse(valueTextBox));
+                else if (selectedTimeUnit == "Minutes") time = TimeSpan.FromMinutes(Int32.Parse(valueTextBox));
+                else if (selectedTimeUnit == "Hours") time = TimeSpan.FromHours(Int32.Parse(valueTextBox));
+
+                if (selectedComparison.Equals(SPUtility.Comparison.Is.ToString()))
+                {
+                    string lowTime, highTime;
+                    lowTime = time.Ticks.ToString();
+                    if (selectedTimeUnit == "Seconds")
+                    {
+                        highTime = (time.Add(TimeSpan.FromSeconds(1)).Ticks - 1).ToString();
+                    }
+                    else if (selectedTimeUnit == "Minutes")
+                    {
+                        highTime = (time.Add(TimeSpan.FromMinutes(1)).Ticks - 1).ToString();
+                    }
+                    else// if (selectedTimeUnit == "Hours")
+                    {
+                        highTime = (time.Add(TimeSpan.FromHours(1)).Ticks - 1).ToString();
+                    }
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.Comparison.IsGreater, lowTime);
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.Comparison.IsLess, highTime);
+                }
+                else if (selectedComparison.Equals(SPUtility.Comparison.IsNot.ToString()))//!
+                {
+                    string lowTime, highTime;
+                    lowTime = time.Ticks.ToString();
+                    if (selectedTimeUnit == "Seconds")
+                    {
+                        highTime = (time.Add(TimeSpan.FromSeconds(1)).Ticks - 1).ToString();
+                    }
+                    else if (selectedTimeUnit == "Minutes")
+                    {
+                        highTime = (time.Add(TimeSpan.FromMinutes(1)).Ticks - 1).ToString();
+                    }
+                    else// if (selectedTimeUnit == "Hours")
+                    {
+                        highTime = (time.Add(TimeSpan.FromHours(1)).Ticks - 1).ToString();
+                    }
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.ComparisonEx.IsLessOR, lowTime);
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, SPUtility.ComparisonEx.IsGreaterOR, highTime);
+                }
+                else
+                {
+                    value = time.Ticks.ToString();
+                    await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, selectedComparison, value);
+                }
             }
-            await DatabaseManager.InsertSmartPlaylistEntry(id, selectedItem, selectedComparison, value);
             navigationService.GoBack();
         }
 
@@ -691,8 +804,9 @@ namespace NextPlayer.ViewModel
             selectedSorting = "";
             selectedTimeUnit = "";
             playlistName = "";
-            songsNumber = "25";
+            songsNumber = "";
             valueTextBox = "";
+            Date = DateTime.Now.Date;
         }
 
         public void Deactivate(Dictionary<string, object> state)

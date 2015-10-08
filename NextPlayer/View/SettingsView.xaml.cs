@@ -292,7 +292,7 @@ namespace NextPlayer.View
 
         private async void ShowLog_Click(object sender, RoutedEventArgs e)
         {
-            logTB.Text = await NextPlayerDataLayer.Diagnostics.Logger.ReadAll();
+            logTB.Text = await NextPlayerDataLayer.Diagnostics.Logger.Read();
         }
 
         private void transparentToggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -336,7 +336,11 @@ namespace NextPlayer.View
 
         private void gotobl(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(testBT));
+            var brush = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
+            Windows.UI.Color color = brush.Color;
+            color.A = 144;
+            ((SolidColorBrush)App.Current.Resources["TransparentColor"]).Color = color;
+            App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
         }
     }
 }

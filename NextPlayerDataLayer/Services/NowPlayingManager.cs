@@ -87,11 +87,16 @@ namespace NextPlayerDataLayer.Services
                 {
                     if (!paused)
                     {
-                        SendSkipNext();
+                        Pause();
                     }
+                    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
+                    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                 }
                 else
                 {
+                    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
+                    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+
                     ValueSet message = new ValueSet();
                     message.Add(AppConstants.ShutdownBGPlayer, "");
                     BackgroundMediaPlayer.SendMessageToBackground(message);

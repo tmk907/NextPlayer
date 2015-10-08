@@ -7,6 +7,8 @@ namespace NextPlayerDataLayer.Constants
         public const string AppId = "7a609088-e51a-458e-a8ca-5f13fc9ea5a8";
         public const string DBFileName = "database1.db";
         public const string FirstRun = "firstrun";
+        public const string DBVersion = "DBVersion";
+        public const string AppVersion = "AppVersion";
 
         //Review
         public const string IsReviewed = "isreviewed5";
@@ -54,6 +56,8 @@ namespace NextPlayerDataLayer.Constants
         public const string TileIdValue = "TileIdValue";
         public const string TileImage = "TileImage";
         public const string TileAppTransparent = "isapptiletransparent";
+
+        public const string DataLastSend = "DataLastSend";
 
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string BackgroundTaskRunning = "BackgroundTaskRunning";

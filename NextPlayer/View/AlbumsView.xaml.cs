@@ -115,5 +115,15 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        //private void TextBlock_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        //{
+        //        var frame = (Frame)Window.Current.Content;
+        //        while(frame.CanGoBack && frame.BackStack.LastOrDefault().SourcePageType.FullName!="NextPlayer.View.MainPage")
+        //        {
+        //            frame.BackStack.RemoveAt(frame.BackStackDepth - 1);
+        //        }
+        //        frame.GoBack();
+        //}
     }
 }

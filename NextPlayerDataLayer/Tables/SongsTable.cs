@@ -14,8 +14,10 @@ namespace NextPlayerDataLayer.Tables
         [Indexed]
         public string Artist { get; set; }
         public uint Bitrate { get; set; }
+        public string Composer { get; set; }
         public TimeSpan Duration { get; set; }
         public string Genre { get; set; }
+        public string Performer { get; set; }
         public string Publisher { get; set; }
         public uint Rating { get; set; }
         public string Subtitle { get; set; }

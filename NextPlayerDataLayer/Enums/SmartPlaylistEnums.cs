@@ -25,6 +25,8 @@ namespace NextPlayerDataLayer.Enums
             public static readonly string Title = "Title";
             public static readonly string Album = "Album";
             public static readonly string Artist = "Artist";
+            public static readonly string AlbumArtist = "AlbumArtist";
+            public static readonly string Composer = "Composer";
             public static readonly string Genre = "Genre";
             public static readonly string Duration = "Duration";
             public static readonly string Year = "Year";
@@ -45,6 +47,12 @@ namespace NextPlayerDataLayer.Enums
             public static readonly string DoesNotContain = "DoesNotContain";
             public static readonly string StartsWith = "StartsWith";
             public static readonly string EndsWith = "EndsWith";
+        }
+
+        public class ComparisonEx
+        {
+            public static readonly string IsGreaterOR = "IsGreaterOR";
+            public static readonly string IsLessOR = "IsLessOR";
         }
 
         internal static Dictionary<string, string> SPsorting = new Dictionary<string, string>()
@@ -68,6 +76,8 @@ namespace NextPlayerDataLayer.Enums
             {Item.Title, "Title"},
             {Item.Album, "Album"},
             {Item.Artist, "Artist"},
+            {Item.AlbumArtist, "AlbumArtist"},
+            {Item.Composer, "Composer"},
             {Item.Genre, "Genre"},
             {Item.Duration, "Duration"},
             {Item.Year, "Year"},
@@ -86,7 +96,9 @@ namespace NextPlayerDataLayer.Enums
             {Comparison.Contains, "LIKE"},
             {Comparison.DoesNotContain, "NOT LIKE"},
             {Comparison.StartsWith, "LIKE"},
-            {Comparison.EndsWith,"LIKE"}
+            {Comparison.EndsWith,"LIKE"},
+            {ComparisonEx.IsGreaterOR,ComparisonEx.IsGreaterOR},
+            {ComparisonEx.IsLessOR,ComparisonEx.IsLessOR}
         };
     }
     

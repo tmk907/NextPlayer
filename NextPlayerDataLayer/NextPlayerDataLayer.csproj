@@ -91,6 +91,7 @@
     <Compile Include="Common\Grouped.cs" />
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
+    <Compile Include="Diagnostics\Sender.cs" />
     <Compile Include="Enums\SmartPlaylistEnums.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\FileItemToShare.cs" />
@@ -127,8 +128,15 @@
       <HintPath>..\packages\TagLib.Portable.1.0.2\lib\portable-net45+win8+wpa81\TagLib.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WriteableBitmapEx.WinRT, Version=1.5.0.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
+      <HintPath>..\packages\WriteableBitmapEx.1.5.0.0\lib\wpa81\WriteableBitmapEx.WinRT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="config\imageprocessor\cache.config" />
+    <None Include="config\imageprocessor\processing.config" />
+    <None Include="config\imageprocessor\security.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

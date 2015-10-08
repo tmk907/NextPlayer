@@ -215,17 +215,28 @@ namespace NextPlayerBackgroundAudioPlayer
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Play:
-                    if (!backgroundTaskStatus)
+                    //if (!backgroundTaskStatus)
+                    //{
+                    //    bool result = backgroundTaskStarted.WaitOne(2000);
+                    //    if (!result)
+                    //    {
+                    //        NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Play" + "\n" + "Background Task didnt initialize in time" + "Button: " + args.Button + "\n" + "Status: " + sender.PlaybackStatus.ToString());
+                    //        NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    //        throw new Exception("Background Task didnt initialize in time");
+                    //    }
+                    //    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Play BG Started");
+                    //    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Status: " + sender.PlaybackStatus.ToString());
+                    //    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    //}
+                    try
                     {
-                        bool result = backgroundTaskStarted.WaitOne(2000);
-                        if (!result)
-                        {
-                            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Play" + "\n" + "Background Task didnt initialize in time" + "Button: " + args.Button + "\n" + "Status: " + sender.PlaybackStatus.ToString());
-                            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
-                            throw new Exception("Background Task didnt initialize in time");
-                        }
+                        Play();
                     }
-                    Play();
+                    catch (Exception ex)
+                    {
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player HandleButtonPressed Play" + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
+                        NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    }
 
                     break;
                 case SystemMediaTransportControlsButton.Pause:

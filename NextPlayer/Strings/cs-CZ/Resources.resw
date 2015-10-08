@@ -418,10 +418,10 @@
     <value>Rok</value>
   </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>Změnit směr</value>
+    <value>změnit směr</value>
   </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>Uložit</value>
+    <value>uložit</value>
   </data>
   <data name="AppBarSort.Label" xml:space="preserve">
     <value>Řadit podle</value>
@@ -448,7 +448,7 @@
     <value>Uložit</value>
   </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>Upravit</value>
+    <value>upravit</value>
   </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
     <value>Hledat</value>
@@ -472,7 +472,7 @@
     <value>Hodnotit</value>
   </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Uložit</value>
+    <value>uložit</value>
   </data>
   <data name="Playlist" xml:space="preserve">
     <value>Seznam stop</value>
