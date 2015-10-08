@@ -341,6 +341,7 @@ namespace NextPlayer.View
             color.A = 144;
             ((SolidColorBrush)App.Current.Resources["TransparentColor"]).Color = color;
             App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
+            App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
         }
     }
 }

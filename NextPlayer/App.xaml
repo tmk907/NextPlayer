@@ -14,19 +14,21 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="HighContrast">
-                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="{x:Null}"/>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="UserListFontColor" Color="White"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="UserListFontColor" Color="Black"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
-            <SolidColorBrush x:Key="UserListFontColor" Color="{ThemeResource PhoneForegroundColor}"/>
             <SolidColorBrush x:Key="TransparentColor" Color="#FF000000"/>
             <SolidColorBrush x:Key="TransparentBGImageColor" Color="#90141414"/>
 
-
             <vm:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
-            <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
+            <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter" Enabled="{StaticResource UserAccentBrush}"/>
             <JumpListItemForegroundConverter x:Key="JumpListItemForegroundConverter"/>
             <DataTemplate x:Key="ZoomedInHeaderTemplate">
                 <Border Background="{StaticResource UserAccentBrush}" 
@@ -93,6 +95,7 @@
                                TextTrimming="CharacterEllipsis" 
                                FontSize="20" 
                                FontWeight="SemiBold" 
+                               Foreground="{StaticResource UserListFontColor}"
                                Margin="0,0,0,0"/>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
@@ -101,18 +104,20 @@
                                TextTrimming="CharacterEllipsis"
                                FontSize="17" 
                                FontWeight="Normal" 
+                                Foreground="{StaticResource UserListFontColor}"
                                Margin="0,0,4.5,0"/>
                     </Border>
                     <Border Grid.Column="1" Grid.RowSpan="2"   >
                         <TextBlock Text="{Binding SongsNumber}" 
                                FontSize="17" 
                                FontWeight="Normal"
+                                   Foreground="{StaticResource UserListFontColor}"
                                Margin="4.5,0,4.5,0"  
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="2" Grid.RowSpan="2">
-                        <TextBlock FontSize="16" FontFamily="Segoe UI Symbol" Text="&#xE189;" VerticalAlignment="Center"/>
+                        <TextBlock FontSize="16" FontFamily="Segoe UI Symbol" Text="&#xE189;" Foreground="{StaticResource UserListFontColor}" VerticalAlignment="Center"/>
                     </Border>
                 </Grid>
             </DataTemplate>
@@ -151,13 +156,15 @@
                                FontSize="20" 
                                FontWeight="SemiBold"
                                TextWrapping="NoWrap" 
-                               TextTrimming="CharacterEllipsis" 
+                               TextTrimming="CharacterEllipsis"
+                                   Foreground="{StaticResource UserListFontColor}"
                                VerticalAlignment="Center" />
                     </Border>
                     <Border Grid.Row="0" Grid.Column="1"  >
                         <TextBlock Text="{Binding AlbumsNumber}" 
                                FontSize="15" 
                                FontWeight="SemiBold" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                Margin="0,0,0,0" 
                                HorizontalAlignment="Right"
                                VerticalAlignment="Bottom"/>
@@ -166,6 +173,7 @@
                         <TextBlock Text="&#x1f4bf;" 
                                FontSize="13" 
                                FontFamily="Segoe UI Symbol" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center"/>
                     </Border>
@@ -173,6 +181,7 @@
                         <TextBlock Text="{Binding SongsNumber}" 
                                FontSize="15" 
                                FontWeight="SemiBold" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                Margin="0,0,0,0" 
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top"/>
@@ -180,7 +189,8 @@
                     <Border Grid.Row="1" Grid.Column="2" >
                         <TextBlock Text="&#xE189;"
                                FontSize="12" 
-                               FontFamily="Segoe UI Symbol" 
+                               FontFamily="Segoe UI Symbol"
+                                   Foreground="{StaticResource UserListFontColor}"
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Top"/>
                     </Border>
@@ -219,7 +229,7 @@
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="20" 
                                    FontWeight="SemiBold" 
-                                   Foreground="Red"
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,0,0"/>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
@@ -228,12 +238,14 @@
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="17" 
                                    FontWeight="Normal" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,4.5,0"/>
                     </Border>
                     <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
                         <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" 
                                    FontSize="17" 
-                                   FontWeight="Normal" 
+                                   FontWeight="Normal"
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="4.5,9.5,0,0"  
                                    HorizontalAlignment="Right"/>
                     </Border>
@@ -274,7 +286,8 @@
                                    TextWrapping="NoWrap" 
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="20" 
-                                   FontWeight="SemiBold" 
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,0,0"/>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
@@ -283,12 +296,14 @@
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="17" 
                                    FontWeight="Normal" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,4.5,0"/>
                     </Border>
                     <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
                         <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToString}}" 
                                    FontSize="17" 
                                    FontWeight="Normal" 
+                                   Foreground="{StaticResource UserListFontColor}"
                                    Margin="4.5,9.5,0,0"  
                                    HorizontalAlignment="Right"/>
                     </Border>
@@ -304,6 +319,7 @@
             <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
             <converters:IntToBitrateConverter x:Key="IntToBitrateConverter"/>
             <converters:StringToInputScopeConverter x:Key="StringToInputScope"/>
+ 
             
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
@@ -317,7 +333,7 @@
             <Style x:Key="ButtonStyle1" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource PhoneForegroundBrush}"/>
-                <Setter Property="Foreground" Value="{ThemeResource PhoneAccentBrush}"/>
+                <Setter Property="Foreground" Value="{ThemeResource UserAccentBrush}"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="FontFamily" Value="{ThemeResource PhoneFontFamilyNormal}"/>
                 <Setter Property="FontWeight" Value="{ThemeResource PhoneButtonFontWeight}"/>
@@ -499,7 +515,7 @@
                         <ControlTemplate TargetType="Button">
                             <Grid x:Name="Grid" Background="Transparent">
                                 <Border x:Name="Border" 
-                                        BorderBrush="{StaticResource PhoneAccentBrush}" 
+                                        BorderBrush="{StaticResource UserAccentBrush}" 
                                         BorderThickness="4"
                                         CornerRadius="40"
                                         Background="{TemplateBinding Background}" 
@@ -519,7 +535,7 @@
                 </Setter>
             </Style>
             <Style x:Key="ButtonStyleMainPage" TargetType="Button">
-                <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}"/>
+                <Setter Property="Background" Value="{StaticResource UserAccentBrush}"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource PhoneForegroundBrush}"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="BorderThickness" Value="{ThemeResource PhoneBorderThickness}"/>
@@ -593,8 +609,8 @@
             <Style x:Key="ButtonStyleSmallRound" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="4"/>
-                <Setter Property="BorderBrush" Value="{StaticResource PhoneAccentBrush}"/>
-                <Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource UserAccentBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource UserAccentBrush}"/>
                 <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
                 <Setter Property="FontWeight" Value="{ThemeResource PhoneButtonFontWeight}"/>
                 <Setter Property="FontSize" Value="24"/>

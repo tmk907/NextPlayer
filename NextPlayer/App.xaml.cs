@@ -44,6 +44,7 @@ namespace NextPlayer
         /// </summary>
         public App()
         {
+            //App.Current.RequestedTheme = ApplicationTheme.Dark;
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);

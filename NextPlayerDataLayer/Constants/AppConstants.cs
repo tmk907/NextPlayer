@@ -10,6 +10,10 @@ namespace NextPlayerDataLayer.Constants
         public const string DBVersion = "DBVersion";
         public const string AppVersion = "AppVersion";
 
+        //Layout
+        public const string AppTheme = "AppTheme";
+        public const string AppAccent = "AppAccent";
+
         //Review
         public const string IsReviewed = "isreviewed5";
         public const string LastReviewRemind = "lastreviewremind5";
