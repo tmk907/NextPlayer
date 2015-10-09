@@ -92,6 +92,7 @@
     <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\Sender.cs" />
+    <Compile Include="Enums\AppThemeEnum.cs" />
     <Compile Include="Enums\SmartPlaylistEnums.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
     <Compile Include="Helpers\FileItemToShare.cs" />

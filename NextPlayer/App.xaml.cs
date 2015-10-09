@@ -2,6 +2,7 @@
 using NextPlayer.Common;
 using NextPlayer.Converters;
 using NextPlayerDataLayer.Constants;
+using NextPlayerDataLayer.Enums;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
 using System;
@@ -48,15 +49,54 @@ namespace NextPlayer
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
             
             if (FirstRun())
             {
                 //jesli jest DB jest tworzone po wersji 1.5.1.0 przy tworzeniu bazy trzeba zapisac jej wersje
                 Library.Current.SetDB();
+                settings.Values.Add(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+                settings.Values.Add(AppConstants.PhoneAccent, true);
+                settings.Values.Add(AppConstants.AppAccent, "#FF008A00");
+                //settings.Values.Add(AppConstants.BackgroundImage, );
             }
             else
             {
                 ManageSecondaryTileImages();
+
+                if (!settings.Values.ContainsKey(AppConstants.BackgroundImage))
+                {
+                    //settings.Values.Add(AppConstants.BackgroundImage, );
+
+                }
+                if (!settings.Values.ContainsKey(AppConstants.AppTheme))
+                {
+                    settings.Values.Add(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+                }
+                else
+                {
+                    string theme = settings.Values[AppConstants.AppTheme] as string;
+                    if (theme.Equals(AppThemeEnum.Dark.ToString()))
+                    {
+                        App.Current.RequestedTheme = ApplicationTheme.Dark;
+                    }
+                    else if (theme.Equals(AppThemeEnum.Light.ToString()))
+                    {
+                        App.Current.RequestedTheme = ApplicationTheme.Light;
+                    }
+                    else if (theme.Equals(AppThemeEnum.Image.ToString()))
+                    {
+                    }
+                }
+                if (!settings.Values.ContainsKey(AppConstants.PhoneAccent))
+                {
+                    settings.Values.Add(AppConstants.PhoneAccent, true);
+                }
+                if (!settings.Values.ContainsKey(AppConstants.AppAccent))
+                {
+                    settings.Values.Add(AppConstants.AppAccent, "#FF008A00");
+                }
+                    
                 SendLogs();
                 CheckDBVersion();
             }
@@ -92,6 +132,35 @@ namespace NextPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PhoneAccent);
+            if (isPhoneAccent)
+            {
+                App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
+            }
+            else
+            {
+                string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+                byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
+                Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
+                App.Current.Resources["UserAccentBrush"] = new SolidColorBrush(color);
+            }
+            string theme = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme) as string;
+            if (theme.Equals(AppThemeEnum.Image.ToString()))
+            {
+                ((SolidColorBrush)App.Current.Resources["UserListFontColor"]).Color = Windows.UI.Colors.White;
+                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImage) as string;
+                if (path != null && path != "")
+                {
+                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path,UriKind.RelativeOrAbsolute));
+                }
+            }
+            else
+            {
+
+            }
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             Frame rootFrame = Window.Current.Content as Frame;
             
@@ -202,6 +271,7 @@ namespace NextPlayer
             }
             //rootFrame.Background = (ImageBrush)Resources["BgImage"];
             // Ensure the current window is active
+
             Window.Current.Activate();
             DispatcherHelper.Initialize();
         }
@@ -364,7 +434,7 @@ namespace NextPlayer
                     Package.Current.Id.Version.Minor,
                     Package.Current.Id.Version.Revision);
 
-            if (ApplicationData.Current.LocalSettings.Values["AppVersion"] != appVersion)
+            if ((string)ApplicationData.Current.LocalSettings.Values["AppVersion"] != appVersion)
             {
                 // Our app has been updated
                 ApplicationData.Current.LocalSettings.Values["AppVersion"] = appVersion;

@@ -13,6 +13,9 @@ namespace NextPlayerDataLayer.Constants
         //Layout
         public const string AppTheme = "AppTheme";
         public const string AppAccent = "AppAccent";
+        public const string PhoneAccent = "PhoneAccent";
+        public const string IsBGImageSet = "IsBGImageSet";
+        public const string BackgroundImage = "BackgroundImage";
 
         //Review
         public const string IsReviewed = "isreviewed5";

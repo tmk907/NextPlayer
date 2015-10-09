@@ -13,7 +13,7 @@
     DataContext="{Binding AlbumVM, Mode=OneWay, Source={StaticResource Locator}}">
 
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

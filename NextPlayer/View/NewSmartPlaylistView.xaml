@@ -57,8 +57,8 @@
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
-    
-    <Grid x:Name="LayoutRoot">
+
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
 
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -70,7 +70,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <!--<Image Grid.RowSpan="2"  Source="{StaticResource }"/>-->
+        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>

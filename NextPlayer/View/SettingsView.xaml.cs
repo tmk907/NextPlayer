@@ -1,6 +1,7 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.ViewModel;
 using NextPlayerDataLayer.Constants;
+using NextPlayerDataLayer.Enums;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
 using System;
@@ -24,6 +25,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -119,6 +121,31 @@ namespace NextPlayer.View
             {
                 transparentToggleSwitch.IsOn = true;
             }
+
+            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PhoneAccent);
+            if (isPhoneAccent)
+            {
+                phoneAccentToggleSwitch.IsOn = true;
+            }
+            string appTheme = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
+            if (appTheme.Equals(AppThemeEnum.Dark.ToString()))
+            {
+                RBDark.IsChecked = true;
+            }
+            else if (appTheme.Equals(AppThemeEnum.Light.ToString()))
+            {
+                RBLight.IsChecked = true;
+            }
+            else
+            {
+                //RBImage.IsChecked = true;
+            }
+            //string showCover = (string)ApplicationSettingsHelper.ReadSettingsValue();
+            //if (showCover)
+            //{
+            //    ShowAlbumCover_ToggleSwitch.IsOn = true;
+            //}
+
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
@@ -343,5 +370,93 @@ namespace NextPlayer.View
             App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
             App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
         }
+
+        private void BGCover_Toggled(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ColorAccent_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, true);
+            }
+            else
+            {
+                string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+                byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
+                Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
+                ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, false);
+
+            }
+        }
+        
+        private void RBTheme_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            
+            if (rb.Name == "RBDark")
+            {
+                //App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImage, "");
+            }
+            else if (rb.Name == "RBLight")
+            {
+                //App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.Black);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Light.ToString());
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImage, "");
+            }
+            else if (rb.Name == "RBImage")
+            {
+                App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Image.ToString());
+
+                //pokaz wybor obrazka
+                Frame.Navigate(typeof(ImageSelection));
+            }
+        }
+
+        private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            phoneAccentToggleSwitch.IsOn = false;
+            Rectangle rect = sender as Rectangle;
+            Windows.UI.Color color = ((SolidColorBrush)rect.Fill).Color;
+
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
+            ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, false);
+        }
+
+        private void selectBGImage_Click(object sender, RoutedEventArgs e)
+        {
+            ShowBGImage_ToggleSwitch.IsOn = true;
+            App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Image.ToString());
+            Frame.Navigate(typeof(ImageSelection));
+        }
+
+        private void BGImage_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                
+            }
+            else
+            {
+                if (App.Current.RequestedTheme == ApplicationTheme.Light)
+                {
+                    App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.Black);
+                }
+
+            }
+        }
+
     }
 }

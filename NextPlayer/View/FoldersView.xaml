@@ -49,6 +49,7 @@
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="20" 
                                    FontWeight="SemiBold" 
+                               Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,0,0"/>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
@@ -56,38 +57,34 @@
                                    TextWrapping="NoWrap" 
                                    TextTrimming="CharacterEllipsis" 
                                    FontSize="17" 
-                                   FontWeight="Normal" 
+                                   FontWeight="Normal"
+                               Foreground="{StaticResource UserListFontColor}"
                                    Margin="0,0,4.5,0"/>
                 </Border>
                 <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
                     <TextBlock Text="{Binding SongsNumber}" 
                                FontSize="20" 
                                FontWeight="SemiBold" 
+                               Foreground="{StaticResource UserListFontColor}"
                                Margin="4,0,4,0" 
                                HorizontalAlignment="Right"/>
                 </Border>
                 <Border Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Bottom"  >
                     <TextBlock Text="&#xE189;"
                                FontSize="16" 
-                               FontFamily="Segoe UI Symbol"/>
+                               FontFamily="Segoe UI Symbol"
+                               Foreground="{StaticResource UserListFontColor}"/>
                 </Border>
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!--<Image 
-            Grid.RowSpan="2"
-            x:Name="imageBG"
-            Stretch="UniformToFill"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Source="/Assets/BG/wallpaper 18.jpg"
-            />
-        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
+        <!--<Image Grid.RowSpan="2" Style="{StaticResource BackgroundImageSource}"/>-->
+        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName"  Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>

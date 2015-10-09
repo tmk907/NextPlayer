@@ -16,16 +16,30 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <SolidColorBrush x:Key="UserListFontColor" Color="White"/>
+
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="UserListFontColor" Color="Black"/>
+
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
+
             <SolidColorBrush x:Key="TransparentColor" Color="#FF000000"/>
             <SolidColorBrush x:Key="TransparentBGImageColor" Color="#90141414"/>
-
+            <Style x:Key="BackgroundImageSource" TargetType="Image">
+                <Setter Property="Source" Value="/Assets/BG/wallpaper 10.jpg"/>
+                <Setter Property="Stretch" Value="UniformToFill"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+            <ImageBrush x:Key="BgImage" ImageSource="" Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Center"/>
+            <Style x:Key="BackgroundTranspRectFill" TargetType="Rectangle">
+                <Setter Property="Fill" Value="#80161616"/>
+            </Style>
+            <Style x:Key="BackgroundFullTranspRectFill" TargetType="Rectangle">
+                <Setter Property="Fill" Value="#00000000"/>
+            </Style>
             <vm:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
             <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter" Enabled="{StaticResource UserAccentBrush}"/>
@@ -319,8 +333,8 @@
             <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
             <converters:IntToBitrateConverter x:Key="IntToBitrateConverter"/>
             <converters:StringToInputScopeConverter x:Key="StringToInputScope"/>
- 
-            
+            <converters:StyleConverter x:Key="StyleConverter"/>
+
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
             <FontWeight x:Key="PhoneButtonFontWeight">Semibold</FontWeight>
@@ -579,7 +593,7 @@
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedBackgroundThemeBrush}"/>
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource UserAccentBrush}"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -701,7 +715,7 @@
                 <Setter Property="Background" Value="{ThemeResource SliderTrackBackgroundThemeBrush}"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource SliderBorderThemeBrush}"/>
                 <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}"/>
-                <Setter Property="Foreground" Value="{ThemeResource SliderTrackDecreaseBackgroundThemeBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource UserAccentBrush}"/>
                 <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
                 <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
                 <Setter Property="ManipulationMode" Value="None"/>
