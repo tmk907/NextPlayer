@@ -114,7 +114,9 @@ namespace NextPlayer.View
         {
             Image image = sender as Image;
             string path = "ms-appx:///Assets/BG/wallpaper " + image.Tag.ToString() + ".jpg";
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImage,path);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath,path);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
+            App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
             ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
             Frame.GoBack();
         }

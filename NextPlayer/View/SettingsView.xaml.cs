@@ -80,14 +80,19 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            //string s = Library.Current.Read();
-            //NextPlayerDataLayer.Diagnostics.Logger.Save("settings"+s);
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            if (e.PageState != null && e.PageState.ContainsKey("pivotIndex"))
+            {
+                PivotSettings.SelectedIndex = (int)e.PageState["pivotIndex"];
+            }
+           
+            //General Settings
+            //Library scan
             var a = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.MediaScan);
             if (a != null)
             {
                 DisableControls();
             }
+            //Timer
             var d = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
             
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
@@ -116,17 +121,21 @@ namespace NextPlayer.View
                 timerPicker.IsEnabled = false;
                 timerToggleSwitch.IsOn = false;
             }
+            //Transparent tile
             string isTr = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileAppTransparent) as string;
             if (isTr == "yes")
             {
                 transparentToggleSwitch.IsOn = true;
             }
 
-            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PhoneAccent);
+            //Personalize
+            //Color accent
+            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
             if (isPhoneAccent)
             {
                 phoneAccentToggleSwitch.IsOn = true;
             }
+            //Theme
             string appTheme = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (appTheme.Equals(AppThemeEnum.Dark.ToString()))
             {
@@ -136,9 +145,17 @@ namespace NextPlayer.View
             {
                 RBLight.IsChecked = true;
             }
+            //Background image
+            bool isBGImageSet = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet);
+            if (isBGImageSet)
+            {
+                ShowBGImage_ToggleSwitch.IsOn = true;
+                //SelectImage_Button.IsEnabled = true;
+            }
             else
             {
-                //RBImage.IsChecked = true;
+                ShowBGImage_ToggleSwitch.IsOn = false;
+                //SelectImage_Button.IsEnabled = false;
             }
             //string showCover = (string)ApplicationSettingsHelper.ReadSettingsValue();
             //if (showCover)
@@ -162,6 +179,14 @@ namespace NextPlayer.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            if (e.PageState.ContainsKey("pivotIndex"))
+            {
+                e.PageState["pivotIndex"] = PivotSettings.SelectedIndex;
+            }
+            else
+            {
+                e.PageState.Add("pivotIndex", PivotSettings.SelectedIndex);
+            }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Deactivate(e.PageState);
@@ -194,6 +219,8 @@ namespace NextPlayer.View
 
         #endregion
 
+
+        #region Library update
         private void UpdateLibrary_Click(object sender, RoutedEventArgs e)
         {
             UpdateLibrary();
@@ -232,7 +259,8 @@ namespace NextPlayer.View
         {
             Count2.Text = value.ToString();
         }
-
+        #endregion
+        #region Rate app
         private void Rate_Click(object sender, RoutedEventArgs e)
         {
             Rate();
@@ -244,7 +272,8 @@ namespace NextPlayer.View
             settings.Values[AppConstants.IsReviewed] = -1;
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId)); 
         }
-
+        #endregion
+        #region Timer
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             if (((ToggleSwitch)sender).IsOn)
@@ -304,7 +333,6 @@ namespace NextPlayer.View
 
         private void OnCompleted(IBackgroundTaskRegistration task, BackgroundTaskCompletedEventArgs args)
         {
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             UpdateUI();
         }
 
@@ -316,12 +344,8 @@ namespace NextPlayer.View
                 timerPicker.IsEnabled = false;
             });
         }
-
-        private async void ShowLog_Click(object sender, RoutedEventArgs e)
-        {
-            logTB.Text = await NextPlayerDataLayer.Diagnostics.Logger.Read();
-        }
-
+        #endregion
+        #region Transparent tile
         private void transparentToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             if (((ToggleSwitch)sender).IsOn)
@@ -360,6 +384,11 @@ namespace NextPlayer.View
             TileNotification tileNotification = new TileNotification(tileXml);
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
+        #endregion
+        private async void ShowLog_Click(object sender, RoutedEventArgs e)
+        {
+            logTB.Text = await NextPlayerDataLayer.Diagnostics.Logger.Read();
+        }
 
         private void gotobl(object sender, RoutedEventArgs e)
         {
@@ -375,13 +404,13 @@ namespace NextPlayer.View
         {
 
         }
-
+        #region Color accent
         private void ColorAccent_Toggled(object sender, RoutedEventArgs e)
         {
             if (((ToggleSwitch)sender).IsOn)
             {
                 App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, true);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, true);
             }
             else
             {
@@ -392,35 +421,9 @@ namespace NextPlayer.View
                 byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
                 Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
                 ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, false);
-
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, false);
             }
-        }
-        
-        private void RBTheme_Checked(object sender, RoutedEventArgs e)
-        {
-            RadioButton rb = sender as RadioButton;
-            
-            if (rb.Name == "RBDark")
-            {
-                //App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImage, "");
-            }
-            else if (rb.Name == "RBLight")
-            {
-                //App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.Black);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Light.ToString());
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImage, "");
-            }
-            else if (rb.Name == "RBImage")
-            {
-                App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Image.ToString());
-
-                //pokaz wybor obrazka
-                Frame.Navigate(typeof(ImageSelection));
-            }
+            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
 
         private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
@@ -428,35 +431,69 @@ namespace NextPlayer.View
             phoneAccentToggleSwitch.IsOn = false;
             Rectangle rect = sender as Rectangle;
             Windows.UI.Color color = ((SolidColorBrush)rect.Fill).Color;
-
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
             ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.PhoneAccent, false);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, false);
+            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
-
-        private void selectBGImage_Click(object sender, RoutedEventArgs e)
+        #endregion
+        #region App theme
+        private void RBTheme_Checked(object sender, RoutedEventArgs e)
         {
-            ShowBGImage_ToggleSwitch.IsOn = true;
-            App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Image.ToString());
-            Frame.Navigate(typeof(ImageSelection));
+            RadioButton rb = sender as RadioButton;
+            if (rb.Name == "RBDark")
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+            }
+            else if (rb.Name == "RBLight")
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Light.ToString());
+                if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
+                {
+                    App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+                }
+            }
         }
+        #endregion
 
+        #region Background image
         private void BGImage_Toggled(object sender, RoutedEventArgs e)
         {
             if (((ToggleSwitch)sender).IsOn)
             {
-                
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
+                if (App.Current.RequestedTheme == ApplicationTheme.Light)
+                {
+                    App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+                }
+                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImagePath) as string;
+                if (path != null && path != "")
+                {
+                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
+                }
+
+                //SelectImage_Button.IsEnabled = true;
             }
             else
             {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
+                //SelectImage_Button.IsEnabled = false; ;
+
                 if (App.Current.RequestedTheme == ApplicationTheme.Light)
                 {
                     App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.Black);
                 }
-
             }
+            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
 
+        private void selectBGImage_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ImageSelection));
+        }
+
+        
+
+        #endregion
     }
 }

@@ -15,21 +15,14 @@
         <Thickness x:Key="MiddleMargin">4,0,4,8</Thickness>
         <Thickness x:Key="RightMargin">4,0,4,8</Thickness>
     </Page.Resources>
-    
-    <Grid x:Name="LayoutRoot">
+
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!--<Image 
-            Grid.RowSpan="2"
-            x:Name="imageBG"
-            Stretch="UniformToFill"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Source="/Assets/BG/wallpaper 7.jpg"
-            />
-        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
+        <!--<Image Grid.RowSpan="2" Style="{StaticResource BackgroundImageSource}"/>-->
+        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
@@ -64,7 +57,6 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Uid="MenuNowPlayingPlaylist"
                         Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
-                        
                         Command="{Binding GoToNowPlayingListPage}" 
                         Margin="{StaticResource TopMargin}"
                         Style="{StaticResource ButtonStyleMainPage}">
@@ -146,6 +138,9 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
+                <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="2"
+                           Margin="20,0,20,0"
+                           Style="{StaticResource BackgroundTranspRectFill}"/>
 
                 <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                    Margin="20,0,0,0"

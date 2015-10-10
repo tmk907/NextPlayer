@@ -50,53 +50,52 @@ namespace NextPlayer
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            
+
             if (FirstRun())
             {
                 //jesli jest DB jest tworzone po wersji 1.5.1.0 przy tworzeniu bazy trzeba zapisac jej wersje
                 Library.Current.SetDB();
-                settings.Values.Add(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
-                settings.Values.Add(AppConstants.PhoneAccent, true);
-                settings.Values.Add(AppConstants.AppAccent, "#FF008A00");
-                //settings.Values.Add(AppConstants.BackgroundImage, );
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, true);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, "#FF008A00");
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
             }
             else
             {
                 ManageSecondaryTileImages();
 
-                if (!settings.Values.ContainsKey(AppConstants.BackgroundImage))
+                if (!settings.Values.ContainsKey(AppConstants.BackgroundImagePath))
                 {
-                    //settings.Values.Add(AppConstants.BackgroundImage, );
-
+                    settings.Values.Add(AppConstants.BackgroundImagePath, "");
+                }
+                if (!settings.Values.ContainsKey(AppConstants.IsBGImageSet))
+                {
+                    settings.Values.Add(AppConstants.IsBGImageSet, false);
                 }
                 if (!settings.Values.ContainsKey(AppConstants.AppTheme))
                 {
                     settings.Values.Add(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
                 }
-                else
+                if (!settings.Values.ContainsKey(AppConstants.IsPhoneAccentSet))
                 {
-                    string theme = settings.Values[AppConstants.AppTheme] as string;
-                    if (theme.Equals(AppThemeEnum.Dark.ToString()))
-                    {
-                        App.Current.RequestedTheme = ApplicationTheme.Dark;
-                    }
-                    else if (theme.Equals(AppThemeEnum.Light.ToString()))
-                    {
-                        App.Current.RequestedTheme = ApplicationTheme.Light;
-                    }
-                    else if (theme.Equals(AppThemeEnum.Image.ToString()))
-                    {
-                    }
-                }
-                if (!settings.Values.ContainsKey(AppConstants.PhoneAccent))
-                {
-                    settings.Values.Add(AppConstants.PhoneAccent, true);
+                    settings.Values.Add(AppConstants.IsPhoneAccentSet, true);
                 }
                 if (!settings.Values.ContainsKey(AppConstants.AppAccent))
                 {
                     settings.Values.Add(AppConstants.AppAccent, "#FF008A00");
                 }
-                    
+
+                string theme = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme) as string;
+                if (theme.Equals(AppThemeEnum.Dark.ToString()))
+                {
+                    App.Current.RequestedTheme = ApplicationTheme.Dark;
+                }
+                else if (theme.Equals(AppThemeEnum.Light.ToString()))
+                {
+                    App.Current.RequestedTheme = ApplicationTheme.Light;
+                }  
+  
                 SendLogs();
                 CheckDBVersion();
             }
@@ -132,10 +131,11 @@ namespace NextPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PhoneAccent);
+            
+            bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
             if (isPhoneAccent)
             {
-                App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
+                App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
             }
             else
             {
@@ -145,22 +145,20 @@ namespace NextPlayer
                 byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
                 byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
                 Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
-                App.Current.Resources["UserAccentBrush"] = new SolidColorBrush(color);
+                ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
             }
-            string theme = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme) as string;
-            if (theme.Equals(AppThemeEnum.Image.ToString()))
+            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
                 ((SolidColorBrush)App.Current.Resources["UserListFontColor"]).Color = Windows.UI.Colors.White;
-                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImage) as string;
+                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImagePath) as string;
                 if (path != null && path != "")
                 {
-                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path,UriKind.RelativeOrAbsolute));
+                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
                 }
             }
-            else
-            {
+            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
+            
 
-            }
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             Frame rootFrame = Window.Current.Content as Frame;
             
@@ -426,7 +424,7 @@ namespace NextPlayer
             }
         }
 
-        async void CheckAppVersion()
+        private async void CheckAppVersion()
         {
             String appVersion = String.Format("{0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Build,

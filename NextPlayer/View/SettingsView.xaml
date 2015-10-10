@@ -18,7 +18,7 @@
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Text="NEXT PLAYER" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
         </StackPanel>
-        <Pivot Grid.Row="1">
+        <Pivot Grid.Row="1" x:Name="PivotSettings">
             <PivotItem Header="general">
                 <ScrollViewer>
                     <Grid>
@@ -174,7 +174,8 @@
                                           Toggled="BGImage_Toggled"
                                           />
                             <Button Grid.Row="1" Grid.ColumnSpan="2"
-                                   HorizontalAlignment="Stretch"
+                                    x:Name="Button1"
+                                    HorizontalAlignment="Stretch"
                                     x:Uid="ButtonSelectImage"
                                     Click="selectBGImage_Click"
                                     Content="Select image"/>
