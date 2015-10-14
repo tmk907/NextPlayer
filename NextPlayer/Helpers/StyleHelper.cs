@@ -19,7 +19,7 @@ namespace NextPlayer.Helpers
             Windows.UI.Color color;
             if (isImageSet)
             {
-                byte a = byte.Parse("80", System.Globalization.NumberStyles.HexNumber);
+                byte a = byte.Parse("C0", System.Globalization.NumberStyles.HexNumber);
                 if (isPhoneAccent)
                 {
                     color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;
@@ -49,7 +49,7 @@ namespace NextPlayer.Helpers
                     byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
                     byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
                     color = Windows.UI.Color.FromArgb(a, r, g, b);
-                    ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
+                    ((SolidColorBrush)App.Current.Resources["MainPageButtonsBackground"]).Color = color;
                 }
                 
             }

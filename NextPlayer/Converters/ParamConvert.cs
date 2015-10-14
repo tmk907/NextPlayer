@@ -9,13 +9,21 @@ namespace NextPlayer.Converters
     public class ParamConvert
     {
         private const string delimiter = "#$%";
+        private const string nullString = "@^@";
 
         public static string ToString(String[] array)
         {
             string result = "";
             foreach (string s in array)
             {
-                result += s;
+                if (s == null)
+                {
+                    result += nullString;
+                }
+                else
+                {
+                    result += s;
+                }
                 result += delimiter;
             }
             return result;
@@ -23,7 +31,17 @@ namespace NextPlayer.Converters
 
         public static string[] ToStringArray(string s)
         {
-            return s.Split(new string[] { delimiter }, 5, System.StringSplitOptions.None);
+            string[] table = s.Split(new string[] { delimiter }, 5, System.StringSplitOptions.None);
+            int i = 0;
+            while (i < table.Length)
+            {
+                if (table[i].Equals(nullString))
+                {
+                    table[i] = null;
+                }
+                i++;
+            }
+            return table;
         }
     }
 }

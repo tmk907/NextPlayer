@@ -311,7 +311,7 @@ namespace NextPlayer.ViewModel
                     {
                         AlbumItem a = DatabaseManager.GetAlbumItem(albumParam, artistParam);
                         Album = a.Album;
-                        Artist = a.Artist;
+                        Artist = a.AlbumArtist;
                         Duration = a.Duration;
                         Songs = DatabaseManager.GetSongItemsFromAlbum(albumParam, artistParam);
                         SetCover();

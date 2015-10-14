@@ -5,11 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerDataLayer.Model
 {
     public class AlbumItem: INotifyPropertyChanged
     {
+        private string albumParam;
+        public string AlbumParam { get { return albumParam; } }
         private string album;
         public string Album
         {
@@ -26,19 +29,21 @@ namespace NextPlayerDataLayer.Model
                 }
             }
         }
-        private string artist;
-        public string Artist
+        private string artistParam;
+        public string ArtistParam { get { return artistParam; } }
+        private string albumArtist;
+        public string AlbumArtist
         {
             get
             {
-                return artist;
+                return albumArtist;
             }
             set
             {
-                if (value != artist)
+                if (value != albumArtist)
                 {
-                    artist = value;
-                    onPropertyChanged(this, "Artist");
+                    albumArtist = value;
+                    onPropertyChanged(this, "AlbumArtist");
                 }
             }
         }
@@ -63,16 +68,43 @@ namespace NextPlayerDataLayer.Model
 
         public AlbumItem()
         {
+            albumParam = "";
             album = "Unknown Album";
-            artist = "Unknown Artist";
+            artistParam = "Unknown Artist";
+            albumArtist = "Unknown Album artist";
             songsNumber = 0;
             duration = TimeSpan.Zero;
         }
 
-        public AlbumItem(string album, string artist, TimeSpan duration, int songsnumber)
+        public AlbumItem(string albumParam, string artistParam, string albumArtist, TimeSpan duration, int songsnumber)
         {
-            this.album = album;
-            this.artist = artist;
+            this.albumParam = albumParam;
+            this.artistParam = artistParam;
+            if (albumParam == "")
+            {
+                ResourceLoader loader = new ResourceLoader();
+                this.album = loader.GetString("UnknownAlbum");
+            }
+            else
+            {
+                this.album = albumParam;
+            }
+            if (albumArtist == "")
+            {
+                if (artistParam == null || artistParam == "")
+                {
+                    ResourceLoader loader = new ResourceLoader();
+                    this.albumArtist = loader.GetString("UnknownArtist");
+                }
+                else
+                {
+                    this.albumArtist = artistParam;
+                }
+            }
+            else
+            {
+                this.albumArtist = albumArtist;
+            }
             this.duration = duration;
             this.songsNumber = songsnumber;
         }

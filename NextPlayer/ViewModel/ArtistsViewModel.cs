@@ -99,7 +99,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<ArtistItem>(
                     item =>
                     {
-                        var g = DatabaseManager.GetSongItemsFromArtist(item.Artist);
+                        var g = DatabaseManager.GetSongItemsFromArtist(item.ArtistParam);
                         g.OrderBy(s => s.Album).ThenBy(t=>t.TrackNumber);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
@@ -146,7 +146,7 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[2];
                         s[0] = "artist";
-                        s[1] = item.Artist;
+                        s[1] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
                     }));
             }
@@ -176,7 +176,7 @@ namespace NextPlayer.ViewModel
             ApplicationSettingsHelper.SaveTileIdValue(id);
 
             string displayName = "Next Player";
-            string tileActivationArguments = ParamConvert.ToString(new string[] { "artist", artist.Artist});
+            string tileActivationArguments = ParamConvert.ToString(new string[] { "artist", artist.ArtistParam});
             Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
 
             SecondaryTile secondaryTile = new SecondaryTile(tileId,
@@ -236,7 +236,7 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[2];
                         s[0] = "artist";
-                        s[1] = item.Artist;
+                        s[1] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
                     }));
             }
@@ -274,7 +274,7 @@ namespace NextPlayer.ViewModel
                         if (!find) index = 0;
                         String[] s = new String[2];
                         s[0] = "artist";
-                        s[1] = item.Artist;
+                        s[1] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.AlbumsView, ParamConvert.ToString(s));
                     }));
             }

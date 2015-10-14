@@ -113,78 +113,115 @@ namespace NextPlayerDataLayer.Services
             song.PlayCount = 0;
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
-
-            //song.Album = mp.Album;
-            //song.AlbumArtist = mp.AlbumArtist;
-            //song.Artist = mp.Artist;
-            //song.Bitrate = mp.Bitrate;
+            song.Tag.Rating = 0;
             
-            //song.Duration = TimeSpan.FromMilliseconds(mp.Duration.Ticks);
-
-            //song.Genre = mp.Genre.FirstOrDefault();
-            //song.Lyrics = ""; //jak odczytac?
-            //song.Title = mp.Title;
-            //song.TrackNumber = mp.TrackNumber;
-            //song.Year = mp.Year;
-
-            song.Publisher = "";
-            song.Rating = 0;
-            song.Subtitle = "";
-            
-            if (Path.GetExtension(file.Path).ToLower().Equals(".aac"))
-            {
-
-            }
             Stream fileStream = await file.OpenStreamForReadAsync();
-           
+            
             try
             {
                 var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-                Tag tags;
-                if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                try
                 {
-                    tags = tagFile.GetTag(TagTypes.Id3v2);
+                    song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
+                    song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
                 }
-                else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                catch (Exception ex)
                 {
-                    tags = tagFile.GetTag(TagTypes.Id3v1);
+                    song.Duration = TimeSpan.Zero;
+                    song.Bitrate = 0;
                 }
-                else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                try
                 {
-                    tags = tagFile.GetTag(TagTypes.Apple);
+                    //TagLib.Id3v2.Tag.DefaultVersion = 3;
+                    //TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                    Tag tags;
+                    if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                    {
+                        tags = tagFile.GetTag(TagTypes.Id3v2);
+                        TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+                        if (pop!=null)
+                        {
+                            if (224 <= pop.Rating && pop.Rating <= 255) song.Tag.Rating = 5;
+                            else if (160 <= pop.Rating && pop.Rating <= 223) song.Tag.Rating = 4;
+                            else if (96 <= pop.Rating && pop.Rating <= 159) song.Tag.Rating = 3;
+                            else if (32 <= pop.Rating && pop.Rating <= 95) song.Tag.Rating = 2;
+                            else if (1 <= pop.Rating && pop.Rating <= 31) song.Tag.Rating = 1;
+                        }
+                    }
+                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                    {
+                        tags = tagFile.GetTag(TagTypes.Id3v1);
+                    }
+                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                    {
+                        tags = tagFile.GetTag(TagTypes.Apple);
+                    }
+                    else
+                    {
+                        tags = tagFile.GetTag(tagFile.TagTypes);
+                    }
+
+                    song.Tag.Album = tags.Album ?? "";
+                    song.Tag.AlbumArtist = tags.FirstAlbumArtist ?? "";
+                    song.Tag.Artists = tags.JoinedPerformers ?? "";
+                    song.Tag.Comment = tags.Comment ?? "";
+                    song.Tag.Composers = tags.JoinedComposers ?? "";
+                    song.Tag.Conductor = tags.Conductor ?? "";
+                    song.Tag.Disc = (int)tags.Disc;
+                    song.Tag.DiscCount = (int)tags.DiscCount;
+                    song.Tag.FirstArtist = tags.FirstPerformer ?? "";
+                    song.Tag.FirstComposer = tags.FirstComposer ?? "";
+                    song.Tag.Genre = tags.FirstGenre ?? "";
+                    song.Tag.Lyrics = tags.Lyrics ?? "";
+                    song.Tag.Title = tags.Title ?? file.DisplayName;
+                    song.Tag.Track = (int)tags.Track;
+                    song.Tag.TrackCount = (int)tags.TrackCount;
+                    song.Tag.Year = (int)tags.Year;
                 }
-                else
+                catch (CorruptFileException e)
                 {
-                    tags = tagFile.GetTag(tagFile.TagTypes);
+                    song.Tag.Album = "";
+                    song.Tag.AlbumArtist = "";
+                    song.Tag.Artists = "";
+                    song.Tag.Comment = "";
+                    song.Tag.Composers = "";
+                    song.Tag.Conductor = "";
+                    song.Tag.Disc = 0;
+                    song.Tag.DiscCount = 0;
+                    song.Tag.FirstArtist = "";
+                    song.Tag.FirstComposer = "";
+                    song.Tag.Genre = "";
+                    song.Tag.Lyrics = "";
+                    song.Tag.Title = file.DisplayName;
+                    song.Tag.Track = 0;
+                    song.Tag.TrackCount = 0;
+                    song.Tag.Year = 0;
                 }
-                song.Album = tags.Album ?? "Unknown";
-                song.AlbumArtist = tags.FirstAlbumArtist ?? "";
-                song.Artist = tags.FirstPerformer ?? "Unknown";
-                song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
-                song.Composer = tags.FirstComposer ?? "";
-                song.Performer = tags.FirstPerformer ?? "";
-                song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
-                song.Genre = tags.FirstGenre ?? "Unknown";
-                song.Lyrics = tags.Lyrics ?? "";
-                song.Title = tags.Title ?? file.DisplayName;
-                song.TrackNumber = tags.Track;
-                song.Year = tags.Year;
+
             }
-            catch (CorruptFileException e)
+            catch (Exception ex)
             {
-                song.Album = "Unknown";
-                song.AlbumArtist = "";
-                song.Artist = "Unknown";
-                song.Bitrate = 0;
-                song.Composer = "";
-                song.Duration = TimeSpan.Zero;
-                song.Genre = "Unknown";
-                song.Lyrics = "";
-                song.Performer = "";
-                song.Title = file.DisplayName;
-                song.TrackNumber = 0;
-                song.Year = 0;
+                song.Tag.Album = "";
+                song.Tag.AlbumArtist = "";
+                song.Tag.Artists = "";
+                song.Tag.Comment = "";
+                song.Tag.Composers = "";
+                song.Tag.Conductor = "";
+                song.Tag.Disc = 0;
+                song.Tag.DiscCount = 0;
+                song.Tag.FirstArtist = "";
+                song.Tag.FirstComposer = "";
+                song.Tag.Genre = "";
+                song.Tag.Lyrics = "";
+                song.Tag.Title = file.DisplayName;
+                song.Tag.Track = 0;
+                song.Tag.TrackCount = 0;
+                song.Tag.Year = 0;
             }
+                
+                
+            
+            
           
             return song;
         }

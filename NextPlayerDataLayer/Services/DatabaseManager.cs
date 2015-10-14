@@ -141,34 +141,9 @@ namespace NextPlayerDataLayer.Services
             await AsyncConnectionDb().InsertAsync(newEntry);
         }
 
-        public async static Task<int> InsertSong(SongData _song)
+        public async static Task<int> InsertSong(SongData song)
         {
-            var newSong = new SongsTable()
-            {
-                Album = _song.Album,
-                AlbumArtist = _song.AlbumArtist,
-                Artist = _song.Artist,
-                Bitrate = _song.Bitrate,
-                Composer = _song.Composer,
-                DateAdded = _song.DateAdded,
-                Duration = _song.Duration,
-                Filename = _song.Filename,
-                FileSize = (long) _song.FileSize,
-                Genre = _song.Genre,
-                IsAvailable = _song.IsAvailable,
-                LastPlayed = _song.LastPlayed,
-                Lyrics = _song.Lyrics,
-                Path = _song.Path,
-                Performer = _song.Performer,
-                PlayCount = _song.PlayCount,
-                Publisher = _song.Publisher,
-                Rating = _song.Rating,
-                Subtitle = _song.Subtitle,
-                Title = _song.Title,
-                TrackNumber = _song.TrackNumber,
-                Year = _song.Year,
-            };
-
+            SongsTable newSong = CreateSongsTable(song);
             await AsyncConnectionDb().InsertAsync(newSong);
             return newSong.SongId;
         }
@@ -178,31 +153,7 @@ namespace NextPlayerDataLayer.Services
             List<SongsTable> newSongs = new List<SongsTable>();
             foreach (var item in list)
             {
-                newSongs.Add(new SongsTable() 
-                {
-                    Album = item.Album,
-                    AlbumArtist = item.AlbumArtist,
-                    Artist = item.Artist,
-                    Bitrate = item.Bitrate,
-                    Composer = item.Composer,
-                    DateAdded = item.DateAdded,
-                    Duration = item.Duration,
-                    Filename = item.Filename,
-                    FileSize = (long)item.FileSize,
-                    Genre = item.Genre,
-                    IsAvailable = item.IsAvailable,
-                    LastPlayed = item.LastPlayed,
-                    Lyrics = item.Lyrics,
-                    Path = item.Path,
-                    Performer = item.Performer,
-                    PlayCount = item.PlayCount,
-                    Publisher = item.Publisher,
-                    Rating = item.Rating,
-                    Subtitle = item.Subtitle,
-                    Title = item.Title,
-                    TrackNumber = item.TrackNumber,
-                    Year = item.Year,
-                });
+                newSongs.Add(CreateSongsTable(item));
             }
             await AsyncConnectionDb().InsertAllAsync(newSongs);
         }
@@ -322,13 +273,13 @@ namespace NextPlayerDataLayer.Services
             conn.InsertAll(list);
         }
 
-        public async static Task AddArtistToPlaylistAsync(string artist, int playlistId)
+        public async static Task AddArtistToPlaylistAsync(string artistParam, int playlistId)
         {
             var conn = ConnectionDb();
-            var query = await SongsConnAsync().Where(s => s.Artist.Equals(artist)).ToListAsync();
+            var query = await SongsConnAsync().Where(s => s.Artists.Equals(artistParam)).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
-            query.OrderBy(s => s.Album).ThenBy(t => t.TrackNumber);
+            query.OrderBy(s => s.Album).ThenBy(t => t.Track);
             foreach (var item in query)
             {
                 lastPosition++;
@@ -347,7 +298,6 @@ namespace NextPlayerDataLayer.Services
         {
             var conn = ConnectionDb();
             var songs = GetSongItemsFromAlbum(album, artist);
-            var query = await SongsConnAsync().Where(s => s.Album.Equals(album)).OrderBy(t=>t.TrackNumber).ToListAsync();
             List<PlainPlaylistEntryTable> list = new List<PlainPlaylistEntryTable>();
             int lastPosition = conn.Table<PlainPlaylistEntryTable>().Where(p => p.PlaylistId == playlistId).ToList().Count;
             foreach (var item in songs)
@@ -446,11 +396,11 @@ namespace NextPlayerDataLayer.Services
         public static ObservableCollection<ArtistItem> GetArtistItems()
         {
             ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
-            var query = SongsConn().OrderBy(s => s.Artist).GroupBy(s => s.Artist).ToList();
+            var query = SongsConn().OrderBy(s => s.Artists).GroupBy(s => s.Artists).ToList();
             foreach (var artist in query)
             {
                 ArtistItem artistItem = new ArtistItem();
-                string name = artist.FirstOrDefault().Artist;
+                string name = artist.FirstOrDefault().Artists;
                 int songs = 0;
                 int albums = 0;
                 TimeSpan duration = TimeSpan.Zero;
@@ -470,13 +420,13 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task<ObservableCollection<ArtistItem>> GetArtistItemsAsync()
         {
-            var query = await SongsConnAsync().OrderBy(s => s.Artist).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(s => s.Artists).ToListAsync();
             ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
-            var result = query.GroupBy(s => s.Artist);
+            var result = query.GroupBy(s => s.Artists);
             foreach (var artist in result)
             {
                 ArtistItem artistItem = new ArtistItem();
-                string name = artist.FirstOrDefault().Artist;
+                string name = artist.FirstOrDefault().Artists;
                 int songs = 0;
                 int albums = 0;
                 TimeSpan duration = TimeSpan.Zero;
@@ -502,59 +452,67 @@ namespace NextPlayerDataLayer.Services
             {
                 TimeSpan duration = TimeSpan.Zero;
                 int songs = 0;
-                string albumArtist = item.FirstOrDefault().Artist;
+                string albumArtist = "";
                 foreach (var song in item)
                 {
+                    if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
                     duration += song.Duration;
                     songs++;
-                    //if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
                 }
-                if (item.FirstOrDefault().Album.Equals("Unknown")) albumArtist = "Various Artists";
-                collection.Add(new AlbumItem(item.FirstOrDefault().Album, albumArtist, duration, songs));
+                collection.Add(new AlbumItem(item.FirstOrDefault().Album, null, albumArtist, duration, songs));
             }
             return collection;
         }
 
-        public static List<AlbumItem> GetAlbumItems(string artist)
+        public static List<AlbumItem> GetAlbumItems(string artistParam)
         {
             List<AlbumItem> collection = new List<AlbumItem>();
-            var query = SongsConn().Where(a => a.Artist.Equals(artist)).OrderBy(o => o.Album).GroupBy(g => g.Album).ToList();
+            var query = SongsConn().Where(a => a.Artists.Equals(artistParam)).OrderBy(o => o.Album).GroupBy(g => g.Album).ToList();
             foreach (var item in query)
             {
                 TimeSpan duration = TimeSpan.Zero;
                 int songs = 0;
+                string albumArtist = "";
                 foreach (var song in item)
                 {
+                    if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
                     duration += song.Duration;
                     songs++;
                 }
-                collection.Add(new AlbumItem(item.FirstOrDefault().Album, item.FirstOrDefault().Artist, duration, songs));
+                collection.Add(new AlbumItem(item.FirstOrDefault().Album, artistParam, albumArtist, duration, songs));
             }
             return collection;
         }
 
-        public static AlbumItem GetAlbumItem(string album, string artist)
+        public static AlbumItem GetAlbumItem(string albumParam, string artistParam)
         {
             List<SongsTable> query;
-            if (artist == null ||  artist.Equals(""))
+            if (artistParam == null)
             {
-                query = SongsConn().Where(a => a.Album.Equals(album)).ToList();
+                query = SongsConn().Where(a => a.Album.Equals(albumParam)).ToList();
             }
             else
             {
-                query = SongsConn().Where(a => a.Album.Equals(album)).Where(b => b.Artist.Equals(artist)).ToList();
+                query = SongsConn().Where(a => a.Album.Equals(albumParam)).Where(b => b.Artists.Equals(artistParam)).ToList();
             }
             
             TimeSpan duration = TimeSpan.Zero;
             int songs = 0;
-            string albumArtist = query.FirstOrDefault().Artist;
-            foreach (var item in query)
+            string albumArtist = "";
+            foreach (var song in query)
             {
+                if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
                 songs++;
-                duration += item.Duration;
+                duration += song.Duration;
             }
-            if (album.Equals("Unknown") && artist.Equals("")) albumArtist = "Various Artists";
-            AlbumItem albumItem = new AlbumItem(query.FirstOrDefault().Album, albumArtist, duration, songs);
+            string artist = query.FirstOrDefault().Artists;
+            if (albumParam == "" && (artistParam == null || artistParam == "")) //unknown album and artist
+            {
+                albumArtist = "";
+                artist = "";
+            }
+            AlbumItem albumItem = new AlbumItem(albumParam, artist, albumArtist, duration, songs);
+            //AlbumItem albumItem = new AlbumItem(query.FirstOrDefault().Album, query.FirstOrDefault().Artists, albumArtist, duration, songs);
             return albumItem;
         }
 
@@ -714,13 +672,13 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
-        public static ObservableCollection<SongItem> GetSongItemsFromAlbum(string album, string artist)
+        public static ObservableCollection<SongItem> GetSongItemsFromAlbum(string albumParam, string artistParam)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
 
-            if (artist == null || artist.Equals(""))
+            if (artistParam == null)
             {
-                var query = SongsConn().OrderBy(s => s.TrackNumber).Where(a => a.Album.Equals(album)).ToList();
+                var query = SongsConn().OrderBy(s => s.Track).Where(a => a.Album.Equals(albumParam)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));
@@ -728,7 +686,7 @@ namespace NextPlayerDataLayer.Services
             }
             else
             {
-                var query = SongsConn().OrderBy(s => s.TrackNumber).Where(w => w.Artist.Equals(artist)).Where(a => a.Album.Equals(album)).ToList();
+                var query = SongsConn().OrderBy(s => s.Track).Where(w => w.Artists.Equals(artistParam)).Where(a => a.Album.Equals(albumParam)).ToList();
                 foreach (var item in query)
                 {
                     songs.Add(CreateSongItem(item));
@@ -787,10 +745,10 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
-        public static ObservableCollection<SongItem> GetSongItemsFromArtist(string artist)
+        public static ObservableCollection<SongItem> GetSongItemsFromArtist(string artistParam)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = SongsConn().OrderBy(s => s.Title).Where(a => a.Artist.Equals(artist)).ToList();
+            var query = SongsConn().OrderBy(s => s.Title).Where(a => a.Artists.Equals(artistParam)).ToList();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -798,10 +756,10 @@ namespace NextPlayerDataLayer.Services
             return songs;
         }
 
-        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromArtistAsync(string artist)
+        public async static Task<ObservableCollection<SongItem>> GetSongItemsFromArtistAsync(string artistParam)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var query = await SongsConnAsync().OrderBy(s => s.Title).Where(a=>a.Artist.Equals(artist)).ToListAsync();
+            var query = await SongsConnAsync().OrderBy(s => s.Title).Where(a => a.Artists.Equals(artistParam)).ToListAsync();
             foreach (var item in query)
             {
                 songs.Add(CreateSongItem(item));
@@ -1126,42 +1084,13 @@ namespace NextPlayerDataLayer.Services
             return list;
         }
 
-        //public async static Task<Playlist> SelectSmartPlaylistEntry()
-        //{
-
-        //}
         #endregion
 
         #region Update
 
-        public async static Task UpdateSongData(SongData _song, int id)
+        public async static Task UpdateSongData(SongData songData, int id)
         {
-            var song = new SongsTable()
-            {
-                Album = _song.Album,
-                AlbumArtist = _song.AlbumArtist,
-                Artist = _song.Artist,
-                Bitrate = _song.Bitrate,
-                Composer = _song.Composer,
-                DateAdded = _song.DateAdded,
-                Duration = _song.Duration,
-                Filename = _song.Filename,
-                FileSize = (long)_song.FileSize,
-                Genre = _song.Genre,
-                IsAvailable = _song.IsAvailable,
-                LastPlayed = _song.LastPlayed,
-                Lyrics = _song.Lyrics,
-                Path = _song.Path,
-                Performer = _song.Performer,
-                PlayCount = _song.PlayCount,
-                Publisher = _song.Publisher,
-                Rating = _song.Rating,
-                Subtitle = _song.Subtitle,
-                Title = _song.Title,
-                TrackNumber = _song.TrackNumber,
-                Year = _song.Year,
-                SongId = id,
-            };
+            var song = CreateSongsTable(songData);
             await AsyncConnectionDb().UpdateAsync(song);
         }
 
@@ -1178,11 +1107,6 @@ namespace NextPlayerDataLayer.Services
             await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Rating = ? WHERE SongId = ?",rating,songId);
         }
 
-        private static void testUpdate(int id)
-        {
-            var a = SongsConn().Where(i => i.SongId.Equals(id)).FirstOrDefault();
-        }
-
         public async static Task UpdateLyricsAsync(int id, string lyrics)
         {
             await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
@@ -1195,14 +1119,57 @@ namespace NextPlayerDataLayer.Services
         public static async Task<ObservableCollection<SongItem>> SearchSongs(string value)
         {
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
-            var result = await SongsConnAsync().Where(t => (t.Title.Contains(value) || t.Artist.Contains(value) || t.Album.Contains(value) || t.Filename.Contains(value))).ToListAsync();
-            
+            var result = await SongsConnAsync().Where(t => (t.Title.Contains(value))).ToListAsync();
             foreach (var item in result)
             {
                 songs.Add(CreateSongItem(item));
             }
-
             return songs;
+        }
+
+        public static ObservableCollection<AlbumItem> SearchAlbums(string value)
+        {
+            ObservableCollection<AlbumItem> collection = new ObservableCollection<AlbumItem>();
+            var query = SongsConn().Where(s=>s.Album.Contains(value)).OrderBy(a => a.Album).GroupBy(g => g.Album).ToList();
+            foreach (var item in query)
+            {
+                TimeSpan duration = TimeSpan.Zero;
+                int songs = 0;
+                string albumArtist = "";
+                foreach (var song in item)
+                {
+                    if (song.AlbumArtist != "") albumArtist = song.AlbumArtist;
+                    duration += song.Duration;
+                    songs++;
+                }
+                collection.Add(new AlbumItem(item.FirstOrDefault().Album, item.FirstOrDefault().Artists, albumArtist, duration, songs));
+            }
+            return collection;
+        }
+
+        public static  ObservableCollection<ArtistItem> SearchArtists(string value)
+        {
+            ObservableCollection<ArtistItem> collection = new ObservableCollection<ArtistItem>();
+            var query = SongsConn().Where(s=>s.Artists.Contains(value) || s.AlbumArtist.Contains(value)).OrderBy(s => s.Artists).GroupBy(s => s.Artists).ToList();
+            foreach (var artist in query)
+            {
+                ArtistItem artistItem = new ArtistItem();
+                string name = artist.FirstOrDefault().Artists;
+                int songs = 0;
+                int albums = 0;
+                TimeSpan duration = TimeSpan.Zero;
+                foreach (var item in artist.GroupBy(e => e.Album).ToList())
+                {
+                    foreach (var song in item)
+                    {
+                        duration += song.Duration;
+                        songs++;
+                    }
+                    albums++;
+                }
+                collection.Add(new ArtistItem(albums, name, duration, songs));
+            }
+            return collection;
         }
 
         #endregion
@@ -1247,33 +1214,75 @@ namespace NextPlayerDataLayer.Services
 
         private static SongData CreateSongData(SongsTable q)
         {
-            SongData s = new SongData()
+            Tags tag = new Tags()
             {
                 Album = q.Album,
                 AlbumArtist = q.AlbumArtist,
-                Artist = q.Artist,
+                Artists = q.Artists,
+                Comment = q.Comment,
+                Composers = q.Composers,
+                Conductor = q.Conductor,
+                Disc = q.Disc,
+                DiscCount = q.DiscCount,
+                FirstArtist = q.FirstArtist,
+                FirstComposer = q.FirstComposer,
+                Genre = q.Genre,
+                Lyrics = q.Lyrics,
+                Rating = q.Rating,
+                Title = q.Title,
+                Track = q.Track,
+                TrackCount = q.TrackCount,
+                Year = q.Year
+            };
+            SongData s = new SongData()
+            {
                 Bitrate = q.Bitrate,
-                Composer = q.Composer,
                 DateAdded = q.DateAdded,
                 Duration = q.Duration,
                 Filename = q.Filename,
                 FileSize = (ulong)q.FileSize,
-                Genre = q.Genre,
                 IsAvailable = q.IsAvailable,
                 LastPlayed = q.LastPlayed,
-                Lyrics = q.Lyrics,
                 Path = q.Path,
-                Performer = q.Performer,
                 PlayCount = q.PlayCount,
-                Publisher = q.Publisher,
-                Rating = q.Rating,
                 SongId = q.SongId,
-                Subtitle = q.Subtitle,
-                Title = q.Title,
-                TrackNumber = q.TrackNumber,
-                Year = q.Year
+                Tag = tag
             };
             return s;
+        }
+
+        private static SongsTable CreateSongsTable(SongData song)
+        {
+            return new SongsTable()
+            {
+                Album = song.Tag.Album,
+                AlbumArtist = song.Tag.AlbumArtist,
+                Artists = song.Tag.Artists,
+                Bitrate = song.Bitrate,
+                Comment = song.Tag.Comment,
+                Composers = song.Tag.Composers,
+                Conductor = song.Tag.Conductor,
+                DateAdded = song.DateAdded,
+                Duration = song.Duration,
+                Disc = song.Tag.Disc,
+                DiscCount = song.Tag.DiscCount,
+                Filename = song.Filename,
+                FileSize = (long)song.FileSize,
+                FirstArtist = song.Tag.FirstArtist,
+                FirstComposer = song.Tag.FirstComposer,
+                Genre = song.Tag.Genre,
+                IsAvailable = song.IsAvailable,
+                LastPlayed = song.LastPlayed,
+                Lyrics = song.Tag.Lyrics,
+                Path = song.Path,
+                PlayCount = song.PlayCount,
+                Rating = song.Tag.Rating,
+                SongId = song.SongId,
+                Title = song.Tag.Title,
+                Track = song.Tag.Track,
+                TrackCount = song.Tag.TrackCount,
+                Year = song.Tag.Year
+            };
         }
 
         private static NowPlayingSong CreateNowPlayingSong(NowPlayingTable npSong)
@@ -1289,7 +1298,7 @@ namespace NextPlayerDataLayer.Services
 
         private static SongItem CreateSongItem(SongsTable q)
         {
-            return new SongItem(q.Album, q.Artist, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.TrackNumber);
+            return new SongItem(q.Album, q.Artists, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.Track);
         }
 
         public static FileInfo GetFileInfo(int songId)
@@ -1298,10 +1307,10 @@ namespace NextPlayerDataLayer.Services
             FileInfo info = new FileInfo()
             {
                 Album = q.Album,
-                Artist = q.Artist,
+                Artist = q.Artists,
                 AlbumArtist = q.AlbumArtist,
                 Bitrate = (int)q.Bitrate,
-                Composer = q.Composer,
+                Composer = q.Composers,
                 DateAdded = q.DateAdded,
                 FilePath =q.Path,
                 FileSize = (int)q.FileSize,
@@ -1309,7 +1318,7 @@ namespace NextPlayerDataLayer.Services
                 PlayCount = (int)q.PlayCount,
                 Rating = (int)q.Rating,
                 Title = q.Title,
-                TrackNumber = (int)q.TrackNumber,
+                TrackNumber = (int)q.Track,
                 Year = (int)q.Year,
             };
             return info;

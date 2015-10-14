@@ -18,14 +18,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Image 
+        <!--<Image 
             Grid.RowSpan="2"
             x:Name="imageBG"
             Stretch="UniformToFill"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             Source="/Assets/BG/wallpaper 1.jpg"
-            />
+            />-->
         <Rectangle x:Name="Rect1" Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">

@@ -27,14 +27,13 @@ namespace NextPlayer.ViewModel
     {
         private INavigationService navigationService;
         private int index;
-        private string artist;
+        private string artistParam;
         
 
         public AlbumsViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
             index = 0;
-            artist = null;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
         }
 
@@ -56,7 +55,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<AlbumItem>(
                     item =>
                     {
-                        var g = DatabaseManager.GetSongItemsFromAlbum(item.Album, item.Artist);
+                        var g = DatabaseManager.GetSongItemsFromAlbum(item.AlbumParam, item.ArtistParam);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
                         navigationService.NavigateTo(ViewNames.NowPlayingView,"start");
@@ -83,7 +82,7 @@ namespace NextPlayer.ViewModel
         }
         public async void AddToNowPlayingAsync(AlbumItem item)
         {
-            var g = DatabaseManager.GetSongItemsFromAlbum(item.Album,item.Artist);
+            var g = DatabaseManager.GetSongItemsFromAlbum(item.AlbumParam,item.ArtistParam);
             Library.Current.AddToNowPlaying(g);
         }
         private RelayCommand<AlbumItem> addToPlaylist;
@@ -101,9 +100,9 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[4];
                         s[0] = "album";
-                        s[1] = item.Album;
+                        s[1] = item.AlbumParam;
                         s[2] = "artist";
-                        s[3] = item.Artist;
+                        s[3] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
                     }));
             }
@@ -210,9 +209,9 @@ namespace NextPlayer.ViewModel
                         if (!find) index = 0;
                         String[] s = new String[4];
                         s[0] = "album";
-                        s[1] = item.Album;
+                        s[1] = item.AlbumParam;
                         s[2] = "artist";
-                        s[3] = artist;
+                        s[3] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.AlbumView, ParamConvert.ToString(s));
                     }));
             }
@@ -238,7 +237,7 @@ namespace NextPlayer.ViewModel
 
         private void LoadAlbums()
         {
-            if (artist == null)
+            if (artistParam == null)
             {
                 if (allAlbums.Count == 0)
                 {
@@ -248,7 +247,7 @@ namespace NextPlayer.ViewModel
             }
             else
             {
-                Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artist), x => x.Album);
+                Albums = Grouped.CreateGrouped<AlbumItem>(DatabaseManager.GetAlbumItems(artistParam), x => x.Album);
             }
         }
 
@@ -278,9 +277,9 @@ namespace NextPlayer.ViewModel
             
             if (!SecondaryTile.Exists(tileId))
             {
-                string imageName = await Library.Current.SaveAlbumCover(p.Album, artist, tileId);
+                string imageName = await Library.Current.SaveAlbumCover(p.Album, p.ArtistParam, tileId);
                 string displayName = "Next Player";
-                string tileActivationArguments = ParamConvert.ToString(new string[] { "album", p.Album, artist });
+                string tileActivationArguments = ParamConvert.ToString(new string[] { "album", p.AlbumParam, p.ArtistParam });
                 Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
 
                 SecondaryTile secondaryTile = new SecondaryTile(tileId,
@@ -292,7 +291,7 @@ namespace NextPlayer.ViewModel
                 secondaryTile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/AppImages/Square71x71Logo/Square71x71LogoTr.png");
 
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileId, tileId);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ParamConvert.ToString(new string[]{p.Album,p.Artist}));
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileName, ParamConvert.ToString(new string[]{p.Album,p.AlbumArtist}));
                 ResourceLoader loader = new ResourceLoader();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileType, loader.GetString("Album"));
                 if (imageName.Contains(tileId))
@@ -366,8 +365,8 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[3];
                         s[0] = "album";
-                        s[1] = item.Album;
-                        s[2] = artist;
+                        s[1] = item.AlbumParam;
+                        s[2] = item.ArtistParam;
                         navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
                     }));
             }
@@ -383,13 +382,13 @@ namespace NextPlayer.ViewModel
                     index = (int)state["index"];
                 }
             }
-            artist = null;
+            artistParam = null;
             if (parameter != null)
             {
                 if (parameter.GetType() == typeof(string))
                 {
                     String[] s = ParamConvert.ToStringArray(parameter as string);
-                    if (s[0].Equals("artist")) artist = s[1];
+                    if (s[0].Equals("artist")) artistParam = s[1];
                 }
             }
         }

@@ -540,4 +540,10 @@
   <data name="TBComposer.Text" xml:space="preserve">
     <value>Kompozytor</value>
   </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Nieznany album</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Nieznany wykonawca</value>
+  </data>
 </root>

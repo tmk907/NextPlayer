@@ -133,7 +133,7 @@ namespace NextPlayer.View
             bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
             if (isPhoneAccent)
             {
-                phoneAccentToggleSwitch.IsOn = true;
+                phoneAccentToggleSwitch.IsOn = false;
             }
             //Theme
             string appTheme = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);

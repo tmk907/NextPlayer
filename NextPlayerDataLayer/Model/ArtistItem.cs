@@ -5,11 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerDataLayer.Model
 {
     public class ArtistItem: INotifyPropertyChanged
     {
+        private string artistParam;
+        public string ArtistParam { get { return artistParam; } }
         private string artist;
         public string Artist
         {
@@ -63,17 +66,26 @@ namespace NextPlayerDataLayer.Model
 
         public ArtistItem()
         {
-            
+            artistParam = "";
             artist = "Unknown Artist";
             duration = TimeSpan.Zero;
             songsNumber = 0;
             albumsNumber = 0;
         }
 
-        public ArtistItem(int albumsnumber, string artist, TimeSpan duration, int songsnumber)
+        public ArtistItem(int albumsnumber, string artistParam, TimeSpan duration, int songsnumber)
         {
             this.albumsNumber = albumsnumber;
-            this.artist = artist;
+            this.artistParam = artistParam;
+            if (artistParam == "")
+            {
+                ResourceLoader loader = new ResourceLoader();
+                this.artist = loader.GetString("UnknownArtist");
+            }
+            else
+            {
+                this.artist = artistParam;
+            }
             this.duration = duration;
             this.songsNumber = songsnumber;
         }
