@@ -1,0 +1,221 @@
+﻿<Page
+    x:Class="NextPlayer.View.TagsEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayer.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding TagsEditorVM, Mode=TwoWay, Source={StaticResource Locator}}">
+    <Page.Resources>
+        <Style x:Key="DescriptionStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+    </Page.Resources>
+    <Grid x:Name="LayoutRoot">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock x:Uid="AppName" Text="NEXTPLAYER" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="TagsEditorPageTitle" Text="tags editor" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                           x:Uid="TBSemicolonSeparatedValues"
+                           Text="oddziel ;" FontSize="18"/>
+                <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions> 
+                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                    <!--
+                        title
+                        album
+                        artists
+                        album artist
+                        genre
+                        track disc year
+                        comment
+                        composers
+                        conductor
+                    -->
+                        <TextBlock Grid.Row="0"
+                            x:Uid="TBTitle"
+                            Text="Title"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="1"
+                                 Text="{Binding TagData.Title,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="2"
+                            x:Uid="TBAlbum"
+                            Text="Album"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="3"
+                                 Text="{Binding TagData.Album,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="4"
+                            x:Uid="TBArtist"
+                            Text="Artist"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="5"
+                                 Text="{Binding TagData.Artists,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="6"
+                            x:Uid="TBAlbumArtist"
+                            Text="Album artist"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="7"
+                                 Text="{Binding TagData.AlbumArtist,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="8"
+                            x:Uid="TBGenre"
+                            Text="Genre"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="9"
+                                 Text="{Binding TagData.Genre,Mode=TwoWay}"
+                                 />
+                        <Grid Grid.Row="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                x:Uid="TBTrackNumber"
+                                Text="Track"
+                                Style="{StaticResource DescriptionStyle}"
+                                Margin="0,0,4,0"
+                                />
+                            <TextBox Grid.Row="1" Grid.Column="0"
+                                 Text="{Binding TagData.Track,Mode=TwoWay}"
+                                 VerticalAlignment="Center"
+                                 Margin="0,0,4,0"
+                                 />
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                x:Uid="TBDisc"
+                                Text="Disc"
+                                Style="{StaticResource DescriptionStyle}"
+                                Margin="4,0,4,0"
+                                />
+                            <TextBox Grid.Row="1" Grid.Column="1"
+                                Text="{Binding TagData.Disc,Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                Margin="4,0,4,0"
+                                    />
+                            <TextBlock Grid.Row="0" Grid.Column="2"
+                                x:Uid="TBYear"
+                                Text="Year"
+                                Style="{StaticResource DescriptionStyle}"
+                                Margin="4,0,0,0"
+                                />
+                            <TextBox Grid.Row="1" Grid.Column="2"
+                                Text="{Binding TagData.Year,Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                Margin="4,0,0,0"
+                                />
+                        </Grid>
+                        <TextBlock Grid.Row="11"
+                            x:Uid="TBComposer"
+                            Text="Composer"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="12"
+                                 Text="{Binding TagData.Composers,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="13"
+                            x:Uid="TBConductor"
+                            Text="Conductor"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="14"
+                                 Text="{Binding TagData.Conductor,Mode=TwoWay}"
+                                 />
+                        <TextBlock Grid.Row="15"
+                            x:Uid="TBComment"
+                            Text="Comment"
+                            Style="{StaticResource DescriptionStyle}"
+                        />
+                        <TextBox Grid.Row="16"
+                                 Text="{Binding TagData.Comment,Mode=TwoWay}"
+                                 />
+                    </Grid>
+                
+                </Grid>
+                </ScrollViewer>
+
+                <Button Grid.Row="2" Grid.Column="0"
+                        Margin="12,0,12,0"
+                        x:Uid="ButtonSave.Content"
+                        Content="Save"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Command="{Binding Save}"/>
+                <Button Grid.Row="2" Grid.Column="1"
+                        Margin="12,0,12,0"
+                        x:Uid="ButtonCancel.Content"
+                        Content="Cancel"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Command="{Binding Cancel}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1207,7 +1207,7 @@ namespace NextPlayer.ViewModel
 
         private async void SetCover(string path)
         {
-            Cover = await Library.Current.GetCover(path);
+            Cover = await Library.Current.GetCover(path, false);
         }
 
         private async void UpdateRating()

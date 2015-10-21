@@ -15,7 +15,48 @@ using NextPlayerDataLayer.Constants;
 
 namespace NextPlayerDataLayer.Services
 {
-    public delegate void MediaImportedHandler(string s); 
+    public delegate void MediaImportedHandler(string s);
+    public delegate void SongUpdatedHandler();
+
+    public class OwnFileAbstraction : TagLib.File.IFileAbstraction
+    {
+        public OwnFileAbstraction(string name, Stream stream)
+        {
+            this.Name = name;
+            this.ReadStream = stream;
+            this.WriteStream = stream;
+        }
+
+        public OwnFileAbstraction(string name, Stream rstream, Stream wstream)
+        {
+            this.Name = name;
+            this.ReadStream = rstream;
+            this.WriteStream = wstream;
+        }
+
+        public void CloseStream(Stream stream)
+        {
+            stream.Flush();
+        }
+
+        public string Name
+        {
+            get;
+            private set;
+        }
+
+        public Stream ReadStream
+        {
+            get;
+            private set;
+        }
+
+        public Stream WriteStream
+        {
+            get;
+            private set;
+        }
+    }
 
     public sealed class MediaImport
     {
@@ -29,12 +70,22 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
+        public static event SongUpdatedHandler SongUpdated;
+
+        public static void OnSongUpdated()
+        {
+            if (SongUpdated != null)
+            {
+                SongUpdated();
+            }
+        }
+
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
             string dbVersion = Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion].ToString();
             if (dbVersion.EndsWith("notupdated"))
             {
-                UpdateComposers(progress);
+                UpdateDB(progress);
                 Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
                 return;
             }
@@ -218,50 +269,58 @@ namespace NextPlayerDataLayer.Services
                 song.Tag.TrackCount = 0;
                 song.Tag.Year = 0;
             }
-                
-                
-            
-            
-          
             return song;
         }
 
         // Update composer and performer field
-        public static async void UpdateComposers(IProgress<int> progress)
+        public static async void UpdateDB(IProgress<int> progress)
         {
             var list = DatabaseManager.GetSongItems();
-            List<Tuple<int, string,string>> newTags = new List<Tuple<int, string, string>>();
             int count = 0;
-            foreach (var song in list)
+            foreach (var s in list)
             {
                 try
                 {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                    Stream fileStream = await file.OpenStreamForReadAsync();
-                    try
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(s.Path);
+                    using (Stream fileStream = await file.OpenStreamForReadAsync())
                     {
-                        var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-                        Tag tags;
-                        if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                        try
                         {
-                            tags = tagFile.GetTag(TagTypes.Id3v2);
+                            var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                            Tag tags;
+                            if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Id3v2);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Id3v1);
+                            }
+                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                            {
+                                tags = tagFile.GetTag(TagTypes.Apple);
+                            }
+                            else
+                            {
+                                tags = tagFile.GetTag(tagFile.TagTypes);
+                            }
+                            SongData song = new SongData();
+                            song.SongId = s.SongId;
+                            song.Tag.Artists = tags.JoinedPerformers ?? "";
+                            song.Tag.Comment = tags.Comment ?? "";
+                            song.Tag.Composers = tags.JoinedComposers ?? "";
+                            song.Tag.Conductor = tags.Conductor ?? "";
+                            song.Tag.Disc = (int)tags.Disc;
+                            song.Tag.DiscCount = (int)tags.DiscCount;
+                            song.Tag.FirstArtist = tags.FirstPerformer ?? "";
+                            song.Tag.FirstComposer = tags.FirstComposer ?? "";
+                            song.Tag.TrackCount = (int)tags.TrackCount;
+
+                            DatabaseManager.FillSongData(song);
                         }
-                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                        catch (Exception ex)
                         {
-                            tags = tagFile.GetTag(TagTypes.Id3v1);
                         }
-                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
-                        {
-                            tags = tagFile.GetTag(TagTypes.Apple);
-                        }
-                        else
-                        {
-                            tags = tagFile.GetTag(tagFile.TagTypes);
-                        }
-                        newTags.Add(new Tuple<int, string, string>(song.SongId, tags.FirstComposer, tags.FirstPerformer));
-                    }
-                    catch (Exception ex)
-                    {
                     }
                 }
                 catch (Exception ex)
@@ -274,7 +333,6 @@ namespace NextPlayerDataLayer.Services
                 }
                 count++;
             }
-            DatabaseManager.UpdateComposersPerformers(newTags);
         }
 
         private static void SendToast()
@@ -287,6 +345,75 @@ namespace NextPlayerDataLayer.Services
             ToastNotification toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
+
+        public async static void UpdateFileTags(SongData songData)
+        {
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(songData.Path);
+
+                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
+                {
+                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
+                    {
+                        using(File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
+                        {
+                            tagFile.Tag.AlbumArtists = null;
+                            tagFile.Tag.Composers = null;
+                            tagFile.Tag.Performers = null;
+                            tagFile.Tag.Album = songData.Tag.Album;
+                            tagFile.Tag.AlbumArtists = new string[] { songData.Tag.AlbumArtist };
+                            tagFile.Tag.Performers = songData.Tag.Artists.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            tagFile.Tag.Comment = songData.Tag.Comment;
+                            tagFile.Tag.Composers = songData.Tag.Composers.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            tagFile.Tag.Conductor = songData.Tag.Conductor;
+                            tagFile.Tag.Disc = (uint)songData.Tag.Disc;
+                            tagFile.Tag.Genres = new string[] { songData.Tag.Genre };
+                            tagFile.Tag.Title = songData.Tag.Title;
+                            tagFile.Tag.Track = (uint)songData.Tag.Track;
+                            tagFile.Tag.Year = (uint)songData.Tag.Year;
+                            tagFile.Save();
+                        }
+                    }
+                }
+
+                //tempTag = new TagLib.Id3v2.Tag();
+                //tagFile1.Tag.CopyTo(tempTag, true);
+                //tagFile1.RemoveTags(TagLib.TagTypes.AllTags);
+                //tagFile1.Save();
+                //tagFile1.Dispose();
+
+                //TagLib.File tagFile2 = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileReadStream, fileWriteStream));
+                //tempTag.CopyTo(tagFile2.Tag, true);
+                //tagFile2.Save();
+                //tagFile2.Dispose();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            SongUpdated();
+        }
+
+        public async static void UpdateLyrics(int songId, string lyrics)
+        {
+            string path = DatabaseManager.GetFileInfo(songId).FilePath;
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                Stream fileStream = await file.OpenStreamForReadAsync();
+                File tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+
+                tagFile.Tag.Lyrics = lyrics;
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
 
         //public async static Task ImportAndUpdateDatabase()
         //{

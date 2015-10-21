@@ -16,6 +16,7 @@ namespace NextPlayerDataLayer.Constants
         public const string IsPhoneAccentSet = "IsPhoneAccentSet";
         public const string IsBGImageSet = "IsBGImageSet";
         public const string BackgroundImagePath = "BackgroundImagePath";
+        public const string ShowCoverAsBackground = "ShowCoverAsBackground";
 
         //Review
         public const string IsReviewed = "isreviewed5";

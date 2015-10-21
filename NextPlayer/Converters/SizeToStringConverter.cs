@@ -14,7 +14,7 @@ namespace NextPlayer.Converters
             // B KB MB GB
             // 1 2  3  4 
 
-            int size1 = (int)value;  //B
+            int size1 = Int32.Parse(value.ToString());  //B
             double size = size1;
             string[] sizes = { "B", "KB", "MB", "GB" };
             int order = 0;

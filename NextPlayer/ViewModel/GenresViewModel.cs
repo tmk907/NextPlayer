@@ -98,7 +98,7 @@ namespace NextPlayer.ViewModel
                         index = Genres.IndexOf(item);
                         String[] s = new String[2];
                         s[0] = "genre";
-                        s[1] = item.Genre;
+                        s[1] = item.GenreParam;
                         navigationService.NavigateTo(ViewNames.PlaylistView, ParamConvert.ToString(s));
                     }));
             }
@@ -163,7 +163,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<GenreItem>(
                     item =>
                     {
-                        var g = DatabaseManager.GetSongItemsFromGenre(item.Genre);
+                        var g = DatabaseManager.GetSongItemsFromGenre(item.GenreParam);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
                         navigationService.NavigateTo(ViewNames.NowPlayingView, "start");
@@ -204,14 +204,14 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[2];
                         s[0] = "genre";
-                        s[1] = item.Genre;
+                        s[1] = item.GenreParam;
                         navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
                     }));
             }
         }
         public async void AddToNowPlayingAsync(GenreItem item)
         {
-            var g = await DatabaseManager.GetSongItemsFromGenreAsync(item.Genre);
+            var g = await DatabaseManager.GetSongItemsFromGenreAsync(item.GenreParam);
             Library.Current.AddToNowPlaying(g);
         }
 
@@ -240,7 +240,7 @@ namespace NextPlayer.ViewModel
             ApplicationSettingsHelper.SaveTileIdValue(id);
 
             string displayName = "Next Player";
-            string tileActivationArguments = ParamConvert.ToString(new string[] { "genre", genre.Genre });
+            string tileActivationArguments = ParamConvert.ToString(new string[] { "genre", genre.GenreParam });
             Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");
 
             SecondaryTile secondaryTile = new SecondaryTile(tileId,
@@ -300,7 +300,7 @@ namespace NextPlayer.ViewModel
                     {
                         String[] s = new String[3];
                         s[0] = "genre";
-                        s[1] = item.Genre;
+                        s[1] = item.GenreParam;
                         navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
                     }));
             }

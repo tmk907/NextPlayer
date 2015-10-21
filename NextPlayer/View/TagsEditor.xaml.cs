@@ -24,12 +24,12 @@ namespace NextPlayer.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SearchView : Page
+    public sealed partial class TagsEditor : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public SearchView()
+        public TagsEditor()
         {
             this.InitializeComponent();
 
@@ -68,10 +68,6 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            if (e.PageState != null && e.PageState.ContainsKey("pivotIndex"))
-            {
-                SearchPivot.SelectedIndex = (int)e.PageState["pivotIndex"];
-            }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
@@ -87,14 +83,6 @@ namespace NextPlayer.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            if (e.PageState.ContainsKey("pivotIndex"))
-            {
-                e.PageState["pivotIndex"] = SearchPivot.SelectedIndex;
-            }
-            else
-            {
-                e.PageState.Add("pivotIndex", SearchPivot.SelectedIndex);
-            }
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Deactivate(e.PageState);
@@ -127,5 +115,9 @@ namespace NextPlayer.View
 
         #endregion
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

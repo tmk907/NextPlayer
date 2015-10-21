@@ -96,6 +96,10 @@ namespace NextPlayerDataLayer.Model
             }
         }
 
+        private string composer;
+        public string Composer { get { return composer; } }
+        private int year;
+        public int Year { get { return year; } }
         public SongItem()
         {
             title = "Unknown Title";
@@ -105,18 +109,22 @@ namespace NextPlayerDataLayer.Model
             this.path = "";
             rating = 0;
             songId = -1;
+            composer = "";
+            year = 0;
         }
 
-        public SongItem(string album, string artist, TimeSpan duration, string path, int rating, int songid, string title, int trackumber)
+        public SongItem(string album, string artist, string composer, TimeSpan duration, string path, int rating, int songid, string title, int trackumber, int year)
         {
             this.album = album;
             this.artist = artist;
+            this.composer = composer;
             this.duration = duration;
             this.path = path;
             this.rating = rating;
             this.songId = songid;
             this.title = title;
             this.trackNumber = trackumber;
+            this.year = year;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

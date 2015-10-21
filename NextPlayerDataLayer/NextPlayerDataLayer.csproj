@@ -124,6 +124,7 @@
     <Compile Include="Tables\SmartPlaylistEntryTable.cs" />
     <Compile Include="Tables\SmartPlaylistsTable.cs" />
     <Compile Include="Tables\SongsTable.cs" />
+    <Compile Include="Tables\SongsTable2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="TagLib.Portable, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">

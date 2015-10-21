@@ -32,10 +32,16 @@ namespace NextPlayer.ViewModel
             index = 0;
             genre = null;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
         private void OnLibraryUpdated(string s)
         {
+            LoadSongs();
+        }
+        private void OnSongUpdated()
+        {
+            Songs.Clear();
             LoadSongs();
         }
 
@@ -122,6 +128,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         String[] s = new String[2];
                         s[0] = "song";
                         s[1] = item.SongId.ToString();
@@ -143,6 +150,7 @@ namespace NextPlayer.ViewModel
                     ?? (showDetails = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         navigationService.NavigateTo(ViewNames.FileInfoView, item.SongId);
                     }));
             }
@@ -161,6 +169,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         String[] s = new String[2];
                         s[0] = "song";
                         s[1] = item.SongId.ToString();
@@ -168,6 +177,26 @@ namespace NextPlayer.ViewModel
                     }));
             }
         }
+
+        private RelayCommand<SongItem> editTags;
+
+        /// <summary>
+        /// Gets the EditTags.
+        /// </summary>
+        public RelayCommand<SongItem> EditTags
+        {
+            get
+            {
+                return editTags
+                    ?? (editTags = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        index = SelectedIndex(item);
+                        navigationService.NavigateTo(ViewNames.TagsEditor, item.SongId);
+                    }));
+            }
+        }
+
 
         private RelayCommand<object> scrollListView;
 
@@ -269,6 +298,26 @@ namespace NextPlayer.ViewModel
         {
             var a = await DatabaseManager.GetSongItemsAsync();
             Songs = Grouped.CreateGrouped<SongItem>(a, x => x.Title);
+        }
+
+        private int SelectedIndex(SongItem item)
+        {
+            bool find = false;
+            int i = 0;
+            foreach (var a in Songs)
+            {
+                foreach (var b in a)
+                {
+                    if (b.SongId == item.SongId)
+                    {
+                        find = true;
+                        break;
+                    }
+                    i++;
+                }
+                if (find) break;
+            }
+            return i;
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)

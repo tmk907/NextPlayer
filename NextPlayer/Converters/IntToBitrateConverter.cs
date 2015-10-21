@@ -11,7 +11,7 @@ namespace NextPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (int)value + " kbps";
+            return value.ToString() + " kbps";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

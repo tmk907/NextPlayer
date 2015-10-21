@@ -138,6 +138,7 @@
     <Compile Include="ViewModel\SearchViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SongsViewModel.cs" />
+    <Compile Include="ViewModel\TagsEditorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddToPlaylist.xaml.cs">
       <DependentUpon>AddToPlaylist.xaml</DependentUpon>
@@ -192,6 +193,9 @@
     </Compile>
     <Compile Include="View\SongView.xaml.cs">
       <DependentUpon>SongView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TagsEditor.xaml.cs">
+      <DependentUpon>TagsEditor.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +267,7 @@
     <Content Include="Assets\SongCover192.scale-140.png" />
     <Content Include="Assets\SongCover192.scale-240.png" />
     <None Include="Package.StoreAssociation.xml" />
+    <PRIResource Include="Strings\bg-BG\Resources.resw" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\cs-CZ\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
@@ -344,6 +349,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\TagsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bluetooth.Core.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -388,6 +397,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Cover\Light\" />
+    <Folder Include="Strings\id-ID\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">

@@ -32,19 +32,20 @@ namespace NextPlayerDataLayer.Services
             return conn;
         }
 
-        private static SQLite.TableQuery<SongsTable> SongsConn()
+        //Only available songs
+        private static SQLite.TableQuery<SongsTable2> SongsConn()
         {
-            return ConnectionDb().Table<SongsTable>().Where(available => available.IsAvailable > 0);
+            return ConnectionDb().Table<SongsTable2>().Where(available => available.IsAvailable > 0);
         }
 
-        private static SQLite.AsyncTableQuery<SongsTable> SongsConnAsync()
+        private static SQLite.AsyncTableQuery<SongsTable2> SongsConnAsync()
         {
-            return AsyncConnectionDb().Table<SongsTable>().Where(available => available.IsAvailable > 0);
+            return AsyncConnectionDb().Table<SongsTable2>().Where(available => available.IsAvailable > 0);
         }
 
         public async static Task DeleteDatabase()
         {
-            await AsyncConnectionDb().DropTableAsync<SongsTable>();
+            await AsyncConnectionDb().DropTableAsync<SongsTable2>();
             await AsyncConnectionDb().DropTableAsync<PlainPlaylistEntryTable>();
             await AsyncConnectionDb().DropTableAsync<PlainPlaylistsTable>();
             await AsyncConnectionDb().DropTableAsync<SmartPlaylistEntryTable>();
@@ -58,35 +59,74 @@ namespace NextPlayerDataLayer.Services
             await AsyncConnectionDb().CreateTableAsync<PlainPlaylistEntryTable>();
             await AsyncConnectionDb().CreateTableAsync<SmartPlaylistsTable>();
             await AsyncConnectionDb().CreateTableAsync<SmartPlaylistEntryTable>();
-            await AsyncConnectionDb().CreateTableAsync<SongsTable>();
+            await AsyncConnectionDb().CreateTableAsync<SongsTable2>();
             await AsyncConnectionDb().CreateTableAsync<NowPlayingTable>();
         }
 
-        public static void ResetSongsTable()
-        {
-            ConnectionDb().DropTable<SongsTable>();
-            ConnectionDb().CreateTable<SongsTable>();
-        }
+        //public static void ResetSongsTable()
+        //{
+        //    ConnectionDb().DropTable<SongsTable>();
+        //    ConnectionDb().CreateTable<SongsTable>();
+        //}
 
-        // Add composer field
         public static void UpdateDBToVersion2()
         {
             var conn = ConnectionDb();
-            conn.Execute("ALTER TABLE SongsTable ADD COLUMN Composer varchar(63);");
-            conn.Execute("UPDATE SongsTable SET Composer = ''");
-            conn.Execute("ALTER TABLE SongsTable ADD COLUMN Performer varchar(63);");
-            conn.Execute("UPDATE SongsTable SET Performer = ''");
+            conn.CreateTable<SongsTable2>();
+            List<SongsTable2> songs = new List<SongsTable2>();
+            var oldSongsTable = conn.Table<SongsTable>().Where(s=>s.IsAvailable > 0);
+            foreach (var s in oldSongsTable)
+            {
+                songs.Add(new SongsTable2()
+                {
+                    Album = s.Album,
+                    AlbumArtist = s.AlbumArtist,
+                    Artists = "",
+                    Bitrate = s.Bitrate,
+                    Comment = "",
+                    Composers = "",
+                    Conductor = "",
+                    DateAdded = s.DateAdded,
+                    Disc = 0,
+                    DiscCount = 0,
+                    Duration = s.Duration,
+                    Filename = s.Filename,
+                    FileSize = s.FileSize,
+                    FirstArtist = "",
+                    FirstComposer = "",
+                    Genre = s.Genre,
+                    IsAvailable = s.IsAvailable,
+                    LastPlayed = s.LastPlayed,
+                    Lyrics = s.Lyrics,
+                    Path = s.Path,
+                    PlayCount = s.PlayCount,
+                    Rating = s.Rating,
+                    SongId = s.SongId,
+                    Title = s.Title,
+                    Track = (int)s.TrackNumber,
+                    TrackCount = 0,
+                    Year = (int)s.Year,
+                });
+            }
+            conn.InsertAll(songs);
+
+            conn.DropTable<SongsTable>();
+
+            conn.DropTable<NowPlayingTable>();
+            conn.CreateTable<NowPlayingTable>();
+            conn.DropTable<PlainPlaylistEntryTable>();
+            conn.CreateTable<PlainPlaylistEntryTable>();
         }
         public static void UpdateComposersPerformers(List<Tuple<int, string, string>> newTags)
         {
             var conn = ConnectionDb();
             foreach (var x in newTags)
             {
-                conn.Execute("UPDATE SongsTable SET Composer = ? WHERE SongId = ?",x.Item2,x.Item1);
+                conn.Execute("UPDATE SongsTable2 SET Composer = ? WHERE SongId = ?",x.Item2,x.Item1);
             }
             foreach (var x in newTags)
             {
-                conn.Execute("UPDATE SongsTable SET Performer = ? WHERE SongId = ?", x.Item3, x.Item1);
+                conn.Execute("UPDATE SongsTable2 SET Performer = ? WHERE SongId = ?", x.Item3, x.Item1);
             }
         }
 
@@ -143,14 +183,14 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task<int> InsertSong(SongData song)
         {
-            SongsTable newSong = CreateSongsTable(song);
+            SongsTable2 newSong = CreateSongsTable(song);
             await AsyncConnectionDb().InsertAsync(newSong);
             return newSong.SongId;
         }
 
         public async static Task InsertSongsAsync(IEnumerable<SongData> list)
         {
-            List<SongsTable> newSongs = new List<SongsTable>();
+            List<SongsTable2> newSongs = new List<SongsTable2>();
             foreach (var item in list)
             {
                 newSongs.Add(CreateSongsTable(item));
@@ -378,7 +418,7 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task DeleteSong(int _songId)
         {
-            var song = await AsyncConnectionDb().Table<SongsTable>().Where(s => s.SongId.Equals(_songId)).FirstOrDefaultAsync();
+            var song = await AsyncConnectionDb().Table<SongsTable2>().Where(s => s.SongId.Equals(_songId)).FirstOrDefaultAsync();
             await AsyncConnectionDb().DeleteAsync(song);
         }
 
@@ -459,6 +499,31 @@ namespace NextPlayerDataLayer.Services
                     duration += song.Duration;
                     songs++;
                 }
+                if (albumArtist == "")
+                {
+                    if (item.Count() == 1)
+                    {
+                        albumArtist = item.FirstOrDefault().Artists;
+                    }
+                    else
+                    {
+                        var first = item.FirstOrDefault().Artists;
+                        bool dif = false;
+                        foreach (var song in item)
+                        {
+                            if (song.Artists != first)
+                            {
+                                dif = true;
+                                break;
+                            }
+                        }
+                        if (!dif) albumArtist = first;
+                    }
+                }
+                if (item.FirstOrDefault().Album == "" && item.Count() > 1)
+                {
+                    albumArtist = "";
+                }
                 collection.Add(new AlbumItem(item.FirstOrDefault().Album, null, albumArtist, duration, songs));
             }
             return collection;
@@ -479,6 +544,17 @@ namespace NextPlayerDataLayer.Services
                     duration += song.Duration;
                     songs++;
                 }
+                if (albumArtist == "")
+                {
+                    if (item.Count() == 1)
+                    {
+                        albumArtist = item.FirstOrDefault().Artists;
+                    }
+                    else
+                    {
+                        albumArtist = artistParam;
+                    }
+                }
                 collection.Add(new AlbumItem(item.FirstOrDefault().Album, artistParam, albumArtist, duration, songs));
             }
             return collection;
@@ -486,7 +562,7 @@ namespace NextPlayerDataLayer.Services
 
         public static AlbumItem GetAlbumItem(string albumParam, string artistParam)
         {
-            List<SongsTable> query;
+            List<SongsTable2> query;
             if (artistParam == null)
             {
                 query = SongsConn().Where(a => a.Album.Equals(albumParam)).ToList();
@@ -775,10 +851,10 @@ namespace NextPlayerDataLayer.Services
             if (count != 0)
             {
                 //var query = from e in conn.Table<PlainPlaylistEntryTable>()
-                //            join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
+                //            join s in conn.Table<SongsTable2>() on e.SongId equals s.SongId
                 //            where e.PlaylistId.Equals(id)
                 //            select s;
-                List<SongsTable> list = conn.Query<SongsTable>("select * from PlainPlaylistEntryTable inner join SongsTable on PlainPlaylistEntryTable.SongId = SongsTable.SongId where PlainPlaylistEntryTable.PlaylistId = ?  AND SongsTable.IsAvailable = 1 order by PlainPlaylistEntryTable.Place", id);//available
+                List<SongsTable2> list = conn.Query<SongsTable2>("select * from PlainPlaylistEntryTable inner join SongsTable2 on PlainPlaylistEntryTable.SongId = SongsTable2.SongId where PlainPlaylistEntryTable.PlaylistId = ?  AND SongsTable2.IsAvailable = 1 order by PlainPlaylistEntryTable.Place", id);//available
 
 
                 foreach (var item in list)
@@ -795,7 +871,7 @@ namespace NextPlayerDataLayer.Services
             ObservableCollection<SongItem> songs = new ObservableCollection<SongItem>();
             SQLiteConnection conn = ConnectionDb();
             var query = from e in conn.Table<PlainPlaylistEntryTable>()
-                        join s in conn.Table<SongsTable>() on e.SongId equals s.SongId
+                        join s in conn.Table<SongsTable2>() on e.SongId equals s.SongId
                         where e.PlaylistId.Equals(id)
                         select s;
             foreach (var item in query)
@@ -824,7 +900,7 @@ namespace NextPlayerDataLayer.Services
             if (query.Count != 0)
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append("select * from SongsTable where IsAvailable > 0 AND ");
+                builder.Append("select * from SongsTable2 where IsAvailable > 0 AND ");
 
                 foreach (var x in query) //x = condition
                 {
@@ -891,7 +967,7 @@ namespace NextPlayerDataLayer.Services
                 builder.Remove(builder.Length - 4, 4);
                 builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
 
-                List<SongsTable> q = conn.Query<SongsTable>(builder.ToString());
+                List<SongsTable2> q = conn.Query<SongsTable2>(builder.ToString());
 
 
                 foreach (var x in q)
@@ -922,7 +998,7 @@ namespace NextPlayerDataLayer.Services
             if (query.Count > 0)
             {
                 StringBuilder builder = new StringBuilder();
-                builder.Append("select * from SongsTable where IsAvailable > 0 AND ");
+                builder.Append("select * from SongsTable2 where IsAvailable > 0 AND ");
 
                 foreach (var x in query) //x = condition
                 {
@@ -989,7 +1065,7 @@ namespace NextPlayerDataLayer.Services
                 builder.Remove(builder.Length - 4, 4);
                 builder.Append("order by ").Append(sorting).Append(" limit ").Append(maxNumber);
 
-                List<SongsTable> q = await conn.QueryAsync<SongsTable>(builder.ToString());
+                List<SongsTable2> q = await conn.QueryAsync<SongsTable2>(builder.ToString());
 
 
                 foreach (var x in q)
@@ -1014,9 +1090,9 @@ namespace NextPlayerDataLayer.Services
 
         #region Select
 
-        public async static Task<SongData> SelectSongData(int _songId)
+        public static SongData SelectSongData(int _songId)
         {
-            var q = await SongsConnAsync().Where(e => e.SongId.Equals(_songId)).FirstOrDefaultAsync();
+            var q = SongsConn().Where(e => e.SongId.Equals(_songId)).FirstOrDefault();
             SongData s = CreateSongData(q);
             return s;
         }
@@ -1094,22 +1170,27 @@ namespace NextPlayerDataLayer.Services
             await AsyncConnectionDb().UpdateAsync(song);
         }
 
+        public static void FillSongData(SongData song)
+        {
+            ConnectionDb().Execute("UPDATE SongsTable2 SET Artists = ?, Comment = ?, Composers = ?, Conductor = ?, Disc = ?, DiscCount = ?, FirstArtist = ?, FirstComposer = ?, TrackCount = ?,  WHERE SongId = ?", song.Tag.Artists, song.Tag.Comment, song.Tag.Composers, song.Tag.Conductor, song.Tag.Disc, song.Tag.DiscCount, song.Tag.FirstArtist, song.Tag.FirstComposer, song.Tag.TrackCount, song.SongId);
+        }
+
         public async static Task UpdateSongStatistics(int id)
         {
             var conn = AsyncConnectionDb();
-            var result = await conn.Table<SongsTable>().Where(z => z.SongId.Equals(id)).FirstOrDefaultAsync();
+            var result = await conn.Table<SongsTable2>().Where(z => z.SongId.Equals(id)).FirstOrDefaultAsync();
             uint count = result.PlayCount + 1;
-            int i = await conn.ExecuteAsync("UPDATE SongsTable SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?",DateTime.Now ,count, id);
+            int i = await conn.ExecuteAsync("UPDATE SongsTable2 SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?", DateTime.Now, count, id);
         }
 
         public async static Task UpdateSongRating(int songId, int rating)
         {
-            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Rating = ? WHERE SongId = ?",rating,songId);
+            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable2 SET Rating = ? WHERE SongId = ?", rating, songId);
         }
 
         public async static Task UpdateLyricsAsync(int id, string lyrics)
         {
-            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable SET Lyrics = ? WHERE SongId = ?", lyrics, id);
+            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable2 SET Lyrics = ? WHERE SongId = ?", lyrics, id);
         }
 
         #endregion
@@ -1142,7 +1223,7 @@ namespace NextPlayerDataLayer.Services
                     duration += song.Duration;
                     songs++;
                 }
-                collection.Add(new AlbumItem(item.FirstOrDefault().Album, item.FirstOrDefault().Artists, albumArtist, duration, songs));
+                collection.Add(new AlbumItem(item.FirstOrDefault().Album, null, albumArtist, duration, songs));
             }
             return collection;
         }
@@ -1179,7 +1260,7 @@ namespace NextPlayerDataLayer.Services
         public static int IsSongInDB(string path)
         {
             //long s = (long )size;
-            var result = ConnectionDb().Table<SongsTable>().Where(e => e.Path.Equals(path)).FirstOrDefault();
+            var result = ConnectionDb().Table<SongsTable2>().Where(e => e.Path.Equals(path)).FirstOrDefault();
 
             if (result == null) return -1;
             else return 0;
@@ -1194,7 +1275,7 @@ namespace NextPlayerDataLayer.Services
         public static Dictionary<string, Tuple<int,int>> GetFilePaths()
         {
             Dictionary<string, Tuple<int,int>> dict = new Dictionary<string, Tuple<int,int>>();
-            var result = ConnectionDb().Table<SongsTable>().ToList();
+            var result = ConnectionDb().Table<SongsTable2>().ToList();
             foreach (var x in result)
             {
                 dict.Add(x.Path, new Tuple<int,int>(x.IsAvailable,x.SongId));
@@ -1205,14 +1286,14 @@ namespace NextPlayerDataLayer.Services
         public static void ChangeAvailability(IEnumerable<int> toAvailable)
         {
             var conn = ConnectionDb();
-            conn.Execute("UPDATE SongsTable SET IsAvailable = 0");
+            conn.Execute("UPDATE SongsTable2 SET IsAvailable = 0");
             foreach (int id in toAvailable)
             {
-                conn.Execute("UPDATE SongsTable SET IsAvailable = 1 WHERE SongId = ?",id);
+                conn.Execute("UPDATE SongsTable2 SET IsAvailable = 1 WHERE SongId = ?", id);
             }
         }
 
-        private static SongData CreateSongData(SongsTable q)
+        private static SongData CreateSongData(SongsTable2 q)
         {
             Tags tag = new Tags()
             {
@@ -1251,9 +1332,9 @@ namespace NextPlayerDataLayer.Services
             return s;
         }
 
-        private static SongsTable CreateSongsTable(SongData song)
+        private static SongsTable2 CreateSongsTable(SongData song)
         {
-            return new SongsTable()
+            return new SongsTable2()
             {
                 Album = song.Tag.Album,
                 AlbumArtist = song.Tag.AlbumArtist,
@@ -1296,9 +1377,9 @@ namespace NextPlayerDataLayer.Services
             return s;
         }
 
-        private static SongItem CreateSongItem(SongsTable q)
+        private static SongItem CreateSongItem(SongsTable2 q)
         {
-            return new SongItem(q.Album, q.Artists, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.Track);
+            return new SongItem(q.Album, q.Artists, q.Composers, q.Duration, q.Path, (int)q.Rating, q.SongId, q.Title,(int) q.Track, q.Year);
         }
 
         public static FileInfo GetFileInfo(int songId)

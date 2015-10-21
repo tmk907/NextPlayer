@@ -546,4 +546,46 @@
   <data name="UnknownArtist" xml:space="preserve">
     <value>Nieznany wykonawca</value>
   </data>
+  <data name="EditTags.Text" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="TagsEditorPageTitle.Text" xml:space="preserve">
+    <value>edytor tagów</value>
+  </data>
+  <data name="TBComment.Text" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="TBConductor.Text" xml:space="preserve">
+    <value>Dyrygent</value>
+  </data>
+  <data name="TBDisc.Text" xml:space="preserve">
+    <value>Disc</value>
+  </data>
+  <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
+    <value>Semicolon separated values</value>
+  </data>
+  <data name="MFIComposer.Text" xml:space="preserve">
+    <value>Kompozytor</value>
+  </data>
+  <data name="MFIYear.Text" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="TBDuration.Text" xml:space="preserve">
+    <value>Długość</value>
+  </data>
+  <data name="TBGenre.Text" xml:space="preserve">
+    <value>Gatunek</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Nieznany gatunek</value>
+  </data>
+  <data name="AlbumsH.Header" xml:space="preserve">
+    <value>albumy</value>
+  </data>
+  <data name="ArtistsH.Header" xml:space="preserve">
+    <value>artyści</value>
+  </data>
+  <data name="SongsH.Header" xml:space="preserve">
+    <value>utwory</value>
+  </data>
 </root>

@@ -35,10 +35,18 @@ namespace NextPlayer.ViewModel
             this.navigationService = navigationService;
             index = 0;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
         private void OnLibraryUpdated(string s)
         {
+            Albums.Clear();
+            LoadAlbums();
+        }
+
+        private void OnSongUpdated()
+        {
+            Albums.Clear();
             LoadAlbums();
         }
 
@@ -277,7 +285,7 @@ namespace NextPlayer.ViewModel
             
             if (!SecondaryTile.Exists(tileId))
             {
-                string imageName = await Library.Current.SaveAlbumCover(p.Album, p.ArtistParam, tileId);
+                string imageName = await Library.Current.SaveAlbumCover(p.AlbumParam, p.ArtistParam, tileId);
                 string displayName = "Next Player";
                 string tileActivationArguments = ParamConvert.ToString(new string[] { "album", p.AlbumParam, p.ArtistParam });
                 Uri square150x150Logo = new Uri("ms-appx:///Assets/AppImages/Logo/Logo.png");

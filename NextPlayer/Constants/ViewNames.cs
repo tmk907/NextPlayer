@@ -19,6 +19,7 @@ namespace NextPlayer.Constants
         public static readonly string NowPlayingPlaylistView = "NowPlayingPlaylistView";
         public static readonly string PlaylistView = "PlaylistView";
         public static readonly string PlaylistsView = "PlaylistsView";
+        public static readonly string TagsEditor = "TagsEditor";
         public static readonly string SettingsView = "SettingsView";
         public static readonly string SearchView = "SearchView";
         public static readonly string SongsView = "SongsView";

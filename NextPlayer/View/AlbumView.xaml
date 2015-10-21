@@ -12,21 +12,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding AlbumVM, Mode=OneWay, Source={StaticResource Locator}}">
 
-
-    <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
+    <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!--<Image 
+        <Image 
             Grid.RowSpan="2"
-            x:Name="imageBG"
             Stretch="UniformToFill"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-            Source="/Assets/BG/wallpaper 1.jpg"
-            />-->
-        <Rectangle x:Name="Rect1" Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
+            Source="{Binding BackgroundImage}"
+            />
+        <Rectangle x:Name="Rect1" Grid.RowSpan="2" Fill="{StaticResource TransparentAlbumBGImageColor}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Text="NEXT PLAYER" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
@@ -53,7 +51,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
+                    <Rectangle Grid.ColumnSpan="2" Fill="{StaticResource TransparentAlbumInfoColor}"/>
                     <Image x:Name="albumCover" 
                            Grid.Column="0"
                            Width="150" Height="150" 
@@ -108,6 +106,12 @@
                     <i:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Loaded">
                             <core:InvokeCommandAction Command="{Binding LoadItems}" />
+                        </core:EventTriggerBehavior>
+                        <core:EventTriggerBehavior EventName="Loaded">
+                            <core:InvokeCommandAction
+                                    Command="{Binding ScrollListView, Mode=TwoWay}"
+                                    InputConverter="{StaticResource GetListView}"
+                                    InputConverterParameter="{Binding ElementName=SongsListView}" />
                         </core:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </ListView>

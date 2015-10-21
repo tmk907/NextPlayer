@@ -29,7 +29,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid x:Name="Grid" Background="Transparent">
-                            
+
                             <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Margin="0">
                                 <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             </Border>
@@ -39,7 +39,7 @@
             </Setter>
         </Style>
 
-        <DataTemplate x:Key="SongItemTemplate2">
+        <DataTemplate x:Key="SongSearchItemTemplate">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -74,6 +74,208 @@
                 </Border>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="AlbumSearchItemTemplate">
+            <Grid Width="{Binding Width, ElementName=ContentRoot}">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Holding">
+                        <helpers:OpenMenuFlyoutAction />
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" 
+                                        Command="{Binding DataContext.PlayAlbumNow, ElementName=AlbumsListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddAlbumToNP, ElementName=AlbumsListView}" CommandParameter="{Binding}"/>
+                        <!--<MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
+                                        Command="{Binding DataContext.PinAlbum, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>-->
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="24"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">
+                    <TextBlock Text="{Binding Album}" 
+                               TextWrapping="NoWrap" 
+                               TextTrimming="CharacterEllipsis" 
+                               FontSize="20" 
+                               FontWeight="SemiBold" 
+                               Foreground="{StaticResource UserListFontColor}"
+                               Margin="0,0,0,0"/>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
+                    <TextBlock Text="{Binding AlbumArtist}" 
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="17" 
+                               FontWeight="Normal" 
+                                Foreground="{StaticResource UserListFontColor}"
+                               Margin="0,0,4.5,0"/>
+                </Border>
+                <Border Grid.Column="1" Grid.RowSpan="2"   >
+                    <TextBlock Text="{Binding SongsNumber}" 
+                               FontSize="17" 
+                               FontWeight="Normal"
+                                   Foreground="{StaticResource UserListFontColor}"
+                               Margin="4.5,0,4.5,0"  
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="2" Grid.RowSpan="2">
+                    <TextBlock FontSize="16" FontFamily="Segoe UI Symbol" Text="&#xE189;" Foreground="{StaticResource UserListFontColor}" VerticalAlignment="Center"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ArtistSearchItemTemplate">
+            <Grid Width="{Binding Width, ElementName=ContentRoot}">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Holding">
+                        <helpers:OpenMenuFlyoutAction />
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" 
+                                        Command="{Binding DataContext.PlayArtistNow, ElementName=ArtistsListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" 
+                                        Command="{Binding DataContext.AddArtistToNP, ElementName=ArtistsListView}" CommandParameter="{Binding}"/>
+                        <!--<MenuFlyoutItem x:Uid="AddToPlaylist" Text="Add to playlist" 
+                                        Command="{Binding DataContext.AddToPlaylist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" 
+                                        Command="{Binding DataContext.PinArtist, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>
+                        <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
+                                        Command="{Binding DataContext.Share, ElementName=ZoomedInListView}" CommandParameter="{Binding}"/>-->
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="10*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Grid.RowSpan="2"  Margin="0,10,0,10">
+                    <TextBlock Text="{Binding Artist}" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"
+                               TextWrapping="NoWrap" 
+                               TextTrimming="CharacterEllipsis"
+                                   Foreground="{StaticResource UserListFontColor}"
+                               VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1"  >
+                    <TextBlock Text="{Binding AlbumsNumber}" 
+                               FontSize="15" 
+                               FontWeight="SemiBold" 
+                                   Foreground="{StaticResource UserListFontColor}"
+                               Margin="0,0,0,0" 
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom"/>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="2"  >
+                    <TextBlock Text="&#x1f4bf;" 
+                               FontSize="13" 
+                               FontFamily="Segoe UI Symbol" 
+                                   Foreground="{StaticResource UserListFontColor}"
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" >
+                    <TextBlock Text="{Binding SongsNumber}" 
+                               FontSize="15" 
+                               FontWeight="SemiBold" 
+                                   Foreground="{StaticResource UserListFontColor}"
+                               Margin="0,0,0,0" 
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"/>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="2" >
+                    <TextBlock Text="&#xE189;"
+                               FontSize="12" 
+                               FontFamily="Segoe UI Symbol"
+                                   Foreground="{StaticResource UserListFontColor}"
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Top"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="SearchPivotheader">
+            <ContentPresenter>
+                <TextBlock Text="{Binding}" FontSize="32"/>
+            </ContentPresenter>
+        </DataTemplate>
+        <Thickness x:Key="PivotPortraitThemePadding">19,38,0,0</Thickness>
+        <Thickness x:Key="PivotLandscapeThemePadding">19,25,0,0</Thickness>
+        <Style x:Key="SearchPivot" TargetType="Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{ThemeResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Pivot">
+                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Portrait">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPortraitThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Landscape">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotLandscapeThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentControl x:Name="TitleContentControl" ContentTemplate="{TemplateBinding TitleTemplate}" Content="{TemplateBinding Title}" Style="{StaticResource PivotTitleContentControlStyle}"/>
+                            <ScrollViewer x:Name="ScrollViewer" HorizontalSnapPointsAlignment="Center" HorizontalSnapPointsType="MandatorySingle" HorizontalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}" Grid.Row="1" Template="{StaticResource ScrollViewerScrollBarlessTemplate}" VerticalSnapPointsType="None" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" VerticalContentAlignment="Stretch" ZoomMode="Disabled">
+                                <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
+                                    <PivotHeaderPanel x:Name="Header">
+                                        <PivotHeaderPanel.RenderTransform>
+                                            <CompositeTransform x:Name="HeaderTranslateTransform" TranslateX="0"/>
+                                        </PivotHeaderPanel.RenderTransform>
+                                    </PivotHeaderPanel>
+                                    <ItemsPresenter x:Name="PivotItemPresenter">
+                                        <ItemsPresenter.RenderTransform>
+                                            <TranslateTransform x:Name="ItemsPresenterTranslateTransform" X="0"/>
+                                        </ItemsPresenter.RenderTransform>
+                                    </ItemsPresenter>
+                                </PivotPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
@@ -81,11 +283,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--<Image Grid.RowSpan="2" Style="{StaticResource BackgroundImageSource}"/>-->
-        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
+        <Rectangle Grid.RowSpan="2" Fill="{StaticResource TransparentBGImageColor}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
-            <TextBlock x:Uid="SearchPageTitle" Text="Search" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Uid="SearchPageTitle" Text="search" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
@@ -95,28 +297,26 @@
                     <EntranceThemeTransition/>
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                    </Grid.RowDefinitions>
-                <!--<Rectangle Grid.ColumnSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>-->
-
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Grid.Column="0" 
                             Margin="0,0,8,0"
                             Text="{Binding SearchQuery, Mode=TwoWay}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             FontSize="25"/>
-                    <Button
+                <Button
                         Grid.Row="0" Grid.Column="1"
                         Style="{StaticResource ButtonStyleSearch}"
                         Background="Transparent"
@@ -124,24 +324,54 @@
                         Content="&#xE11A;"
                         FontFamily="Segoe UI Symbol" 
                         FontSize="30"
-                        Height="60"
-                            >
-                    </Button>
-                </Grid>
-            <ListView x:Name="SongsListView"  
-                    Grid.Row="1"
-                    SelectionMode="None"
-                    IsItemClickEnabled="True"
-                    ItemsSource="{Binding SearchResults}"
-                    ContinuumNavigationTransitionInfo.ExitElementContainer="True"
-                    helpers:ItemClickCommand.Command="{Binding ItemClicked}"
-                    ItemTemplate="{StaticResource SongItemTemplate2}">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+                        Height="60"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Pivot x:Name="SearchPivot" Margin="0,27,0,0" HeaderTemplate="{StaticResource SearchPivotheader}" Style="{StaticResource SearchPivot}">
+                    <PivotItem x:Uid="SongsH" Header="songs" Margin="0">
+                        <ListView x:Name="SongsListView"  
+                            SelectionMode="None"
+                            IsItemClickEnabled="True"
+                            ItemsSource="{Binding Songs}"
+                            helpers:ItemClickCommand.Command="{Binding SongClicked}"
+                            ItemTemplate="{StaticResource SongSearchItemTemplate}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </PivotItem>
+                    <PivotItem x:Uid="AlbumsH" Header="albums" Margin="0">
+                        <ListView x:Name="AlbumsListView"  
+                            SelectionMode="None"
+                            IsItemClickEnabled="True"
+                            ItemsSource="{Binding Albums}"
+                            helpers:ItemClickCommand.Command="{Binding AlbumClicked}"
+                            ItemTemplate="{StaticResource AlbumSearchItemTemplate}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </PivotItem>
+                    <PivotItem x:Uid="ArtistsH" Header="artists" Margin="0">
+                        <ListView x:Name="ArtistsListView"  
+                            SelectionMode="None"
+                            IsItemClickEnabled="True"
+                            ItemsSource="{Binding Artists}"
+                            helpers:ItemClickCommand.Command="{Binding ArtistClicked}"
+                            ItemTemplate="{StaticResource ArtistSearchItemTemplate}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </PivotItem>
+                </Pivot>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

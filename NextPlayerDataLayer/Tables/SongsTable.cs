@@ -8,41 +8,32 @@ namespace NextPlayerDataLayer.Tables
     {
         [PrimaryKey, AutoIncrement]
         public int SongId { get; set; }
-        public string Filename { get; set; }
-        public long FileSize { get; set; }
         [Indexed]
-        public string Path { get; set; }
-
+        public string Album { get; set; }
+        public string AlbumArtist { get; set; }
+        [Indexed]
+        public string Artist { get; set; }
         public uint Bitrate { get; set; }
         public TimeSpan Duration { get; set; }
+        public string Genre { get; set; }
+        public string Publisher { get; set; }
+        public uint Rating { get; set; }
+        public string Subtitle { get; set; }
+        [Indexed]
+        public string Title { get; set; }
+        public uint TrackNumber { get; set; }
+        public uint Year { get; set; }
 
+        public string Path { get; set; }
+        public string Filename { get; set; }
+        public long FileSize { get; set; }
         public DateTime LastPlayed { get; set; }
         public DateTime DateAdded { get; set; }
         public uint PlayCount { get; set; }
+
         [Indexed]
         public int IsAvailable { get; set; }
 
-        //Tags
-        [Indexed]
-        public string Album { get; set; }
-        [Indexed]
-        public string AlbumArtist { get; set; }
-        public string Artists { get; set; } //Performers in taglib
-        public string Comment { get; set; }
-        public string Composers { get; set; }
-        public string Conductor { get; set; }
-        public int Disc { get; set; }
-        public int DiscCount { get; set; }
-        [Indexed]
-        public string FirstArtist { get; set; } //FirstPerformer
-        public string FirstComposer { get; set; }
-        public string Genre { get; set; }
         public string Lyrics { get; set; }
-        public uint Rating { get; set; }
-        [Indexed]
-        public string Title { get; set; }
-        public int Track { get; set; }
-        public int TrackCount { get; set; }
-        public int Year { get; set; }
     }
 }

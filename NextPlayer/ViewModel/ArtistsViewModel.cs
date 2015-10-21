@@ -31,13 +31,19 @@ namespace NextPlayer.ViewModel
         {
             this.navigationService = navigationService;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
+            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
         private void OnLibraryUpdated(string s)
         {
+            Artists.Clear();
             LoadArtists();
         }
-
+        private void OnSongUpdated()
+        {
+            Artists.Clear();
+            LoadArtists();
+        }
         /// <summary>
         /// The <see cref="Artists" /> property's name.
         /// </summary>

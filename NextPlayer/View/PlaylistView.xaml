@@ -25,8 +25,12 @@
                             Command="{Binding SortBy}" CommandParameter="Artist"/>
                         <MenuFlyoutItem x:Uid="MFIAlbum" Text="Album"
                             Command="{Binding SortBy}" CommandParameter="Album"/>
+                        <MenuFlyoutItem x:Uid="MFIComposer" Text="Composer"
+                            Command="{Binding SortBy}" CommandParameter="Composer"/>
                         <MenuFlyoutItem x:Uid="MFITrackNumber" Text="Track number"
                             Command="{Binding SortBy}" CommandParameter="Track"/>
+                        <MenuFlyoutItem x:Uid="MFIYear" Text="Year"
+                            Command="{Binding SortBy}" CommandParameter="Year"/>
                         <MenuFlyoutItem x:Uid="MFIRating" Text="Rating"
                             Command="{Binding SortBy}" CommandParameter="Rating"/>
                         <MenuFlyoutItem x:Uid="MFIDuration" Text="Duration"
@@ -50,7 +54,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--<Image Grid.RowSpan="2" Style="{StaticResource BackgroundImageSource}"/>-->
-        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
+        <Rectangle Grid.RowSpan="2" Fill="{StaticResource TransparentBGImageColor}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>

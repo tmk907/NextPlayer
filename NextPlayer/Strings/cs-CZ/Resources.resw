@@ -495,4 +495,94 @@
   <data name="UpdateMediaTB.Text" xml:space="preserve">
     <value>Aktualizovat knihovnu</value>
   </data>
+  <data name="AlbumArtist" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="AlbumsH.Header" xml:space="preserve">
+    <value>albums</value>
+  </data>
+  <data name="AppBarScan" xml:space="preserve">
+    <value>scan</value>
+  </data>
+  <data name="AppBarSearch.Label" xml:space="preserve">
+    <value>search</value>
+  </data>
+  <data name="ArtistsH.Header" xml:space="preserve">
+    <value>artists</value>
+  </data>
+  <data name="BTSharePageTitle.Text" xml:space="preserve">
+    <value>share</value>
+  </data>
+  <data name="Composer" xml:space="preserve">
+    <value>Composer</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="DevicesNotFound" xml:space="preserve">
+    <value>No Devices could be found.</value>
+  </data>
+  <data name="EditTags.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="FilesSharedError" xml:space="preserve">
+    <value>Some files could not be shared successfully.</value>
+  </data>
+  <data name="FilesSharedOK" xml:space="preserve">
+    <value>All files shared successfully.</value>
+  </data>
+  <data name="MFIComposer.Text" xml:space="preserve">
+    <value>Composer</value>
+  </data>
+  <data name="MFIShare.Text" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="MFIYear.Text" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="SearchForDevices" xml:space="preserve">
+    <value>Searching for devices . . .</value>
+  </data>
+  <data name="SongsH.Header" xml:space="preserve">
+    <value>songs</value>
+  </data>
+  <data name="TagsEditorPageTitle.Text" xml:space="preserve">
+    <value>tags editor</value>
+  </data>
+  <data name="TBAlbumArtist.Text" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="TBComment.Text" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="TBComposer.Text" xml:space="preserve">
+    <value>Composer</value>
+  </data>
+  <data name="TBConductor.Text" xml:space="preserve">
+    <value>Conductor</value>
+  </data>
+  <data name="TBDevices.Text" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="TBDisc.Text" xml:space="preserve">
+    <value>Disc</value>
+  </data>
+  <data name="TBDuration.Text" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="TBFiles.Text" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="TBGenre.Text" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Unknown album</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Unknown artist</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Unknown genre</value>
+  </data>
 </root>

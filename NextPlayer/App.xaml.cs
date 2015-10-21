@@ -60,6 +60,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, "#FF008A00");
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
             }
             else
             {
@@ -85,6 +86,10 @@ namespace NextPlayer
                 {
                     settings.Values.Add(AppConstants.AppAccent, "#FF008A00");
                 }
+                if (!settings.Values.ContainsKey(AppConstants.ShowCoverAsBackground))
+                {
+                    settings.Values.Add(AppConstants.ShowCoverAsBackground, true);
+                }
 
                 string theme = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme) as string;
                 if (theme.Equals(AppThemeEnum.Dark.ToString()))
@@ -97,7 +102,7 @@ namespace NextPlayer
                 }  
   
                 SendLogs();
-                CheckDBVersion();
+                UpdateDB();
             }
            
             //NextPlayerDataLayer.Diagnostics.Logger.Clear();
@@ -149,15 +154,10 @@ namespace NextPlayer
             }
             if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
-                ((SolidColorBrush)App.Current.Resources["UserListFontColor"]).Color = Windows.UI.Colors.White;
-                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImagePath) as string;
-                if (path != null && path != "")
-                {
-                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
-                }
+                NextPlayer.Helpers.StyleHelper.EnableBGImage();
             }
             NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
-            
+            NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             Frame rootFrame = Window.Current.Content as Frame;
@@ -444,7 +444,7 @@ namespace NextPlayer
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
         }
 
-        private void CheckDBVersion()
+        private void UpdateDB()
         {
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 

@@ -5,11 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace NextPlayerDataLayer.Model
 {
     public class GenreItem : INotifyPropertyChanged
     {
+        private string genreParam;
+        public string GenreParam { get { return genreParam; } }
         private string genre;
         public string Genre { get { return genre; } }
         private int songsNumber;
@@ -35,13 +38,23 @@ namespace NextPlayerDataLayer.Model
         {
             this.duration = TimeSpan.Zero;
             this.genre = "Unknown Genre";
+            this.genreParam = "";
             this.songsNumber = 0;
         }
 
-        public GenreItem(TimeSpan duration, string genre, int songsnumber)
+        public GenreItem(TimeSpan duration, string genreParam, int songsnumber)
         {
             this.duration = duration;
-            this.genre = genre;
+            this.genreParam = genreParam;
+            if (genreParam == "")
+            {
+                ResourceLoader loader = new ResourceLoader();
+                this.genre = loader.GetString("UnknownGenre");
+            }
+            else
+            {
+                this.genre = genreParam;
+            }
             this.songsNumber = songsnumber;
         }
 

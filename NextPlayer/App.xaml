@@ -25,8 +25,11 @@
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
             <SolidColorBrush x:Key="MainPageButtonsBackground" Color="{ThemeResource SystemColorControlAccentColor}"/>
             <SolidColorBrush x:Key="TransparentColor" Color="#00FFFFFF"/>
-            <SolidColorBrush x:Key="TransparentBGImageColor" Color="#90141414"/>
-            
+            <SolidColorBrush x:Key="TransparentBGImageColor" Color="#00000000"/>
+            <SolidColorBrush x:Key="TransparentMainPageBGImageColor" Color="#00000000"/>
+            <SolidColorBrush x:Key="TransparentAlbumInfoColor" Color="#00000000"/>
+            <SolidColorBrush x:Key="TransparentAlbumBGImageColor" Color="#00000000"/>
+            <!--<SolidColorBrush x:Key="TransparentBGImageColor" Color="#50161616"/>-->
             <Style x:Key="BackgroundImageSource" TargetType="Image">
                 <Setter Property="Source" Value="/Assets/BG/wallpaper 1.jpg"/>
                 <Setter Property="Stretch" Value="UniformToFill"/>
@@ -116,7 +119,7 @@
                                Margin="0,0,0,0"/>
                     </Border>
                     <Border Grid.Row="1" Grid.Column="0"  Margin="0,0,0,4" >
-                        <TextBlock Text="{Binding Artist}" 
+                        <TextBlock Text="{Binding AlbumArtist}" 
                                TextWrapping="NoWrap"
                                TextTrimming="CharacterEllipsis"
                                FontSize="17" 
@@ -228,6 +231,8 @@
                                         Command="{Binding DataContext.AddToPlaylist, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
                                         Command="{Binding DataContext.ShowDetails, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="EditTags" Text="Edit" 
+                                        Command="{Binding DataContext.EditTags, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                                         Command="{Binding DataContext.Share, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>
@@ -286,6 +291,8 @@
                                         Command="{Binding DataContext.DeleteFromPlaylist, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
                                         Command="{Binding DataContext.ShowDetails, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
+                            <MenuFlyoutItem x:Uid="EditTags" Text="Edit" 
+                                        Command="{Binding DataContext.EditTags, ElementName=SongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                                         Command="{Binding DataContext.Share, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>

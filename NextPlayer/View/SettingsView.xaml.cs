@@ -146,8 +146,7 @@ namespace NextPlayer.View
                 RBLight.IsChecked = true;
             }
             //Background image
-            bool isBGImageSet = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet);
-            if (isBGImageSet)
+            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
                 ShowBGImage_ToggleSwitch.IsOn = true;
                 //SelectImage_Button.IsEnabled = true;
@@ -157,11 +156,10 @@ namespace NextPlayer.View
                 ShowBGImage_ToggleSwitch.IsOn = false;
                 //SelectImage_Button.IsEnabled = false;
             }
-            //string showCover = (string)ApplicationSettingsHelper.ReadSettingsValue();
-            //if (showCover)
-            //{
-            //    ShowAlbumCover_ToggleSwitch.IsOn = true;
-            //}
+            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.ShowCoverAsBackground))
+            {
+                ShowAlbumCover_ToggleSwitch.IsOn = true;
+            }
 
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
@@ -400,10 +398,7 @@ namespace NextPlayer.View
             App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
         }
 
-        private void BGCover_Toggled(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
         #region Color accent
         private void ColorAccent_Toggled(object sender, RoutedEventArgs e)
         {
@@ -462,15 +457,7 @@ namespace NextPlayer.View
             if (((ToggleSwitch)sender).IsOn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
-                if (App.Current.RequestedTheme == ApplicationTheme.Light)
-                {
-                    App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
-                }
-                string path = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.BackgroundImagePath) as string;
-                if (path != null && path != "")
-                {
-                    ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
-                }
+                NextPlayer.Helpers.StyleHelper.EnableBGImage();
 
                 //SelectImage_Button.IsEnabled = true;
             }
@@ -478,11 +465,7 @@ namespace NextPlayer.View
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 //SelectImage_Button.IsEnabled = false; ;
-
-                if (App.Current.RequestedTheme == ApplicationTheme.Light)
-                {
-                    App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.Black);
-                }
+                NextPlayer.Helpers.StyleHelper.DisableBGImage();
             }
             NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
@@ -491,9 +474,21 @@ namespace NextPlayer.View
         {
             Frame.Navigate(typeof(ImageSelection));
         }
-
-        
-
+        #endregion
+        #region
+        private void BGCover_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
+                NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, false);
+                NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
+            }
+        }
         #endregion
     }
 }

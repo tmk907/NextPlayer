@@ -27,10 +27,44 @@ namespace NextPlayer.ViewModel
         private int id;
         private int index;
         private bool ascending;
+        private ListView listView;
 
         public PlaylistViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+
+            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
+        }
+        
+        private void OnSongUpdated()
+        {
+            Playlist.Clear();
+            if (isNowPlaying)
+            {
+                LoadNowPlayingPlaylist();
+            }
+            else
+            {
+                if (genre == null && folderName == null)
+                {
+                    if (isSmart)
+                    {
+                        LoadSmartPlaylist();
+                    }
+                    else
+                    {
+                        Playlist = DatabaseManager.GetSongItemsFromPlainPlaylist(id);
+                    }
+                }
+                else if (genre != null)
+                {
+                    LoadGenrePlaylist();
+                }
+                else if (folderName != null)
+                {
+                    LoadFolderPlaylist();
+                }
+            }
         }
 
         /// <summary>
@@ -191,6 +225,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         String[] s = new String[2];
                         s[0] = "song";
                         s[1] = item.SongId.ToString();
@@ -250,7 +285,27 @@ namespace NextPlayer.ViewModel
                     ?? (showDetails = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         navigationService.NavigateTo(ViewNames.FileInfoView, item.SongId);
+                    }));
+            }
+        }
+
+        private RelayCommand<SongItem> editTags;
+
+        /// <summary>
+        /// Gets the EditTags.
+        /// </summary>
+        public RelayCommand<SongItem> EditTags
+        {
+            get
+            {
+                return editTags
+                    ?? (editTags = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        index = SelectedIndex(item);
+                        navigationService.NavigateTo(ViewNames.TagsEditor, item.SongId);
                     }));
             }
         }
@@ -268,6 +323,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<SongItem>(
                     item =>
                     {
+                        index = SelectedIndex(item);
                         String[] s = new String[2];
                         s[0] = "song";
                         s[1] = item.SongId.ToString();
@@ -289,18 +345,18 @@ namespace NextPlayer.ViewModel
                     ?? (scrollListView = new RelayCommand<object>(
                     p =>
                     {
-                        ListView l = (ListView)p;
-
-                        if (l.Items.Count > 0 && index > 0)
-                        {
-                            SemanticZoomLocation loc = new SemanticZoomLocation();
-                            l.SelectedIndex = index;
-                            loc.Item = l.SelectedItem;
-                            l.UpdateLayout();
-                            l.MakeVisible(loc);
-                            l.ScrollIntoView(l.SelectedItem, ScrollIntoViewAlignment.Leading);
-                        }
+                        listView = (ListView)p;
                     }));
+            }
+        }
+
+        private void Scroll()
+        {
+            if (listView.Items.Count > 0 && index > 0)
+            {
+                listView.SelectedIndex = index;
+                listView.UpdateLayout();
+                listView.ScrollIntoView(listView.SelectedItem, ScrollIntoViewAlignment.Leading);
             }
         }
 
@@ -337,6 +393,12 @@ namespace NextPlayer.ViewModel
                                 break;
                             case "Duration":
                                 Sort(s => s.Duration);
+                                break;
+                            case "Composer":
+                                Sort(s => s.Composer);
+                                break;
+                            case "Year":
+                                Sort(s => s.Year);
                                 break;
                         }
                     }));
@@ -508,25 +570,42 @@ namespace NextPlayer.ViewModel
             {
                 Playlist.Add(x);
             }
+            Scroll();
             //Playlist = Library.Current.NowPlayingList;
             //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlayingAsync();
         }
         private async void LoadFolderPlaylist()
         {
             Playlist = await DatabaseManager.GetSongItemsFromFolderAsync(directory);
+            Scroll();
         }
         private async void LoadGenrePlaylist()
         {
             Playlist = await DatabaseManager.GetSongItemsFromGenreAsync(genre);
+            Scroll();
         }
         private async void LoadSmartPlaylist()
         {
             Playlist = await DatabaseManager.GetSongItemsFromSmartPlaylistAsync(id);
+            Scroll();
         }
         private async void LoadPlainPlaylist()
         {
             Playlist = await DatabaseManager.GetSongItemsFromPlainPlaylistAsync(id);
+            Scroll();
         }
+
+        private int SelectedIndex(SongItem item)
+        {
+            int i = 0;
+            foreach (var song in Playlist)
+            {
+                if (song.SongId == item.SongId) break;
+                i++;
+            }
+            return i;
+        }
+
         public void Activate(object parameter, Dictionary<string, object> state)
         {
             ascending = true;
@@ -540,6 +619,7 @@ namespace NextPlayer.ViewModel
             id = 0;
             name = "";
             index = 0;
+            
             if (parameter != null)
             {
                 if (parameter.GetType() == typeof(string))
@@ -576,10 +656,18 @@ namespace NextPlayer.ViewModel
             {
                 index = ApplicationSettingsHelper.ReadSongIndex();
             }
+            if (state != null)
+            {
+                if (state.ContainsKey("index"))
+                {
+                    index = (int)state["index"];
+                }
+            }
         }
 
         public void Deactivate(Dictionary<string, object> state)
         {
+            state["index"] = index;
         }
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)

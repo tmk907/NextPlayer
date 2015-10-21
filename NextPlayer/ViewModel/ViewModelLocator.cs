@@ -46,6 +46,7 @@ namespace NextPlayer.ViewModel
             SimpleIoc.Default.Register<FoldersViewModel>();
             SimpleIoc.Default.Register<FileInfoViewModel>();
             SimpleIoc.Default.Register<BluetoothShareViewModel>();
+            SimpleIoc.Default.Register<TagsEditorViewModel>();
         }
 
         private static INavigationService CreateNavigationService()
@@ -69,6 +70,7 @@ namespace NextPlayer.ViewModel
             navigationService.Configure(ViewNames.SearchView, typeof(SearchView));
             navigationService.Configure(ViewNames.FileInfoView, typeof(FileInfoView));
             navigationService.Configure(ViewNames.BluetoothShare, typeof(BluetoothShareView));
+            navigationService.Configure(ViewNames.TagsEditor, typeof(TagsEditor));
             // navigationService.Configure("key2", typeof(OtherPage2));
             //HardwareButtons.BackPressed += (sender, args) =>
             //{
@@ -195,6 +197,14 @@ namespace NextPlayer.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<BluetoothShareViewModel>();
+            }
+        }
+
+        public TagsEditorViewModel TagsEditorVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<TagsEditorViewModel>();
             }
         }
     }

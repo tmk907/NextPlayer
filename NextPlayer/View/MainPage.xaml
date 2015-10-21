@@ -22,7 +22,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--<Image Grid.RowSpan="2" Style="{StaticResource BackgroundImageSource}"/>-->
-        <Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>
+        <!--<Rectangle Grid.RowSpan="2" Style="{StaticResource BackgroundTranspRectFill}"/>-->
+        <Rectangle Grid.RowSpan="2" Fill="{StaticResource TransparentMainPageBGImageColor}"/>
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
@@ -140,7 +141,7 @@
                 </Grid.RowDefinitions>
                 <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="2"
                            Margin="20,0,20,0"
-                           Style="{StaticResource BackgroundTranspRectFill}"/>
+                           Fill="{StaticResource TransparentMainPageBGImageColor}"/>
 
                 <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                    Margin="20,0,0,0"

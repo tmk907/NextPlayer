@@ -141,112 +141,23 @@ namespace NextPlayerDataLayer.Services
         //    Playlists.Add(new PlaylistItem(id,false,name));
         //}
 
-
-        public async Task<BitmapImage> GetCover(string path)
+        /// <summary>
+        /// Return cover saved in file tags or .jpg from folder.
+        /// If cover doesn't exist width and height are 0px.
+        /// </summary>
+        public async Task<BitmapImage> GetOriginalCover(string path, bool small)
         {
             BitmapImage bitmap = new BitmapImage();
-            
+            if (small)
+            {
+                bitmap.DecodePixelHeight = 192;
+            }
             int a = 0;
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(path);
                 Stream fileStream = await file.OpenStreamForReadAsync();
                 File tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-                a = tagFile.Tag.Pictures.Length;
-                fileStream.Dispose();
-                if (a > 0)
-                {
-                    IPicture pic = tagFile.Tag.Pictures[0];
-                    using(MemoryStream stream = new MemoryStream(pic.Data.Data))
-                    {
-                        using (Windows.Storage.Streams.IRandomAccessStream istream = stream.AsRandomAccessStream())
-                        {
-                            await bitmap.SetSourceAsync(istream);
-                        }
-                    }
-                    
-                }
-                else
-                {
-                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(path));
-                    try
-                    {
-                        IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-                        if (files.Count > 0)
-                        {
-                            foreach (var x in files)
-                            {
-                                if (x.Path.EndsWith("jpg"))
-                                {
-                                    using (IRandomAccessStream stream = await x.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                                    {
-                                        await bitmap.SetSourceAsync(stream);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-
-            }
-            if (bitmap.PixelHeight == 0)
-            {
-                var uri = new System.Uri("ms-appx:///Assets/SongCover.png");
-                //Random rnd = new Random();
-                //int i = rnd.Next(1,10);
-                //var uri = new System.Uri("ms-appx:///Assets/Cover/"+i.ToString()+"Cover.jpg");
-                //if (Application.Current.RequestedTheme == ApplicationTheme.Light)
-                //{
-                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover.png");
-                //}
-                //if (Application.Current)
-                //{
-                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover.png");
-                //}
-                var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
-                using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                {
-                    await bitmap.SetSourceAsync(stream);
-                }
-            }
- 
-            return bitmap;
-        }
-
-        public async Task<BitmapImage> GetCurrentCover(int index)
-        {
-            return await GetCover(NowPlayingList.ElementAt(index).Path);
-        }
-
-        public async Task<BitmapImage> GetDefaultSmallCover()
-        {
-            BitmapImage bitmap = new BitmapImage();
-            var uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
-            var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
-            using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
-            {
-                await bitmap.SetSourceAsync(stream);
-            }
-            return bitmap;
-        }
-
-        public async Task<BitmapImage> GetCoverSmall(string path)
-        {
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.DecodePixelHeight = 192;
-            int a = 0;
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                Stream fileStream = await file.OpenStreamForReadAsync();
-                var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
                 a = tagFile.Tag.Pictures.Length;
                 fileStream.Dispose();
                 if (a > 0)
@@ -290,20 +201,54 @@ namespace NextPlayerDataLayer.Services
             {
 
             }
-            if (bitmap.PixelHeight == 0)
+            return bitmap;
+        }
+
+        /// <summary>
+        /// Return default cover.
+        /// </summary>
+        public async Task<BitmapImage> GetDefaultCover(bool small)
+        {
+            BitmapImage bitmap = new BitmapImage();
+            Uri uri;
+            if (small)
             {
-                var uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
-                //if (Application.Current.RequestedTheme == ApplicationTheme.Light)
-                //{
-                //    uri = new System.Uri("ms-appx:///Assets/OrangeCover192.png");
-                //}
-                var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
-                using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                {
-                    await bitmap.SetSourceAsync(stream);
-                }
+                uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
+
+            }
+            else
+            {
+                uri = new System.Uri("ms-appx:///Assets/SongCover.png");
+
+            }
+            var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            {
+                await bitmap.SetSourceAsync(stream);
             }
             return bitmap;
+        }
+
+        /// <summary>
+        /// Return cover saved in file tags or .jpg from folder or default cover.
+        /// </summary>
+        public async Task<BitmapImage> GetCover(string path, bool small)
+        {
+            BitmapImage bitmap = new BitmapImage();
+            
+            bitmap = await GetOriginalCover(path, small);
+            
+            if (bitmap.PixelHeight == 0)
+            {
+                bitmap = await GetDefaultCover(small);
+            }
+ 
+            return bitmap;
+        }
+
+        public async Task<BitmapImage> GetCurrentCover(int index)
+        {
+            return await GetCover(NowPlayingList.ElementAt(index).Path, false);
         }
 
         public async Task<string> SaveAlbumCover(string album, string artist, string tileId)
@@ -397,14 +342,7 @@ namespace NextPlayerDataLayer.Services
         public async Task SetDB()
         {
             await DatabaseManager.CreateDatabase();
-            if (!Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(AppConstants.DBVersion))
-            {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values.Add(AppConstants.DBVersion, 2);
-            }
-            else
-            {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = 2;
-            }
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
             int i;
             i = await DatabaseManager.InsertSmartPlaylist("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
             await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString());

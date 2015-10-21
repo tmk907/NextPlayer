@@ -635,12 +635,12 @@ namespace NextPlayer.ViewModel
 
         private async void SetCover(string path)
         {
-            Cover = await Library.Current.GetCoverSmall(path);
+            Cover = await Library.Current.GetCover(path, true);
         }
 
         private async void SetDefaultCover()
         {
-            Cover = await Library.Current.GetDefaultSmallCover();
+            Cover = await Library.Current.GetDefaultCover(true);
         }
 
         private void StartBackgroundAudioTask(string s, object o)
