@@ -19,7 +19,7 @@
             <TextBlock x:Uid="AppName" Text="NEXT PLAYER" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
         </StackPanel>
         <Pivot Grid.Row="1" x:Name="PivotSettings">
-            <PivotItem Header="general">
+            <PivotItem x:Uid="HSettings" Header="settings">
                 <ScrollViewer>
                     <Grid>
                     <Grid.ChildrenTransitions>
@@ -128,13 +128,13 @@
                                TextWrapping="Wrap"
                            />
                         </ScrollViewer>
-                        <Button Content="test" Grid.Row="8" Click="gotobl"/>
+                        <!--<Button Content="test" Grid.Row="8" Click="gotobl"/>-->
 
                     </Grid>
                 </Grid>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Header="personalize">
+            <PivotItem x:Uid="HPersonalize"  Header="personalize">
                 <ScrollViewer>
                     <Grid>
                         <Grid.ChildrenTransitions>
@@ -154,13 +154,14 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0"
-                                   FontSize="24"
-                                       x:Uid="TBShowAlbumCover"
-                                   Text="Pokaż okładkę albumu jako tło"/>
+                                    FontSize="24"
+                                    x:Uid="TBShowAlbumCover"
+                                    Text="Show album art as a background"
+                                    TextWrapping="WrapWholeWords"/>
                             <ToggleSwitch Grid.Row="1"
-                                          x:Name="ShowAlbumCover_ToggleSwitch"
-                                          Style="{StaticResource ToggleSwitchStyle1}"
-                                          Toggled="BGCover_Toggled"/>
+                                    x:Name="ShowAlbumCover_ToggleSwitch"
+                                    Style="{StaticResource ToggleSwitchStyle1}"
+                                    Toggled="BGCover_Toggled"/>
                         </Grid>
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -170,21 +171,27 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <ToggleSwitch Grid.Row="0" Grid.ColumnSpan="2"
-                                          x:Name="ShowBGImage_ToggleSwitch"
-                                          Header="Show image background"
-                                          Style="{StaticResource ToggleSwitchStyle1}"
-                                          Toggled="BGImage_Toggled"
-                                          />
-                            <Button Grid.Row="1" Grid.ColumnSpan="2"
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                                    FontSize="24"
+                                    x:Uid="TBShowBackgroundImage"
+                                    Text="Show background image"
+                                       TextWrapping="WrapWholeWords"/>
+                            <ToggleSwitch Grid.Row="1" Grid.ColumnSpan="2"
+                                    x:Name="ShowBGImage_ToggleSwitch"
+                                          
+                                    Style="{StaticResource ToggleSwitchStyle1}"
+                                    Toggled="BGImage_Toggled"
+                                    />
+                            <Button Grid.Row="2" Grid.ColumnSpan="2"
                                     x:Name="Button1"
                                     HorizontalAlignment="Stretch"
                                     x:Uid="ButtonSelectImage"
                                     Click="selectBGImage_Click"
                                     Content="Select image"/>
                         </Grid>
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -193,13 +200,13 @@
                             <TextBlock Grid.Row="0"
                                    FontSize="24"
                                    x:Uid="TBSelectAccentColor"
-                                   Text="Wybierz kolor wiodący" />
-                            <ToggleSwitch Grid.Row="1"
+                                   Text="Accent color" />
+                            <!--<ToggleSwitch Grid.Row="1"
                                    x:Name="phoneAccentToggleSwitch"
                                    x:Uid="HeaderPhoneAccent"
                                    Header="akcent telefonu"
                                    Style="{StaticResource ToggleSwitchStyle1}"
-                                   Toggled="ColorAccent_Toggled"/>
+                                   Toggled="ColorAccent_Toggled"/>-->
                             <Grid Grid.Row="2" 
                                 x:Name="gridColors"
                                 HorizontalAlignment="Center"
@@ -242,7 +249,7 @@
                                 <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="3" Fill="#FF87794E"/>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -250,21 +257,21 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0"
-                                    x:Uid="TBAppBackground"
+                                    x:Uid="TBAppTheme"
                                     FontSize="24"
-                                    Text="Motyw"/>
+                                    Text="Theme"/>
                             <RadioButton Grid.Row="1" 
                                          x:Uid="RBDark" 
                                          x:Name="RBDark"
                                          GroupName="ThemeGroup"
                                          Checked="RBTheme_Checked"
-                                         Content="Ciemny"/>
+                                         Content="Dark"/>
                             <RadioButton Grid.Row="2" 
                                          x:Uid="RBLight"
                                          x:Name="RBLight"
                                          GroupName="ThemeGroup"
                                          Checked="RBTheme_Checked"
-                                         Content="Jasny"/>
+                                         Content="Light"/>
                             <!--<RadioButton Grid.Row="3" 
                                          x:Uid="RBImage"
                                          x:Name="RBImage"

@@ -117,18 +117,6 @@ namespace NextPlayerDataLayer.Services
             conn.DropTable<PlainPlaylistEntryTable>();
             conn.CreateTable<PlainPlaylistEntryTable>();
         }
-        public static void UpdateComposersPerformers(List<Tuple<int, string, string>> newTags)
-        {
-            var conn = ConnectionDb();
-            foreach (var x in newTags)
-            {
-                conn.Execute("UPDATE SongsTable2 SET Composer = ? WHERE SongId = ?",x.Item2,x.Item1);
-            }
-            foreach (var x in newTags)
-            {
-                conn.Execute("UPDATE SongsTable2 SET Performer = ? WHERE SongId = ?", x.Item3, x.Item1);
-            }
-        }
 
         #region Insert
 

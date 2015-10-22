@@ -179,6 +179,5 @@ namespace NextPlayer.View
             PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
             ViewModel.PlayNow(item);
         }
-
     }
 }

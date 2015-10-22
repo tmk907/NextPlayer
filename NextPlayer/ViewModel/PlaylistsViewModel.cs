@@ -111,6 +111,24 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand<PlaylistItem> editSmartPlaylist;
+
+        /// <summary>
+        /// Gets the EditSmartPlaylist.
+        /// </summary>
+        public RelayCommand<PlaylistItem> EditSmartPlaylist
+        {
+            get
+            {
+                return editSmartPlaylist
+                    ?? (editSmartPlaylist = new RelayCommand<PlaylistItem>(
+                    item =>
+                    {
+                        navigationService.NavigateTo(ViewNames.NewSmartPlaylistView,item.Id);
+                    }));
+            }
+        }
+
         public void PlayNow(PlaylistItem playlist)
         {
             ObservableCollection<SongItem> songList = new ObservableCollection<SongItem>();

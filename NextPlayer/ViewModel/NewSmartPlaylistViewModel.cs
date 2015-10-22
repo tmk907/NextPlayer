@@ -807,6 +807,11 @@ namespace NextPlayer.ViewModel
             songsNumber = "";
             valueTextBox = "";
             Date = DateTime.Now.Date;
+            if (parameter != null)
+            {
+                int id = Int32.Parse(parameter.ToString());
+                
+            }
         }
 
         public void Deactivate(Dictionary<string, object> state)

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="60490polApki.279685DD06499" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.5.1.0" />
+  <Identity Name="60490polApki.279685DD06499" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.5.9.0" />
   <mp:PhoneIdentity PhoneProductId="f037f451-f63f-4cbd-a47d-336eeb39480a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Next Player</DisplayName>

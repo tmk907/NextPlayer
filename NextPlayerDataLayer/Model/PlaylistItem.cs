@@ -29,12 +29,22 @@ namespace NextPlayerDataLayer.Model
         public int Id { get { return id; } }
         private bool isSmart;
         public bool IsSmart { get { return isSmart; } }
+        private bool isNotDefault;
+        public bool IsNotDefault { get { return isNotDefault; } }
 
         public PlaylistItem(int id, bool issmart, string name)
         {
             this.id = id;
             this.isSmart = issmart;
             this.name = name;
+            if (issmart)
+            {
+                this.isNotDefault = !NextPlayerDataLayer.Helpers.SmartPlaylistHelper.IsDefaultSmartPlaylist(id);
+            }
+            else
+            {
+                this.isNotDefault = true;
+            }
         }
 
         public override string ToString()

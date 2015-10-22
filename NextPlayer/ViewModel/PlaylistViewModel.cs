@@ -332,20 +332,52 @@ namespace NextPlayer.ViewModel
             }
         }
 
-        private RelayCommand<object> scrollListView;
+        private RelayCommand<object> loadAndScroll;
 
         /// <summary>
-        /// Gets the ScrollListView.
+        /// Gets the LoadAndScroll.
         /// </summary>
-        public RelayCommand<object> ScrollListView
+        public RelayCommand<object> LoadAndScroll
         {
             get
             {
-                return scrollListView
-                    ?? (scrollListView = new RelayCommand<object>(
+                return loadAndScroll 
+                    ?? (loadAndScroll = new RelayCommand<object>(
                     p =>
                     {
                         listView = (ListView)p;
+                        if (isNowPlaying)
+                        {
+                            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                            //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlaying();
+                            LoadNowPlayingPlaylist();
+                            PageTitle = loader.GetString("NowPlayingPlaylistPageTitle");
+                        }
+                        else
+                        {
+                            if (genre == null && folderName == null)
+                            {
+                                if (isSmart)
+                                {
+                                    LoadSmartPlaylist();
+                                }
+                                else
+                                {
+                                    Playlist = DatabaseManager.GetSongItemsFromPlainPlaylist(id);
+                                }
+                                PageTitle = name.ToLower();
+                            }
+                            else if (genre != null)
+                            {
+                                LoadGenrePlaylist();
+                                PageTitle = genre.ToLower();
+                            }
+                            else if (folderName != null)
+                            {
+                                LoadFolderPlaylist();
+                                PageTitle = folderName.ToLower();
+                            }
+                        }
                     }));
             }
         }

@@ -59,7 +59,7 @@ namespace NextPlayerDataLayer.Enums
         {
             {SortBy.Title,"Title"},
             {SortBy.Album, "Album"},
-            {SortBy.Artist, "Artist"},
+            {SortBy.Artist, "Artists"},
             {SortBy.Genre, "Genre"},
             {SortBy.HighestRating, "Rating DESC"},
             {SortBy.LowestRating, "Rating"},
@@ -75,9 +75,9 @@ namespace NextPlayerDataLayer.Enums
         {
             {Item.Title, "Title"},
             {Item.Album, "Album"},
-            {Item.Artist, "Artist"},
+            {Item.Artist, "Artists"},
             {Item.AlbumArtist, "AlbumArtist"},
-            {Item.Composer, "Composer"},
+            {Item.Composer, "Composers"},
             {Item.Genre, "Genre"},
             {Item.Duration, "Duration"},
             {Item.Year, "Year"},

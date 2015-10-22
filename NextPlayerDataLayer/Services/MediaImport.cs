@@ -85,8 +85,7 @@ namespace NextPlayerDataLayer.Services
             string dbVersion = Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion].ToString();
             if (dbVersion.EndsWith("notupdated"))
             {
-                UpdateDB(progress);
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
+                await UpdateDB(progress, dbVersion);
                 return;
             }
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
@@ -146,7 +145,6 @@ namespace NextPlayerDataLayer.Services
             OnMediaImported("Update");
             SendToast();
         }
-
         
         private async static Task<SongData> CreateSongFromFile(StorageFile file)
         {
@@ -165,71 +163,92 @@ namespace NextPlayerDataLayer.Services
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
             song.Tag.Rating = 0;
-            
-            Stream fileStream = await file.OpenStreamForReadAsync();
-            
-            try
+
+            using (Stream fileStream = await file.OpenStreamForReadAsync())
             {
-                var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
                 try
                 {
-                    song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
-                    song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
-                }
-                catch (Exception ex)
-                {
-                    song.Duration = TimeSpan.Zero;
-                    song.Bitrate = 0;
-                }
-                try
-                {
-                    //TagLib.Id3v2.Tag.DefaultVersion = 3;
-                    //TagLib.Id3v2.Tag.ForceDefaultVersion = true;
-                    Tag tags;
-                    if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                    var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+                    try
                     {
-                        tags = tagFile.GetTag(TagTypes.Id3v2);
-                        TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
-                        if (pop!=null)
+                        song.Bitrate = (uint)tagFile.Properties.AudioBitrate;
+                        song.Duration = TimeSpan.FromSeconds(Convert.ToInt32(tagFile.Properties.Duration.TotalSeconds));
+                    }
+                    catch (Exception ex)
+                    {
+                        song.Duration = TimeSpan.Zero;
+                        song.Bitrate = 0;
+                    }
+                    try
+                    {
+                        //TagLib.Id3v2.Tag.DefaultVersion = 3;
+                        //TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                        Tag tags;
+                        if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
                         {
-                            if (224 <= pop.Rating && pop.Rating <= 255) song.Tag.Rating = 5;
-                            else if (160 <= pop.Rating && pop.Rating <= 223) song.Tag.Rating = 4;
-                            else if (96 <= pop.Rating && pop.Rating <= 159) song.Tag.Rating = 3;
-                            else if (32 <= pop.Rating && pop.Rating <= 95) song.Tag.Rating = 2;
-                            else if (1 <= pop.Rating && pop.Rating <= 31) song.Tag.Rating = 1;
+                            tags = tagFile.GetTag(TagTypes.Id3v2);
+                            TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+                            if (pop != null)
+                            {
+                                if (224 <= pop.Rating && pop.Rating <= 255) song.Tag.Rating = 5;
+                                else if (160 <= pop.Rating && pop.Rating <= 223) song.Tag.Rating = 4;
+                                else if (96 <= pop.Rating && pop.Rating <= 159) song.Tag.Rating = 3;
+                                else if (32 <= pop.Rating && pop.Rating <= 95) song.Tag.Rating = 2;
+                                else if (1 <= pop.Rating && pop.Rating <= 31) song.Tag.Rating = 1;
+                            }
                         }
+                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                        {
+                            tags = tagFile.GetTag(TagTypes.Id3v1);
+                        }
+                        else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+                        {
+                            tags = tagFile.GetTag(TagTypes.Apple);
+                        }
+                        else
+                        {
+                            tags = tagFile.GetTag(tagFile.TagTypes);
+                        }
+
+                        song.Tag.Album = tags.Album ?? "";
+                        song.Tag.AlbumArtist = tags.FirstAlbumArtist ?? "";
+                        song.Tag.Artists = tags.JoinedPerformers ?? "";
+                        song.Tag.Comment = tags.Comment ?? "";
+                        song.Tag.Composers = tags.JoinedComposers ?? "";
+                        song.Tag.Conductor = tags.Conductor ?? "";
+                        song.Tag.Disc = (int)tags.Disc;
+                        song.Tag.DiscCount = (int)tags.DiscCount;
+                        song.Tag.FirstArtist = tags.FirstPerformer ?? "";
+                        song.Tag.FirstComposer = tags.FirstComposer ?? "";
+                        song.Tag.Genre = tags.FirstGenre ?? "";
+                        song.Tag.Lyrics = tags.Lyrics ?? "";
+                        song.Tag.Title = tags.Title ?? file.DisplayName;
+                        song.Tag.Track = (int)tags.Track;
+                        song.Tag.TrackCount = (int)tags.TrackCount;
+                        song.Tag.Year = (int)tags.Year;
                     }
-                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+                    catch (CorruptFileException e)
                     {
-                        tags = tagFile.GetTag(TagTypes.Id3v1);
-                    }
-                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
-                    {
-                        tags = tagFile.GetTag(TagTypes.Apple);
-                    }
-                    else
-                    {
-                        tags = tagFile.GetTag(tagFile.TagTypes);
+                        song.Tag.Album = "";
+                        song.Tag.AlbumArtist = "";
+                        song.Tag.Artists = "";
+                        song.Tag.Comment = "";
+                        song.Tag.Composers = "";
+                        song.Tag.Conductor = "";
+                        song.Tag.Disc = 0;
+                        song.Tag.DiscCount = 0;
+                        song.Tag.FirstArtist = "";
+                        song.Tag.FirstComposer = "";
+                        song.Tag.Genre = "";
+                        song.Tag.Lyrics = "";
+                        song.Tag.Title = file.DisplayName;
+                        song.Tag.Track = 0;
+                        song.Tag.TrackCount = 0;
+                        song.Tag.Year = 0;
                     }
 
-                    song.Tag.Album = tags.Album ?? "";
-                    song.Tag.AlbumArtist = tags.FirstAlbumArtist ?? "";
-                    song.Tag.Artists = tags.JoinedPerformers ?? "";
-                    song.Tag.Comment = tags.Comment ?? "";
-                    song.Tag.Composers = tags.JoinedComposers ?? "";
-                    song.Tag.Conductor = tags.Conductor ?? "";
-                    song.Tag.Disc = (int)tags.Disc;
-                    song.Tag.DiscCount = (int)tags.DiscCount;
-                    song.Tag.FirstArtist = tags.FirstPerformer ?? "";
-                    song.Tag.FirstComposer = tags.FirstComposer ?? "";
-                    song.Tag.Genre = tags.FirstGenre ?? "";
-                    song.Tag.Lyrics = tags.Lyrics ?? "";
-                    song.Tag.Title = tags.Title ?? file.DisplayName;
-                    song.Tag.Track = (int)tags.Track;
-                    song.Tag.TrackCount = (int)tags.TrackCount;
-                    song.Tag.Year = (int)tags.Year;
                 }
-                catch (CorruptFileException e)
+                catch (Exception ex)
                 {
                     song.Tag.Album = "";
                     song.Tag.AlbumArtist = "";
@@ -248,33 +267,13 @@ namespace NextPlayerDataLayer.Services
                     song.Tag.TrackCount = 0;
                     song.Tag.Year = 0;
                 }
-
-            }
-            catch (Exception ex)
-            {
-                song.Tag.Album = "";
-                song.Tag.AlbumArtist = "";
-                song.Tag.Artists = "";
-                song.Tag.Comment = "";
-                song.Tag.Composers = "";
-                song.Tag.Conductor = "";
-                song.Tag.Disc = 0;
-                song.Tag.DiscCount = 0;
-                song.Tag.FirstArtist = "";
-                song.Tag.FirstComposer = "";
-                song.Tag.Genre = "";
-                song.Tag.Lyrics = "";
-                song.Tag.Title = file.DisplayName;
-                song.Tag.Track = 0;
-                song.Tag.TrackCount = 0;
-                song.Tag.Year = 0;
             }
             return song;
         }
 
-        // Update composer and performer field
-        public static async void UpdateDB(IProgress<int> progress)
+        public static async Task UpdateDB(IProgress<int> progress, string dbVersion)
         {
+
             var list = DatabaseManager.GetSongItems();
             int count = 0;
             foreach (var s in list)
@@ -320,6 +319,7 @@ namespace NextPlayerDataLayer.Services
                         }
                         catch (Exception ex)
                         {
+
                         }
                     }
                 }
@@ -333,6 +333,7 @@ namespace NextPlayerDataLayer.Services
                 }
                 count++;
             }
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
         }
 
         private static void SendToast()
@@ -390,7 +391,8 @@ namespace NextPlayerDataLayer.Services
             }
             catch (Exception ex)
             {
-
+                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateFileTags() " + ex.Message);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
             SongUpdated();
         }
@@ -401,79 +403,23 @@ namespace NextPlayerDataLayer.Services
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                Stream fileStream = await file.OpenStreamForReadAsync();
-                File tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-
-                tagFile.Tag.Lyrics = lyrics;
-
-
+                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
+                {
+                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
+                    {
+                        using (File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
+                        {
+                            tagFile.Tag.Lyrics = lyrics;
+                            tagFile.Save();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-
+                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateLyrics() " + ex.Message);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
         }
-
-
-        //public async static Task ImportAndUpdateDatabase()
-        //{
-        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-
-        //    foreach (var file in list)
-        //    {
-        //        Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
-        //        // Sprawdzanie rozmiaru nie działa
-        //        int i = await DatabaseManager.IsSongInDB(file.Path, bp.Size);
-        //        if (i == -1)
-        //        {
-        //            SongData song = await CreateSongFromFile(file);
-        //            await DatabaseManager.InsertSong(song);
-        //        }
-        //        else if (i == 0)
-        //        {
-        //            //istnieje taka sama
-        //        }
-        //        else if (i > 0)
-        //        {
-        //            SongData song = await CreateSongFromFile(file);
-        //            await DatabaseManager.UpdateSongData(song, i);
-        //        }
-        //        else { };
-        //    }
-        //    OnMediaImported("Update");
-        //}
-
-        //public async static Task ImportAndCreateNewDatabase()
-        //{
-        //    DatabaseManager.ResetSongsTable();
-
-        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-
-        //    foreach (var file in list)
-        //    {
-        //        SongData song = await CreateSongFromFile(file);
-        //        await DatabaseManager.InsertSong(song);
-        //    }
-        //    OnMediaImported("NewDatabase");
-        //}
-
-        //public async static Task ImportAndCreateNewDatabase(IProgress<int> progress)
-        //{
-        //    DatabaseManager.ResetSongsTable();
-
-        //    IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-        //    int count = 1;
-        //    foreach (var file in list)
-        //    {
-        //        SongData song = await CreateSongFromFile(file);
-        //        await DatabaseManager.InsertSong(song);
-        //        progress.Report(count);
-        //        count++;
-        //    }
-        //    OnMediaImported("NewDatabase");
-        //    SendToast();
-        //}
-
-
     }
 }

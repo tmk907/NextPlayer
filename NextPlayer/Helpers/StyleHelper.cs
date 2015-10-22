@@ -20,7 +20,7 @@ namespace NextPlayer.Helpers
             Windows.UI.Color color;
             if (isImageSet)
             {
-                byte a = byte.Parse("D0", System.Globalization.NumberStyles.HexNumber);
+                byte a = byte.Parse("80", System.Globalization.NumberStyles.HexNumber);
                 if (isPhoneAccent)
                 {
                     color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;

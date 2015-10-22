@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI;
 using NextPlayerDataLayer.Constants;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace NextPlayer.ViewModel
 {
@@ -25,6 +26,7 @@ namespace NextPlayer.ViewModel
         private string albumParam;
         private string artistParam;
         private int index;
+        private bool noBGForThisView;
 
         public AlbumViewModel(INavigationService navigationService)
         {
@@ -440,6 +442,12 @@ namespace NextPlayer.ViewModel
             else
             {
                 Cover = await Library.Current.GetDefaultCover(false);
+                if (!isBGSet)
+                {
+                    noBGForThisView = true;
+                    ((SolidColorBrush)App.Current.Resources["TransparentAlbumInfoColor"]).Color = Windows.UI.Color.FromArgb(0, 0, 0, 0);
+                    ((SolidColorBrush)App.Current.Resources["TransparentAlbumBGImageColor"]).Color = Windows.UI.Color.FromArgb(0, 0, 0, 0);
+                }
             }
         }
 
@@ -459,6 +467,7 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
+            noBGForThisView = false;
             index = 0;
             albumParam = null;
             artistParam = null;
@@ -484,6 +493,11 @@ namespace NextPlayer.ViewModel
         public void Deactivate(Dictionary<string, object> state)
         {
             state["index"] = index;
+            if (noBGForThisView)
+            {
+                ((Windows.UI.Xaml.Media.SolidColorBrush)App.Current.Resources["TransparentAlbumInfoColor"]).Color = Windows.UI.Color.FromArgb(100, 22, 22, 22);
+                ((Windows.UI.Xaml.Media.SolidColorBrush)App.Current.Resources["TransparentAlbumBGImageColor"]).Color = Windows.UI.Color.FromArgb(128, 22, 22, 22);
+            }
         }
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)

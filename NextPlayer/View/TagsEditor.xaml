@@ -39,7 +39,7 @@
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="0"/>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -47,9 +47,9 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                <!--<TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
                            x:Uid="TBSemicolonSeparatedValues"
-                           Text="oddziel ;" FontSize="18"/>
+                           Text="oddziel ;" FontSize="18"/>-->
                 <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2">
                 <Grid>
                     <Grid.RowDefinitions>

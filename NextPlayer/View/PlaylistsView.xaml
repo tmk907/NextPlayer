@@ -25,7 +25,11 @@
                     <MenuFlyout>
                         <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" Click="PlayNow_Click"/>
                         <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click" />
-                        <MenuFlyoutItem x:Uid="Delete" Text="Delete" Click="Delete_Click"/>
+                        <MenuFlyoutItem x:Uid="Edit" Text="Edit"
+                                        Command="{Binding DataContext.EditSmartPlaylist, ElementName=PlaylistsListView}" CommandParameter="{Binding}"
+                                        Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <MenuFlyoutItem x:Uid="Delete" Text="Delete" Click="Delete_Click"
+                                        Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" Click="Pin_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
@@ -40,7 +44,7 @@
         </DataTemplate>
         
         <Flyout x:Key="NewPlaylistFlyout">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Height="Auto">
                 <TextBox x:Name="playlistNameTextBox" Text="" Margin="4,0,4,4"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button  x:Uid="ButtonSave" 
@@ -116,7 +120,8 @@
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
             
-            <ListView DataContext="{Binding}"
+            <ListView x:Name="PlaylistsListView"
+                      DataContext="{Binding}"
                       Name="listP"
                       SelectionMode="None"
                       IsItemClickEnabled="True"

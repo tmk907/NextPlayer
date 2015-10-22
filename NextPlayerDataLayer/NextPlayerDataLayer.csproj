@@ -101,6 +101,7 @@
     <Compile Include="Helpers\Repeat.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\PerfTests.cs" />
+    <Compile Include="Helpers\SmartPlaylistHelper.cs" />
     <Compile Include="Model\AlbumItem.cs" />
     <Compile Include="Model\ArtistItem.cs" />
     <Compile Include="Model\FileInfo.cs" />

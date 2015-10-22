@@ -95,10 +95,12 @@ namespace NextPlayer
                 if (theme.Equals(AppThemeEnum.Dark.ToString()))
                 {
                     App.Current.RequestedTheme = ApplicationTheme.Dark;
+                    
                 }
                 else if (theme.Equals(AppThemeEnum.Light.ToString()))
                 {
                     App.Current.RequestedTheme = ApplicationTheme.Light;
+                    
                 }  
   
                 SendLogs();
@@ -136,7 +138,18 @@ namespace NextPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            
+            var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+            string theme = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme) as string;
+            if (theme.Equals(AppThemeEnum.Dark.ToString()))
+            {
+                statusBar.BackgroundColor = Windows.UI.Colors.Black;
+                statusBar.ForegroundColor = Windows.UI.Colors.White;
+            }
+            else if (theme.Equals(AppThemeEnum.Light.ToString()))
+            {
+                statusBar.BackgroundColor = Windows.UI.Colors.White;
+                statusBar.ForegroundColor = Windows.UI.Colors.Black;
+            }  
             bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
             if (isPhoneAccent)
             {

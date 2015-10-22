@@ -588,4 +588,31 @@
   <data name="SongsH.Header" xml:space="preserve">
     <value>utwory</value>
   </data>
+  <data name="TBShowAlbumCover.Text" xml:space="preserve">
+    <value>Pokaż okładkę albumu jako tło</value>
+  </data>
+  <data name="ButtonSelectImage.Content" xml:space="preserve">
+    <value>Wybierz obrazek</value>
+  </data>
+  <data name="TBShowBackgroundImage.Text" xml:space="preserve">
+    <value>Pokaż obrazek jako tło</value>
+  </data>
+  <data name="HPersonalize.Header" xml:space="preserve">
+    <value>personalizuj</value>
+  </data>
+  <data name="TBSelectAccentColor.Text" xml:space="preserve">
+    <value>Kolor wiodący</value>
+  </data>
+  <data name="TBAppTheme.Text" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="RBDark.Content" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="RBLight.Content" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="HSettings.Header" xml:space="preserve">
+    <value>ustawienia</value>
+  </data>
 </root>
