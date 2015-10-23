@@ -122,7 +122,6 @@
             
             <ListView x:Name="PlaylistsListView"
                       DataContext="{Binding}"
-                      Name="listP"
                       SelectionMode="None"
                       IsItemClickEnabled="True"
                       ItemsSource="{Binding Playlists}"

@@ -56,8 +56,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="16"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Uid="MenuNowPlayingPlaylist"
-                        Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
                         Command="{Binding GoToNowPlayingListPage}" 
                         Margin="{StaticResource TopMargin}"
                         Style="{StaticResource ButtonStyleMainPage}">
@@ -65,61 +64,115 @@
                         <DataTemplate>
                             <TextBlock x:Uid="MenuNowPlayingPlaylistTB"
                                 Text="Now playing playlist"
-                                       TextWrapping="WrapWholeWords"
-                                       TextAlignment="Center"/>
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
-                
-                <Button x:Uid="MenuAlbums" 
-                        Grid.Row="1" Grid.Column="2" 
-                        Content="Albums" 
+                <Button Grid.Row="1" Grid.Column="2" 
                         Command="{Binding GoToAlbumsPage}" 
                         Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuArtists" 
-                        Grid.Row="1" Grid.Column="3" 
-                        Content="Artists" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuAlbums"
+                                Text="Albums"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="3" 
                         Command="{Binding GoToArtistsPage}" 
                         Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuFolders" 
-                        Grid.Row="2" Grid.Column="3" 
-                        Content="Folders" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuArtists"
+                                Text="Artists"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="2" Grid.Column="3" 
                         Command="{Binding GoToFoldersPage}"
                         Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuGenres" 
-                        Grid.Row="2" Grid.Column="2" 
-                        Content="Genres" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuFolders"
+                                Text="Folders"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="2" Grid.Column="2" 
                         Command="{Binding GoToGenresPage}"
                         Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuPlaylists" 
-                        Grid.Row="3" Grid.Column="2" 
-                        Content="Playlists" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuGenres"
+                                Text="Genres"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="3" Grid.Column="2" 
                         Command="{Binding GoToPlaylistsPage}"
                         Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuSongs" 
-                        Grid.Row="3" Grid.Column="3" 
-                        Content="Songs" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuPlaylists"
+                                Text="Playlists"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="3" Grid.Column="3" 
                         Command="{Binding GoToSongsPage}" 
                         Margin="{StaticResource MiddleMargin}"
                         Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuSongs"
+                                Text="Songs"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
                 </Button>
-                <Button x:Uid="MenuSettings" 
-                        Grid.Row="3" Grid.Column="1" 
-                        Content="Settings" 
+                <Button Grid.Row="3" Grid.Column="1" 
                         Command="{Binding GoToSettingsPage}" 
                         Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
-                <Button x:Uid="MenuSearch" 
-                        Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
-                        Content="Search" 
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuSettings"
+                                Text="Settings"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
                         Command="{Binding GoToSearchPage}" 
                         Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
+                        Style="{StaticResource ButtonStyleMainPage}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Uid="TBMenuSearch"
+                                Text="Search"
+                                TextWrapping="WrapWholeWords"
+                                TextAlignment="Center"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
                 <Button x:Uid="MenuStop" 
                         Grid.Row="0" Grid.Column="1"
                         Content="Stop" 

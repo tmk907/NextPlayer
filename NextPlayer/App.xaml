@@ -31,7 +31,7 @@
             <SolidColorBrush x:Key="TransparentAlbumBGImageColor" Color="#00000000"/>
             <!--<SolidColorBrush x:Key="TransparentBGImageColor" Color="#50161616"/>-->
             <Style x:Key="BackgroundImageSource" TargetType="Image">
-                <Setter Property="Source" Value="/Assets/BG/wallpaper 1.jpg"/>
+                <Setter Property="Source" Value="/Assets/Wallpapers/wallpaper 1.jpg"/>
                 <Setter Property="Stretch" Value="UniformToFill"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>

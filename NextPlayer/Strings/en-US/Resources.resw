@@ -615,4 +615,31 @@
   <data name="HSettings.Header" xml:space="preserve">
     <value>settings</value>
   </data>
+  <data name="SelectImagePageTitle.Text" xml:space="preserve">
+    <value>image selection</value>
+  </data>
+  <data name="TBMenuPlaylists.Text" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="TBMenuSettings.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="TBMenuSearch.Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="TBMenuAlbums.Text" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="TBMenuGenres.Text" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="TBMenuFolders.Text" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="TBMenuArtists.Text" xml:space="preserve">
+    <value>Artists</value>
+  </data>
+  <data name="TBMenuSongs.Text" xml:space="preserve">
+    <value>Songs</value>
+  </data>
 </root>

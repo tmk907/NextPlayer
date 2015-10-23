@@ -113,7 +113,7 @@ namespace NextPlayer.View
         private void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
             Image image = sender as Image;
-            string path = "ms-appx:///Assets/BG/wallpaper " + image.Tag.ToString() + ".jpg";
+            string path = "ms-appx:///Assets/Wallpapers/wallpaper " + image.Tag.ToString() + ".jpg";
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath,path);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
             App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);

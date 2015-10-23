@@ -505,10 +505,10 @@
     <value>scan</value>
   </data>
   <data name="AppBarSearch.Label" xml:space="preserve">
-    <value>search</value>
+    <value>rechercher</value>
   </data>
   <data name="ArtistsH.Header" xml:space="preserve">
-    <value>artists</value>
+    <value>artistes</value>
   </data>
   <data name="BTSharePageTitle.Text" xml:space="preserve">
     <value>share</value>
@@ -523,7 +523,7 @@
     <value>No Devices could be found.</value>
   </data>
   <data name="EditTags.Text" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifier</value>
   </data>
   <data name="FilesSharedError" xml:space="preserve">
     <value>Some files could not be shared successfully.</value>
@@ -538,13 +538,13 @@
     <value>Share</value>
   </data>
   <data name="MFIYear.Text" xml:space="preserve">
-    <value>Year</value>
+    <value>Année</value>
   </data>
   <data name="SearchForDevices" xml:space="preserve">
     <value>Searching for devices . . .</value>
   </data>
   <data name="SongsH.Header" xml:space="preserve">
-    <value>songs</value>
+    <value>chansons</value>
   </data>
   <data name="TagsEditorPageTitle.Text" xml:space="preserve">
     <value>tags editor</value>
@@ -568,7 +568,7 @@
     <value>Disc</value>
   </data>
   <data name="TBDuration.Text" xml:space="preserve">
-    <value>Duration</value>
+    <value>Durée</value>
   </data>
   <data name="TBFiles.Text" xml:space="preserve">
     <value>Files</value>
@@ -611,5 +611,35 @@
   </data>
   <data name="HSettings.Header" xml:space="preserve">
     <value>paramètres</value>
+  </data>
+  <data name="SelectImagePageTitle.Text" xml:space="preserve">
+    <value>image selection</value>
+  </data>
+  <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
+    <value>Semicolon separated values</value>
+  </data>
+  <data name="TBMenuSettings.Text" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="TBMenuSongs.Text" xml:space="preserve">
+    <value>Chansons</value>
+  </data>
+  <data name="TBMenuSearch.Text" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="TBMenuPlaylists.Text" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="TBMenuFolders.Text" xml:space="preserve">
+    <value>Dossiers</value>
+  </data>
+  <data name="TBMenuGenres.Text" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="TBMenuAlbums.Text" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="TBMenuArtists.Text" xml:space="preserve">
+    <value>Artistes</value>
   </data>
 </root>
