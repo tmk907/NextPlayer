@@ -25,9 +25,9 @@
                     <MenuFlyout>
                         <MenuFlyoutItem x:Uid="PlayNow" Text="Play now" Click="PlayNow_Click"/>
                         <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Add to now playing" Click="AddToNP_Click" />
-                        <MenuFlyoutItem x:Uid="Edit" Text="Edit"
+                        <!--<MenuFlyoutItem x:Uid="Edit" Text="Edit"
                                         Command="{Binding DataContext.EditSmartPlaylist, ElementName=PlaylistsListView}" CommandParameter="{Binding}"
-                                        Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"/>-->
                         <MenuFlyoutItem x:Uid="Delete" Text="Delete" Click="Delete_Click"
                                         Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" Click="Pin_Click"/>

@@ -292,7 +292,7 @@
                             <MenuFlyoutItem x:Uid="ShowDetails" Text="Show details" 
                                         Command="{Binding DataContext.ShowDetails, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="EditTags" Text="Edit" 
-                                        Command="{Binding DataContext.EditTags, ElementName=SongsListView}" CommandParameter="{Binding}"/>
+                                        Command="{Binding DataContext.EditTags, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                             <MenuFlyoutItem x:Uid="MFIShare" Text="Share" 
                                         Command="{Binding DataContext.Share, ElementName=PlaylistSongsListView}" CommandParameter="{Binding}"/>
                         </MenuFlyout>

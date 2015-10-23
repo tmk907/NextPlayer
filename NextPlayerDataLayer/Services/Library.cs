@@ -213,13 +213,27 @@ namespace NextPlayerDataLayer.Services
             Uri uri;
             if (small)
             {
+                //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light192.png");
+                //}
+                //else
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark192.png");
+                //}
                 uri = new System.Uri("ms-appx:///Assets/SongCover192.png");
-
             }
             else
             {
+                //if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-light.png");
+                //}
+                //else
+                //{
+                //    uri = new System.Uri("ms-appx:///Assets/Cover/cover-dark.png");
+                //}
                 uri = new System.Uri("ms-appx:///Assets/SongCover.png");
-
             }
             var file2 = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
             using (IRandomAccessStream stream = await file2.OpenAsync(Windows.Storage.FileAccessMode.Read))

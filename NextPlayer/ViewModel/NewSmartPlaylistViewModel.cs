@@ -25,6 +25,7 @@ namespace NextPlayer.ViewModel
     {
         private INavigationService navigationService;
         ResourceLoader loader;
+        int smartId;
 
         public NewSmartPlaylistViewModel(INavigationService navigationService)
         {
@@ -807,11 +808,11 @@ namespace NextPlayer.ViewModel
             songsNumber = "";
             valueTextBox = "";
             Date = DateTime.Now.Date;
-            if (parameter != null)
-            {
-                int id = Int32.Parse(parameter.ToString());
-                
-            }
+            smartId = -1;
+            //if (parameter != null)
+            //{
+            //    smartId = Int32.Parse(parameter.ToString());
+            //}
         }
 
         public void Deactivate(Dictionary<string, object> state)
