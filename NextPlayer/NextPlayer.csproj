@@ -244,9 +244,6 @@
     <Content Include="Assets\BG\wallpaper 7.jpg" />
     <Content Include="Assets\BG\wallpaper 8.jpg" />
     <Content Include="Assets\BG\wallpaper 9.jpg" />
-    <Content Include="Assets\Buttons\Dark\MainNextButton.scale-100.png" />
-    <Content Include="Assets\Buttons\Dark\MainNextButton.scale-140.png" />
-    <Content Include="Assets\Buttons\Dark\MainNextButton.scale-240.png" />
     <Content Include="Assets\Cover\Dark\SmallCover.png" />
     <Content Include="Assets\OrangeCover.png" />
     <Content Include="Assets\OrangeCover192.png" />
@@ -255,7 +252,6 @@
     <Content Include="Assets\SongCover192.scale-140.png" />
     <Content Include="Assets\SongCover192.scale-240.png" />
     <None Include="Package.StoreAssociation.xml" />
-    <PRIResource Include="Strings\bg-BG\Resources.resw" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\cs-CZ\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
@@ -384,8 +380,8 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\Buttons\" />
     <Folder Include="Assets\Cover\Light\" />
-    <Folder Include="Strings\id-ID\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">

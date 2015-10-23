@@ -138,9 +138,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config\imageprocessor\cache.config" />
-    <None Include="config\imageprocessor\processing.config" />
-    <None Include="config\imageprocessor\security.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
