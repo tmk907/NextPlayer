@@ -16,6 +16,8 @@ namespace NextPlayerDataLayer.Diagnostics
         private static string temp = "";
         private static string tempBG = "";
 
+        private static bool BGLogON = false;
+
         public async static void SaveToFile()
         {
             string content = temp;
@@ -94,24 +96,29 @@ namespace NextPlayerDataLayer.Diagnostics
 
         public async static void SaveToFileBG()
         {
-            string content = tempBG;
-            tempBG = "";
-            byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
-            try
+            if (BGLogON)
             {
-                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.OpenIfExists);
+                string content = tempBG;
+                tempBG = "";
+                byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
+                try
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.OpenIfExists);
 
-                await FileIO.AppendTextAsync(file, content);
+                    await FileIO.AppendTextAsync(file, content);
+                }
+                catch (Exception e)
+                {
+                    Logger.SaveBG("error log\n" + content + "\n" + e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                Logger.SaveBG("error log\n"+content+"\n"+e.Message);
-            }
-
         }
         public static void SaveBG(string data)
         {
-            tempBG += DateTime.Now.ToString() + " " + data + "\n" + System.Environment.NewLine;
+            if (BGLogON)
+            {
+                tempBG += DateTime.Now.ToString() + " " + data + "\n" + System.Environment.NewLine;
+            }
         }
 
     }

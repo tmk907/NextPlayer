@@ -113,6 +113,7 @@
     <Compile Include="Model\SongItem.cs" />
     <Compile Include="Model\Tags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BluetoothManager.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\Library.cs" />
     <Compile Include="Services\MediaImport.cs" />
@@ -128,6 +129,18 @@
     <Compile Include="Tables\SongsTable2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Bluetooth.Core.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Core.Services.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bluetooth.Core.Sockets, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Core.Sockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bluetooth.Services.Obex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bluetooth.Services.Obex.1.0.0.0\lib\portable-win81+wpa81+wp81\Bluetooth.Services.Obex.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="TagLib.Portable, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>..\packages\TagLib.Portable.1.0.2\lib\portable-net45+win8+wpa81\TagLib.Portable.dll</HintPath>
       <Private>True</Private>

@@ -44,14 +44,19 @@
         </DataTemplate>
     </Page.Resources>
     <Page.BottomAppBar>
-        <CommandBar IsOpen="False" ClosedDisplayMode="Compact"
-                    Visibility="{Binding DeviceListVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
-                    >
+        <CommandBar IsOpen="False" ClosedDisplayMode="Compact">
             <AppBarButton x:Uid="AppBarScan" 
                           Icon="Refresh"
                           Label="Scan" 
                           IsCompact="True" 
+                          Visibility="{Binding DeviceListVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
                           Command="{Binding Scan}"/>
+            <AppBarButton x:Uid="AppBarClear"
+                          Icon="Clear"
+                          Label="Clear"
+                          IsCompact="True"
+                          Visibility="{Binding DeviceListVisibility, Converter={StaticResource BoolToInverterVisibilityConverter}}"
+                          Command="{Binding Clear}"/>
             </CommandBar>
     </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot">

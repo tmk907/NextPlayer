@@ -115,7 +115,14 @@ namespace BluetoothDemo
                 }
             }
         }
-
+        public void SetStatus(FileShareStatus status)
+        {
+            m_FileShareStatus = status;
+        }
+        public void SetProgress(ulong progress)
+        {
+            m_Progress = progress;
+        }
         public IStorageFile FileToShare
         {
             get

@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.ApplicationInsights;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -37,7 +38,13 @@ namespace NextPlayer
     /// </summary>
     public sealed partial class App : Application
     {
+        /// <summary>
+        /// Allows tracking page views, exceptions and other telemetry through the Microsoft Application Insights service.
+        /// </summary>
+        public static TelemetryClient TelemetryClient;
+
         private TransitionCollection transitions;
+        private bool dev = true;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,6 +52,19 @@ namespace NextPlayer
         /// </summary>
         public App()
         {
+            TelemetryClient = new TelemetryClient();
+            
+            if (dev)
+            {
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "01fcaacd-5dd7-490e-b6a9-ebd5f927558e";
+            }
+            else
+            {
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "35553b27-ab5c-4fbe-8495-07f21758f72c";
+            }
+            
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
@@ -103,7 +123,7 @@ namespace NextPlayer
                     
                 }  
   
-                SendLogs();
+                //SendLogs();
                 UpdateDB();
             }
            

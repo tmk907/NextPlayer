@@ -18,6 +18,10 @@ namespace NextPlayerDataLayer.Diagnostics
         }
         public async Task Go()
         {
+            #if DEBUG
+                        return;
+            #endif
+
             try
             {
                 await Send();
@@ -61,12 +65,6 @@ namespace NextPlayerDataLayer.Diagnostics
                 data.Add(new KeyValuePair<string,string>("SystemHardwareVersion",deviceInfo.SystemHardwareVersion));
                 data.Add(new KeyValuePair<string,string>("SystemManufacturer",deviceInfo.SystemManufacturer));
                 data.Add(new KeyValuePair<string,string>("SystemProductName",deviceInfo.SystemProductName));
-                //device += deviceInfo.FriendlyName + "\n";
-                //device += deviceInfo.OperatingSystem + "\n";
-                //device += deviceInfo.SystemFirmwareVersion + "\n";
-                //device += deviceInfo.SystemHardwareVersion + "\n";
-                //device += deviceInfo.SystemManufacturer + "\n";
-                //device += deviceInfo.SystemProductName + "\n";
             }
             catch (Exception ex)
             {

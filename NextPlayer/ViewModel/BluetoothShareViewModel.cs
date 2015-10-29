@@ -41,6 +41,33 @@ namespace NextPlayer.ViewModel
             songIds = new List<int>();
             systemTray = StatusBar.GetForCurrentView();
             loader = new ResourceLoader();
+            App.Current.Suspending += ForegroundApp_Suspending;
+            App.Current.Resuming += ForegroundApp_Resuming;
+        }
+
+        private void ForegroundApp_Resuming(object sender, object e)
+        {
+            foreach (var file in BluetoothManager.Current.FilesToShare)
+            {
+                FilesToShare.Add(file);
+            }
+            BluetoothManager.FailedHandler += BluetoothManager_FailedHandler;
+            BluetoothManager.ChangeProgressHandler += BluetoothManager_ChangeProgressHandler;
+            BluetoothManager.ChangeStatusHandler += BluetoothManager_ChangeStatusHandler;
+            BluetoothManager.RemoveFirstFileHandler += BluetoothManager_RemoveFirstFileHandler;
+            BluetoothManager.SetDevicesListHandler += BluetoothManager_SetDevicesListHandler;
+            BluetoothManager.TransferCompletedHandler += BluetoothManager_TransferCompletedHandler;
+        }
+
+        private void ForegroundApp_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            BluetoothManager.FailedHandler -= BluetoothManager_FailedHandler;
+            BluetoothManager.ChangeProgressHandler -= BluetoothManager_ChangeProgressHandler;
+            BluetoothManager.ChangeStatusHandler -= BluetoothManager_ChangeStatusHandler;
+            BluetoothManager.RemoveFirstFileHandler -= BluetoothManager_RemoveFirstFileHandler;
+            BluetoothManager.SetDevicesListHandler -= BluetoothManager_SetDevicesListHandler;
+            BluetoothManager.TransferCompletedHandler -= BluetoothManager_TransferCompletedHandler;
+            FilesToShare.Clear();
         }
 
         #region Properties
@@ -222,7 +249,8 @@ namespace NextPlayer.ViewModel
                     {
                         DeviceListVisibility = false;
                         FileListVisibility = true;
-                        StartService(p);
+                        //StartService(p);
+                        BluetoothManager.Current.StartService(p);
                     }));
             }
         }
@@ -240,42 +268,59 @@ namespace NextPlayer.ViewModel
                     ?? (scan = new RelayCommand(
                     () =>
                     {
-                        EnumerateDevicesAsync();
+                        //EnumerateDevicesAsync();
+                        StartScan();
                     }));
             }
         }
 
-        #region BT
+        private RelayCommand clear;
 
-        public async Task EnumerateDevicesAsync()
+        /// <summary>
+        /// Gets the Clear.
+        /// </summary>
+        public RelayCommand Clear
+        {
+            get
+            {
+                return clear
+                    ?? (clear = new RelayCommand(
+                    () =>
+                    {
+                        BluetoothManager.Current.Clear();
+                        FilesToShare.Clear();
+                        foreach (var file in BluetoothManager.Current.FilesToShare) FilesToShare.Add(file); //add 0 or 1 file
+                    }));
+            }
+        }
+
+      
+        public async Task StartScan()
         {
             ScanResult = loader.GetString("SearchForDevices");
             systemTray.ProgressIndicator.Text = loader.GetString("SearchForDevices");
             await systemTray.ProgressIndicator.ShowAsync();
-            BluetoothService btService = BluetoothService.GetDefault();
-            btService.SearchForPairedDevicesFailed += btService_SearchForPairedDevicesFailed;
-            btService.SearchForPairedDevicesSucceeded += btService_SearchForPairedDevicesSucceeded;
-            await btService.SearchForPairedDevicesAsync();
+            await BluetoothManager.Current.EnumerateDevicesAsync();
         }
-        async void btService_SearchForPairedDevicesSucceeded(object sender, SearchForPairedDevicesSucceededEventArgs e)
+
+        public async Task SearchForPairedDevicesSucceeded()
         {
-            await systemTray.ProgressIndicator.HideAsync();
             ScanResult = loader.GetString("Devices");
-            (sender as BluetoothService).SearchForPairedDevicesFailed -= btService_SearchForPairedDevicesFailed;
-            (sender as BluetoothService).SearchForPairedDevicesSucceeded -= btService_SearchForPairedDevicesSucceeded;
-            DeviceList = e.PairedDevices;
+            await systemTray.ProgressIndicator.HideAsync();
+            DeviceList = BluetoothManager.Current.PairedDevices;
         }
-        async void btService_SearchForPairedDevicesFailed(object sender, SearchForPairedDevicesFailedEventArgs e)
+
+        public async Task SearchForPairedDevicesFailed()
         {
             ScanResult = loader.GetString("DevicesNotFound");
             await systemTray.ProgressIndicator.HideAsync();
-            (sender as BluetoothService).SearchForPairedDevicesFailed -= btService_SearchForPairedDevicesFailed;
-            (sender as BluetoothService).SearchForPairedDevicesSucceeded -=  btService_SearchForPairedDevicesSucceeded;
-            //txtblkErrorBtDevices.Text = e.FailureReason.ToString();
+            DeviceList = BluetoothManager.Current.PairedDevices;
         }
+        #region BT
+
         private async void StartService(BluetoothDevice BTDevice)
         {
-            bool a = await GetFiles();
+            await GetFiles();
             BtDevice = BTDevice;
             obexService = ObexService.GetDefaultForBluetoothDevice(BtDevice);
             obexService.Aborted += obexService_Aborted;
@@ -329,23 +374,11 @@ namespace NextPlayer.ViewModel
 
                 if (this.filesToShare.Count.Equals(0))
                 {
-                    //MessageDialog messageBox = new MessageDialog("All files shared successfully", "Bluetooth OBEX DemoApp");
-                    //messageBox.Commands.Add(new UICommand("OK", (uiCommand) =>
-                    //{
-                    //    this.Frame.Navigate(typeof(MainPage));
-                    //}));
-                    //await messageBox.ShowAsync();
                     SendToast(AppConstants.FilesSharedOK);
                     navigationService.GoBack();
                 }
                 else if (this.filesToShare[0].ShareStatus.Equals(FileShareStatus.Error) || this.filesToShare[0].ShareStatus.Equals(FileShareStatus.Cancelled))
                 {
-                    //MessageDialog messageBox = new MessageDialog("Some files could not be shared successfully", "Bluetooth OBEX DemoApp");
-                    //messageBox.Commands.Add(new UICommand("OK", (uiCommand) =>
-                    //{
-                    //    this.Frame.Navigate(typeof(MainPage));
-                    //}));
-                    //await messageBox.ShowAsync();
                     SendToast(AppConstants.FilesSharedError);
                     navigationService.GoBack();
                 }
@@ -454,15 +487,16 @@ namespace NextPlayer.ViewModel
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
-        private async Task<bool> GetFiles()
+        private async Task<IEnumerable<FileItemToShare>> GetFiles()
         {
+            List<FileItemToShare> list = new List<FileItemToShare>();
             if (s[0].Equals("song"))
             {
                 string path = DatabaseManager.GetFileInfo(Int32.Parse(s[1])).FilePath;
                 try
                 {
                     IStorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                    filesToShare.Add(new FileItemToShare(Path.GetFileName(path), path, file));
+                    list.Add(new FileItemToShare(Path.GetFileName(path), path, file));
                 }
                 catch (Exception e)
                 {
@@ -477,7 +511,7 @@ namespace NextPlayer.ViewModel
                     try
                     {
                         IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                        list.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
                     }
                     catch (Exception e)
                     {
@@ -493,7 +527,7 @@ namespace NextPlayer.ViewModel
                     try
                     {
                         IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                        list.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
                     }
                     catch (Exception e)
                     {
@@ -509,7 +543,7 @@ namespace NextPlayer.ViewModel
                     try
                     {
                         IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                        list.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
                     }
                     catch (Exception e)
                     {
@@ -525,7 +559,7 @@ namespace NextPlayer.ViewModel
                     try
                     {
                         IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                        list.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
                     }
                     catch (Exception e)
                     {
@@ -550,7 +584,7 @@ namespace NextPlayer.ViewModel
                     try
                     {
                         IStorageFile file = await StorageFile.GetFileFromPathAsync(song.Path);
-                        FilesToShare.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
+                        list.Add(new FileItemToShare(Path.GetFileName(song.Path), song.Path, file));
                     }
                     catch (Exception e)
                     {
@@ -559,7 +593,7 @@ namespace NextPlayer.ViewModel
                     }
                 }
             }
-            return true;
+            return list;
         }
 
         public void Activate(object parameter, Dictionary<string, object> state)
@@ -575,25 +609,122 @@ namespace NextPlayer.ViewModel
                     s = ParamConvert.ToStringArray(parameter as string);
                 }
             }
-            EnumerateDevicesAsync();
+            Start();
+            BluetoothManager.FailedHandler += BluetoothManager_FailedHandler;
+            BluetoothManager.ChangeProgressHandler += BluetoothManager_ChangeProgressHandler;
+            BluetoothManager.ChangeStatusHandler += BluetoothManager_ChangeStatusHandler;
+            BluetoothManager.RemoveFirstFileHandler += BluetoothManager_RemoveFirstFileHandler;
+            BluetoothManager.SetDevicesListHandler += BluetoothManager_SetDevicesListHandler;
+            BluetoothManager.TransferCompletedHandler += BluetoothManager_TransferCompletedHandler;
+        }
+
+        async void BluetoothManager_TransferCompletedHandler(string status)
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                SendToast(status);
+                navigationService.GoBack();
+            });
+        }
+
+        async void BluetoothManager_SetDevicesListHandler()
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                if (BluetoothManager.Current.PairedDevices.Count == 0)
+                {
+                    SearchForPairedDevicesFailed();
+                }
+                else
+                {
+                    SearchForPairedDevicesSucceeded();
+                }
+            });
+        }
+
+        async void BluetoothManager_RemoveFirstFileHandler()
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                if (!filesToShare.Count.Equals(0))
+                {
+                    FilesToShare.RemoveAt(0);
+                }
+            });
+        }
+
+        async void BluetoothManager_ChangeStatusHandler(FileShareStatus status)
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                if (!filesToShare.Count.Equals(0))
+                {
+                    FilesToShare[0].ShareStatus = status;
+                }
+            });
+        }
+
+        async void BluetoothManager_ChangeProgressHandler(ulong progress)
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                if (!filesToShare.Count.Equals(0))
+                {
+                    FilesToShare[0].Progress = progress;
+                }
+            });
+        }
+
+        async void BluetoothManager_FailedHandler(FileItemToShare f)
+        {
+            await DispatcherHelper.RunAsync(() =>
+            {
+                FileItemToShare file = filesToShare[0];
+                file.ShareStatus = FileShareStatus.Error;
+                file.Progress = 0;
+                FilesToShare.RemoveAt(0);
+                FilesToShare.Add(file);
+            });
+        }
+
+        private async void Start()
+        {
+            var list = await GetFiles();
+            int count = BluetoothManager.Current.FilesToShare.Count;
+            foreach (var file in BluetoothManager.Current.FilesToShare)
+            {
+                FilesToShare.Add(file);
+            }
+            BluetoothManager.Current.AddFiles(list);
+            foreach (var f in list)
+            {
+                FilesToShare.Add(f);
+            }
+            if (count == 0)
+            {
+                await StartScan();
+            }
+            else
+            {
+                DeviceListVisibility = false;
+                FileListVisibility = true;
+                if (filesToShare[0].ShareStatus == FileShareStatus.Error)
+                {
+                    BluetoothManager.Current.StartService();
+                }
+            }
         }
 
         public void Deactivate(Dictionary<string, object> state)
         {
+            
+            BluetoothManager.FailedHandler -= BluetoothManager_FailedHandler;
+            BluetoothManager.ChangeProgressHandler -= BluetoothManager_ChangeProgressHandler;
+            BluetoothManager.ChangeStatusHandler -= BluetoothManager_ChangeStatusHandler;
+            BluetoothManager.RemoveFirstFileHandler -= BluetoothManager_RemoveFirstFileHandler;
+            BluetoothManager.SetDevicesListHandler -= BluetoothManager_SetDevicesListHandler;
+            BluetoothManager.TransferCompletedHandler -= BluetoothManager_TransferCompletedHandler;
             filesToShare.Clear();
-            if (obexService != null)
-            {
-                obexService.Aborted -= obexService_Aborted;
-                obexService.ConnectionFailed -= obexService_ConnectionFailed;
-                obexService.DataTransferFailed -= obexService_DataTransferFailed;
-                obexService.DataTransferProgressed -= obexService_DataTransferProgressed;
-                obexService.DataTransferSucceeded -= obexService_DataTransferSucceeded;
-                obexService.DeviceConnected -= obexService_DeviceConnected;
-                obexService.Disconnected -= obexService_Disconnected;
-                obexService.Disconnecting -= obexService_Disconnecting;
-                obexService.ServiceConnected -= obexService_ServiceConnected;
-                obexService = null;
-            }
         }
 
         public void BackButonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using NextPlayer.Common;
+﻿using Microsoft.ApplicationInsights.DataContracts;
+using NextPlayer.Common;
 using NextPlayer.ViewModel;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Enums;
@@ -164,7 +165,7 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
-            var s = Windows.Media.Devices.MediaDevice.GetAudioRenderSelector();
+            App.TelemetryClient.TrackEvent("Settings page open");
         }
 
         /// <summary>
@@ -229,12 +230,21 @@ namespace NextPlayer.View
             DisableControls();
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
-            Count2.Text = "";
+            Count2.Text = "0";
             Count2.Visibility = Visibility.Visible;
             WaitFewMinutes.Visibility = Visibility.Visible;
 
             var progressIndicator = new Progress<int>(ReportProgressUpdate);
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             await MediaImport.ImportAndUpdateDatabase(progressIndicator);
+            stopwatch.Stop();
+
+            var updateEvent = new EventTelemetry();
+            updateEvent.Name = "Library update";
+            updateEvent.Metrics["time"] = stopwatch.Elapsed.TotalSeconds;
+            updateEvent.Metrics["count"] = Int32.Parse(Count2.Text);
+            App.TelemetryClient.TrackEvent(updateEvent);
 
             WaitFewMinutes.Visibility = Visibility.Collapsed;
             Count2.Visibility = Visibility.Collapsed;
@@ -280,6 +290,7 @@ namespace NextPlayer.View
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, timerPicker.Time.Ticks);
                 SendMessage(AppConstants.SetTimer);
+                App.TelemetryClient.TrackEvent("Timer On");
             }
             else
             {
@@ -349,10 +360,12 @@ namespace NextPlayer.View
             if (((ToggleSwitch)sender).IsOn)
             {
                 UpdateAppTile(true);
+                App.TelemetryClient.TrackEvent("Transparent tile On");
             }
             else
             {
                 UpdateAppTile(false);
+                App.TelemetryClient.TrackEvent("Transparent tile Off");
             }
         }
 
@@ -439,6 +452,7 @@ namespace NextPlayer.View
             if (rb.Name == "RBDark")
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
+                App.TelemetryClient.TrackEvent("Theme changed Dark");
             }
             else if (rb.Name == "RBLight")
             {
@@ -447,6 +461,7 @@ namespace NextPlayer.View
                 {
                     App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
                 }
+                App.TelemetryClient.TrackEvent("Theme changed Light");
             }
         }
         #endregion
@@ -458,7 +473,7 @@ namespace NextPlayer.View
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
                 NextPlayer.Helpers.StyleHelper.EnableBGImage();
-
+                App.TelemetryClient.TrackEvent("BG image On");
                 //SelectImage_Button.IsEnabled = true;
             }
             else
@@ -466,6 +481,7 @@ namespace NextPlayer.View
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 //SelectImage_Button.IsEnabled = false; ;
                 NextPlayer.Helpers.StyleHelper.DisableBGImage();
+                App.TelemetryClient.TrackEvent("BG image Off");
             }
             NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
@@ -475,18 +491,20 @@ namespace NextPlayer.View
             Frame.Navigate(typeof(ImageSelection));
         }
         #endregion
-        #region
+        #region Background Cover
         private void BGCover_Toggled(object sender, RoutedEventArgs e)
         {
             if (((ToggleSwitch)sender).IsOn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
                 NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
+                App.TelemetryClient.TrackEvent("BG Cover On");
             }
             else
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, false);
                 NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
+                App.TelemetryClient.TrackEvent("BG Cover Off");
             }
         }
         #endregion

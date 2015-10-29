@@ -344,6 +344,7 @@
             <converters:IntToBitrateConverter x:Key="IntToBitrateConverter"/>
             <converters:StringToInputScopeConverter x:Key="StringToInputScope"/>
             <converters:StyleConverter x:Key="StyleConverter"/>
+            <converters:BoolToInvertedVisibility x:Key="BoolToInverterVisibilityConverter"/>
 
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
             <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
