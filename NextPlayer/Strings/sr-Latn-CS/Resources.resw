@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddPlaylist.Label" xml:space="preserve">
+    <value>Dodajte listu za plejlistu</value>  </data>
+  <data name="AddSmartPlaylist.Label" xml:space="preserve">
+    <value>Dodajte smart listu</value>  </data>
+  <data name="AddToNowPlaying.Text" xml:space="preserve">
+    <value>Dodajte u sada se reprodukuje</value>  </data>
+  <data name="AddToPlaylist.Text" xml:space="preserve">
+    <value>Dodajte u plejlistu</value>  </data>
+  <data name="Album" xml:space="preserve">
+    <value>Album</value>  </data>
+  <data name="AlbumPageTitle.Text" xml:space="preserve">
+    <value>album</value>  </data>
+  <data name="AlbumsPageTitle.Text" xml:space="preserve">
+    <value>albumi</value>  </data>
+  <data name="AppName.Text" xml:space="preserve">
+    <value>Sledeći izvođač</value>  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Umetnik</value>  </data>
+  <data name="ArtistsPageTitle.Text" xml:space="preserve">
+    <value>Umetnici</value>  </data>
+  <data name="ButtonCancel.Content" xml:space="preserve">
+    <value>Poništi</value>  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>Izbriši</value>  </data>
+  <data name="Cancel.Label" xml:space="preserve">
+    <value>Poništi</value>  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Povezuje se</value>  </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Greška u povezivanju</value>  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Sadrži</value>  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Datum dodavanja</value>  </data>
+  <data name="Delete.Text" xml:space="preserve">
+    <value>Izbriši</value>  </data>
+  <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
+    <value>Da li ste sigurni da želite izbrisati ovu plejlistu?</value>  </data>
+  <data name="DeleteRule.Content" xml:space="preserve">
+    <value>Izbriši pravilo</value>  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>Ne sadrži</value>  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Trajanje</value>  </data>
+  <data name="EndsWith" xml:space="preserve">
+    <value>Završava sa</value>  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>Putanja fajla</value>  </data>
+  <data name="Genre" xml:space="preserve">
+    <value>Žanr</value>  </data>
+  <data name="GenresPageTitle.Text" xml:space="preserve">
+    <value>žanrovi</value>  </data>
+  <data name="HighestRating" xml:space="preserve">
+    <value>Najviša ocjena</value>  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Sati</value>  </data>
+  <data name="ImportMediaButton.Content" xml:space="preserve">
+    <value>Dodaj pjesmu u biblioteku</value>  </data>
+  <data name="Is" xml:space="preserve">
+    <value>je</value>  </data>
+  <data name="IsGreater" xml:space="preserve">
+    <value>Veće je</value>  </data>
+  <data name="IsLess" xml:space="preserve">
+    <value>Manje je</value>  </data>
+  <data name="IsNot" xml:space="preserve">
+    <value>Nije</value>  </data>
+  <data name="LastPlayed" xml:space="preserve">
+    <value>Zadnje reprodukovano</value>  </data>
+  <data name="LeastOftenPlayed" xml:space="preserve">
+    <value>Najređe reprodukovano</value>  </data>
+  <data name="LeastRecentlyAdded" xml:space="preserve">
+    <value>Ne tako skoro dodano</value>  </data>
+  <data name="LeastRecentlyPlayed" xml:space="preserve">
+    <value>Ne tako skoro reprodukovano</value>  </data>
+  <data name="LibraryUpdated" xml:space="preserve">
+    <value>Biblioteka ažurirana</value>  </data>
+  <data name="LowestRating" xml:space="preserve">
+    <value>Najniža ocena</value>  </data>
+  <data name="LyricsButton.Content" xml:space="preserve">
+    <value>Tekst</value>  </data>
+  <data name="MenuAlbums.Content" xml:space="preserve">
+    <value>Albumi</value>  </data>
+  <data name="MenuArtists.Content" xml:space="preserve">
+    <value>Izvođači</value>  </data>
+  <data name="MenuFolders.Content" xml:space="preserve">
+    <value>Folderi</value>  </data>
+  <data name="MenuGenres.Content" xml:space="preserve">
+    <value>Žanrovi</value>  </data>
+  <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
+    <value>Sadašnja plejlista</value>  </data>
+  <data name="MenuPlaylists.Content" xml:space="preserve">
+    <value>Plejliste</value>  </data>
+  <data name="MenuSettings.Content" xml:space="preserve">
+    <value>Podešavanja</value>  </data>
+  <data name="MenuSongs.Content" xml:space="preserve">
+    <value>Pesme</value>  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuta</value>  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>Najčešće reprodukovano</value>  </data>
+  <data name="MostRecentlyAdded" xml:space="preserve">
+    <value>Nedavno dodato</value>  </data>
+  <data name="MostRecentlyPlayed" xml:space="preserve">
+    <value>Nedavno reprodukovano</value>  </data>
+  <data name="NajczesciejOdtwarzane" xml:space="preserve">
+    <value>Najčešće reprodukovano</value>  </data>
+  <data name="NajgorzejOceniane" xml:space="preserve">
+    <value>Najniža ocena</value>  </data>
+  <data name="NajlepiejOceniane" xml:space="preserve">
+    <value>Najviša ocena</value>  </data>
+  <data name="NajrzadziejOdtwarzane" xml:space="preserve">
+    <value>Najređe reprodukovano</value>  </data>
+  <data name="NewRule.Content" xml:space="preserve">
+    <value>Dodaj pravilo</value>  </data>
+  <data name="NewSPPageTitle.Text" xml:space="preserve">
+    <value>nova pametna plejlista</value>  </data>
+  <data name="NowPlayingPageTitle.Text" xml:space="preserve">
+    <value>sada se reprodukuje</value>  </data>
+  <data name="NowPlayingPlaylistPageTitle" xml:space="preserve">
+    <value>sada se reprodukuje</value>  </data>
+  <data name="OstatnioDodane" xml:space="preserve">
+    <value>Zadnje dodano</value>  </data>
+  <data name="OstatnioOdtwarzane" xml:space="preserve">
+    <value>Zadnje reprodukovano</value>  </data>
+  <data name="PlayCount" xml:space="preserve">
+    <value>Brojač reprodukovanja</value>  </data>
+  <data name="PlaylistsPageTitle.Text" xml:space="preserve">
+    <value>liste za reprodukovanje</value>  </data>
+  <data name="PlayNow.Text" xml:space="preserve">
+    <value>Sada se reprodukuje</value>  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Ocena</value>  </data>
+  <data name="Rules.Text" xml:space="preserve">
+    <value>Pravila</value>  </data>
+  <data name="Save.Content" xml:space="preserve">
+    <value>Spasi</value>  </data>
+  <data name="Save.Label" xml:space="preserve">
+    <value>Spasi</value>  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Sekunda</value>  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>podešavanja</value>  </data>
+  <data name="SongsPageTitle" xml:space="preserve">
+    <value>pesme</value>  </data>
+  <data name="SPName.Text" xml:space="preserve">
+    <value>Ime</value>  </data>
+  <data name="SPSongsNumber.Text" xml:space="preserve">
+    <value>Broj pesme</value>  </data>
+  <data name="SPSortBy.Text" xml:space="preserve">
+    <value>Složi po</value>  </data>
+  <data name="StartsWith" xml:space="preserve">
+    <value>Počinje sa</value>  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Naslov</value>  </data>
+  <data name="UpdateMediaButton.Content" xml:space="preserve">
+    <value>Ažuriraj biblioteku</value>  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Godina</value>  </data>
+  <data name="WaitFewMinutes.Text" xml:space="preserve">
+    <value>Molimo Vas ne zatvarajte ovu stranicu dok se pretražuje.</value>  </data>
+  <data name="MenuSearch.Content" xml:space="preserve">
+    <value>Traži</value>  </data>
+  <data name="SearchPageTitle.Text" xml:space="preserve">
+    <value>pretraga</value>  </data>
+  <data name="FoldersPageTitle.Text" xml:space="preserve">
+    <value>folderi</value>  </data>
+  <data name="RateButton.Content" xml:space="preserve">
+    <value>Ocena</value>  </data>
+  <data name="SPErrorText.Text" xml:space="preserve">
+    <value>Molimo Vas popunite ova polja ispravno.</value>  </data>
+  <data name="ShowDetails.Text" xml:space="preserve">
+    <value>Prikaži detalje</value>  </data>
+  <data name="DeleteFromPlaylist.Text" xml:space="preserve">
+    <value>Izbriši iz plejliste</value>  </data>
+  <data name="MenuStop.Content" xml:space="preserve">
+    <value>Zaustavi</value>  </data>
+  <data name="TBAlbum.Text" xml:space="preserve">
+    <value>Album</value>  </data>
+  <data name="TBArtist.Text" xml:space="preserve">
+    <value>Umetnik</value>  </data>
+  <data name="TBBitrate.Text" xml:space="preserve">
+    <value>Bitrejt</value>  </data>
+  <data name="TBDateAdded.Text" xml:space="preserve">
+    <value>Datum dodavanja</value>  </data>
+  <data name="TBFilePath.Text" xml:space="preserve">
+    <value>Putanja fajla</value>  </data>
+  <data name="TBFileSize.Text" xml:space="preserve">
+    <value>Težina fajla</value>  </data>
+  <data name="TBLastTimePlayed.Text" xml:space="preserve">
+    <value>Zadnji put reprodukovano</value>  </data>
+  <data name="TBPlayCount.Text" xml:space="preserve">
+    <value>Brojač reprodukovanja</value>  </data>
+  <data name="TBRating.Text" xml:space="preserve">
+    <value>Ocena</value>  </data>
+  <data name="TBTitle.Text" xml:space="preserve">
+    <value>Naslov</value>  </data>
+  <data name="TBTrackNumber.Text" xml:space="preserve">
+    <value>Broj pesme</value>  </data>
+  <data name="TBYear.Text" xml:space="preserve">
+    <value>Godina</value>  </data>
+  <data name="AppBarOrder.Label" xml:space="preserve">
+    <value>unazad</value>  </data>
+  <data name="AppBarSave.Label" xml:space="preserve">
+    <value>spasi</value>  </data>
+  <data name="AppBarSort.Label" xml:space="preserve">
+    <value>rasporedi po</value>  </data>
+  <data name="MFIAlbum.Text" xml:space="preserve">
+    <value>Album</value>  </data>
+  <data name="MFIArtist.Text" xml:space="preserve">
+    <value>Umetnik</value>  </data>
+  <data name="MFIDuration.Text" xml:space="preserve">
+    <value>Trajanje</value>  </data>
+  <data name="MFIRating.Text" xml:space="preserve">
+    <value>Ocena</value>  </data>
+  <data name="MFITitle.Text" xml:space="preserve">
+    <value>Naslov</value>  </data>
+  <data name="MFITrackNumber.Text" xml:space="preserve">
+    <value>Broj pesme</value>  </data>
+  <data name="ButtonSave.Content" xml:space="preserve">
+    <value>Spasi</value>  </data>
+  <data name="AppBarEdit.Label" xml:space="preserve">
+    <value>uredi</value>  </data>
+  <data name="ButtonSearch.Content" xml:space="preserve">
+    <value>Pretraži</value>  </data>
+  <data name="Later" xml:space="preserve">
+    <value>Kasnije</value>  </data>
+  <data name="MainPageTitle.Text" xml:space="preserve">
+    <value>glavna stranica</value>  </data>
+  <data name="RateAppMsg" xml:space="preserve">
+    <value>Ako ste uživali u korištenju Next playera, da li bi ste mogli izdvojiti moment da ga ocenite? Ovo neće trajati duže od minute. Zahvaljujemo Vam se na podršci!</value>  </data>
+  <data name="RateAppTitle" xml:space="preserve">
+    <value>Oceni aplikaciju</value>  </data>
+  <data name="SelectPlaylist.Text" xml:space="preserve">
+    <value>Odaberi plejlistu</value>  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Oceni</value>  </data>
+  <data name="AppBarSaveLyrics.Label" xml:space="preserve">
+    <value>spasi</value>  </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>Plejlista</value>  </data>
+  <data name="PinToStart.Text" xml:space="preserve">
+    <value>Zakači</value>  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>  </data>
+  <data name="HeaderTransparentTile.Header" xml:space="preserve">
+    <value>Providni naslov</value>  </data>
+  <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
+    <value>Sada se reprodukuje</value>  </data>
+  <data name="TBTransparentTile.Text" xml:space="preserve">
+    <value>Providni naslov</value>  </data>
+  <data name="UpdateMediaTB.Text" xml:space="preserve">
+    <value>Ažuriraj biblioteku</value>  </data>
+  <data name="FilesSharedError" xml:space="preserve">
+    <value>Neki fajlovi ne mogu se deliti uspešno.</value>  </data>
+  <data name="FilesSharedOK" xml:space="preserve">
+    <value>Sve datoteke su uspešno podeljene.</value>  </data>
+  <data name="BTSharePageTitle.Text" xml:space="preserve">
+    <value>podeli</value>  </data>
+  <data name="MFIShare.Text" xml:space="preserve">
+    <value>Podeli</value>  </data>
+  <data name="TBDevices.Text" xml:space="preserve">
+    <value>Uređaji</value>  </data>
+  <data name="TBFiles.Text" xml:space="preserve">
+    <value>Fajlovi</value>  </data>
+  <data name="AppBarScan" xml:space="preserve">
+    <value>pretraži</value>  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Uređaji</value>  </data>
+  <data name="DevicesNotFound" xml:space="preserve">
+    <value>Niti jedan uređaj nije pronađen.</value>  </data>
+  <data name="SearchForDevices" xml:space="preserve">
+    <value>Traži uređaje...</value>  </data>
+  <data name="AppBarSearch.Label" xml:space="preserve">
+    <value>pretraži</value>  </data>
+  <data name="AlbumArtist" xml:space="preserve">
+    <value>Umetnik albuma</value>  </data>
+  <data name="Composer" xml:space="preserve">
+    <value>Kompozitor</value>  </data>
+  <data name="TBAlbumArtist.Text" xml:space="preserve">
+    <value>Umjetnik albuma</value>  </data>
+  <data name="TBComposer.Text" xml:space="preserve">
+    <value>Kompozitor</value>  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Nepoznati album</value>  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Nepoznati umetnik</value>  </data>
+  <data name="AlbumsH.Header" xml:space="preserve">
+    <value>albumi</value>  </data>
+  <data name="ArtistsH.Header" xml:space="preserve">
+    <value>umetnici</value>  </data>
+  <data name="SongsH.Header" xml:space="preserve">
+    <value>pesme</value>  </data>
+  <data name="EditTags.Text" xml:space="preserve">
+    <value>Uredi</value>  </data>
+  <data name="TagsEditorPageTitle.Text" xml:space="preserve">
+    <value>uređivač oznaka</value>  </data>
+  <data name="TBComment.Text" xml:space="preserve">
+    <value>Komentar</value>  </data>
+  <data name="TBConductor.Text" xml:space="preserve">
+    <value>Dirigent</value>  </data>
+  <data name="TBDisc.Text" xml:space="preserve">
+    <value>Disk</value>  </data>
+  <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
+    <value>Semicolon separated values</value>  </data>
+  <data name="MFIComposer.Text" xml:space="preserve">
+    <value>Kompozitor</value>  </data>
+  <data name="MFIYear.Text" xml:space="preserve">
+    <value>Godina</value>  </data>
+  <data name="TBDuration.Text" xml:space="preserve">
+    <value>Trajanje</value>  </data>
+  <data name="TBGenre.Text" xml:space="preserve">
+    <value>Žanr</value>  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Nepoznat žanr</value>  </data>
+</root>
