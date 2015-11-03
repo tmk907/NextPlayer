@@ -232,6 +232,7 @@ namespace NextPlayerDataLayer.Services
 
         private void obexService_DataTransferSucceeded(object sender, EventArgs e)
         {
+            OnTransferCompleted("fileSent" + filesToShare[0].FileName);
             filesToShare.RemoveAt(0);
             OnRemoveFirstFile();
         }

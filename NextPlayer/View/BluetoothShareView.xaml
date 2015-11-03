@@ -30,6 +30,7 @@
                         FontSize="16" 
                         Margin="0,0,4,4"/>
                     <ProgressBar Grid.Row="2"
+                        Foreground="{StaticResource UserAccentBrush}"
                         Maximum="{Binding FileSize}"
                         Value="{Binding Progress}"
                         />

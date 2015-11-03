@@ -316,165 +316,6 @@ namespace NextPlayer.ViewModel
             await systemTray.ProgressIndicator.HideAsync();
             DeviceList = BluetoothManager.Current.PairedDevices;
         }
-        #region BT
-
-        private async void StartService(BluetoothDevice BTDevice)
-        {
-            await GetFiles();
-            BtDevice = BTDevice;
-            obexService = ObexService.GetDefaultForBluetoothDevice(BtDevice);
-            obexService.Aborted += obexService_Aborted;
-            obexService.ConnectionFailed += obexService_ConnectionFailed;
-            obexService.DataTransferFailed += obexService_DataTransferFailed;
-            obexService.DataTransferProgressed += obexService_DataTransferProgressed;
-            obexService.DataTransferSucceeded += obexService_DataTransferSucceeded;
-            obexService.DeviceConnected += obexService_DeviceConnected;
-            obexService.Disconnected += obexService_Disconnected;
-            obexService.Disconnecting += obexService_Disconnecting;
-            obexService.ServiceConnected += obexService_ServiceConnected;
-            await obexService.ConnectAsync();
-        }
-       
-        async void obexService_DataTransferFailed(object sender, DataTransferFailedEventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                this.filesToShare[0].ShareStatus = FileShareStatus.Error;
-                this.filesToShare[0].Progress = 0;
-                FileItemToShare fileToShare = this.filesToShare[0];
-                this.filesToShare.RemoveAt(0);
-                this.filesToShare.Add(fileToShare);
-            });
-        }
-
-        async void obexService_Aborted(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                if (!filesToShare.Count.Equals(0))
-                {
-                    filesToShare.RemoveAt(0);
-                }
-            });
-        }
-        async void obexService_Disconnected(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                obexService.Aborted -= obexService_Aborted;
-                obexService.ConnectionFailed -= obexService_ConnectionFailed;
-                obexService.DataTransferFailed -= obexService_DataTransferFailed;
-                obexService.DataTransferProgressed -= obexService_DataTransferProgressed;
-                obexService.DataTransferSucceeded -= obexService_DataTransferSucceeded;
-                obexService.DeviceConnected -= obexService_DeviceConnected;
-                obexService.Disconnected -= obexService_Disconnected;
-                obexService.Disconnecting -= obexService_Disconnecting;
-                obexService.ServiceConnected -= obexService_ServiceConnected;
-                obexService = null;
-
-                if (this.filesToShare.Count.Equals(0))
-                {
-                    SendToast(AppConstants.FilesSharedOK);
-                    navigationService.GoBack();
-                }
-                else if (this.filesToShare[0].ShareStatus.Equals(FileShareStatus.Error) || this.filesToShare[0].ShareStatus.Equals(FileShareStatus.Cancelled))
-                {
-                    SendToast(AppConstants.FilesSharedError);
-                    navigationService.GoBack();
-                }
-                else
-                {
-                    obexService = ObexService.GetDefaultForBluetoothDevice(BtDevice);
-                    obexService.DeviceConnected += obexService_DeviceConnected;
-                    obexService.ServiceConnected += obexService_ServiceConnected;
-                    obexService.ConnectionFailed += obexService_ConnectionFailed;
-                    obexService.DataTransferProgressed += obexService_DataTransferProgressed;
-                    obexService.DataTransferSucceeded += obexService_DataTransferSucceeded;
-                    obexService.DataTransferFailed += obexService_DataTransferFailed;
-                    obexService.Disconnecting += obexService_Disconnecting;
-                    obexService.Disconnected += obexService_Disconnected;
-                    obexService.Aborted += obexService_Aborted;
-                    await obexService.ConnectAsync();
-                }
-            });
-        }
-        async void obexService_Disconnecting(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                //System.Diagnostics.Debug.WriteLine("disconnecting from remote device");
-            });
-        }
-
-        async void obexService_DataTransferSucceeded(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                System.Diagnostics.Debug.WriteLine("Data transfer of current file succeeded");
-                this.filesToShare.RemoveAt(0);
-            });
-        }
-
-        async void obexService_DataTransferProgressed(object sender, DataTransferProgressedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("{0} bytes sent, {1}% transfer progressed", e.TransferInBytes, e.TransferInPercentage * 100);
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                FileItemToShare fileToShare = this.filesToShare[0];
-                fileToShare.Progress = e.TransferInBytes;
-
-            });
-        }
-
-        async void obexService_ConnectionFailed(object sender, ConnectionFailedEventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                System.Diagnostics.Debug.WriteLine("Connection to obex service on target device failed");
-                FileItemToShare fileToShare = this.filesToShare[0];
-                fileToShare.ShareStatus = FileShareStatus.Error;
-                fileToShare.Progress = 0;
-                this.filesToShare.RemoveAt(0);
-                this.filesToShare.Add(fileToShare);
-            });
-        }
-
-        async void obexService_ServiceConnected(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                System.Diagnostics.Debug.WriteLine("Device connected to remote obex service on target device");
-                this.filesToShare[0].ShareStatus = FileShareStatus.Sharing;
-            });
-        }
-
-        async void obexService_DeviceConnected(object sender, EventArgs e)
-        {
-            await DispatcherHelper.RunAsync(async () =>
-            {
-                System.Diagnostics.Debug.WriteLine("Device connected to remote socket");
-                if (this.filesToShare.Count > 0)
-                {
-                    this.filesToShare[0].ShareStatus = FileShareStatus.Connecting;
-                    await obexService.SendFileAsync(this.filesToShare[0].FileToShare);
-                }
-                else
-                {
-                    obexService.Aborted -= obexService_Aborted;
-                    obexService.ConnectionFailed -= obexService_ConnectionFailed;
-                    obexService.DataTransferFailed -= obexService_DataTransferFailed;
-                    obexService.DataTransferProgressed -= obexService_DataTransferProgressed;
-                    obexService.DataTransferSucceeded -= obexService_DataTransferSucceeded;
-                    obexService.DeviceConnected -= obexService_DeviceConnected;
-                    obexService.Disconnected -= obexService_Disconnected;
-                    obexService.Disconnecting -= obexService_Disconnecting;
-                    obexService.ServiceConnected -= obexService_ServiceConnected;
-                    obexService = null;
-                }
-            });
-        }
-
-        #endregion
 
         private static void SendToast(string message)
         {
@@ -482,7 +323,15 @@ namespace NextPlayer.ViewModel
             ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
             XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
             XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-            toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString(message)));
+            if (message.Contains("fileSent"))
+            {
+                message = message.Replace("fileSent", "");
+                toastTextElements[0].AppendChild(toastXml.CreateTextNode(message));
+            }
+            else
+            {
+                toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString(message)));
+            }
             ToastNotification toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
