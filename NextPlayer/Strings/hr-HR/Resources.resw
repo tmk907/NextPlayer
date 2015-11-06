@@ -466,7 +466,7 @@
     <value>Ocjeni aplikaciju</value>
   </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>Odaberi listu za reproduciranje</value>
+    <value>odaberi listu za reproduciranje</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ocjeni</value>
@@ -629,5 +629,17 @@
   </data>
   <data name="TBAppTheme.Text" xml:space="preserve">
     <value>Theme</value>
+  </data>
+  <data name="TBMenuArtists.Text" xml:space="preserve">
+    <value>Izvođači</value>
+  </data>
+  <data name="RBDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="TBMenuAlbums.Text" xml:space="preserve">
+    <value>Albumi</value>
+  </data>
+  <data name="TBSelectAccentColor.Text" xml:space="preserve">
+    <value>Accent color</value>
   </data>
 </root>

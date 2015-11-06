@@ -466,7 +466,7 @@
     <value>Oceń aplikację</value>
   </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>Wybierz playlistę</value>
+    <value>wybierz playlistę</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Oceń</value>
@@ -592,7 +592,7 @@
     <value>Pokaż okładkę albumu jako tło</value>
   </data>
   <data name="ButtonSelectImage.Content" xml:space="preserve">
-    <value>Wybierz obrazek</value>
+    <value>Wybierz tło</value>
   </data>
   <data name="TBShowBackgroundImage.Text" xml:space="preserve">
     <value>Pokaż obrazek jako tło</value>

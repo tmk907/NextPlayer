@@ -31,6 +31,7 @@
                         <MenuFlyoutItem x:Uid="Delete" Text="Delete" Click="Delete_Click"
                                         Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" Click="Pin_Click"/>
+                        <MenuFlyoutItem x:Uid="MFIShare" Text="Share" Click="Share_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <TextBlock Text="{Binding Name}" 

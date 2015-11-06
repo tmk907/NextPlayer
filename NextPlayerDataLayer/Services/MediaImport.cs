@@ -421,5 +421,45 @@ namespace NextPlayerDataLayer.Services
                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
         }
+
+        public async static Task UpdateRating(int songId, int rating)
+        {
+            string path = DatabaseManager.GetFileInfo(songId).FilePath;
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
+                {
+                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
+                    {
+                        using (File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
+                        {
+                            if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+                            {
+                                Tag tags = tagFile.GetTag(TagTypes.Id3v2);
+
+                                TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+
+                                if (rating == 5) pop.Rating = 255;
+                                else if (rating == 4) pop.Rating = 196;
+                                else if (rating == 3) pop.Rating = 128;
+                                else if (rating == 2) pop.Rating = 64;
+                                else if (rating == 1) pop.Rating = 1;
+                                else if (rating == 0) pop.Rating = 0;
+
+                                TagLib.Id3v2.Tag.DefaultVersion = 3;
+                                TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                                tagFile.Save();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateRating() " + ex.Message);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            }
+        }
     }
 }

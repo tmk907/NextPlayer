@@ -164,14 +164,15 @@ namespace NextPlayer.View
             {
                 DatabaseManager.AddFolderToPlaylistAsync(directory,p.Id);
             }
-            else if (artist != null)
-            {
-                DatabaseManager.AddArtistToPlaylistAsync(artist, p.Id);
-            }
             else if (album != null)
             {
                 DatabaseManager.AddAlbumToPlaylistAsync(album, artist, p.Id);
             }
+            else if (artist != null)
+            {
+                DatabaseManager.AddArtistToPlaylistAsync(artist, p.Id);
+            }
+            
             else if (songId > -1)
             {
                 DatabaseManager.AddSongToPlaylist(songId, p.Id);

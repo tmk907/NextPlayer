@@ -44,7 +44,7 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = true;
+        private bool dev = false;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -57,14 +57,14 @@ namespace NextPlayer
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "01fcaacd-5dd7-490e-b6a9-ebd5f927558e";
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "35553b27-ab5c-4fbe-8495-07f21758f72c";
             }
             else
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "35553b27-ab5c-4fbe-8495-07f21758f72c";
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "80222e7f-9556-409e-adbc-a0b0151540b2";
             }
-            
+
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;

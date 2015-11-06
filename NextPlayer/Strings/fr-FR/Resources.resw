@@ -466,7 +466,7 @@
     <value>Noter l'application</value>
   </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>Choisir une playlist</value>
+    <value>choisir une playlist</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Noter</value>

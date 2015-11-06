@@ -1217,6 +1217,7 @@ namespace NextPlayer.ViewModel
                 Library.Current.ChangeRating(rating, CurrentSongIndex);
                 //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
                 await DatabaseManager.UpdateSongRating(songId, rating);
+                await MediaImport.UpdateRating(songId, rating);
             }
         }
     }

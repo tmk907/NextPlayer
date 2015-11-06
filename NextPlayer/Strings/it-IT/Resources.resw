@@ -466,7 +466,7 @@
     <value>Valuta l'app</value>
   </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>Scegli playlist</value>
+    <value>scegli playlist</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Valuta</value>

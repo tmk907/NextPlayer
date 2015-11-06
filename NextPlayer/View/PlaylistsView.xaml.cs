@@ -179,5 +179,12 @@ namespace NextPlayer.View
             PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
             ViewModel.PlayNow(item);
         }
+
+        private void Share_Click(object sender, RoutedEventArgs e)
+        {
+            PlaylistItem item = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
+            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
+            ViewModel.Share(item);
+        }
     }
 }

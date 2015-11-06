@@ -240,6 +240,22 @@ namespace NextPlayer.ViewModel
             TileUpdateManager.CreateTileUpdaterForSecondaryTile(id).Update(tileNotification);
         }
 
+        public void Share(PlaylistItem item)
+        {
+            String[] s = new String[3];
+            s[0] = "playlist";
+            if (item.IsSmart)
+            {
+                s[1] = "smart";
+            }
+            else
+            {
+                s[1] = "plain";
+            }
+            s[2] = item.Id.ToString();
+            navigationService.NavigateTo(ViewNames.BluetoothShare, ParamConvert.ToString(s));
+        }
+
         public void Activate(object parameter, Dictionary<string, object> state)
         {
             playlists.Clear();

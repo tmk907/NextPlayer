@@ -364,6 +364,7 @@
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
+    <MainPackageIdentityName>60490polApki.Next-Player</MainPackageIdentityName>
     <MainPackageIdentityName>60490polApki.NextPlayer</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGH1XMTZ" />
