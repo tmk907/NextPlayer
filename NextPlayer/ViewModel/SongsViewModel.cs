@@ -51,6 +51,33 @@ namespace NextPlayer.ViewModel
             private set;
         }
 
+        //public const string Songs2PropertyName = "Songs2";
+        //private IOrderedEnumerable<IGrouping<string, SongItem>> songs2;
+        //public IOrderedEnumerable<IGrouping<string,SongItem>> Songs2
+        //{
+        //    get
+        //    {
+        //        if (songs2 == null)
+        //        {
+        //            var characterGroupings = new Windows.Globalization.Collation.CharacterGroupings();
+        //            songs2 = DatabaseManager.GetSongItems().GroupBy(s => characterGroupings.Lookup(s.Title)).Select(s => s).OrderBy(t => t.Key);
+                    
+                    
+        //        }
+        //        return songs2;
+        //    }
+        //    set
+        //    {
+        //        if (songs2 == value)
+        //        {
+        //            return;
+        //        }
+
+        //        songs2 = value;
+        //        RaisePropertyChanged(Songs2PropertyName);
+        //    }
+        //}
+
         /// <summary>
         /// The <see cref="Songs" /> property's name.
         /// </summary>

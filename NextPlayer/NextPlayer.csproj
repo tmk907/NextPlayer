@@ -258,6 +258,7 @@
     <None Include="Package.StoreAssociation.xml">
       <SubType>Designer</SubType>
     </None>
+    <PRIResource Include="Strings\he-IL\Resources.resw" />
     <PRIResource Include="Strings\hr-HR\Resources.resw" />
     <PRIResource Include="Strings\sr-Latn\Resources.resw" />
     <PRIResource Include="Strings\bg-BG\Resources.resw" />

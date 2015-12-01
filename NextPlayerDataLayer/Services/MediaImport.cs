@@ -82,18 +82,16 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
-            string dbVersion = Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion].ToString();
-            if (dbVersion.EndsWith("notupdated"))
-            {
-                await UpdateDB(progress, dbVersion);
-                return;
-            }
+            int a = Environment.CurrentManagedThreadId;
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
-            
+            int all = list.Count;
             int count = 1;
             Tuple<int, int> tuple;
             Dictionary<string, Tuple<int, int>> dict = DatabaseManager.GetFilePaths();
+
+            int w1;
+            int w2;
 
             List<int> toAvailable = new List<int>();//lista songId
             List<SongData> newSongs = new List<SongData>();
@@ -118,29 +116,20 @@ namespace NextPlayerDataLayer.Services
                     SongData song = await CreateSongFromFile(file);
                     newSongs.Add(song);
                 }
-                
-                //if (i == 0)
-                //{
-                //    //istnieje taka sama
-                //}
-                //else if (i > 0)
-                //{
-                //    SongData song = await CreateSongFromFile(file);
-                //    await DatabaseManager.UpdateSongData(song, i);
-                //}
-                //else { };
 
-                if (count % 10 == 0)//!!!
+                w1 = (100 * count / all);
+                w2 = (100 * (count - 1) / all);
+
+                if (progress != null && w1!=w2)
                 {
-                    progress.Report(count);
+                    progress.Report(w1);
                 }
                 count++;
             }
-
+            progress.Report(99);
             DatabaseManager.ChangeAvailability(toAvailable);
             Library.Current.CheckNPAfterUpdate(toAvailable);
             await DatabaseManager.InsertSongsAsync(newSongs);
-
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             OnMediaImported("Update");
             SendToast();
@@ -271,71 +260,6 @@ namespace NextPlayerDataLayer.Services
             return song;
         }
 
-        public static async Task UpdateDB(IProgress<int> progress, string dbVersion)
-        {
-
-            var list = DatabaseManager.GetSongItems();
-            int count = 0;
-            foreach (var s in list)
-            {
-                try
-                {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(s.Path);
-                    using (Stream fileStream = await file.OpenStreamForReadAsync())
-                    {
-                        try
-                        {
-                            var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
-                            Tag tags;
-                            if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
-                            {
-                                tags = tagFile.GetTag(TagTypes.Id3v2);
-                            }
-                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
-                            {
-                                tags = tagFile.GetTag(TagTypes.Id3v1);
-                            }
-                            else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
-                            {
-                                tags = tagFile.GetTag(TagTypes.Apple);
-                            }
-                            else
-                            {
-                                tags = tagFile.GetTag(tagFile.TagTypes);
-                            }
-                            SongData song = new SongData();
-                            song.SongId = s.SongId;
-                            song.Tag.Artists = tags.JoinedPerformers ?? "";
-                            song.Tag.Comment = tags.Comment ?? "";
-                            song.Tag.Composers = tags.JoinedComposers ?? "";
-                            song.Tag.Conductor = tags.Conductor ?? "";
-                            song.Tag.Disc = (int)tags.Disc;
-                            song.Tag.DiscCount = (int)tags.DiscCount;
-                            song.Tag.FirstArtist = tags.FirstPerformer ?? "";
-                            song.Tag.FirstComposer = tags.FirstComposer ?? "";
-                            song.Tag.TrackCount = (int)tags.TrackCount;
-
-                            DatabaseManager.FillSongData(song);
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                }
-                if (count % 10 == 0)//!!!
-                {
-                    progress.Report(count);
-                }
-                count++;
-            }
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
-        }
-
         private static void SendToast()
         {
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -461,5 +385,72 @@ namespace NextPlayerDataLayer.Services
                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
         }
+
+
+        //public static async Task UpdateDB(IProgress<int> progress, string dbVersion)
+        //{
+
+        //    var list = DatabaseManager.GetSongItems();
+        //    int count = 0;
+        //    foreach (var s in list)
+        //    {
+        //        try
+        //        {
+        //            StorageFile file = await StorageFile.GetFileFromPathAsync(s.Path);
+        //            using (Stream fileStream = await file.OpenStreamForReadAsync())
+        //            {
+        //                try
+        //                {
+        //                    var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileStream, fileStream));
+        //                    Tag tags;
+        //                    if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
+        //                    {
+        //                        tags = tagFile.GetTag(TagTypes.Id3v2);
+        //                    }
+        //                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v1.ToString()))
+        //                    {
+        //                        tags = tagFile.GetTag(TagTypes.Id3v1);
+        //                    }
+        //                    else if (tagFile.TagTypes.ToString().Contains(TagTypes.Apple.ToString()))
+        //                    {
+        //                        tags = tagFile.GetTag(TagTypes.Apple);
+        //                    }
+        //                    else
+        //                    {
+        //                        tags = tagFile.GetTag(tagFile.TagTypes);
+        //                    }
+        //                    SongData song = new SongData();
+        //                    song.SongId = s.SongId;
+        //                    song.Tag.Artists = tags.JoinedPerformers ?? "";
+        //                    song.Tag.Comment = tags.Comment ?? "";
+        //                    song.Tag.Composers = tags.JoinedComposers ?? "";
+        //                    song.Tag.Conductor = tags.Conductor ?? "";
+        //                    song.Tag.Disc = (int)tags.Disc;
+        //                    song.Tag.DiscCount = (int)tags.DiscCount;
+        //                    song.Tag.FirstArtist = tags.FirstPerformer ?? "";
+        //                    song.Tag.FirstComposer = tags.FirstComposer ?? "";
+        //                    song.Tag.TrackCount = (int)tags.TrackCount;
+
+        //                    DatabaseManager.FillSongData(song);
+        //                }
+        //                catch (Exception ex)
+        //                {
+
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //        }
+        //        if (count % 10 == 0)//!!!
+        //        {
+        //            progress.Report(count);
+        //        }
+        //        count++;
+        //    }
+        //    Windows.Storage.ApplicationData.Current.LocalSettings.Values[AppConstants.DBVersion] = dbVersion.Replace("notupdated", "");
+        //}
+
     }
 }

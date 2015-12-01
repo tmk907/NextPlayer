@@ -225,26 +225,32 @@ namespace NextPlayer.View
             UpdateLibrary();
         }
 
-        private async Task UpdateLibrary()
+        private async void UpdateLibrary()
         {
+            App.TelemetryClient.TrackEvent("Start UpdateLibrary");
             DisableControls();
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
             Count2.Text = "0";
             Count2.Visibility = Visibility.Visible;
             WaitFewMinutes.Visibility = Visibility.Visible;
-
-            var progressIndicator = new Progress<int>(ReportProgressUpdate);
+            int a = Environment.CurrentManagedThreadId;
+            //var progressIndicator = new Progress<int>(ReportProgressUpdate);
+            var progress = new Progress<int>(percent=>
+            {
+                Count2.Text = percent + "%";
+            });
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            await MediaImport.ImportAndUpdateDatabase(progressIndicator);
+            await Task.Run(() => MediaImport.ImportAndUpdateDatabase(progress));
+            int i = Task.CurrentId ?? -1;
             stopwatch.Stop();
 
-            var updateEvent = new EventTelemetry();
-            updateEvent.Name = "Library update";
-            updateEvent.Metrics["time"] = stopwatch.Elapsed.TotalSeconds;
-            updateEvent.Metrics["count"] = Int32.Parse(Count2.Text);
-            App.TelemetryClient.TrackEvent(updateEvent);
+            //var updateEvent = new EventTelemetry();
+            //updateEvent.Name = "Library update";
+            //updateEvent.Metrics["time"] = stopwatch.Elapsed.TotalSeconds;
+            //updateEvent.Metrics["count"] = Int32.Parse(Count2.Text.Replace("%",""));
+            //App.TelemetryClient.TrackEvent(updateEvent);
 
             WaitFewMinutes.Visibility = Visibility.Collapsed;
             Count2.Visibility = Visibility.Collapsed;

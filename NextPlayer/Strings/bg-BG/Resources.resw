@@ -642,4 +642,7 @@
   <data name="TBMenuSongs.Text" xml:space="preserve">
     <value>Песни</value>
   </data>
+  <data name="FileInfoPageTitle.Text" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

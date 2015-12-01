@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddPlaylist.Label" xml:space="preserve">
+    <value>הוסף רשימת שירים</value>
+  </data>
+  <data name="AddSmartPlaylist.Label" xml:space="preserve">
+    <value>הוספת רשימת שירים חכמה</value>
+  </data>
+  <data name="AddToNowPlaying.Text" xml:space="preserve">
+    <value>הוסף ל'מתנגן כעת'</value>
+  </data>
+  <data name="AddToPlaylist.Text" xml:space="preserve">
+    <value>הוספה לרשימת שירים</value>
+  </data>
+  <data name="Album" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="AlbumPageTitle.Text" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="AlbumsPageTitle.Text" xml:space="preserve">
+    <value>אלבומים</value>
+  </data>
+  <data name="AppName.Text" xml:space="preserve">
+    <value>הנגן הבא</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="ArtistsPageTitle.Text" xml:space="preserve">
+    <value>אמנים</value>
+  </data>
+  <data name="ButtonCancel.Content" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="ButtonDelete.Content" xml:space="preserve">
+    <value>מחיקה</value>
+  </data>
+  <data name="Cancel.Label" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>מתחבר</value>
+  </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>התחברות נכשלה</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>מכיל</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>תאריך הוספה</value>
+  </data>
+  <data name="Delete.Text" xml:space="preserve">
+    <value>מחיקה</value>
+  </data>
+  <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
+    <value>האם הנך בטוח שברצונך למחוק את רשימת השירים ?</value>
+  </data>
+  <data name="DeleteRule.Content" xml:space="preserve">
+    <value>מחק כלל</value>
+  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>שאינו מכיל</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>משך</value>
+  </data>
+  <data name="EndsWith" xml:space="preserve">
+    <value>נגמר ב</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>נתיב תיקייה</value>
+  </data>
+  <data name="Genre" xml:space="preserve">
+    <value>ז'אנר</value>
+  </data>
+  <data name="GenresPageTitle.Text" xml:space="preserve">
+    <value>ז'אנרים</value>
+  </data>
+  <data name="HighestRating" xml:space="preserve">
+    <value>הדירוג הגבוה ביותר</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>שעות</value>
+  </data>
+  <data name="ImportMediaButton.Content" xml:space="preserve">
+    <value>הוספת שירים לספריה</value>
+  </data>
+  <data name="Is" xml:space="preserve">
+    <value>הוא/היא</value>
+  </data>
+  <data name="IsGreater" xml:space="preserve">
+    <value>גדול מ</value>
+  </data>
+  <data name="IsLess" xml:space="preserve">
+    <value>קטן מ</value>
+  </data>
+  <data name="IsNot" xml:space="preserve">
+    <value>הוא/היא לא</value>
+  </data>
+  <data name="LastPlayed" xml:space="preserve">
+    <value>נוגן אחרון</value>
+  </data>
+  <data name="LeastOftenPlayed" xml:space="preserve">
+    <value>נוגן הכי פחות</value>
+  </data>
+  <data name="LeastRecentlyAdded" xml:space="preserve">
+    <value>התווסף מזמן</value>
+  </data>
+  <data name="LeastRecentlyPlayed" xml:space="preserve">
+    <value>נוגן מזמן</value>
+  </data>
+  <data name="LibraryUpdated" xml:space="preserve">
+    <value>ספרייה עודכנה.</value>
+  </data>
+  <data name="LowestRating" xml:space="preserve">
+    <value>הדירוג הנמוך ביותר</value>
+  </data>
+  <data name="LyricsButton.Content" xml:space="preserve">
+    <value>מילות שיר</value>
+  </data>
+  <data name="MenuAlbums.Content" xml:space="preserve">
+    <value>אלבומים</value>
+  </data>
+  <data name="MenuArtists.Content" xml:space="preserve">
+    <value>אמנים</value>
+  </data>
+  <data name="MenuFolders.Content" xml:space="preserve">
+    <value>ספריות</value>
+  </data>
+  <data name="MenuGenres.Content" xml:space="preserve">
+    <value>ז'אנרים</value>
+  </data>
+  <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
+    <value>רשימת שירים 'מתנגן כעת'</value>
+  </data>
+  <data name="MenuPlaylists.Content" xml:space="preserve">
+    <value>רשימות שירים</value>
+  </data>
+  <data name="MenuSettings.Content" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="MenuSongs.Content" xml:space="preserve">
+    <value>שירים</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>דקות</value>
+  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>נוגן הכי הרבה</value>
+  </data>
+  <data name="MostRecentlyAdded" xml:space="preserve">
+    <value>התווסף לאחרונה</value>
+  </data>
+  <data name="MostRecentlyPlayed" xml:space="preserve">
+    <value>נוגן לאחרונה</value>
+  </data>
+  <data name="NajczesciejOdtwarzane" xml:space="preserve">
+    <value>נוגן הכי הרבה</value>
+  </data>
+  <data name="NajgorzejOceniane" xml:space="preserve">
+    <value>הדירוג הנמוך</value>
+  </data>
+  <data name="NajlepiejOceniane" xml:space="preserve">
+    <value>הדירוג הגבוה ביותר</value>
+  </data>
+  <data name="NajrzadziejOdtwarzane" xml:space="preserve">
+    <value>נוגן הכי פחות</value>
+  </data>
+  <data name="NewRule.Content" xml:space="preserve">
+    <value>הוסף כלל</value>
+  </data>
+  <data name="NewSPPageTitle.Text" xml:space="preserve">
+    <value>רשימת שירים חכמה חדשה</value>
+  </data>
+  <data name="NowPlayingPageTitle.Text" xml:space="preserve">
+    <value>מתנגן כעת</value>
+  </data>
+  <data name="NowPlayingPlaylistPageTitle" xml:space="preserve">
+    <value>מתנגן כעת</value>
+  </data>
+  <data name="OstatnioDodane" xml:space="preserve">
+    <value>התווסף אחרון</value>
+  </data>
+  <data name="OstatnioOdtwarzane" xml:space="preserve">
+    <value>נוגן אחרון</value>
+  </data>
+  <data name="PlayCount" xml:space="preserve">
+    <value>מונה ניגונים</value>
+  </data>
+  <data name="PlaylistsPageTitle.Text" xml:space="preserve">
+    <value>רשימות שירים</value>
+  </data>
+  <data name="PlayNow.Text" xml:space="preserve">
+    <value>נגן עכשיו</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>דירוג</value>
+  </data>
+  <data name="Rules.Text" xml:space="preserve">
+    <value>כללים</value>
+  </data>
+  <data name="Save.Content" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="Save.Label" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>שניות</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="SongsPageTitle" xml:space="preserve">
+    <value>שירים</value>
+  </data>
+  <data name="SPName.Text" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="SPSongsNumber.Text" xml:space="preserve">
+    <value>מספר שירים</value>
+  </data>
+  <data name="SPSortBy.Text" xml:space="preserve">
+    <value>מיין לפי</value>
+  </data>
+  <data name="StartsWith" xml:space="preserve">
+    <value>מתחיל ב</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>כותרת</value>
+  </data>
+  <data name="UpdateMediaButton.Content" xml:space="preserve">
+    <value>עדכין ספרייה</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>שנה</value>
+  </data>
+  <data name="WaitFewMinutes.Text" xml:space="preserve">
+    <value>נא לא לסגור עמוד זה במהלך הסריקה.</value>
+  </data>
+  <data name="MenuSearch.Content" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="SearchPageTitle.Text" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="FoldersPageTitle.Text" xml:space="preserve">
+    <value>ספריות</value>
+  </data>
+  <data name="RateButton.Content" xml:space="preserve">
+    <value>דרג</value>
+  </data>
+  <data name="SPErrorText.Text" xml:space="preserve">
+    <value>נא מלא את כל השדות בהתאם.</value>
+  </data>
+  <data name="ShowDetails.Text" xml:space="preserve">
+    <value>הצג פרטים</value>
+  </data>
+  <data name="DeleteFromPlaylist.Text" xml:space="preserve">
+    <value>מחק מרשימת שירים</value>
+  </data>
+  <data name="MenuStop.Content" xml:space="preserve">
+    <value>עצור</value>
+  </data>
+  <data name="TBAlbum.Text" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="TBArtist.Text" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="TBBitrate.Text" xml:space="preserve">
+    <value>קצב סיביות</value>
+  </data>
+  <data name="TBDateAdded.Text" xml:space="preserve">
+    <value>הוסף בתאריך</value>
+  </data>
+  <data name="TBFilePath.Text" xml:space="preserve">
+    <value>נתיב קובץ</value>
+  </data>
+  <data name="TBFileSize.Text" xml:space="preserve">
+    <value>גודל קובץ</value>
+  </data>
+  <data name="TBLastTimePlayed.Text" xml:space="preserve">
+    <value>זמן ניגון אחרון</value>
+  </data>
+  <data name="TBPlayCount.Text" xml:space="preserve">
+    <value>מונה ניגונים</value>
+  </data>
+  <data name="TBRating.Text" xml:space="preserve">
+    <value>דירוג</value>
+  </data>
+  <data name="TBTitle.Text" xml:space="preserve">
+    <value>כותרת</value>
+  </data>
+  <data name="TBTrackNumber.Text" xml:space="preserve">
+    <value>מספר טרק</value>
+  </data>
+  <data name="TBYear.Text" xml:space="preserve">
+    <value>שנה</value>
+  </data>
+  <data name="AppBarOrder.Label" xml:space="preserve">
+    <value>הפוך סדר</value>
+  </data>
+  <data name="AppBarSave.Label" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="AppBarSort.Label" xml:space="preserve">
+    <value>מיין לפי</value>
+  </data>
+  <data name="MFIAlbum.Text" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="MFIArtist.Text" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="MFIDuration.Text" xml:space="preserve">
+    <value>משך</value>
+  </data>
+  <data name="MFIRating.Text" xml:space="preserve">
+    <value>דירוג</value>
+  </data>
+  <data name="MFITitle.Text" xml:space="preserve">
+    <value>כותרת</value>
+  </data>
+  <data name="MFITrackNumber.Text" xml:space="preserve">
+    <value>מספר טרק</value>
+  </data>
+  <data name="ButtonSave.Content" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="AppBarEdit.Label" xml:space="preserve">
+    <value>עריכה</value>
+  </data>
+  <data name="ButtonSearch.Content" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="Later" xml:space="preserve">
+    <value>מאוחר יותר</value>
+  </data>
+  <data name="MainPageTitle.Text" xml:space="preserve">
+    <value>עמוד ראשי</value>
+  </data>
+  <data name="RateAppMsg" xml:space="preserve">
+    <value>אם אתה נהנה מהנגן הבא,  האם תואיל להקדיש דקה מזמנך על מנת לדרג אותו?
+זה לא יקח יותר מדקה. תודה על התמיכה שלך!</value>
+  </data>
+  <data name="RateAppTitle" xml:space="preserve">
+    <value>דרג את האפליקציה</value>
+  </data>
+  <data name="SelectPlaylist.Text" xml:space="preserve">
+    <value>בחר רשימת שירים</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>דרג</value>
+  </data>
+  <data name="AppBarSaveLyrics.Label" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>רשימת שירים</value>
+  </data>
+  <data name="PinToStart.Text" xml:space="preserve">
+    <value>הצמד</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>ספרייה</value>
+  </data>
+  <data name="HeaderTransparentTile.Header" xml:space="preserve">
+    <value>אריח שקוף</value>
+  </data>
+  <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
+    <value>רשימת שירים 'מתנגן כעת'</value>
+  </data>
+  <data name="TBTransparentTile.Text" xml:space="preserve">
+    <value>אריח שקוף</value>
+  </data>
+  <data name="UpdateMediaTB.Text" xml:space="preserve">
+    <value>עדכן ספרייה</value>
+  </data>
+  <data name="FilesSharedError" xml:space="preserve">
+    <value>לא ניתן היה לשתף מספר קבצים בהצלחה.</value>
+  </data>
+  <data name="FilesSharedOK" xml:space="preserve">
+    <value>כל הקבצים שותפו בהצלחה.</value>
+  </data>
+  <data name="BTSharePageTitle.Text" xml:space="preserve">
+    <value>שתף</value>
+  </data>
+  <data name="MFIShare.Text" xml:space="preserve">
+    <value>שתף</value>
+  </data>
+  <data name="TBDevices.Text" xml:space="preserve">
+    <value>מכשירים</value>
+  </data>
+  <data name="TBFiles.Text" xml:space="preserve">
+    <value>קבצים</value>
+  </data>
+  <data name="AppBarScan" xml:space="preserve">
+    <value>סרוק</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>מכשירים</value>
+  </data>
+  <data name="DevicesNotFound" xml:space="preserve">
+    <value>לא נמצלאו מכשירים</value>
+  </data>
+  <data name="SearchForDevices" xml:space="preserve">
+    <value>מחפש מכשירים...</value>
+  </data>
+  <data name="AppBarSearch.Label" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="AlbumArtist" xml:space="preserve">
+    <value>אמן אלבום</value>
+  </data>
+  <data name="Composer" xml:space="preserve">
+    <value>מלחין</value>
+  </data>
+  <data name="TBAlbumArtist.Text" xml:space="preserve">
+    <value>אמן אלבום</value>
+  </data>
+  <data name="TBComposer.Text" xml:space="preserve">
+    <value>מלחין</value>
+  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>אלבום לא ידוע</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>אמן לא ידוע</value>
+  </data>
+  <data name="AlbumsH.Header" xml:space="preserve">
+    <value>אלבומים</value>
+  </data>
+  <data name="ArtistsH.Header" xml:space="preserve">
+    <value>אמנים</value>
+  </data>
+  <data name="SongsH.Header" xml:space="preserve">
+    <value>שירים</value>
+  </data>
+  <data name="EditTags.Text" xml:space="preserve">
+    <value>עריכה</value>
+  </data>
+  <data name="TagsEditorPageTitle.Text" xml:space="preserve">
+    <value>עורך תגיות</value>
+  </data>
+  <data name="TBComment.Text" xml:space="preserve">
+    <value>הערה</value>
+  </data>
+  <data name="TBConductor.Text" xml:space="preserve">
+    <value>מנצח</value>
+  </data>
+  <data name="TBDisc.Text" xml:space="preserve">
+    <value>דיסק</value>
+  </data>
+  <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
+    <value>Semicolon separated values</value>
+  </data>
+  <data name="MFIComposer.Text" xml:space="preserve">
+    <value>מלחין</value>
+  </data>
+  <data name="MFIYear.Text" xml:space="preserve">
+    <value>שנה</value>
+  </data>
+  <data name="TBDuration.Text" xml:space="preserve">
+    <value>משך</value>
+  </data>
+  <data name="TBGenre.Text" xml:space="preserve">
+    <value>ז'אנר</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>ז'אנר לא ידוע</value>
+  </data>
+  <data name="TBAppTheme.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="TBMenuSongs.Text" xml:space="preserve">
+    <value>שירים</value>
+  </data>
+  <data name="TBShowBackgroundImage.Text" xml:space="preserve">
+    <value>Show background image</value>
+  </data>
+  <data name="TBShowAlbumCover.Text" xml:space="preserve">
+    <value>Show album art as a background</value>
+  </data>
+  <data name="TBMenuSettings.Text" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="HSettings.Header" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="ButtonSelectImage.Content" xml:space="preserve">
+    <value>Select image</value>
+  </data>
+  <data name="TBMenuSearch.Text" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="TBMenuPlaylists.Text" xml:space="preserve">
+    <value>רשימות שירים</value>
+  </data>
+  <data name="HPersonalize.Header" xml:space="preserve">
+    <value>personalize</value>
+  </data>
+  <data name="RBLight.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SelectImagePageTitle.Text" xml:space="preserve">
+    <value>image selection</value>
+  </data>
+  <data name="TBMenuGenres.Text" xml:space="preserve">
+    <value>ז'אנרים</value>
+  </data>
+  <data name="TBMenuFolders.Text" xml:space="preserve">
+    <value>ספריות</value>
+  </data>
+  <data name="RBDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="TBMenuArtists.Text" xml:space="preserve">
+    <value>אמנים</value>
+  </data>
+  <data name="TBMenuAlbums.Text" xml:space="preserve">
+    <value>אלבומים</value>
+  </data>
+  <data name="TBSelectAccentColor.Text" xml:space="preserve">
+    <value>Accent color</value>
+  </data>
+</root>

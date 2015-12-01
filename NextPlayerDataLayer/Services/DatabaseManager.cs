@@ -73,45 +73,44 @@ namespace NextPlayerDataLayer.Services
         {
             var conn = ConnectionDb();
             conn.CreateTable<SongsTable2>();
-            List<SongsTable2> songs = new List<SongsTable2>();
-            var oldSongsTable = conn.Table<SongsTable>().Where(s=>s.IsAvailable > 0);
-            foreach (var s in oldSongsTable)
-            {
-                songs.Add(new SongsTable2()
-                {
-                    Album = s.Album,
-                    AlbumArtist = s.AlbumArtist,
-                    Artists = "",
-                    Bitrate = s.Bitrate,
-                    Comment = "",
-                    Composers = "",
-                    Conductor = "",
-                    DateAdded = s.DateAdded,
-                    Disc = 0,
-                    DiscCount = 0,
-                    Duration = s.Duration,
-                    Filename = s.Filename,
-                    FileSize = s.FileSize,
-                    FirstArtist = "",
-                    FirstComposer = "",
-                    Genre = s.Genre,
-                    IsAvailable = s.IsAvailable,
-                    LastPlayed = s.LastPlayed,
-                    Lyrics = s.Lyrics,
-                    Path = s.Path,
-                    PlayCount = s.PlayCount,
-                    Rating = s.Rating,
-                    SongId = s.SongId,
-                    Title = s.Title,
-                    Track = (int)s.TrackNumber,
-                    TrackCount = 0,
-                    Year = (int)s.Year,
-                });
-            }
-            conn.InsertAll(songs);
+            //List<SongsTable2> songs = new List<SongsTable2>();
+            //var oldSongsTable = conn.Table<SongsTable>().Where(s=>s.IsAvailable > 0);
+            //foreach (var s in oldSongsTable)
+            //{
+            //    songs.Add(new SongsTable2()
+            //    {
+            //        Album = s.Album,
+            //        AlbumArtist = s.AlbumArtist,
+            //        Artists = "",
+            //        Bitrate = s.Bitrate,
+            //        Comment = "",
+            //        Composers = "",
+            //        Conductor = "",
+            //        DateAdded = s.DateAdded,
+            //        Disc = 0,
+            //        DiscCount = 0,
+            //        Duration = s.Duration,
+            //        Filename = s.Filename,
+            //        FileSize = s.FileSize,
+            //        FirstArtist = "",
+            //        FirstComposer = "",
+            //        Genre = s.Genre,
+            //        IsAvailable = s.IsAvailable,
+            //        LastPlayed = s.LastPlayed,
+            //        Lyrics = s.Lyrics,
+            //        Path = s.Path,
+            //        PlayCount = s.PlayCount,
+            //        Rating = s.Rating,
+            //        SongId = s.SongId,
+            //        Title = s.Title,
+            //        Track = (int)s.TrackNumber,
+            //        TrackCount = 0,
+            //        Year = (int)s.Year,
+            //    });
+            //}
+            //conn.InsertAll(songs);
 
             conn.DropTable<SongsTable>();
-
             conn.DropTable<NowPlayingTable>();
             conn.CreateTable<NowPlayingTable>();
             conn.DropTable<PlainPlaylistEntryTable>();

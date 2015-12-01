@@ -44,7 +44,7 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = false;
+        private bool dev = true;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -69,7 +69,7 @@ namespace NextPlayer
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
-            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            var settings = ApplicationData.Current.LocalSettings;
 
             if (FirstRun())
             {
@@ -137,11 +137,21 @@ namespace NextPlayer
             NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
-            ApplicationSettingsHelper.SaveSongIndex(-1);
-            if (Library.Current.NowPlayingList.Count >= 0)
+            int i = ApplicationSettingsHelper.ReadSongIndex();
+            int npc = Library.Current.NowPlayingList.Count;
+            if (i>=0 && npc>0 && npc > i)
             {
-                ApplicationSettingsHelper.SaveSongIndex(0);
+                ApplicationSettingsHelper.SaveSongIndex(i);
             }
+            else
+            {
+                ApplicationSettingsHelper.SaveSongIndex(-1);
+                if (npc >= 0)
+                {
+                    ApplicationSettingsHelper.SaveSongIndex(0);
+                }
+            }
+            
         }
 
         /// <summary>
@@ -400,12 +410,25 @@ namespace NextPlayer
 
         public static Action OnNewTilePinned { get; set; }
 
+        private void UpdateDB()
+        {
+            var settings = ApplicationData.Current.LocalSettings;
+
+            if (!settings.Values.ContainsKey(AppConstants.DBVersion))
+            {
+                DatabaseManager.UpdateDBToVersion2();
+                settings.Values.Add(AppConstants.DBVersion, "2");
+            }
+        }
+
+        //old
+
         private void SendLogs()
         {
             try
             {
                 var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                
+
                 if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
                 {
                     settings.Values.Add(AppConstants.DataLastSend, DateTime.Today.Ticks);
@@ -418,7 +441,7 @@ namespace NextPlayer
                     TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
                     //if (TimeSpan.FromDays(2) <= elapsed)
                     //{
-                        //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
+                    //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
                     CreateTask();
                     //}
                 }
@@ -475,17 +498,6 @@ namespace NextPlayer
             }
 
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
-        }
-
-        private void UpdateDB()
-        {
-            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-            if (!settings.Values.ContainsKey(AppConstants.DBVersion))
-            {
-                DatabaseManager.UpdateDBToVersion2();
-                settings.Values.Add(AppConstants.DBVersion, "2notupdated");
-            }
         }
     }
 }
