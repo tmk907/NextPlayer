@@ -12,6 +12,7 @@ namespace NextPlayerDataLayer.Diagnostics
     {
         private const string filename = "log1.txt";
         private const string filenameBG = "logBG1.txt";
+        private const string lastfmlog = "lastfmlog.txt";
 
         private static string temp = "";
         private static string tempBG = "";
@@ -121,5 +122,43 @@ namespace NextPlayerDataLayer.Diagnostics
             }
         }
 
+
+        public async static void SaveLastFm(string data)
+        {
+            try
+            {
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(lastfmlog, CreationCollisionOption.OpenIfExists);
+                await FileIO.AppendTextAsync(file, DateTime.Now.ToString() + Environment.NewLine + data + Environment.NewLine);
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+
+        public async static Task<string> ReadLastFm()
+        {
+            string text = "";
+            StorageFolder local = ApplicationData.Current.LocalFolder;
+            try
+            {
+                Stream stream = await local.OpenStreamForReadAsync(lastfmlog);
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    text = reader.ReadToEnd();
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                
+            }
+
+            return text;
+        }
+
+        public async static void ClearLastFm()
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(lastfmlog, CreationCollisionOption.ReplaceExisting);
+        }
     }
 }

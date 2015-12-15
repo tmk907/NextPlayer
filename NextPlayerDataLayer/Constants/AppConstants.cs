@@ -9,6 +9,8 @@ namespace NextPlayerDataLayer.Constants
         public const string FirstRun = "firstrun";
         public const string DBVersion = "DBVersion";
         public const string AppVersion = "AppVersion";
+        public const string LastFmDBFileName = "lastfm.db";
+        public const string LastFmDBVersion = "lastfmDBVersion";
 
         //Layout
         public const string AppTheme = "AppTheme";
@@ -87,5 +89,16 @@ namespace NextPlayerDataLayer.Constants
         public const string NajgorzejOceniane = "NajgorzejOceniane";
         public const string NajczesciejOdtwarzane = "NajczesciejOdtwarzane";
         public const string NajrzadziejOdtwarzane = "NajrzadziejOdtwarzane";
+
+        //Last.fm
+        public const string LfmLogin = "lfmlogin";
+        public const string LfmPassword = "lfmpassword";
+        public const string LfmIsScrobblingOn = "isscrobblingon";
+        public const string LfmSessionKey = "lfmsessionkey";
+        public const string LfmRateSongs = "lfmrate";
+        public const string LfmUnLove = "lfmunlove";
+        public const string LfmLove = "lfmlove";
+        public const string LfmSendNP = "lfmsendnp";
+
     }
 }

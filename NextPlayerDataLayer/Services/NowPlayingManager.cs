@@ -30,6 +30,9 @@ namespace NextPlayerDataLayer.Services
         int prevSongIndex = -1;
         private int currentSongId = -1;
 
+        private DateTime songsStart;
+        private TimeSpan songPlayed;
+
 
         public NowPlayingManager()
         {
@@ -111,6 +114,7 @@ namespace NextPlayerDataLayer.Services
             paused = false;
             currentSongIndex = index;
             LoadSong();
+            ScrobbleNowPlaying();
         }
 
         public void ResumePlayback()
@@ -134,19 +138,22 @@ namespace NextPlayerDataLayer.Services
         {
             paused = false;
             mediaPlayer.Play();
+            ScrobbleNowPlaying();
             //SendPosition();
+            songsStart = DateTime.Now;
         }
 
         public void Pause()
         {
             paused = true;
             mediaPlayer.Pause();
+            songPlayed = DateTime.Now - songsStart;
         }
 
         public void Next()
         {
             UpdateSongStatistics();
-
+            ScrobbleTrack();
             if (isShuffleOn)
             {
                 prevSongIndex = currentSongIndex;
@@ -178,7 +185,7 @@ namespace NextPlayerDataLayer.Services
         public void Previous()
         {
             UpdateSongStatistics();
-
+            ScrobbleTrack();
             if (isShuffleOn)
             {
                 //currentSongIndex = shuffleSongIndexes.Last();
@@ -313,12 +320,33 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
+        private async Task ScrobbleTrack()
+        {
+            //DateTime now = DateTime.Now;
+            //songPlayed = now - songsStart;
+            //if (songPlayed >= BackgroundMediaPlayer.Current.NaturalDuration)
+            //{
+            //    await LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { new TrackScrobble() {
+            //        Artist = GetArtist(),
+            //        Track = GetTitle(),
+            //        Timestamp = (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds.ToString()
+            //    } });
+            //}
+        }
+
+        private async Task ScrobbleNowPlaying()
+        {
+            //if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
+            //{
+            //    await LastFmManager.Current.TrackUpdateNowPlaying(GetArtist(), GetTitle());
+            //}
+        }
+
         public void UpdateSongStatistics()
         {
             if (currentSongId>0 &&  BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
             {
                 DatabaseManager.UpdateSongStatistics(currentSongId);
-
             }
         }
 
@@ -336,6 +364,7 @@ namespace NextPlayerDataLayer.Services
             if (!paused)
             {
                 sender.Play();
+                songsStart = DateTime.Now;
                 if (!startPosition.Equals(TimeSpan.Zero))
                 {
                     sender.Position = startPosition;

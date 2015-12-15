@@ -353,28 +353,28 @@ namespace NextPlayerDataLayer.Services
 
         
 
-        public async Task SetDB()
+        public void SetDB()
         {
-            await DatabaseManager.CreateDatabase();
+            DatabaseManager.CreateDatabase();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
             int i;
-            i = await DatabaseManager.InsertSmartPlaylist("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString());
+            i = DatabaseManager.InsertSmartPlaylist2("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioDodane, i);
-            i = await DatabaseManager.InsertSmartPlaylist("Ostatnio odtwarzane", 50, SPUtility.SortBy.MostRecentlyPlayed);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString());
+            i = DatabaseManager.InsertSmartPlaylist2("Ostatnio odtwarzane", 50, SPUtility.SortBy.MostRecentlyPlayed);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.LastPlayed, SPUtility.Comparison.IsGreater, DateTime.MinValue.Ticks.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.OstatnioOdtwarzane, i);
-            i = await DatabaseManager.InsertSmartPlaylist("Najczęściej odtwarzane",50,SPUtility.SortBy.MostOftenPlayed);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0");
+            i = DatabaseManager.InsertSmartPlaylist2("Najczęściej odtwarzane",50,SPUtility.SortBy.MostOftenPlayed);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "0");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajczesciejOdtwarzane, i);
-            i = await DatabaseManager.InsertSmartPlaylist("Najlepiej oceniane",50,SPUtility.SortBy.HighestRating);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3");
+            i = DatabaseManager.InsertSmartPlaylist2("Najlepiej oceniane",50,SPUtility.SortBy.HighestRating);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.Rating, SPUtility.Comparison.IsGreater, "3");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajlepiejOceniane, i);
-            i = await DatabaseManager.InsertSmartPlaylist("Najrzadziej odtwarzane", 50, SPUtility.SortBy.LeastOftenPlayed);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1");
+            i = DatabaseManager.InsertSmartPlaylist2("Najrzadziej odtwarzane", 50, SPUtility.SortBy.LeastOftenPlayed);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.PlayCount, SPUtility.Comparison.IsGreater, "-1");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajrzadziejOdtwarzane, i);
-            i = await DatabaseManager.InsertSmartPlaylist("Najgorzej oceniane", 50, SPUtility.SortBy.LowestRating);
-            await DatabaseManager.InsertSmartPlaylistEntry(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4");
+            i = DatabaseManager.InsertSmartPlaylist2("Najgorzej oceniane", 50, SPUtility.SortBy.LowestRating);
+            DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.Rating, SPUtility.Comparison.IsLess, "4");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.NajgorzejOceniane, i);
         }
     }

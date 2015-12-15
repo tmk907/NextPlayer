@@ -227,7 +227,7 @@ namespace NextPlayer.View
 
         private async void UpdateLibrary()
         {
-            App.TelemetryClient.TrackEvent("Start UpdateLibrary");
+            //App.TelemetryClient.TrackEvent("Start UpdateLibrary");
             DisableControls();
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
@@ -241,10 +241,10 @@ namespace NextPlayer.View
                 Count2.Text = percent + "%";
             });
 
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            //var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             await Task.Run(() => MediaImport.ImportAndUpdateDatabase(progress));
             int i = Task.CurrentId ?? -1;
-            stopwatch.Stop();
+            //stopwatch.Stop();
 
             //var updateEvent = new EventTelemetry();
             //updateEvent.Name = "Library update";

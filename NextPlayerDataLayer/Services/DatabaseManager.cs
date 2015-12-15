@@ -32,6 +32,13 @@ namespace NextPlayerDataLayer.Services
             return conn;
         }
 
+        private static SQLiteConnection LastFmDBConnection()
+        {
+            var conn = new SQLite.SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.LastFmDBFileName), true);
+            conn.BusyTimeout = TimeSpan.FromSeconds(2);
+            return conn;
+        }
+
         //Only available songs
         private static SQLite.TableQuery<SongsTable2> SongsConn()
         {
@@ -53,14 +60,19 @@ namespace NextPlayerDataLayer.Services
             await AsyncConnectionDb().DropTableAsync<NowPlayingTable>();
         }
 
-        public static async Task CreateDatabase()
+        public static void CreateDatabase()
         {
-            await AsyncConnectionDb().CreateTableAsync<PlainPlaylistsTable>();
-            await AsyncConnectionDb().CreateTableAsync<PlainPlaylistEntryTable>();
-            await AsyncConnectionDb().CreateTableAsync<SmartPlaylistsTable>();
-            await AsyncConnectionDb().CreateTableAsync<SmartPlaylistEntryTable>();
-            await AsyncConnectionDb().CreateTableAsync<SongsTable2>();
-            await AsyncConnectionDb().CreateTableAsync<NowPlayingTable>();
+            ConnectionDb().CreateTable<PlainPlaylistsTable>();
+            ConnectionDb().CreateTable<PlainPlaylistEntryTable>();
+            ConnectionDb().CreateTable<SmartPlaylistsTable>();
+            ConnectionDb().CreateTable<SmartPlaylistEntryTable>();
+            ConnectionDb().CreateTable<SongsTable2>();
+            ConnectionDb().CreateTable<NowPlayingTable>();
+        }
+
+        public static void CreateLastFmDB()
+        {
+            LastFmDBConnection().CreateTable<CachedScrobble>();
         }
 
         //public static void ResetSongsTable()
@@ -155,6 +167,19 @@ namespace NextPlayerDataLayer.Services
             return newplaylist.SmartPlaylistId;
         }
 
+        public static int InsertSmartPlaylist2(string _name, int _number, string _sorting)
+        {
+            var newplaylist = new SmartPlaylistsTable
+            {
+                Name = _name,
+                SongsNumber = _number,
+                SortBy = _sorting,
+            };
+
+            ConnectionDb().Insert(newplaylist);
+            return newplaylist.SmartPlaylistId;
+        }
+
         public async static Task InsertSmartPlaylistEntry(int _playlistId, string _item, string _comparison, string _value)
         {
             var newEntry = new SmartPlaylistEntryTable
@@ -166,6 +191,19 @@ namespace NextPlayerDataLayer.Services
             };
 
             await AsyncConnectionDb().InsertAsync(newEntry);
+        }
+
+        public static void InsertSmartPlaylistEntry2(int _playlistId, string _item, string _comparison, string _value)
+        {
+            var newEntry = new SmartPlaylistEntryTable
+            {
+                PlaylistId = _playlistId,
+                Item = _item,
+                Comparison = _comparison,
+                Value = _value,
+            };
+
+            ConnectionDb().Insert(newEntry);
         }
 
         public async static Task<int> InsertSong(SongData song)
@@ -1390,6 +1428,38 @@ namespace NextPlayerDataLayer.Services
                 Year = (int)q.Year,
             };
             return info;
+        }
+
+        #endregion
+
+        #region LastFm
+
+        public static void Save(string function, string artist, string track, string timestamp = "")
+        {
+            LastFmDBConnection().Insert(new CachedScrobble()
+            {
+                Artist = artist,
+                Function = function,
+                Timestamp = timestamp,
+                Track = track
+            });
+        }
+
+        public static List<Dictionary<string, string>> ReadAndDeleteAll()
+        {
+            List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
+
+            foreach(var item in LastFmDBConnection().Table<CachedScrobble>().ToList())
+            {
+                list.Add(new Dictionary<string, string>() {
+                    {"artist", item.Artist },
+                    {"track", item.Track },
+                    {"timestamp", item.Timestamp },
+                    {"function", item.Function }
+                });
+            }
+
+            return list;
         }
 
         #endregion

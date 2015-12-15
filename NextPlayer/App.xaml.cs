@@ -46,6 +46,11 @@ namespace NextPlayer
         private TransitionCollection transitions;
         private bool dev = true;
 
+        public static bool LastFmRateOn;
+        public static int LastFmUnLove;
+        public static int LastFmLove;
+        public static bool LastFmSendNP;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -70,7 +75,7 @@ namespace NextPlayer
             this.Suspending += this.OnSuspending;
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             var settings = ApplicationData.Current.LocalSettings;
-
+            
             if (FirstRun())
             {
                 //jesli jest DB jest tworzone po wersji 1.5.1.0 przy tworzeniu bazy trzeba zapisac jej wersje
@@ -81,6 +86,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
+                
             }
             else
             {
@@ -121,12 +127,31 @@ namespace NextPlayer
                 {
                     App.Current.RequestedTheme = ApplicationTheme.Light;
                     
-                }  
-  
+                }
+
                 //SendLogs();
-                UpdateDB();
+                //UpdateDB();
             }
-           
+
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 5);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, 0);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
+            }
+
+            LastFmLove = Int32.Parse(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLove).ToString());
+            LastFmUnLove = Int32.Parse(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmUnLove).ToString());
+            LastFmRateOn = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs);
+            LastFmSendNP = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP);
+
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LastFmDBVersion) == null)
+            {
+                DatabaseManager.CreateLastFmDB();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LastFmDBVersion, 1);
+            }
+
             //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
         }
@@ -499,5 +524,21 @@ namespace NextPlayer
 
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
         }
+
+        private async void testlastfm()
+        {
+            //await LastFmManager.Current.SetMobileSession();
+            List<TrackScrobble> l = new List<TrackScrobble>();
+            for(int i = 0; i < 11; i++)
+            {
+                l.Add(new TrackScrobble() { Artist = "a"+i.ToString(), Timestamp = i.ToString(), Track = "tr" });
+            }
+            //await LastFmManager.Current.TrackScroblle(l);
+            //await LastFmManager.Current.TrackLove("enya", "watermark");
+            //await LastFmManager.Current.TrackUnlove("enya", "May it be");
+            //await LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { new TrackScrobble() { Artist = "Enya", Timestamp = "1450186957", Track = "Exile" } });
+        }
+
+        
     }
 }

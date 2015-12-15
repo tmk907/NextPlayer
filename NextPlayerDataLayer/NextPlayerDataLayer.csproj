@@ -83,13 +83,14 @@
     <SDKReference Include="Microsoft.VCLibs, version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.WP81, Version=3.8.11.1">
-      <Name>SQLite for Windows Phone 8.1 %28SQLite.WP81, Version=3.8.11.1%29</Name>
+    <SDKReference Include="SQLite.WP81, Version=3.9.2">
+      <Name>SQLite for Windows Phone 8.1 %28SQLite.WP81, Version=3.9.2%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Grouped.cs" />
     <Compile Include="Constants\AppConstants.cs" />
+    <Compile Include="Constants\LastFmKeys.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\Sender.cs" />
     <Compile Include="Enums\AppThemeEnum.cs" />
@@ -115,11 +116,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BluetoothManager.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
+    <Compile Include="Services\LastFmManager.cs" />
     <Compile Include="Services\Library.cs" />
     <Compile Include="Services\MediaImport.cs" />
     <Compile Include="Services\NowPlayingManager.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
+    <Compile Include="Tables\CachedScrobble.cs" />
     <Compile Include="Tables\NowPlayingTable.cs" />
     <Compile Include="Tables\PlainPlaylistEntryTable.cs" />
     <Compile Include="Tables\PlainPlaylistsTable.cs" />

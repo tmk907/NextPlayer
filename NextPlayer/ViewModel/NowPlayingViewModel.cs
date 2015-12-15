@@ -339,6 +339,10 @@ namespace NextPlayer.ViewModel
 
             set
             {
+                if (rating == value)
+                {
+                    return;
+                }
                 if (value == 0 || value == 1 || value == 2 || value == 3 || value == 4 || value == 5)
                 {
                     rating = value;
@@ -1215,6 +1219,17 @@ namespace NextPlayer.ViewModel
             if (!fromDB)
             {
                 Library.Current.ChangeRating(rating, CurrentSongIndex);
+                if (App.LastFmRateOn)
+                {
+                    if (rating >= App.LastFmLove)
+                    {
+                        await LastFmManager.Current.TrackLove(Artist, Title);
+                    }
+                    if (rating<= App.LastFmUnLove)
+                    {
+                        await LastFmManager.Current.TrackUnlove(Artist, Title);
+                    }
+                }
                 //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
                 await DatabaseManager.UpdateSongRating(songId, rating);
                 await MediaImport.UpdateRating(songId, rating);
