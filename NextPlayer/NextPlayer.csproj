@@ -117,6 +117,7 @@
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
+    <Compile Include="Converters\RatingConverter.cs" />
     <Compile Include="Converters\SizeToStringConverter.cs" />
     <Compile Include="Converters\StringToInputScopeConverter.cs" />
     <Compile Include="Converters\StyleConverter.cs" />
@@ -376,6 +377,10 @@
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.1.1.35052, Culture=neutral, PublicKeyToken=2d6752c4fdf70b88, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\wpa81\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JRatingControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JISoft.Rating.1.0.3\lib\portable-wpa81+win81\JRatingControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=0.14.0.20632, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

@@ -9,11 +9,117 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:rating="using:Bratched.Tools.RatingControl"
+    xmlns:RatingControl="using:JISoft.RatingControl" 
     Loaded="MainPage_Loaded"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding NowPlayingVM, Mode=OneWay, Source={StaticResource Locator}}">
-
+    <Page.Resources>
+        <Style x:Key="CheckBoxHeartStyle" TargetType="CheckBox">
+            <Setter Property="Background" Value="{ThemeResource CheckBoxBackgroundThemeBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CheckBoxBorderThemeBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource PhoneBorderThickness}"/>
+            <Setter Property="FontSize" Value="{ThemeResource TextStyleLargeFontSize}"/>
+            <Setter Property="FontFamily" Value="{ThemeResource PhoneFontFamilyNormal}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Padding" Value="{ThemeResource CheckBoxAndRadioButtonTextPaddingThickness}"/>
+            <Setter Property="MinWidth" Value="{ThemeResource CheckBoxAndRadioButtonMinWidthSize}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <!--<VisualStateGroup.Transitions>
+                                        <VisualTransition From="Pressed" To="PointerOver">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                        <VisualTransition From="PointerOver" To="Normal">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                        <VisualTransition From="Pressed" To="Normal">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="Grid"/>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                    </VisualStateGroup.Transitions>-->
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="PointerOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <!--<Storyboard>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="Grid"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="CheckGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxPressedBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxPressedForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxPressedBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>-->
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <!--<VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>-->
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="Grid" Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid x:Name="CheckGrid" Grid.Column="0" VerticalAlignment="Top" Background="{TemplateBinding Background}">
+                                    <TextBlock x:Name="CheckBackground" HorizontalAlignment="Center" Text="&#xE1CE;" VerticalAlignment="Top" FontFamily="Segoe UI Symbol" IsHitTestVisible="False" Foreground="{StaticResource PhoneForegroundBrush}" FontSize="{StaticResource TextStyleLargeFontSize}"/>
+                                    <TextBlock x:Name="NormalRectangle" HorizontalAlignment="Center" Text="&#xE007;" VerticalAlignment="Top" FontFamily="Segoe UI Symbol" IsHitTestVisible="False" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleLargeFontSize}" />
+                                    <TextBlock x:Name="CheckGlyph" HorizontalAlignment="Center" Text="&#xE1CF;" VerticalAlignment="Top" FontFamily="Segoe UI Symbol" IsHitTestVisible="False" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleLargeFontSize}" />
+                                </Grid>
+                                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" Foreground="{TemplateBinding Foreground}" FontWeight="Normal" FontSize="{ThemeResource TextStyleLargeFontSize}" FontFamily="{ThemeResource PhoneFontFamilyNormal}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -41,7 +147,7 @@
             <TextBlock x:Uid="NowPlayingPageTitle" Text="now playing" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
-        
+
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -80,7 +186,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    
+
                     <StackPanel Grid.Row="0"
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Center"
@@ -115,11 +221,42 @@
                             Command="{Binding GoToNowPlayingList}"
                             Style="{StaticResource ButtonStyleSmallRound}"/>
                 </Grid>
-                <rating:RatingControl Grid.Row="1" Grid.Column="0"
+                <!--<Grid  Grid.Row="1" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" 
+                              IsChecked="{Binding TestRating, Converter={StaticResource RatingConverter} ,ConverterParameter=1, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource CheckBoxHeartStyle}"/>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding TestRating, Converter={StaticResource RatingConverter} ,ConverterParameter=2, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource CheckBoxHeartStyle}"/>
+                    <CheckBox Grid.Column="2" IsChecked="{Binding TestRating, Converter={StaticResource RatingConverter} ,ConverterParameter=3, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource CheckBoxHeartStyle}"/>
+                    <CheckBox Grid.Column="3" IsChecked="{Binding TestRating, Converter={StaticResource RatingConverter} ,ConverterParameter=4, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource CheckBoxHeartStyle}"/>
+                    <CheckBox Grid.Column="4" IsChecked="{Binding TestRating, Converter={StaticResource RatingConverter} ,ConverterParameter=5, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource CheckBoxHeartStyle}"/>
+                </Grid>-->
+                <RatingControl:Rating Grid.Row="1" Grid.Column="0"
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"   
+                AllowSelectingZero="True" ReadOnly="False"  
+                RatingItemCount="5" Value="{Binding TestRating, Mode=TwoWay}">
+                    <RatingControl:Rating.FilledItemStyle>
+                        <Style TargetType="RatingControl:RatingItem">
+                            <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}"/>
+                        </Style>
+                    </RatingControl:Rating.FilledItemStyle>
+                    <RatingControl:Rating.UnfilledItemStyle>
+                        <Style TargetType="RatingControl:RatingItem">
+                            <Setter Property="Background" Value="#cc646464"/>
+                        </Style>
+                    </RatingControl:Rating.UnfilledItemStyle>
+                </RatingControl:Rating>
+                <!--<rating:RatingControl Grid.Row="1" Grid.Column="0"
                                       IsEditable="True"
                                       RoundValueSlice="1"
                                       ItemsCount="5" 
-                                      Value="{Binding Rating, Mode=TwoWay}"
+                                      Value="{Binding TestRating, Mode=TwoWay}"
                                       ItemsSpacing="20" 
                                       >
                     <rating:RatingControl.EmptyItemsDefinition>
@@ -134,9 +271,9 @@
                                 BackgroundColor="{StaticResource UserAccentBrush}"
                                 OutlineColor="{StaticResource UserAccentBrush}"
                                 OutlineThikness="8"
-           />
+                        />
                     </rating:RatingControl.FullItemsDefinition>
-                </rating:RatingControl>
+                </rating:RatingControl>-->
                 <Grid Grid.Row="2" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
