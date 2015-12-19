@@ -133,12 +133,15 @@ namespace NextPlayer
                 //UpdateDB();
             }
 
+            //aplikacja jest uruchomiona 1 raz lub po aktualizacji
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs) == null)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, 5);
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, 0);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, 1);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
             }
 
             LastFmLove = Int32.Parse(ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLove).ToString());

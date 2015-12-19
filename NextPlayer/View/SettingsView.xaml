@@ -201,12 +201,12 @@
                                    FontSize="24"
                                    x:Uid="TBSelectAccentColor"
                                    Text="Accent color" />
-                            <!--<ToggleSwitch Grid.Row="1"
+                            <ToggleSwitch Grid.Row="1"
                                    x:Name="phoneAccentToggleSwitch"
                                    x:Uid="HeaderPhoneAccent"
                                    Header="akcent telefonu"
                                    Style="{StaticResource ToggleSwitchStyle1}"
-                                   Toggled="ColorAccent_Toggled"/>-->
+                                   Toggled="ColorAccent_Toggled"/>
                             <Grid Grid.Row="2" 
                                 x:Name="gridColors"
                                 HorizontalAlignment="Center"
@@ -272,13 +272,112 @@
                                          GroupName="ThemeGroup"
                                          Checked="RBTheme_Checked"
                                          Content="Light"/>
-                            <!--<RadioButton Grid.Row="3" 
-                                         x:Uid="RBImage"
-                                         x:Name="RBImage"
-                                         GroupName="ThemeGroup"
-                                         Checked="RBTheme_Checked"
-                                         Content="Image"/>-->
+                            <TextBlock Grid.Row="3"
+                                       x:Uid="TBChangeAfterRestart"
+                                       Text="Restart app to apply theme"
+                                       TextWrapping="WrapWholeWords"
+                                       FontSize="18"
+                                       />
                         </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem Header="last.fm">
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Uid="TBYouAreLogedIn" Grid.Row="0"
+                                   x:Name="TBYouAreLoggedIn"
+                                   Text="You're logged in"
+                                   FontSize="22"
+                                   Visibility="Collapsed"
+                                   />
+                        <TextBlock x:Uid="TBLogin" Grid.Row="0" 
+                                   x:Name="TBLogin"
+                                   Text="Login"
+                                   FontSize="22"/>
+                        <TextBox x:Name="LFMLogin" Grid.Row="1" />
+                        <TextBlock x:Uid="TBPassword" Grid.Row="2"  
+                                   x:Name="TBPassword"
+                                   Text="Password"
+                                   FontSize="22"/>
+                        <PasswordBox x:Name="LFMPassword" Grid.Row="3"/>
+
+                        <Button x:Name="LFMLoginButton" Grid.Row="4"  x:Uid="ButtonLogin" 
+                                Content="Log in" 
+                                HorizontalAlignment="Center"
+                                Click="LFMLoginButton_Click"/>
+                        <Button x:Name="LFMLogoutButton" Grid.Row="4"  x:Uid="ButtonLogout" 
+                                Content="Log out" 
+                                HorizontalAlignment="Center"
+                                Visibility="Collapsed" 
+                                Click="LFMLogoutButton_Click"/>
+                        <TextBlock x:Uid="TBLoginError" Grid.Row="5"  x:Name="LFMLoginError" 
+                                   Text="Cannot log in"
+                                   TextWrapping="WrapWholeWords"
+                                   FontSize="22"
+                                   HorizontalAlignment="Center"
+                                   Visibility="Collapsed"/>
+                        <TextBlock x:Uid="TBSendNP" Grid.Row="6" 
+                                   Margin="0,16,0,0"
+                                   FontSize="22"
+                                   TextWrapping="WrapWholeWords"
+                                   Text="Update Now Playing on my profile page"/>
+                        <ToggleSwitch Grid.Row="7"
+                                    x:Name="ToggleSwitchSendNP"
+                                    Style="{StaticResource ToggleSwitchStyle1}"
+                                    Toggled="SendNP_Toggled"/>
+                        <TextBlock x:Uid="TBSendLoveTrack" Grid.Row="8" 
+                                   FontSize="22"
+                                   TextWrapping="WrapWholeWords"
+                                   Text="Mark track as loved when I rate song"/>
+                        <ToggleSwitch Grid.Row="9"
+                                    x:Name="ToggleSwitchLoveTrack"
+                                    Style="{StaticResource ToggleSwitchStyle1}"
+                                    Toggled="LoveTrack_Toggled"/>
+                        <ComboBox x:Name="MinLove" Grid.Row="10" SelectionChanged="MinLove_SelectionChanged">
+                            <ComboBox.Header>
+                                    <TextBlock x:Uid="TBMarkAtLeast" 
+                                        Text="Mark as loved when I rate at least" 
+                                               TextWrapping="WrapWholeWords"
+                                               FontSize="18"/>
+                            </ComboBox.Header>
+                            <ComboBoxItem Content="1"/>
+                            <ComboBoxItem Content="2"/>
+                            <ComboBoxItem Content="3"/>
+                            <ComboBoxItem Content="4"/>
+                            <ComboBoxItem Content="5"/>
+                        </ComboBox>
+                        <ComboBox x:Name="MaxUnLove" Grid.Row="11" 
+                                  Visibility="Collapsed"
+                                  Opacity="0"
+                                  SelectionChanged="MaxUnLove_SelectionChanged">
+                            <ComboBox.Header>
+                                    <TextBlock Text="Mark as unloved when I rate at most" 
+                                               TextWrapping="WrapWholeWords"
+                                               FontSize="18"/>
+                            </ComboBox.Header>
+                            <ComboBoxItem Content="1"/>
+                            <ComboBoxItem Content="2"/>
+                            <ComboBoxItem Content="3"/>
+                            <ComboBoxItem Content="4"/>
+                            <ComboBoxItem Content="5"/>
+                        </ComboBox>
+                        
                     </Grid>
                 </ScrollViewer>
             </PivotItem>

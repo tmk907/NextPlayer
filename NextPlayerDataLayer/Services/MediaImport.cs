@@ -363,17 +363,19 @@ namespace NextPlayerDataLayer.Services
                                 Tag tags = tagFile.GetTag(TagTypes.Id3v2);
 
                                 TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+                                if (pop!= null)
+                                {
+                                    if (rating == 5) pop.Rating = 255;
+                                    else if (rating == 4) pop.Rating = 196;
+                                    else if (rating == 3) pop.Rating = 128;
+                                    else if (rating == 2) pop.Rating = 64;
+                                    else if (rating == 1) pop.Rating = 1;
+                                    else if (rating == 0) pop.Rating = 0;
 
-                                if (rating == 5) pop.Rating = 255;
-                                else if (rating == 4) pop.Rating = 196;
-                                else if (rating == 3) pop.Rating = 128;
-                                else if (rating == 2) pop.Rating = 64;
-                                else if (rating == 1) pop.Rating = 1;
-                                else if (rating == 0) pop.Rating = 0;
-
-                                TagLib.Id3v2.Tag.DefaultVersion = 3;
-                                TagLib.Id3v2.Tag.ForceDefaultVersion = true;
-                                tagFile.Save();
+                                    TagLib.Id3v2.Tag.DefaultVersion = 3;
+                                    TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                                    tagFile.Save();
+                                }
                             }
                         }
                     }

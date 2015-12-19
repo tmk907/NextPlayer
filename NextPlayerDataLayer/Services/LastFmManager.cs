@@ -27,7 +27,7 @@ namespace NextPlayerDataLayer.Services
         public string Timestamp { get; set; }
     }
 
-    public class LastFmManager
+    public sealed class LastFmManager
     {
         private const string ApiKey = "9fc200c26a0fcd9fe847964f6dfc5860";
         private const string ApiSecret = "784012f4290f2023f4d0ee43ecf6dd24";
@@ -40,25 +40,28 @@ namespace NextPlayerDataLayer.Services
 
         private string SessionKey = "";
 
+        private static readonly LastFmManager current = new LastFmManager();
 
-        private static LastFmManager current = null;
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static LastFmManager()
+        {
+        }
+
         public static LastFmManager Current
         {
             get
             {
-                if (current == null)
-                {
-                    current = new LastFmManager();
-                }
                 return current;
             }
         }
+        
         private LastFmManager()
         {
-            Username = "tmk907";
-            Password = "tom108pl";
-            //Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
-            //Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
+            //Username = "tmk907";
+            //Password = "tom108pl";
+            Username = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin) ?? String.Empty).ToString();
+            Password = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword) ?? String.Empty).ToString();
             SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
             if (AreCredentialsSet())
             {
@@ -262,7 +265,8 @@ namespace NextPlayerDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                await HadleError(ParseError(response), "track.love", new Tuple<string,string>(artist,track));
+                var er = ParseError(response);
+                await HadleError(er, "track.love", new Tuple<string,string>(artist,track));
             }
         }
 
@@ -278,7 +282,8 @@ namespace NextPlayerDataLayer.Services
             string response = await SendMessage(msg, false);
             if (!IsStatusOK(response))
             {
-                await HadleError(ParseError(response), "track.unlove", new Tuple<string, string>(artist, track));
+                var er = ParseError(response);
+                await HadleError(er, "track.unlove", new Tuple<string, string>(artist, track));
             }
         }
 
@@ -298,6 +303,20 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
+        public async Task<bool> Login(string login, string password)
+        {
+            Username = login;
+            Password = password;
+            await SetMobileSession();
+            return IsSessionOn();
+        }
+
+        public void Logout()
+        {
+            Username = "";
+            Password = "";
+            SessionKey = "";
+        }
         
     }
 }

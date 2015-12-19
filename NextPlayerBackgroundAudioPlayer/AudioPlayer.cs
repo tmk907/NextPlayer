@@ -110,7 +110,8 @@ namespace NextPlayerBackgroundAudioPlayer
                 //message.Add(AppConstants.PlayerClosed, "");
                 //BackgroundMediaPlayer.SendMessageToForeground(message);
 
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, nowPlayingManager.currentSongIndex);
+                //jest zapisywane w playliscie
+                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, nowPlayingManager.currentSongIndex);
                 if (shutdown)
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
@@ -147,25 +148,25 @@ namespace NextPlayerBackgroundAudioPlayer
         }
 
 
-        private void MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
+        private async void MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             foreach (string key in e.Data.Keys)
             {
                 switch (key.ToLower())
                 {
                     case AppConstants.StartPlayback:
-                        nowPlayingManager.StartPlaying(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
+                        await nowPlayingManager.PlaySong(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
                         UpdateUVCOnNewTrack();
                         break;
                     case AppConstants.ResumePlayback:
-                        nowPlayingManager.ResumePlayback();
+                        await nowPlayingManager.ResumePlayback();
                         UpdateUVCOnNewTrack();
                         break;
                     case AppConstants.SkipNext:
-                        Next();
+                        await Next();
                         break;
                     case AppConstants.SkipPrevious:
-                        Previous();
+                        await Previous();
                         break;
                     case AppConstants.Play:
                         Play();
@@ -182,7 +183,8 @@ namespace NextPlayerBackgroundAudioPlayer
                         //ApplicationSettingsHelper.SaveSettingsValue(Constants.SongId, nowPlayingManager.GetCurrentSongId());
                         break;
                     case AppConstants.NowPlayingListChanged:
-                        nowPlayingManager.UpdateNowPlayingList();
+                        //nowPlayingManager.UpdateNowPlayingList();
+                        nowPlayingManager.LoadPlaylist();
                         break;
                     case AppConstants.Repeat:
                         nowPlayingManager.ChangeRepeat();
@@ -194,7 +196,8 @@ namespace NextPlayerBackgroundAudioPlayer
                         BackgroundMediaPlayer.Current.Position = TimeSpan.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString());
                         break;
                     case AppConstants.NowPlayingListSorted:
-                        nowPlayingManager.UpdateNowPlayingList2();
+                        //nowPlayingManager.UpdateNowPlayingList2();
+                        nowPlayingManager.LoadPlaylist();
                         break;
                     case AppConstants.SetTimer:
                         SetTimer();
@@ -313,15 +316,15 @@ namespace NextPlayerBackgroundAudioPlayer
             nowPlayingManager.Pause();
         }
 
-        private void Next()
+        private async Task Next()
         {
-            nowPlayingManager.Next();
+            await nowPlayingManager.Next();
             UpdateUVCOnNewTrack();
         }
 
-        private void Previous()
+        private async Task Previous()
         {
-            nowPlayingManager.Previous();
+            await nowPlayingManager.Previous();
             UpdateUVCOnNewTrack();
         }
 
@@ -347,7 +350,7 @@ namespace NextPlayerBackgroundAudioPlayer
         {
             Pause();
             BackgroundMediaPlayer.Current.Position = TimeSpan.Zero;
-            ApplicationSettingsHelper.SaveSongIndex(nowPlayingManager.currentSongIndex);
+            //ApplicationSettingsHelper.SaveSongIndex(nowPlayingManager.currentSongIndex);
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
             systemControls.IsEnabled = false;
         }

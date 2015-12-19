@@ -85,7 +85,7 @@ namespace NextPlayer.View
             {
                 PivotSettings.SelectedIndex = (int)e.PageState["pivotIndex"];
             }
-           
+
             //General Settings
             //Library scan
             var a = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.MediaScan);
@@ -95,7 +95,7 @@ namespace NextPlayer.View
             }
             //Timer
             var d = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerTime);
-            
+
             var t = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TimerOn);
             if (t == null)
             {
@@ -105,7 +105,7 @@ namespace NextPlayer.View
             {
                 isTimerOn = (bool)t;
             }
-            
+
             if (isTimerOn)
             {
                 timerPicker.IsEnabled = true;
@@ -161,6 +161,45 @@ namespace NextPlayer.View
             {
                 ShowAlbumCover_ToggleSwitch.IsOn = true;
             }
+
+            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
+            {
+                ToggleSwitchSendNP.IsOn = true;
+            }
+            else
+            {
+                ToggleSwitchSendNP.IsOn = false;
+            }
+            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs))
+            {
+                ToggleSwitchLoveTrack.IsOn = true;
+            }
+            else
+            {
+                ToggleSwitchLoveTrack.IsOn = false;
+            }
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmPassword).ToString() == "")
+            {
+                LFMLogoutButton.Visibility = Visibility.Collapsed;
+                LFMLoginButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                LFMLoginButton.Visibility = Visibility.Collapsed;
+                LFMLogoutButton.Visibility = Visibility.Visible;
+
+                TBLogin.Visibility = Visibility.Collapsed;
+                TBPassword.Visibility = Visibility.Collapsed;
+                TBYouAreLoggedIn.Visibility = Visibility.Visible;
+
+                LFMPassword.Visibility = Visibility.Collapsed;
+                LFMLogin.Visibility = Visibility.Collapsed;
+            }
+            int love = Int32.Parse(ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.LfmLove).ToString());
+            int unlove = Int32.Parse(ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.LfmUnLove).ToString());
+            MaxUnLove.SelectedIndex = unlove - 1;
+            MinLove.SelectedIndex = love - 1;
+
 
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
@@ -236,7 +275,7 @@ namespace NextPlayer.View
             WaitFewMinutes.Visibility = Visibility.Visible;
             int a = Environment.CurrentManagedThreadId;
             //var progressIndicator = new Progress<int>(ReportProgressUpdate);
-            var progress = new Progress<int>(percent=>
+            var progress = new Progress<int>(percent =>
             {
                 Count2.Text = percent + "%";
             });
@@ -256,7 +295,7 @@ namespace NextPlayer.View
             Count2.Visibility = Visibility.Collapsed;
             ProgressRing2.IsActive = false;
             ProgressRing2.Visibility = Visibility.Collapsed;
-            EnableControls();          
+            EnableControls();
         }
 
         private void DisableControls()
@@ -284,7 +323,7 @@ namespace NextPlayer.View
         {
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
             settings.Values[AppConstants.IsReviewed] = -1;
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId)); 
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId));
         }
         #endregion
         #region Timer
@@ -377,7 +416,7 @@ namespace NextPlayer.View
 
         public async void UpdateAppTile(bool isTransparent)
         {
-            
+
             XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Image);
             XmlDocument wideTile = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Image);
             var tileImageAttributes = tileXml.GetElementsByTagName("image");
@@ -417,7 +456,7 @@ namespace NextPlayer.View
             App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
         }
 
-        
+
         #region Color accent
         private void ColorAccent_Toggled(object sender, RoutedEventArgs e)
         {
@@ -512,6 +551,95 @@ namespace NextPlayer.View
                 NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
                 App.TelemetryClient.TrackEvent("BG Cover Off");
             }
+        }
+        #endregion
+
+        #region Last.fm
+        private async void LFMLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isLoggedIn = await LastFmManager.Current.Login(LFMLogin.Text, LFMPassword.Password);
+            if (isLoggedIn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, LFMLogin.Text);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, LFMPassword.Password);
+                LFMLoginButton.Visibility = Visibility.Collapsed;
+                LFMLogoutButton.Visibility = Visibility.Visible;
+                LFMLoginError.Visibility = Visibility.Collapsed;
+
+                TBLogin.Visibility = Visibility.Collapsed;
+                TBPassword.Visibility = Visibility.Collapsed;
+                TBYouAreLoggedIn.Visibility = Visibility.Visible;
+
+                LFMPassword.Visibility = Visibility.Collapsed;
+                LFMLogin.Visibility = Visibility.Collapsed;
+
+                LFMPassword.Password = "";
+            }
+            else
+            {
+                LFMPassword.Password = "";
+                LFMLoginError.Visibility = Visibility.Visible;
+            }
+
+        }
+
+        private void LFMLogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, "");
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmPassword, "");
+            LFMLoginButton.Visibility = Visibility.Visible;
+            LFMLogoutButton.Visibility = Visibility.Collapsed;
+            LastFmManager.Current.Logout();
+
+            TBLogin.Visibility = Visibility.Visible;
+            TBPassword.Visibility = Visibility.Visible;
+            TBYouAreLoggedIn.Visibility = Visibility.Collapsed;
+
+            LFMPassword.Visibility = Visibility.Visible;
+            LFMLogin.Visibility = Visibility.Visible;
+        }
+
+        private void SendNP_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, true);
+                App.LastFmSendNP = true;
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmSendNP, false);
+                App.LastFmSendNP = false;
+            }
+        }
+
+        private void LoveTrack_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (((ToggleSwitch)sender).IsOn)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, true);
+                App.LastFmRateOn = true;
+            }
+            else
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmRateSongs, false);
+                App.LastFmRateOn = false;
+            }
+        }
+
+        private void MaxUnLove_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = (int)((ComboBox)sender).SelectedIndex;
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmUnLove, i + 1);
+            App.LastFmUnLove = i + 1;
+        }
+
+        private void MinLove_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = (int)((ComboBox)sender).SelectedIndex;
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLove, i + 1);
+            App.LastFmLove = i + 1;
+
         }
         #endregion
     }

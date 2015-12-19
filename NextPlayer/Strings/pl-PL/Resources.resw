@@ -642,4 +642,37 @@
   <data name="TBMenuArtists.Text" xml:space="preserve">
     <value>Artyści</value>
   </data>
+  <data name="ButtonLogin.Content" xml:space="preserve">
+    <value>Zaloguj</value>
+  </data>
+  <data name="ButtonLogout.Content" xml:space="preserve">
+    <value>Wyloguj</value>
+  </data>
+  <data name="FileInfoPageTitle.Text" xml:space="preserve">
+    <value>szczegóły</value>
+  </data>
+  <data name="TBLogin.Text" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="TBPassword.Text" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="TBYouAreLogedIn.Text" xml:space="preserve">
+    <value>Jesteś zalogowany</value>
+  </data>
+  <data name="TBChangeAfterRestart.Text" xml:space="preserve">
+    <value>Uruchom ponownie aplikację, aby zastosować motyw</value>
+  </data>
+  <data name="TBLoginError.Text" xml:space="preserve">
+    <value>Nie można zalogować</value>
+  </data>
+  <data name="TBMarkAtLeast.Text" xml:space="preserve">
+    <value>Zaznacz jako ulubione, kiedy ocenię co najmniej na</value>
+  </data>
+  <data name="TBSendLoveTrack.Text" xml:space="preserve">
+    <value>Zaznacz jako ulubione, kiedy ocenię utwór</value>
+  </data>
+  <data name="TBSendNP.Text" xml:space="preserve">
+    <value>Aktualizuj stronę Teraz Odtwarzane</value>
+  </data>
 </root>

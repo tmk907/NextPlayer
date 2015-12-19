@@ -350,162 +350,11 @@ namespace NextPlayer.ViewModel
                     UpdateRating();
 
                     fromDB = false;
-                    //RaisePropertyChanged(RatingPropertyName);
+                    RaisePropertyChanged(RatingPropertyName);
                 }
             }
         }
-        #region rat
-        /// <summary>
-        /// The <see cref="Rat1" /> property's name.
-        /// </summary>
-        public const string Rat1PropertyName = "Rat1";
-
-        private bool rat1 = false;
-
-        /// <summary>
-        /// Sets and gets the Rat1 property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public bool Rat1
-        {
-            get
-            {
-                return rat1;
-            }
-
-            set
-            {
-                if (rat1 == value)
-                {
-                    return;
-                }
-                SetLower(1);
-                SetHigher(1);
-                rat1 = value;
-                RaisePropertyChanged(Rat1PropertyName);
-            }
-        }
-        /// <summary>
-        /// The <see cref="Rat2" /> property's name.
-        /// </summary>
-        public const string Rat2PropertyName = "Rat2";
-
-        private bool rat2 = false;
-
-        /// <summary>
-        /// Sets and gets the Rat2 property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public bool Rat2
-        {
-            get
-            {
-                return rat2;
-            }
-
-            set
-            {
-                if (rat2 == value)
-                {
-                    return;
-                }
-                SetLower(2);
-                SetHigher(2);
-                rat2 = value;
-                RaisePropertyChanged(Rat2PropertyName);
-            }
-        }
-        /// <summary>
-        /// The <see cref="Rat3" /> property's name.
-        /// </summary>
-        public const string Rat3PropertyName = "Rat3";
-
-        private bool rat3 = false;
-
-        /// <summary>
-        /// Sets and gets the Rat3 property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public bool Rat3
-        {
-            get
-            {
-                return rat3;
-            }
-
-            set
-            {
-                if (rat3 == value)
-                {
-                    return;
-                }
-                SetLower(3);
-                SetHigher(3);
-                rat3 = value;
-                RaisePropertyChanged(Rat3PropertyName);
-            }
-        }
-        /// <summary>
-        /// The <see cref="Rat4" /> property's name.
-        /// </summary>
-        public const string Rat4PropertyName = "Rat4";
-
-        private bool rat4 = false;
-
-        /// <summary>
-        /// Sets and gets the Rat4 property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public bool Rat4
-        {
-            get
-            {
-                return rat4;
-            }
-
-            set
-            {
-                if (rat4 == value)
-                {
-                    return;
-                }
-                SetLower(4);
-                SetHigher(4);
-                rat4 = value;
-                RaisePropertyChanged(Rat4PropertyName);
-            }
-        }
-        /// <summary>
-        /// The <see cref="Rat5" /> property's name.
-        /// </summary>
-        public const string Rat5PropertyName = "Rat5";
-
-        private bool rat5 = false;
-
-        /// <summary>
-        /// Sets and gets the Rat5 property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public bool Rat5
-        {
-            get
-            {
-                return rat5;
-            }
-
-            set
-            {
-                if (rat5 == value)
-                {
-                    return;
-                }
-                SetLower(5);
-                SetHigher(5);
-                rat5 = value;
-                RaisePropertyChanged(Rat5PropertyName);
-            }
-        }
-        #endregion
+       
         /// <summary>
         /// The <see cref="ProgressBarValue" /> property's name.
         /// </summary>
@@ -1374,126 +1223,19 @@ namespace NextPlayer.ViewModel
                 {
                     if (rating >= App.LastFmLove)
                     {
-                        await LastFmManager.Current.TrackLove(Artist, Title);
+                        await Task.Run(() => LastFmManager.Current.TrackLove(Artist, Title));
                     }
-                    if (rating<= App.LastFmUnLove)
+                    if (rating < App.LastFmLove)
                     {
-                        await LastFmManager.Current.TrackUnlove(Artist, Title);
+                        await Task.Run(() => LastFmManager.Current.TrackUnlove(Artist, Title));
                     }
                 }
                 //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
-                await DatabaseManager.UpdateSongRating(songId, rating);
-                await MediaImport.UpdateRating(songId, rating);
+                DatabaseManager.UpdateSongRating(songId, rating);
+                //await MediaImport.UpdateRating(songId, rating);
             }
         }
 
-        private void SetRating(int rating)
-        {
-            ClearRating();
-            if (rating > 0)
-            {
-                Rat1 = true;
-            }
-            if (rating > 1)
-            {
-                Rat2 = true;
-            }
-            if (rating > 2)
-            {
-                Rat3 = true;
-            }
-            if (rating > 3)
-            {
-                Rat4 = true;
-            }
-            if (rating > 4)
-            {
-                Rat5 = true;
-            }
-        }
-
-        private int GetRating()
-        {
-            if (Rat5) return 5;
-            if (Rat4) return 4;
-            if (Rat3) return 3;
-            if (Rat2) return 2;
-            if (Rat1) return 1;
-            return 0;
-        }
-
-        private void ClearRating()
-        {
-            Rat1 = false;
-            Rat2 = false;
-            Rat3 = false;
-            Rat4 = false;
-            Rat5 = false;
-        }
-
-        private void SetHigher(int i)
-        {
-            if (i < 5)
-            {
-                Rat5 = false;
-            }
-            if (i < 4)
-            {
-                Rat4 = false;
-            }
-            if (i < 3)
-            {
-                Rat3 = false;
-            }
-            if (i < 2)
-            {
-                Rat2 = false;
-            }
-            if (i < 1)
-            {
-                Rat1 = false;
-            }
-        }
-
-        private void SetLower(int i)
-        {
-            if (i >= 5)
-            {
-                Rat4 = true;
-            }
-            if (i >= 4)
-            {
-                Rat3 = true;
-            }
-            if (i >= 3)
-            {
-                Rat2 = true;
-            }
-            if (i >= 2)
-            {
-                Rat1 = true;
-            }
-        }
-
-        public const string TestRatingPropertyName = "TestRating";
-        private int testRating = 2;
-        public int TestRating
-        {
-            get
-            {
-                return testRating;
-            }
-
-            set
-            {
-                if (testRating == value)
-                {
-                    return;
-                }
-
-                testRating = value;
-                RaisePropertyChanged(TestRatingPropertyName);
-            }
-        }
+        
     }
 }

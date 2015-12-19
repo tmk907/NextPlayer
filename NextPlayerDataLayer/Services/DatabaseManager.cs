@@ -1200,7 +1200,7 @@ namespace NextPlayerDataLayer.Services
             ConnectionDb().Execute("UPDATE SongsTable2 SET Artists = ?, Comment = ?, Composers = ?, Conductor = ?, Disc = ?, DiscCount = ?, FirstArtist = ?, FirstComposer = ?, TrackCount = ?,  WHERE SongId = ?", song.Tag.Artists, song.Tag.Comment, song.Tag.Composers, song.Tag.Conductor, song.Tag.Disc, song.Tag.DiscCount, song.Tag.FirstArtist, song.Tag.FirstComposer, song.Tag.TrackCount, song.SongId);
         }
 
-        public async static Task UpdateSongStatistics(int id)
+        public async static Task UpdateSongStatisticsAync(int id)
         {
             var conn = AsyncConnectionDb();
             var result = await conn.Table<SongsTable2>().Where(z => z.SongId.Equals(id)).FirstOrDefaultAsync();
@@ -1208,9 +1208,17 @@ namespace NextPlayerDataLayer.Services
             int i = await conn.ExecuteAsync("UPDATE SongsTable2 SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?", DateTime.Now, count, id);
         }
 
-        public async static Task UpdateSongRating(int songId, int rating)
+        public static void UpdateSongStatistics(int id)
         {
-            await AsyncConnectionDb().ExecuteAsync("UPDATE SongsTable2 SET Rating = ? WHERE SongId = ?", rating, songId);
+            var conn = ConnectionDb();
+            var result = conn.Table<SongsTable2>().Where(z => z.SongId.Equals(id)).FirstOrDefault();
+            uint count = result.PlayCount + 1;
+            int i = conn.Execute("UPDATE SongsTable2 SET LastPlayed = ?, PlayCount = ? WHERE SongId = ?", DateTime.Now, count, id);
+        }
+
+        public  static void UpdateSongRating(int songId, int rating)
+        {
+            ConnectionDb().Execute("UPDATE SongsTable2 SET Rating = ? WHERE SongId = ?", rating, songId);
         }
 
         public async static Task UpdateLyricsAsync(int id, string lyrics)

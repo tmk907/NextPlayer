@@ -642,4 +642,37 @@
   <data name="TBMenuArtists.Text" xml:space="preserve">
     <value>Umělci</value>
   </data>
+  <data name="FileInfoPageTitle.Text" xml:space="preserve">
+    <value>details</value>
+  </data>
+  <data name="ButtonLogin.Content" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="ButtonLogout.Content" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="TBChangeAfterRestart.Text" xml:space="preserve">
+    <value>Restart app to apply theme</value>
+  </data>
+  <data name="TBLogin.Text" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="TBLoginError.Text" xml:space="preserve">
+    <value>Cannot log in</value>
+  </data>
+  <data name="TBMarkAtLeast.Text" xml:space="preserve">
+    <value>Mark as loved when I rate at least</value>
+  </data>
+  <data name="TBPassword.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="TBYouAreLogedIn.Text" xml:space="preserve">
+    <value>You're logged in</value>
+  </data>
+  <data name="TBSendNP.Text" xml:space="preserve">
+    <value>Update Now Playing on my profile page</value>
+  </data>
+  <data name="TBSendLoveTrack.Text" xml:space="preserve">
+    <value>Mark track as loved when I rate song</value>
+  </data>
 </root>
