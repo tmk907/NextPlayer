@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -7,12 +6,9 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Media;
 using Windows.Media.Playback;
-using System.Collections.ObjectModel;
-using Windows.Storage;
 using Windows.Foundation.Collections;
 using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
-using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
 using Windows.System.Threading;
 

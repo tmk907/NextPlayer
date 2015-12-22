@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -41,7 +38,7 @@ namespace NextPlayerDataLayer.Diagnostics
 
         public static void Save(string data)
         {
-            temp += DateTime.Now.ToString() + " " + data + "\n"+System.Environment.NewLine;
+            temp += DateTime.Now.ToString() + " " + data + "\n"+Environment.NewLine;
         }
 
         
@@ -101,7 +98,7 @@ namespace NextPlayerDataLayer.Diagnostics
             {
                 string content = tempBG;
                 tempBG = "";
-                byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
+                System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
                 try
                 {
                     StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.OpenIfExists);
@@ -110,7 +107,7 @@ namespace NextPlayerDataLayer.Diagnostics
                 }
                 catch (Exception e)
                 {
-                    Logger.SaveBG("error log\n" + content + "\n" + e.Message);
+                    SaveBG("error log\n" + content + "\n" + e.Message);
                 }
             }
         }
@@ -118,7 +115,7 @@ namespace NextPlayerDataLayer.Diagnostics
         {
             if (BGLogON)
             {
-                tempBG += DateTime.Now.ToString() + " " + data + "\n" + System.Environment.NewLine;
+                tempBG += DateTime.Now.ToString() + " " + data + "\n" + Environment.NewLine;
             }
         }
 

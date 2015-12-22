@@ -18,6 +18,30 @@ namespace NextPlayerDataLayer.Services
 {
     public class DatabaseManager
     {
+        //private static readonly DatabaseManager current = new DatabaseManager();
+        //private readonly SQLiteAsyncConnection ConnectionAsync;
+        //private readonly SQLiteConnection Connection;
+        //private readonly SQLiteConnection LastFmConnection;
+
+        //static DatabaseManager()
+        //{
+        //}
+
+        //public static DatabaseManager Current
+        //{
+        //    get
+        //    {
+        //        return current;
+        //    }
+        //}
+
+        //private DatabaseManager()
+        //{
+        //    ConnectionAsync = AsyncConnectionDb();
+        //    Connection = ConnectionDb();
+        //    LastFmConnection = LastFmDBConnection();
+        //}
+
 
         private static SQLiteAsyncConnection AsyncConnectionDb()
         {

@@ -1,12 +1,8 @@
 ﻿using NextPlayerDataLayer.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using Windows.Foundation;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace BluetoothDemo
 {

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="60490polApki.279685DD06499" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.6.1.0" />
+  <Identity Name="60490polApki.279685DD06499" Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE" Version="1.7.0.2" />
   <mp:PhoneIdentity PhoneProductId="f037f451-f63f-4cbd-a47d-336eeb39480a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Next Player</DisplayName>
@@ -16,9 +16,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="NextPlayer.App">
-      <m3:VisualElements DisplayName="Next Player" Square150x150Logo="Assets\AppImages\Logo\Logo.png" Square44x44Logo="Assets\AppImages\Square44x44Logo\Square44x44Logo.png" Description="Next Player is a music player for Windows Phone." ForegroundText="light" BackgroundColor="transparent" ToastCapable="true">
+      <m3:VisualElements DisplayName="Next Player" Square150x150Logo="Assets\AppImages\Logo\LogoTr.png" Square44x44Logo="Assets\AppImages\Square44x44Logo\Square44x44Logo.png" Description="Next Player is a music player for Windows Phone." ForegroundText="light" BackgroundColor="transparent" ToastCapable="true">
         <m3:DefaultTile Wide310x150Logo="Assets\AppImages\WideLogo\WideLogo.png" Square71x71Logo="Assets\AppImages\Square71x71Logo\Square71x71Logo.png">
           <m3:ShowNameOnTiles>
+            <m3:ShowOn Tile="square150x150Logo" />
             <m3:ShowOn Tile="wide310x150Logo" />
           </m3:ShowNameOnTiles>
         </m3:DefaultTile>
@@ -62,10 +63,11 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClientServer" />
+    <Capability Name="internetClient" />
     <Capability Name="musicLibrary" />
     <Capability Name="removableStorage" />
     <Capability Name="picturesLibrary" />
+    <Capability Name="internetClientServer" />
     <m2:DeviceCapability Name="bluetooth.rfcomm">
       <m2:Device Id="any">
         <m2:Function Type="name:obexObjectPush" />

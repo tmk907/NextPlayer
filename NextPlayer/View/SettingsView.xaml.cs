@@ -404,17 +404,17 @@ namespace NextPlayer.View
         {
             if (((ToggleSwitch)sender).IsOn)
             {
-                UpdateAppTile(true);
+                //UpdateAppTile(true);
                 App.TelemetryClient.TrackEvent("Transparent tile On");
             }
             else
             {
-                UpdateAppTile(false);
+                //UpdateAppTile(false);
                 App.TelemetryClient.TrackEvent("Transparent tile Off");
             }
         }
 
-        public async void UpdateAppTile(bool isTransparent)
+        public async Task UpdateAppTile(bool isTransparent)
         {
 
             XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Image);

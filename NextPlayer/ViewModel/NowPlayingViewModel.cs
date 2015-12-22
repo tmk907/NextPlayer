@@ -1055,6 +1055,7 @@ namespace NextPlayer.ViewModel
                             ProgressBarValue = 0.0;
                             CurrentTime = TimeSpan.Zero;
                             EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                            SaveCached();
                         });
                         break;
                     case AppConstants.Position:
@@ -1233,9 +1234,15 @@ namespace NextPlayer.ViewModel
                 //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;
                 DatabaseManager.UpdateSongRating(songId, rating);
                 //await MediaImport.UpdateRating(songId, rating);
+                SaveLater.Current.SaveRatingLater(songId, rating);
             }
         }
 
+        private async Task SaveCached()
+        {
+            await SaveLater.Current.SaveRatingsNow();
+            await SaveLater.Current.SaveTagsNow();
+        }
         
     }
 }

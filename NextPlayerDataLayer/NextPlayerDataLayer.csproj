@@ -100,6 +100,7 @@
     <Compile Include="Helpers\FileShareStatus.cs" />
     <Compile Include="Helpers\NPChange.cs" />
     <Compile Include="Helpers\Repeat.cs" />
+    <Compile Include="Helpers\SaveLater.cs" />
     <Compile Include="Helpers\Shuffle.cs" />
     <Compile Include="Helpers\PerfTests.cs" />
     <Compile Include="Helpers\SmartPlaylistHelper.cs" />

@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
 
+        <Style x:Key="ColorRectangleStyle" TargetType="Rectangle">
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+
+    </Page.Resources>
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,63 +28,63 @@
             <PivotItem x:Uid="HSettings" Header="settings">
                 <ScrollViewer>
                     <Grid>
-                    <Grid.ChildrenTransitions>
-                        <TransitionCollection>
-                            <EntranceThemeTransition/>
-                        </TransitionCollection>
-                    </Grid.ChildrenTransitions>
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="20"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" MinHeight="60"/>
+                                <RowDefinition Height="Auto" MinHeight="20"/>
+                                <RowDefinition Height="Auto" MinHeight="60"/>
+                                <RowDefinition Height="Auto" MinHeight="60"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" MinHeight="60"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
 
-                        <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton"
+                            <Button x:Uid="UpdateMediaButton" x:Name="UpdateMediaButton"
                                 Grid.Row="0" Grid.Column="0"
                                 Click="UpdateLibrary_Click"
                                 Width="200">
-                            <Button.ContentTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Uid="UpdateMediaTB"
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock x:Uid="UpdateMediaTB"
                                         Text="Update library" 
                                         TextAlignment="Center" 
                                         TextWrapping="WrapWholeWords"/>
-                                </DataTemplate>
-                            </Button.ContentTemplate>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
 
-                        </Button>
+                            </Button>
 
-                        <StackPanel Orientation="Horizontal"
+                            <StackPanel Orientation="Horizontal"
                                 Grid.Row="0" Grid.Column="1">
-                            <ProgressRing x:Name="ProgressRing2" 
+                                <ProgressRing x:Name="ProgressRing2" 
                                 Visibility="Collapsed" 
                                 IsActive="False" 
                                 Margin="8,0,8,0"/>
-                            <TextBlock x:Name="Count2" 
+                                <TextBlock x:Name="Count2" 
                                 Visibility="Collapsed" 
                                 VerticalAlignment="Center" 
                                 FontSize="20"
                                Margin="8,0,8,0"/>
-                        </StackPanel>
+                            </StackPanel>
 
-                        <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes"
+                            <TextBlock x:Uid="WaitFewMinutes" x:Name="WaitFewMinutes"
                            Grid.Row="1" Grid.ColumnSpan="2"
                            Visibility="Collapsed" 
                            TextWrapping="WrapWholeWords" 
                            FontSize="18"/>
 
-                        <ToggleSwitch 
+                            <ToggleSwitch 
                             x:Name="timerToggleSwitch"
                             Grid.Row="2" Grid.ColumnSpan="2"
                             HorizontalAlignment="Stretch"
@@ -87,7 +93,7 @@
                             Toggled="ToggleSwitch_Toggled" 
                             Style="{StaticResource ToggleSwitchStyle1}"
                         />
-                        <TimePicker Grid.ColumnSpan="2" Grid.Row="3" 
+                            <TimePicker Grid.ColumnSpan="2" Grid.Row="3" 
                             x:Name="timerPicker"
                             ClockIdentifier="24HourClock"
                             VerticalAlignment="Center"
@@ -98,7 +104,7 @@
                             TimeChanged="TimePicker_TimeChanged"
                             />
 
-                        <ToggleSwitch 
+                            <ToggleSwitch 
                             x:Name="transparentToggleSwitch"
                             x:Uid="HeaderTransparentTile"
                             Grid.Row="4" Grid.ColumnSpan="2"
@@ -106,32 +112,33 @@
                             VerticalAlignment="Center"
                             Header="Transparent tile"
                             Style="{StaticResource ToggleSwitchStyle1}"
-                            Toggled="transparentToggleSwitch_Toggled"/>
-                        
-                        <Button x:Uid="RateButton" 
+                            Toggled="transparentToggleSwitch_Toggled"
+                            Visibility="Collapsed"/>
+
+                            <Button x:Uid="RateButton" 
                             Grid.Row="5" Grid.Column="0"
-                            Content="Rate" 
+                            Content="Rate app" 
                             Click="Rate_Click" 
                             Width="200"/>
 
-                        <Button x:Uid="MailMeButton" 
+                            <Button x:Uid="MailMeButton" 
                             Grid.Row="6" Grid.Column="0"
                             Content="Mail me" 
                             Click="ShowLog_Click" 
                             Width="200"
                             Visibility="Collapsed"
                         />
-                        <ScrollViewer Grid.Row="7" Grid.ColumnSpan="2">
-                            <TextBlock x:Name="logTB"
+                            <ScrollViewer Grid.Row="7" Grid.ColumnSpan="2">
+                                <TextBlock x:Name="logTB"
                                FontSize="14"
                                Width="350"
                                TextWrapping="Wrap"
                            />
-                        </ScrollViewer>
-                        <!--<Button Content="test" Grid.Row="8" Click="gotobl"/>-->
+                            </ScrollViewer>
+                            <!--<Button Content="test" Grid.Row="8" Click="gotobl"/>-->
 
+                        </Grid>
                     </Grid>
-                </Grid>
                 </ScrollViewer>
             </PivotItem>
             <PivotItem x:Uid="HPersonalize"  Header="personalize">
@@ -148,7 +155,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -163,7 +170,7 @@
                                     Style="{StaticResource ToggleSwitchStyle1}"
                                     Toggled="BGCover_Toggled"/>
                         </Grid>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Margin="0,8,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -184,14 +191,22 @@
                                     Style="{StaticResource ToggleSwitchStyle1}"
                                     Toggled="BGImage_Toggled"
                                     />
-                            <Button Grid.Row="2" Grid.ColumnSpan="2"
+                            <Button Grid.Row="2" Grid.Column="0"
                                     x:Name="Button1"
                                     HorizontalAlignment="Stretch"
                                     x:Uid="ButtonSelectImage"
                                     Click="selectBGImage_Click"
-                                    Content="Select image"/>
+                                    Content="Select image"
+                                    Margin="0,0,4,0"/>
+                            <Button Grid.Row="2" Grid.Column="1"
+                                    x:Name="ButtonSelectFile"
+                                    HorizontalAlignment="Stretch"
+                                    x:Uid="ButtonSelectImageFile"
+                                    Click="selectBGImageFile_Click"
+                                    Content="Select from file"
+                                    Margin="4,0,0,0"/>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="2" Margin="0,8,0,8">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -213,43 +228,43 @@
                                 Margin="0,12,0,0"  
                                 Opacity="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="60"/>
+                                    <RowDefinition Height="70"/>
+                                    <RowDefinition Height="70"/>
+                                    <RowDefinition Height="70"/>
+                                    <RowDefinition Height="70"/>
+                                    <RowDefinition Height="70"/>
 
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="70"/>
                                 </Grid.ColumnDefinitions>
-                                
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="0" Fill="#FFA4C400"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="1" Fill="#FF60A917"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="2" Fill="#FF008A00"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="3" Fill="#FF00ABA9"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="0" Fill="#FF1BA1E2"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="1" Fill="#FF3E65FF"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="2" Fill="#FF6A00FF"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="3" Fill="#FFAA00FF"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="0" Fill="#FFF472D0"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="1" Fill="#FFD80073"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="2" Fill="#FFA20025"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="3" Fill="#FFE51400"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="0" Fill="#FFFA6800"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="1" Fill="#FFF0A30A"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="2" Fill="#FFE3C800"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="3" Fill="#FF825A2C"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="0" Fill="#FF6D8764"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="1" Fill="#FF647687"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="2" Fill="#FF76608A"/>
-                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="3" Fill="#FF87794E"/>
+
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="0" Fill="#FFA4C400" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="1" Fill="#FF60A917" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="2" Fill="#FF008A00" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="0" Grid.Column="3" Fill="#FF00ABA9" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="0" Fill="#FF1BA1E2" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="1" Fill="#FF3E65FF" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="2" Fill="#FF6A00FF" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="1" Grid.Column="3" Fill="#FFAA00FF" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="0" Fill="#FFF472D0" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="1" Fill="#FFD80073" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="2" Fill="#FFA20025" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="2" Grid.Column="3" Fill="#FFE51400" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="0" Fill="#FFFA6800" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="1" Fill="#FFF0A30A" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="2" Fill="#FFE3C800" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="3" Grid.Column="3" Fill="#FF825A2C" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="0" Fill="#FF6D8764" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="1" Fill="#FF647687" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="2" Fill="#FF76608A" Style="{StaticResource ColorRectangleStyle}"/>
+                                <Rectangle Tapped="Rectangle_Tapped" Grid.Row="4" Grid.Column="3" Fill="#FF87794E" Style="{StaticResource ColorRectangleStyle}"/>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="3" Margin="0,8,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -309,12 +324,12 @@
                         <TextBlock x:Uid="TBLogin" Grid.Row="0" 
                                    x:Name="TBLogin"
                                    Text="Login"
-                                   FontSize="22"/>
+                                   FontSize="24"/>
                         <TextBox x:Name="LFMLogin" Grid.Row="1" />
                         <TextBlock x:Uid="TBPassword" Grid.Row="2"  
                                    x:Name="TBPassword"
                                    Text="Password"
-                                   FontSize="22"/>
+                                   FontSize="24"/>
                         <PasswordBox x:Name="LFMPassword" Grid.Row="3"/>
 
                         <Button x:Name="LFMLoginButton" Grid.Row="4"  x:Uid="ButtonLogin" 
@@ -334,7 +349,7 @@
                                    Visibility="Collapsed"/>
                         <TextBlock x:Uid="TBSendNP" Grid.Row="6" 
                                    Margin="0,16,0,0"
-                                   FontSize="22"
+                                   FontSize="24"
                                    TextWrapping="WrapWholeWords"
                                    Text="Update Now Playing on my profile page"/>
                         <ToggleSwitch Grid.Row="7"
@@ -342,7 +357,7 @@
                                     Style="{StaticResource ToggleSwitchStyle1}"
                                     Toggled="SendNP_Toggled"/>
                         <TextBlock x:Uid="TBSendLoveTrack" Grid.Row="8" 
-                                   FontSize="22"
+                                   FontSize="24"
                                    TextWrapping="WrapWholeWords"
                                    Text="Mark track as loved when I rate song"/>
                         <ToggleSwitch Grid.Row="9"
@@ -351,7 +366,7 @@
                                     Toggled="LoveTrack_Toggled"/>
                         <ComboBox x:Name="MinLove" Grid.Row="10" SelectionChanged="MinLove_SelectionChanged">
                             <ComboBox.Header>
-                                    <TextBlock x:Uid="TBMarkAtLeast" 
+                                <TextBlock x:Uid="TBMarkAtLeast" 
                                         Text="Mark as loved when I rate at least" 
                                                TextWrapping="WrapWholeWords"
                                                FontSize="18"/>
@@ -367,7 +382,7 @@
                                   Opacity="0"
                                   SelectionChanged="MaxUnLove_SelectionChanged">
                             <ComboBox.Header>
-                                    <TextBlock Text="Mark as unloved when I rate at most" 
+                                <TextBlock Text="Mark as unloved when I rate at most" 
                                                TextWrapping="WrapWholeWords"
                                                FontSize="18"/>
                             </ComboBox.Header>
@@ -377,12 +392,12 @@
                             <ComboBoxItem Content="4"/>
                             <ComboBoxItem Content="5"/>
                         </ComboBox>
-                        
+
                     </Grid>
                 </ScrollViewer>
             </PivotItem>
         </Pivot>
         <!--TODO: Content should be placed within the following grid-->
-        
+
     </Grid>
 </Page>

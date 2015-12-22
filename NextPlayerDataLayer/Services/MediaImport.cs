@@ -271,8 +271,15 @@ namespace NextPlayerDataLayer.Services
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
-        public async static void UpdateFileTags(SongData songData)
+        public async static Task UpdateFileTags(SongData songData)
         {
+            var song = Library.Current.GetCurrentPlayingSong();
+            if (song == null) return;
+            if (song.SongId == songData.SongId)
+            {
+                SaveLater.Current.SaveTagsLater(songData);
+                return;
+            }
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(songData.Path);
@@ -348,6 +355,13 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task UpdateRating(int songId, int rating)
         {
+            var song = Library.Current.GetCurrentPlayingSong();
+            if (song == null) return;
+            if (song.SongId == songId)
+            {
+                SaveLater.Current.SaveRatingLater(songId, rating);
+                return;
+            }
             string path = DatabaseManager.GetFileInfo(songId).FilePath;
             try
             {
@@ -363,7 +377,7 @@ namespace NextPlayerDataLayer.Services
                                 Tag tags = tagFile.GetTag(TagTypes.Id3v2);
 
                                 TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
-                                if (pop!= null)
+                                if (pop != null)
                                 {
                                     if (rating == 5) pop.Rating = 255;
                                     else if (rating == 4) pop.Rating = 196;

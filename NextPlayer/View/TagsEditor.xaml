@@ -203,14 +203,14 @@
 
                 <Button Grid.Row="2" Grid.Column="0"
                         Margin="12,0,12,0"
-                        x:Uid="ButtonSave.Content"
+                        x:Uid="ButtonSave"
                         Content="Save"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Command="{Binding Save}"/>
                 <Button Grid.Row="2" Grid.Column="1"
                         Margin="12,0,12,0"
-                        x:Uid="ButtonCancel.Content"
+                        x:Uid="ButtonCancel"
                         Content="Cancel"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"

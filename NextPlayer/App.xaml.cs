@@ -7,23 +7,14 @@ using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -58,7 +49,7 @@ namespace NextPlayer
         public App()
         {
             TelemetryClient = new TelemetryClient();
-            
+            //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.DisableTelemetry = true;
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
@@ -179,7 +170,7 @@ namespace NextPlayer
                     ApplicationSettingsHelper.SaveSongIndex(0);
                 }
             }
-            
+            TelemetryClient.TrackException(e.Exception);
         }
 
         /// <summary>
@@ -527,21 +518,5 @@ namespace NextPlayer
 
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
         }
-
-        private async void testlastfm()
-        {
-            //await LastFmManager.Current.SetMobileSession();
-            List<TrackScrobble> l = new List<TrackScrobble>();
-            for(int i = 0; i < 11; i++)
-            {
-                l.Add(new TrackScrobble() { Artist = "a"+i.ToString(), Timestamp = i.ToString(), Track = "tr" });
-            }
-            //await LastFmManager.Current.TrackScroblle(l);
-            //await LastFmManager.Current.TrackLove("enya", "watermark");
-            //await LastFmManager.Current.TrackUnlove("enya", "May it be");
-            //await LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { new TrackScrobble() { Artist = "Enya", Timestamp = "1450186957", Track = "Exile" } });
-        }
-
-        
     }
 }

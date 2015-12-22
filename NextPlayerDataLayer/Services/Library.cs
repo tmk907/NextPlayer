@@ -108,38 +108,25 @@ namespace NextPlayerDataLayer.Services
             SaveNowPlayingInDB();
         }
 
-        //public SongItem GetFromNowPlaying(int index)
-        //{
-        //    return NowPlayingList[index];
-        //}
+        public SongItem GetCurrentPlayingSong()
+        {
+            try
+            {
+                return NowPlayingList[ApplicationSettingsHelper.ReadSongIndex()];
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return null;
+        }
 
         public void ChangeRating(int rating, int songId)
         {
             nowPlayingList.ElementAt(songId).Rating = rating;
         }
 
-        //public void SaveCurrentSongIndex(int id)
-        //{
-        //    int i = 0;
-        //    foreach (var item in _nowPlayingList)
-        //    {
-        //        if (item.SongId == id)
-        //        {
-        //            ApplicationSettingsHelper.SaveSongIndex(i);
-        //            break;
-        //        }
-        //        i++;
-        //    }
-        //}
-
-        
         #endregion
-
-        //public async void CreateNewPlainPlaylist(string name)
-        //{
-        //    int id = await DatabaseManager.InsertPlainPlaylist(name);
-        //    Playlists.Add(new PlaylistItem(id,false,name));
-        //}
 
         /// <summary>
         /// Return cover saved in file tags or .jpg from folder.
@@ -380,70 +367,7 @@ namespace NextPlayerDataLayer.Services
     }
 
     #region stare
-    #region Collections
 
-    //private ObservableCollection<SongItem> _songs = new ObservableCollection<SongItem>();
-    //public ObservableCollection<SongItem> Songs
-    //{
-    //    get
-    //    {
-    //        if (_songs.Count == 0)
-    //        {
-    //            GetSongsFromDB();
-    //        }
-    //        return _songs;
-    //    }
-    //}
-    //private ObservableCollection<AlbumItem> _albums = new ObservableCollection<AlbumItem>();
-    //public ObservableCollection<AlbumItem> Albums
-    //{
-    //    get
-    //    {
-    //        if (_albums.Count == 0) GetAlbumsFromDB();
-    //        return _albums;
-    //    }
-    //}
-
-    //private ObservableCollection<ArtistItem> _artists = new ObservableCollection<ArtistItem>();
-    //public ObservableCollection<ArtistItem> Artists
-    //{
-    //    get
-    //    {
-    //        if (_artists.Count == 0) GetArtistsFromDB();
-    //        return _artists;
-    //    }
-    //}
-    //private ObservableCollection<GenreItem> _genres = new ObservableCollection<GenreItem>();
-    //public ObservableCollection<GenreItem> Genres 
-    //{
-    //    get
-    //    {
-    //        if (_genres.Count == 0) GetGenresFromDB();
-    //        return _genres;
-    //    }
-    //}
-    //private ObservableCollection<FolderItem> _folders = new ObservableCollection<FolderItem>();
-    //public ObservableCollection<FolderItem> Folders
-    //{
-    //    get
-    //    {
-    //        if (_folders.Count == 0) GetFoldersFromDB();
-    //        return _folders;
-    //    }
-    //}
-    //private ObservableCollection<PlaylistItem> _playlists = new ObservableCollection<PlaylistItem>();
-    //public ObservableCollection<PlaylistItem> Playlists
-    //{
-    //    get
-    //    {
-    //        if (_playlists.Count == 0) GetPlaylistsFromDB();
-    //        return _playlists;
-    //    }
-    //}
-
-
-
-    #endregion
     //public ObservableCollection<int> AllSongsId;
     //public async Task<WriteableBitmap> GetCoverForBG(string path)
     //{
@@ -517,76 +441,6 @@ namespace NextPlayerDataLayer.Services
     //    return bitmap;
     //}
 
-    //#region Get Data From DB
-
-    //private void GetAlbumsFromDB()
-    //{
-    //    _albums = DatabaseManager.GetAlbumItems();
-    //}
-
-    //private void GetArtistsFromDB()
-    //{
-    //    _artists = DatabaseManager.GetArtistItems();
-    //}
-
-    //private void GetFoldersFromDB()
-    //{
-
-    //}
-
-    //private void GetGenresFromDB()
-    //{
-    //    _genres = DatabaseManager.GetGenreItems();
-    //}
-
-    //private void GetPlaylistsFromDB()
-    //{
-    //    _playlists = DatabaseManager.GetPlaylistItems();
-    //}
-
-
-
-    //private void GetSongsFromDB()
-    //{
-    //    _songs = DatabaseManager.GetSongItems();
-    //}
-
-    //#endregion
-    //#region GetGroupedData
-
-    //public IEnumerable<GroupedOC<SongItem>> GetSongsGrouped()
-    //{
-    //    return Grouped.CreateGrouped<SongItem>(Songs, x => x.Title);
-    //}
-
-    //public IEnumerable<GroupedOC<SongItem>> GetSongsGrouped(string p)
-    //{
-    //    return Grouped.CreateGrouped<SongItem>(GetSongs(p), x => x.Title);
-    //}
-
-    //public IEnumerable<GroupedOC<AlbumItem>> GetAlbumsGrouped()
-    //{
-    //    return Grouped.CreateGrouped<AlbumItem>(Albums, x => x.Album);
-    //}
-
-    //public IEnumerable<GroupedOC<AlbumItem>> GetAlbumsGrouped(string artist)
-    //{
-    //    return Grouped.CreateGrouped<AlbumItem>(GetAlbums(artist), x => x.Album);
-    //}
-
-    //public IEnumerable<GroupedOC<ArtistItem>> GetArtistsGrouped()
-    //{
-    //    return Grouped.CreateGrouped<ArtistItem>(Artists, x => x.Artist);
-    //}
-
-    //#endregion
-
-
-    //public List<AlbumItem> GetAlbums(string artist)
-    //{
-    //    return DatabaseManager.GetAlbumItems(artist);
-    //}
-
     //public ObservableCollection<SongItem> GetSongs(string parameter)
     //{
     //    ObservableCollection<SongItem> collection = new ObservableCollection<SongItem>();
@@ -611,9 +465,5 @@ namespace NextPlayerDataLayer.Services
     //    return collection;
     //}
 
-    //public string GetPlaylistName(int id, bool isSmart)
-    //{
-    //    return Playlists.Where(p => p.Id.Equals(id)).Where(s => s.IsSmart.Equals(isSmart)).FirstOrDefault().Name;
-    //}
     #endregion
 }

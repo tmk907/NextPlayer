@@ -256,10 +256,12 @@ namespace NextPlayerDataLayer.Services
         public async Task TrackLove(string artist, string track)
         {
             if (!AreCredentialsSet()) return;
-            Dictionary<string, string> msg = new Dictionary<string, string>();
-            msg.Add("artist", artist);
-            msg.Add("track", track);
-            msg.Add("method", "track.love");
+            Dictionary<string, string> msg = new Dictionary<string, string>
+            {
+                {"artist", artist},
+                {"track", track},
+                {"method", "track.love"}
+            };
             PrepareAuth(ref msg);
 
             string response = await SendMessage(msg, false);
@@ -273,10 +275,12 @@ namespace NextPlayerDataLayer.Services
         public async Task TrackUnlove(string artist, string track)
         {
             if (!AreCredentialsSet()) return;
-            Dictionary<string, string> msg = new Dictionary<string, string>();
-            msg.Add("artist", artist);
-            msg.Add("track", track);
-            msg.Add("method", "track.unlove");
+            Dictionary<string, string> msg = new Dictionary<string, string>
+            {
+                {"artist", artist},
+                {"track", track},
+                {"method", "track.unlove"}
+            };
             PrepareAuth(ref msg);
 
             string response = await SendMessage(msg, false);
@@ -290,10 +294,12 @@ namespace NextPlayerDataLayer.Services
         public async Task TrackUpdateNowPlaying(string artist, string track)
         {
             if (!AreCredentialsSet()) return;
-            Dictionary<string, string> msg = new Dictionary<string, string>();
-            msg.Add("artist", artist);
-            msg.Add("track", track);
-            msg.Add("method", "track.updateNowPlaying");
+            Dictionary<string, string> msg = new Dictionary<string, string>
+            {
+                {"artist", artist},
+                {"track", track},
+                {"method", "track.updateNowPlaying"}
+            };
             PrepareAuth(ref msg);
 
             string response = await SendMessage(msg, false);
