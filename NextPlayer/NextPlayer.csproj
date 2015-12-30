@@ -116,6 +116,7 @@
     <Compile Include="Converters\IntToBitrateConverter.cs" />
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />
+    <Compile Include="Converters\NumberToPercent.cs" />
     <Compile Include="Converters\ParamConvert.cs" />
     <Compile Include="Converters\RatingConverter.cs" />
     <Compile Include="Converters\SizeToStringConverter.cs" />
@@ -261,7 +262,7 @@
     </None>
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
-    <PRIResource Include="Strings\zh-CHS\Resources.resw" />
+    <PRIResource Include="Strings\zh-CN\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\he-IL\Resources.resw" />
     <PRIResource Include="Strings\hr-HR\Resources.resw" />

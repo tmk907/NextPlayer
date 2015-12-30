@@ -177,7 +177,7 @@
                                FontSize="20"
                                Margin="8,0,0,0"
                                DoubleTapped="TextBlock_DoubleTapped"
-                               Text="{Binding Value, ElementName=PlaybackRateSlider}"/>
+                               Text="{Binding Value, ElementName=PlaybackRateSlider, Converter={StaticResource NumberToPercentConverter}}"/>
 
                 </Grid>
                 <Grid Grid.Row="2" Grid.ColumnSpan="2" DoubleTapped="Grid_DoubleTapped">
@@ -186,6 +186,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
+                    <Grid Grid.RowSpan="3" Opacity="0" Background="White"/>
                     <TextBlock Grid.Row="0"
                         HorizontalAlignment="Left"  
                         TextWrapping="NoWrap" 

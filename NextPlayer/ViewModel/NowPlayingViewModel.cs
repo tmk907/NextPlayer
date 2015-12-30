@@ -1038,7 +1038,7 @@ namespace NextPlayer.ViewModel
                                     + ex.Message + "\n"
                                     + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
                                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
-                                App.TelemetryClient.TrackException(ex);
+                                //App.TelemetryClient.TrackException(ex);
                             }
                             catch (Exception ex)
                             {
@@ -1053,7 +1053,7 @@ namespace NextPlayer.ViewModel
                                     + ex.Message + "\n"
                                     + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
                                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
-                                App.TelemetryClient.TrackException(ex);
+                                //App.TelemetryClient.TrackException(ex);
                             }
                         });
                         break;

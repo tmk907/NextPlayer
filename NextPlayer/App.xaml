@@ -345,6 +345,7 @@
             <converters:StringToInputScopeConverter x:Key="StringToInputScope"/>
             <converters:StyleConverter x:Key="StyleConverter"/>
             <converters:BoolToInvertedVisibility x:Key="BoolToInverterVisibilityConverter"/>
+            <converters:NumberToPercent x:Key="NumberToPercentConverter"/>
             <!--<converters:RatingConverter x:Key="RatingConverter"/>-->
             
             <Thickness x:Key="PhoneBorderThickness">2.5</Thickness>
