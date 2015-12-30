@@ -118,435 +118,435 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OstatnioDodane" xml:space="preserve">
-    <value>Dernier ajout</value>
+    <value>Последние добавленные</value>
   </data>
   <data name="NowPlayingPlaylistPageTitle" xml:space="preserve">
-    <value>en cours de lecture</value>
+    <value>сейчас играет</value>
   </data>
   <data name="NowPlayingPageTitle.Text" xml:space="preserve">
-    <value>en cours de lecture</value>
+    <value>сейчас играет</value>
   </data>
   <data name="NewSPPageTitle.Text" xml:space="preserve">
-    <value>nouvelle playlist intelligente</value>
+    <value>новый smart-плейлист</value>
   </data>
   <data name="NewRule.Content" xml:space="preserve">
-    <value>Ajouter une règle</value>
+    <value>Добавить правило</value>
   </data>
   <data name="NajrzadziejOdtwarzane" xml:space="preserve">
-    <value>Dernier souvent lu</value>
+    <value>Самые не проигрываемые</value>
   </data>
   <data name="NajlepiejOceniane" xml:space="preserve">
-    <value>Rang le plus haut</value>
+    <value>Высокий рейтинг</value>
   </data>
   <data name="NajgorzejOceniane" xml:space="preserve">
-    <value>Rang le plus bas</value>
+    <value>Низкий рейтинг</value>
   </data>
   <data name="NajczesciejOdtwarzane" xml:space="preserve">
-    <value>Le plus souvent lu</value>
+    <value>Самые проигрываемые</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Le plus récemment lu</value>
+    <value>Играли недавно</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Le plus récemment ajouté</value>
-  </data>
-  <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Le plus souvent lu</value>
+    <value>Добавлены недавно</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Minutes</value>
+    <value>Минуты</value>
+  </data>
+  <data name="MostOftenPlayed" xml:space="preserve">
+    <value>Самые проигрываемые</value>
   </data>
   <data name="MenuSongs.Content" xml:space="preserve">
-    <value>Chansons</value>
+    <value>Композиции</value>
   </data>
   <data name="MenuSettings.Content" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>Настройки</value>
   </data>
   <data name="MenuPlaylists.Content" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Плейлисты</value>
   </data>
   <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>Playlist en cours de lecture</value>
+    <value>Сейчас играет</value>
   </data>
   <data name="MenuGenres.Content" xml:space="preserve">
-    <value>Genres</value>
-  </data>
-  <data name="MenuArtists.Content" xml:space="preserve">
-    <value>Artistes</value>
+    <value>Жанры</value>
   </data>
   <data name="MenuFolders.Content" xml:space="preserve">
-    <value>Dossiers</value>
+    <value>Папки</value>
+  </data>
+  <data name="MenuArtists.Content" xml:space="preserve">
+    <value>Исполнители</value>
   </data>
   <data name="MenuAlbums.Content" xml:space="preserve">
-    <value>Albums</value>
+    <value>Альбомы</value>
   </data>
   <data name="LyricsButton.Content" xml:space="preserve">
-    <value>Paroles</value>
+    <value>Слова песни</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Note la plus basse</value>
+    <value>Низкий рейтинг</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
-    <value>Bibliothèque mise à jour.</value>
+    <value>Библиотека обновлена.</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Dernier récemment lu</value>
+    <value>Практически не проигрываемые</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Dernier récemment ajouté</value>
+    <value>Практически не добавляемые</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Dernier souvent lu</value>
+    <value>Самые не слушаемые</value>
   </data>
   <data name="LastPlayed" xml:space="preserve">
-    <value>Dernière lecture</value>
+    <value>Последние</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>N'est pas</value>
+    <value>Нет</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Est plus petit</value>
+    <value>Меньше</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Est plus grand</value>
+    <value>Больше</value>
   </data>
   <data name="Is" xml:space="preserve">
-    <value>Est</value>
+    <value>Это</value>
   </data>
   <data name="ImportMediaButton.Content" xml:space="preserve">
-    <value>Ajouter des chansons à la bibliothèque</value>
+    <value>Добавить композицию в библиотеку</value>
   </data>
   <data name="Hours" xml:space="preserve">
-    <value>Heures</value>
+    <value>Часы</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Note la plus élevée</value>
+    <value>Высший рейтинг</value>
   </data>
   <data name="GenresPageTitle.Text" xml:space="preserve">
-    <value>genres</value>
+    <value>жанры</value>
   </data>
   <data name="Genre" xml:space="preserve">
-    <value>Genre</value>
+    <value>Жанр</value>
   </data>
   <data name="FilePath" xml:space="preserve">
-    <value>Chemin d'accès</value>
+    <value>Путь к файлу</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Se termine par</value>
+    <value>Остановиться с</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Durée</value>
+    <value>Продолжительность</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Ne contient pas</value>
+    <value>Не содержит</value>
   </data>
   <data name="DeleteRule.Content" xml:space="preserve">
-    <value>Supprimer la règle</value>
+    <value>Удалить правило</value>
   </data>
   <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
-    <value>Voulez-vous vraiment supprimer cette playlist ?</value>
+    <value>Вы уверены, что хотите удалить этот плейлист?</value>
   </data>
   <data name="Delete.Text" xml:space="preserve">
-    <value>Effacer</value>
+    <value>Удалить</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date d'ajout</value>
+    <value>Дата добавлена</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Contient</value>
+    <value>Содержит</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
-    <value>Erreur de connexion</value>
+    <value>Ошибка соединения</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>Connexion</value>
+    <value>Соединение</value>
   </data>
   <data name="Cancel.Label" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Отмена</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
-    <value>Supprimer</value>
+    <value>Удалить</value>
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Отмена</value>
   </data>
   <data name="ArtistsPageTitle.Text" xml:space="preserve">
-    <value>artistes</value>
+    <value>исполнители</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artiste</value>
+    <value>Исполнитель</value>
   </data>
   <data name="AppName.Text" xml:space="preserve">
     <value>NEXT PLAYER</value>
   </data>
   <data name="AlbumsPageTitle.Text" xml:space="preserve">
-    <value>albums</value>
+    <value>альбомы</value>
   </data>
   <data name="AlbumPageTitle.Text" xml:space="preserve">
-    <value>album</value>
+    <value>альбом</value>
   </data>
   <data name="Album" xml:space="preserve">
-    <value>Album</value>
+    <value>Альбом</value>
   </data>
   <data name="AddToPlaylist.Text" xml:space="preserve">
-    <value>Ajouter à la playlist</value>
+    <value>Добавить в плейлист</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Ajouter à la lecture en cours</value>
+    <value>Добавить в текущий</value>
   </data>
   <data name="AddSmartPlaylist.Label" xml:space="preserve">
-    <value>Ajouter une playlist intelligente</value>
+    <value>Создать Smart-плейлист</value>
   </data>
   <data name="AddPlaylist.Label" xml:space="preserve">
-    <value>Ajouter une playlist</value>  </data>
+    <value>Добавить плейлист</value>  </data>
   <data name="OstatnioOdtwarzane" xml:space="preserve">
-    <value>Dernière lecture</value>  </data>
+    <value>Последние композиции</value>  </data>
   <data name="PlayCount" xml:space="preserve">
-    <value>Nombre de lectures</value>  </data>
+    <value>Количество</value>  </data>
   <data name="PlaylistsPageTitle.Text" xml:space="preserve">
-    <value>playlists</value>  </data>
+    <value>плейлист</value>  </data>
   <data name="PlayNow.Text" xml:space="preserve">
-    <value>Lire maintenant</value>  </data>
+    <value>Проигрывается сейчас</value>  </data>
   <data name="Rating" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>Рейтинг</value>  </data>
   <data name="Rules.Text" xml:space="preserve">
-    <value>Règles</value>  </data>
+    <value>Правила</value>  </data>
   <data name="Save.Content" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>Сохранить</value>  </data>
   <data name="Save.Label" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>Сохранить</value>  </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Secondes</value>  </data>
+    <value>Секунды</value>  </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>paramètres</value>  </data>
+    <value>настройки</value>  </data>
   <data name="SongsPageTitle" xml:space="preserve">
-    <value>chansons</value>  </data>
+    <value>композиции</value>  </data>
   <data name="SPName.Text" xml:space="preserve">
-    <value>Nom</value>  </data>
+    <value>Название</value>  </data>
   <data name="SPSongsNumber.Text" xml:space="preserve">
-    <value>Nombre de chansons</value>  </data>
+    <value>Номер композиции</value>  </data>
   <data name="SPSortBy.Text" xml:space="preserve">
-    <value>Trier par</value>  </data>
+    <value>Сортировать по</value>  </data>
   <data name="StartsWith" xml:space="preserve">
-    <value>Commence par</value>  </data>
+    <value>Начать с</value>  </data>
   <data name="Title" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>Заголовок</value>  </data>
   <data name="UpdateMediaButton.Content" xml:space="preserve">
-    <value>Mettre à jour la bibliothèque</value>  </data>
+    <value>Обновить библиотеку</value>  </data>
   <data name="Year" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>Год</value>  </data>
   <data name="WaitFewMinutes.Text" xml:space="preserve">
-    <value>Ne fermez pas cette page lors de l'analyse.</value>  </data>
+    <value>Пожалуйста не закрывайте окно. Идет сканирование...</value>  </data>
   <data name="MenuSearch.Content" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>Поиск</value>  </data>
   <data name="SearchPageTitle.Text" xml:space="preserve">
-    <value>rechercher</value>  </data>
+    <value>поиск</value>  </data>
   <data name="FoldersPageTitle.Text" xml:space="preserve">
-    <value>dossiers</value>  </data>
+    <value>папка</value>  </data>
   <data name="RateButton.Content" xml:space="preserve">
-    <value>Noter</value>  </data>
+    <value>Рейтинг</value>  </data>
   <data name="SPErrorText.Text" xml:space="preserve">
-    <value>Remplissez bien tous les champs.</value>  </data>
+    <value>Пожалуйста проверьте все поля.</value>  </data>
   <data name="ShowDetails.Text" xml:space="preserve">
-    <value>Afficher les détails</value>  </data>
+    <value>Подробней..</value>  </data>
   <data name="DeleteFromPlaylist.Text" xml:space="preserve">
-    <value>Supprimer de la playlist</value>  </data>
+    <value>Удалить из листа</value>  </data>
   <data name="MenuStop.Content" xml:space="preserve">
-    <value>Stop</value>  </data>
+    <value>Стоп</value>  </data>
   <data name="TBAlbum.Text" xml:space="preserve">
-    <value>Album</value>  </data>
+    <value>Альбом</value>  </data>
   <data name="TBArtist.Text" xml:space="preserve">
-    <value>Artiste</value>  </data>
+    <value>Исполнитель</value>  </data>
   <data name="TBBitrate.Text" xml:space="preserve">
-    <value>Vitesse de transmission</value>  </data>
+    <value>Битрейт</value>  </data>
   <data name="TBDateAdded.Text" xml:space="preserve">
-    <value>Date d'ajout</value>  </data>
+    <value>Добавлено</value>  </data>
   <data name="TBFilePath.Text" xml:space="preserve">
-    <value>Chemin d'accès</value>  </data>
+    <value>Путь к файлу</value>  </data>
   <data name="TBFileSize.Text" xml:space="preserve">
-    <value>Taille du fichier</value>  </data>
+    <value>Рамер файла</value>  </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
-    <value>Heure de la dernière lecture</value>  </data>
+    <value>Играло в последнее время</value>  </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>Nombre de lectures</value>  </data>
+    <value>Счетчик прослушиваний</value>  </data>
   <data name="TBRating.Text" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>Рейтинг</value>  </data>
   <data name="TBTitle.Text" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>Заголовок</value>  </data>
   <data name="TBTrackNumber.Text" xml:space="preserve">
-    <value>Numéro de piste</value>  </data>
+    <value>Номер трека</value>  </data>
   <data name="TBYear.Text" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>Год</value>  </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>inverser</value>  </data>
+    <value>развернуть</value>  </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>enregistrer</value>  </data>
+    <value>сохранить</value>  </data>
   <data name="AppBarSort.Label" xml:space="preserve">
-    <value>trier par</value>  </data>
+    <value>сортировать по</value>  </data>
   <data name="MFIAlbum.Text" xml:space="preserve">
-    <value>Album</value>  </data>
+    <value>Альбом</value>  </data>
   <data name="MFIArtist.Text" xml:space="preserve">
-    <value>Artiste</value>  </data>
+    <value>Исполнитель</value>  </data>
   <data name="MFIDuration.Text" xml:space="preserve">
-    <value>Durée</value>  </data>
+    <value>Длительность</value>  </data>
   <data name="MFIRating.Text" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>Рейтинг</value>  </data>
   <data name="MFITitle.Text" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>Заголовок</value>  </data>
   <data name="MFITrackNumber.Text" xml:space="preserve">
-    <value>Numéro de piste</value>  </data>
+    <value>Номер трека</value>  </data>
   <data name="ButtonSave.Content" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>Сохранить</value>  </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>modifier</value>  </data>
+    <value>редактировать</value>  </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>Поиск</value>  </data>
   <data name="Later" xml:space="preserve">
-    <value>Plus tard</value>  </data>
+    <value>Позже</value>  </data>
   <data name="MainPageTitle.Text" xml:space="preserve">
-    <value>page principale</value>  </data>
+    <value>главная страница</value>  </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>Si vous aimez utiliser Next Player, pourriez-vous prendre un moment pour le noter ? Cela ne prendra pas plus d'une minute. Merci de votre soutien !</value>  </data>
+    <value>Если вам нравится пользовать NEXT,  не уделите пару минут для того что бы поддержать проект. Это не займет много времени</value>  </data>
   <data name="RateAppTitle" xml:space="preserve">
-    <value>Noter l'application</value>  </data>
+    <value>Поддержать проект</value>  </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>choisir une sélection</value>  </data>
+    <value>выбрать плейлист</value>  </data>
   <data name="Yes" xml:space="preserve">
-    <value>Noter</value>  </data>
+    <value>Рейтинг</value>  </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>сохранить</value>  </data>
   <data name="Playlist" xml:space="preserve">
-    <value>Playlist</value>  </data>
+    <value>Плейлист</value>  </data>
   <data name="PinToStart.Text" xml:space="preserve">
-    <value>Épingler</value>  </data>
+    <value>Код</value>  </data>
   <data name="Folder" xml:space="preserve">
-    <value>Dossier</value>  </data>
+    <value>Папка</value>  </data>
   <data name="HeaderTransparentTile.Header" xml:space="preserve">
-    <value>Tuile transparente</value>  </data>
+    <value>Transparent tile</value>  </data>
   <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
-    <value>Playlist en cours de lecture</value>  </data>
+    <value>Сейчас играет</value>  </data>
   <data name="TBTransparentTile.Text" xml:space="preserve">
-    <value>Tuile transparente</value>  </data>
+    <value>Transparent tile</value>  </data>
   <data name="UpdateMediaTB.Text" xml:space="preserve">
-    <value>Mettre à jour la bibliothèque</value>  </data>
+    <value>Обновить библиотеку</value>  </data>
   <data name="FilesSharedError" xml:space="preserve">
-    <value>Impossible de partager certains fichiers.</value>  </data>
+    <value>Некоторые файлы нельзя отправить</value>  </data>
   <data name="FilesSharedOK" xml:space="preserve">
-    <value>Tous les fichiers ont été partagés.</value>  </data>
+    <value>Все файлы отправлены</value>  </data>
   <data name="BTSharePageTitle.Text" xml:space="preserve">
-    <value>partager</value>  </data>
+    <value>поделиться</value>  </data>
   <data name="MFIShare.Text" xml:space="preserve">
-    <value>Partager</value>  </data>
+    <value>Поделиться</value>  </data>
   <data name="TBDevices.Text" xml:space="preserve">
-    <value>Appareils</value>  </data>
+    <value>Устройства</value>  </data>
   <data name="TBFiles.Text" xml:space="preserve">
-    <value>Fichiers</value>  </data>
+    <value>Файлы</value>  </data>
   <data name="AppBarScan" xml:space="preserve">
-    <value>analyser</value>  </data>
+    <value>сканировать</value>  </data>
   <data name="Devices" xml:space="preserve">
-    <value>Appareils</value>  </data>
+    <value>Устройства</value>  </data>
   <data name="DevicesNotFound" xml:space="preserve">
-    <value>Appareil introuvable</value>  </data>
+    <value>Не найдено устройств</value>  </data>
   <data name="SearchForDevices" xml:space="preserve">
-    <value>Recherche d'appareils . . .</value>  </data>
+    <value>Поиск устройств...</value>  </data>
   <data name="AppBarSearch.Label" xml:space="preserve">
-    <value>rechercher</value>  </data>
+    <value>Поиск</value>  </data>
   <data name="AlbumArtist" xml:space="preserve">
-    <value>Artiste de l'album</value>  </data>
+    <value>Дискография</value>  </data>
   <data name="Composer" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>Композитор</value>  </data>
   <data name="TBAlbumArtist.Text" xml:space="preserve">
-    <value>Artiste de l'album</value>  </data>
+    <value>Дискография</value>  </data>
   <data name="TBComposer.Text" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>Композитор</value>  </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Album inconnu</value>  </data>
+    <value>Неизвестный альбом</value>  </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Artiste inconnu</value>  </data>
+    <value>Неизвестный исполнитель</value>  </data>
   <data name="AlbumsH.Header" xml:space="preserve">
-    <value>albums</value>  </data>
+    <value>альбомы</value>  </data>
   <data name="ArtistsH.Header" xml:space="preserve">
-    <value>artistes</value>  </data>
+    <value>исполнители</value>  </data>
   <data name="SongsH.Header" xml:space="preserve">
-    <value>chansons</value>  </data>
+    <value>песни</value>  </data>
   <data name="EditTags.Text" xml:space="preserve">
-    <value>Modifier</value>  </data>
+    <value>Редактировать</value>  </data>
   <data name="TagsEditorPageTitle.Text" xml:space="preserve">
-    <value>éditeur de balises</value>  </data>
+    <value>редактор меток</value>  </data>
   <data name="TBComment.Text" xml:space="preserve">
-    <value>Commentaire</value>  </data>
+    <value>Коментировать</value>  </data>
   <data name="TBConductor.Text" xml:space="preserve">
-    <value>Chef d'orchestre</value>  </data>
+    <value>Conductor</value>  </data>
   <data name="TBDisc.Text" xml:space="preserve">
-    <value>Disque</value>  </data>
+    <value>Диск</value>  </data>
   <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
-    <value>Valeurs séparées par des points-virgules</value>  </data>
+    <value>Semicolon separated values</value>  </data>
   <data name="MFIComposer.Text" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>Композитор</value>  </data>
   <data name="MFIYear.Text" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>Год</value>  </data>
   <data name="TBDuration.Text" xml:space="preserve">
-    <value>Durée</value>  </data>
+    <value>Длительность</value>  </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>  </data>
+    <value>Жанр</value>  </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Genre inconnu</value>  </data>
+    <value>Неизвестный жанр</value>  </data>
   <data name="TBShowAlbumCover.Text" xml:space="preserve">
-    <value>Afficher la pochette d'album en arrière-plan</value>  </data>
+    <value>Поставить обложку на фон</value>  </data>
   <data name="ButtonSelectImage.Content" xml:space="preserve">
-    <value>Sélectionner une image</value>  </data>
+    <value>Выбрать изображение</value>  </data>
   <data name="TBShowBackgroundImage.Text" xml:space="preserve">
-    <value>Afficher l'image d'arrière-plan</value>  </data>
+    <value>Показать фон</value>  </data>
   <data name="HPersonalize.Header" xml:space="preserve">
-    <value>personnaliser</value>  </data>
+    <value>настроить</value>  </data>
   <data name="TBSelectAccentColor.Text" xml:space="preserve">
-    <value>Couleur d'accentuation</value>  </data>
+    <value>Выбрать цвет</value>  </data>
   <data name="TBAppTheme.Text" xml:space="preserve">
-    <value>Thème</value>  </data>
+    <value>Тема</value>  </data>
   <data name="RBDark.Content" xml:space="preserve">
-    <value>Foncé</value>  </data>
+    <value>Темная</value>  </data>
   <data name="RBLight.Content" xml:space="preserve">
-    <value>Clair</value>  </data>
+    <value>Светлая</value>  </data>
   <data name="HSettings.Header" xml:space="preserve">
-    <value>paramètres</value>  </data>
+    <value>настройки</value>  </data>
   <data name="SelectImagePageTitle.Text" xml:space="preserve">
-    <value>sélection de l'image</value>  </data>
+    <value>выбраная картинка</value>  </data>
   <data name="TBMenuPlaylists.Text" xml:space="preserve">
-    <value>Playlists</value>  </data>
+    <value>Плейлисты</value>  </data>
   <data name="TBMenuSettings.Text" xml:space="preserve">
-    <value>Paramètres</value>  </data>
+    <value>Настройки</value>  </data>
   <data name="TBMenuSearch.Text" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>Поиск</value>  </data>
   <data name="TBMenuAlbums.Text" xml:space="preserve">
-    <value>Albums</value>  </data>
+    <value>Альбомы</value>  </data>
   <data name="TBMenuGenres.Text" xml:space="preserve">
-    <value>Genres</value>  </data>
+    <value>Жанры</value>  </data>
   <data name="TBMenuFolders.Text" xml:space="preserve">
-    <value>Dossiers</value>  </data>
+    <value>Папки</value>  </data>
   <data name="TBMenuArtists.Text" xml:space="preserve">
-    <value>Artistes</value>  </data>
+    <value>Исполнители</value>  </data>
   <data name="TBMenuSongs.Text" xml:space="preserve">
-    <value>Chansons</value>  </data>
+    <value>Песни</value>  </data>
   <data name="ButtonLogin.Content" xml:space="preserve">
-    <value>Connexion</value>  </data>
+    <value>Войти</value>  </data>
   <data name="ButtonLogout.Content" xml:space="preserve">
-    <value>Déconnexion</value>  </data>
+    <value>Выйти</value>  </data>
   <data name="TBChangeAfterRestart.Text" xml:space="preserve">
-    <value>Redémarrer l'application pour appliquer le thème</value>  </data>
+    <value>Перезапустите приложение для применения темы</value>  </data>
   <data name="TBLogin.Text" xml:space="preserve">
-    <value>Connexion</value>  </data>
+    <value>Войти</value>  </data>
   <data name="TBLoginError.Text" xml:space="preserve">
-    <value>Impossible de se connecter</value>  </data>
+    <value>Не могу войти</value>  </data>
   <data name="TBMarkAtLeast.Text" xml:space="preserve">
-    <value>Marquer comme aimé lorsque je note au moins une fois</value>  </data>
+    <value>Mark as loved when I rate at least</value>  </data>
   <data name="TBPassword.Text" xml:space="preserve">
-    <value>Mot de passe</value>  </data>
+    <value>Пароль</value>  </data>
   <data name="TBSendLoveTrack.Text" xml:space="preserve">
-    <value>Marquer la piste comme aimée lorsque je note la chanson</value>  </data>
+    <value>Mark track as loved when I rate song</value>  </data>
   <data name="TBSendNP.Text" xml:space="preserve">
-    <value>Mettre à jour En cours de lecture sur mon page de profil</value>  </data>
+    <value>Отправить текущий плейлист на мою страницу</value>  </data>
   <data name="TBYouAreLogedIn.Text" xml:space="preserve">
-    <value>Vous êtes connecté(e)</value>  </data>
+    <value>Вы вошли как</value>  </data>
   <data name="FileInfoPageTitle.Text" xml:space="preserve">
-    <value>détails</value>  </data>
+    <value>детали</value>  </data>
 </root>

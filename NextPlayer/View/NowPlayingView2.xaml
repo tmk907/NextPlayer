@@ -14,7 +14,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding NowPlayingVM, Mode=OneWay, Source={StaticResource Locator}}">
-    
+
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -70,9 +70,8 @@
                        PointerExited="Image_Exited"
                        DoubleTapped="Image_DoubleTapped"/>
                 </local:SizeNotifyPanel>
-                <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="28"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -82,7 +81,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="0"
+                    <!--<StackPanel Grid.Row="0"
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
@@ -90,8 +89,8 @@
                         <TextBlock x:Name="NrTextBlock" HorizontalAlignment="Right" Text="{Binding CurrentNr}" FontSize="20"/>
                         <TextBlock HorizontalAlignment="Right" Text="/" FontSize="20"/>
                         <TextBlock x:Name="AllTextBlock" HorizontalAlignment="Right" Text="{Binding SongsCount}" FontSize="20"/>
-                    </StackPanel>
-                    <Button Grid.Row="1"
+                    </StackPanel>-->
+                    <Button Grid.Row="0"
                             x:Name="ShuffleButton" 
                             Content="&#xE14b;" 
                             Foreground="{Binding ShuffleButtonForeground}"
@@ -100,23 +99,48 @@
                             Command="{Binding Shuffle_Click}" 
                             Style="{StaticResource ButtonStyleSmallRound}">
                     </Button>
-                    <Button Grid.Row="2"
+                    <Button Grid.Row="1"
                             x:Name="RepeatButton" 
                             Content="{Binding RepeatButtonContent}" 
                             Foreground="{Binding RepeatButtonForeground}"
                             BorderBrush="{Binding RepeatButtonForeground}"
                             Command="{Binding Repeat_Click}" 
                             Style="{StaticResource ButtonStyleSmallRound}"/>
-                    <Button Grid.Row="3"
+                    <Button Grid.Row="2"
                             Content="&#xE185;"  
                             Command="{Binding ShowLyricsClick}"
                             Style="{StaticResource ButtonStyleSmallRound}"/>
-                    <Button Grid.Row="4"
+                    <Button Grid.Row="3"
                             Content="&#xE14C;"  
                             Command="{Binding GoToNowPlayingList}"
                             Style="{StaticResource ButtonStyleSmallRound}"/>
                 </Grid>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="NrTextBlock" 
+                               Grid.Column="0"
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Bottom"
+                               Text="{Binding CurrentNr}" 
+                               FontSize="20"/>
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Bottom"
+                               Text="/" 
+                               FontSize="20"/>
+                    <TextBlock x:Name="AllTextBlock" 
+                               Grid.Column="2"
+                               HorizontalAlignment="Left" 
+                               VerticalAlignment="Bottom"
+                               Text="{Binding SongsCount}" 
+                               FontSize="20"/>
+                </Grid>
                 <RatingControl:Rating Grid.Row="1" Grid.Column="0"
+                                      Visibility="{Binding RatingControlVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center"   
                             AllowSelectingZero="True" 
@@ -125,7 +149,7 @@
                             Value="{Binding Rating, Mode=TwoWay}">
                     <RatingControl:Rating.FilledItemStyle>
                         <Style TargetType="RatingControl:RatingItem">
-                            <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}"/>
+                            <Setter Property="Background" Value="{StaticResource UserAccentBrush}"/>
                         </Style>
                     </RatingControl:Rating.FilledItemStyle>
                     <RatingControl:Rating.UnfilledItemStyle>
@@ -134,7 +158,29 @@
                         </Style>
                     </RatingControl:Rating.UnfilledItemStyle>
                 </RatingControl:Rating>
-                <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding RatingControlVisibility, Converter={StaticResource BoolToInverterVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0"
+                            Style="{StaticResource SliderStyle1}" 
+                            x:Name="PlaybackRateSlider"
+                            HorizontalAlignment="Stretch"
+                            Minimum="30" 
+                            Maximum="200" 
+                            StepFrequency="1.0"
+                            Value="{Binding PlaybackRate, Mode=TwoWay}"/>
+                    <TextBlock Grid.Column="1"
+                               x:Name="PlaybackRateTB"
+                               VerticalAlignment="Bottom"
+                               FontSize="20"
+                               Margin="8,0,0,0"
+                               DoubleTapped="TextBlock_DoubleTapped"
+                               Text="{Binding Value, ElementName=PlaybackRateSlider}"/>
+
+                </Grid>
+                <Grid Grid.Row="2" Grid.ColumnSpan="2" DoubleTapped="Grid_DoubleTapped">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>

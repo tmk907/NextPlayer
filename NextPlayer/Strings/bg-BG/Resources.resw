@@ -526,7 +526,7 @@
     <value>Големина на фала</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>Жанр</value>
   </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
     <value>Последно пуснати</value>

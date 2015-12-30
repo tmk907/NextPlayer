@@ -259,14 +259,16 @@
     <None Include="Package.StoreAssociation.xml">
       <SubType>Designer</SubType>
     </None>
+    <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\it-IT\Resources.resw" />
+    <PRIResource Include="Strings\zh-CHS\Resources.resw" />
+    <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\he-IL\Resources.resw" />
     <PRIResource Include="Strings\hr-HR\Resources.resw" />
     <PRIResource Include="Strings\sr-Latn\Resources.resw" />
     <PRIResource Include="Strings\bg-BG\Resources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
-    <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\cs-CZ\Resources.resw" />
-    <PRIResource Include="Strings\fr-FR\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -410,6 +412,7 @@
   <ItemGroup>
     <Folder Include="Assets\Buttons\" />
     <Folder Include="Assets\Cover\Light\" />
+    <Folder Include="Strings\id-ID\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">

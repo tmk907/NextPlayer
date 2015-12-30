@@ -704,6 +704,7 @@ namespace NextPlayer.ViewModel
                 Album = song.Album;
                 fromDB = true;
                 Rating = song.Rating;
+                //PlaybackRate = 100.0;
                 SetCover(song.Path);
 
                 SetupTimer();
@@ -731,6 +732,7 @@ namespace NextPlayer.ViewModel
                         double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                         ProgressBarMaxValue = absvalue;
                         EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                        PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
                     }
                     else if (NextPlayer.Common.SuspensionManager.SessionState.ContainsKey("lyrics"))//mozna chyba zmienic na Dict<> state
                     {
@@ -748,6 +750,7 @@ namespace NextPlayer.ViewModel
                         double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                         ProgressBarMaxValue = absvalue;
                         EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                        PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
                     }
                     else
                     {
@@ -818,6 +821,7 @@ namespace NextPlayer.ViewModel
             Title = song.Title;
             fromDB = true;
             Rating = song.Rating;
+            
 
             if (IsMyBackgroundTaskRunning)
             {
@@ -829,6 +833,7 @@ namespace NextPlayer.ViewModel
                 double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                 ProgressBarMaxValue = absvalue;
                 EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
 
                 SendMessage(AppConstants.AppResumed, DateTime.Now.ToString());
 
@@ -843,6 +848,7 @@ namespace NextPlayer.ViewModel
             }
             else
             {
+                PlaybackRate = 100.0;
                 PlayButtonContent = "\uE17e\uE102";//play
             }
         }
@@ -1015,6 +1021,7 @@ namespace NextPlayer.ViewModel
                                 Title = song.Title;
                                 fromDB = true;
                                 Rating = song.Rating;
+                                PlaybackRate = 100.0;
                             }
                             catch(System.IndexOutOfRangeException ex)
                             {
@@ -1026,10 +1033,12 @@ namespace NextPlayer.ViewModel
                                 Title = "-";
                                 fromDB = true;
                                 Rating = 0;
+                                PlaybackRate = 100.0;
                                 NextPlayerDataLayer.Diagnostics.Logger.Save("NP View MesRecFromBG SongIndex IndexOutOfRangeException" + "\n"
                                     + ex.Message + "\n"
                                     + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
                                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                                App.TelemetryClient.TrackException(ex);
                             }
                             catch (Exception ex)
                             {
@@ -1039,10 +1048,12 @@ namespace NextPlayer.ViewModel
                                 Title = "-";
                                 fromDB = true;
                                 Rating = 0;
+                                PlaybackRate = 100.0;
                                 NextPlayerDataLayer.Diagnostics.Logger.Save("NP View MesRecFromBG SongIndex" + "\n"
                                     + ex.Message + "\n"
                                     + "NPList Count " + Library.Current.NowPlayingList.Count + " index " + CurrentSongIndex);
                                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                                App.TelemetryClient.TrackException(ex);
                             }
                         });
                         break;
@@ -1055,6 +1066,7 @@ namespace NextPlayer.ViewModel
                             ProgressBarValue = 0.0;
                             CurrentTime = TimeSpan.Zero;
                             EndTime = BackgroundMediaPlayer.Current.NaturalDuration;
+                            PlaybackRate = BackgroundMediaPlayer.Current.PlaybackRate * 100.0;
                             SaveCached();
                         });
                         break;
@@ -1243,6 +1255,72 @@ namespace NextPlayer.ViewModel
             await SaveLater.Current.SaveRatingsNow();
             await SaveLater.Current.SaveTagsNow();
         }
-        
+
+
+        /// <summary>
+        /// The <see cref="RatingControlVisibility" /> property's name.
+        /// </summary>
+        public const string RatingControlVisibilityPropertyName = "RatingControlVisibility";
+
+        private bool ratingControlVisibility = true;
+
+        /// <summary>
+        /// Sets and gets the RatingControlVisibility property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool RatingControlVisibility
+        {
+            get
+            {
+                return ratingControlVisibility;
+            }
+
+            set
+            {
+                if (ratingControlVisibility == value)
+                {
+                    return;
+                }
+
+                ratingControlVisibility = value;
+                RaisePropertyChanged(RatingControlVisibilityPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="PlaybackRate" /> property's name.
+        /// </summary>
+        public const string PlaybackRatePropertyName = "PlaybackRate";
+
+        private double playbackRate = 100;
+
+        /// <summary>
+        /// Sets and gets the PlaybackRate property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double PlaybackRate
+        {
+            get
+            {
+                return playbackRate;
+            }
+
+            set
+            {
+                if (playbackRate == value)
+                {
+                    return;
+                }
+
+                playbackRate = value;
+                ChangePlaybackRate(value);
+                RaisePropertyChanged(PlaybackRatePropertyName);
+            }
+        }
+
+        public void ChangePlaybackRate(double percent)
+        {
+            SendMessage(AppConstants.ChangeRate, percent);
+        }
     }
 }

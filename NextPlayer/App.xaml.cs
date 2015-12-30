@@ -35,7 +35,7 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = true;
+        private bool dev = false;
 
         public static bool LastFmRateOn;
         public static int LastFmUnLove;
@@ -53,7 +53,7 @@ namespace NextPlayer
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "35553b27-ab5c-4fbe-8495-07f21758f72c";
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "01fcaacd-5dd7-490e-b6a9-ebd5f927558e";
             }
             else
             {

@@ -199,7 +199,7 @@ namespace NextPlayerDataLayer.Services
 
         public void CompleteUpdate()
         {
-            SendIndex();
+            //SendIndex();
             ValueSet message = new ValueSet();
             message.Add(AppConstants.MediaOpened, BackgroundMediaPlayer.Current.NaturalDuration);
             BackgroundMediaPlayer.SendMessageToForeground(message);
@@ -320,6 +320,13 @@ namespace NextPlayerDataLayer.Services
         {
             return playlist.GetCurrentSong().Title;
         }
+
+        public void ChangeRate(int percent)
+        {
+            double rate = percent / 100.0;
+            mediaPlayer.PlaybackRate = rate;
+        }
+
 
     }
 

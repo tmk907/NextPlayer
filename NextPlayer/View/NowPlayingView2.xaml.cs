@@ -175,12 +175,23 @@ namespace NextPlayer.View
             }
         }
 
+        private void TextBlock_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            PlaybackRateSlider.Value = 100.0;
+        }
+
+        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            viewModel.RatingControlVisibility = !viewModel.RatingControlVisibility;
+        }
+
         private void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             viewModel.Play();
         }
         #endregion
     }
+
     public class SizeNotifyPanel : ContentPresenter
     {
         public static DependencyProperty SizeProperty = DependencyProperty.Register("Size", typeof(Size), typeof(SizeNotifyPanel), null);

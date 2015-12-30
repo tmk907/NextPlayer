@@ -205,6 +205,9 @@ namespace NextPlayerBackgroundAudioPlayer
                         ShutdownPlayer();
                         //ClearPlayer();
                         break;
+                    case AppConstants.ChangeRate:
+                        nowPlayingManager.ChangeRate(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
+                        break;
                 }
             }
         }

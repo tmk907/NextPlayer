@@ -642,5 +642,10 @@ namespace NextPlayer.View
 
         }
         #endregion
+
+        private void selectBGImageFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

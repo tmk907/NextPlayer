@@ -574,7 +574,7 @@
     <value>Files</value>
   </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>
+    <value>Žánr</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
     <value>Unknown album</value>

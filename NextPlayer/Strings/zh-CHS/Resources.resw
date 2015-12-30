@@ -118,435 +118,435 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OstatnioDodane" xml:space="preserve">
-    <value>Dernier ajout</value>
+    <value>上次添加</value>
   </data>
   <data name="NowPlayingPlaylistPageTitle" xml:space="preserve">
-    <value>en cours de lecture</value>
+    <value>正在播放</value>
   </data>
   <data name="NowPlayingPageTitle.Text" xml:space="preserve">
-    <value>en cours de lecture</value>
+    <value>正在播放</value>
   </data>
   <data name="NewSPPageTitle.Text" xml:space="preserve">
-    <value>nouvelle playlist intelligente</value>
+    <value>新增智能播放列表</value>
   </data>
   <data name="NewRule.Content" xml:space="preserve">
-    <value>Ajouter une règle</value>
+    <value>添加规则</value>
   </data>
   <data name="NajrzadziejOdtwarzane" xml:space="preserve">
-    <value>Dernier souvent lu</value>
+    <value>播放最少的</value>
   </data>
   <data name="NajlepiejOceniane" xml:space="preserve">
-    <value>Rang le plus haut</value>
+    <value>排名最高的</value>
   </data>
   <data name="NajgorzejOceniane" xml:space="preserve">
-    <value>Rang le plus bas</value>
+    <value>排名最低的</value>
   </data>
   <data name="NajczesciejOdtwarzane" xml:space="preserve">
-    <value>Le plus souvent lu</value>
+    <value>播放最多的</value>
   </data>
   <data name="MostRecentlyPlayed" xml:space="preserve">
-    <value>Le plus récemment lu</value>
+    <value>最近播放最多的</value>
   </data>
   <data name="MostRecentlyAdded" xml:space="preserve">
-    <value>Le plus récemment ajouté</value>
+    <value>最近添加最多的</value>
   </data>
   <data name="MostOftenPlayed" xml:space="preserve">
-    <value>Le plus souvent lu</value>
+    <value>播放最多的</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Minutes</value>
+    <value>分钟</value>
   </data>
   <data name="MenuSongs.Content" xml:space="preserve">
-    <value>Chansons</value>
+    <value>歌曲</value>
   </data>
   <data name="MenuSettings.Content" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>设置</value>
   </data>
   <data name="MenuPlaylists.Content" xml:space="preserve">
-    <value>Playlists</value>
-  </data>
-  <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
-    <value>Playlist en cours de lecture</value>
+    <value>播放列表</value>
   </data>
   <data name="MenuGenres.Content" xml:space="preserve">
-    <value>Genres</value>
+    <value>类型</value>
   </data>
-  <data name="MenuArtists.Content" xml:space="preserve">
-    <value>Artistes</value>
+  <data name="MenuNowPlayingPlaylist.Content" xml:space="preserve">
+    <value>正在播放列表</value>
   </data>
   <data name="MenuFolders.Content" xml:space="preserve">
-    <value>Dossiers</value>
+    <value>文件夹</value>
+  </data>
+  <data name="MenuArtists.Content" xml:space="preserve">
+    <value>歌手</value>
   </data>
   <data name="MenuAlbums.Content" xml:space="preserve">
-    <value>Albums</value>
+    <value>专辑</value>
   </data>
   <data name="LyricsButton.Content" xml:space="preserve">
-    <value>Paroles</value>
+    <value>歌词</value>
   </data>
   <data name="LowestRating" xml:space="preserve">
-    <value>Note la plus basse</value>
+    <value>评价最低的</value>
   </data>
   <data name="LibraryUpdated" xml:space="preserve">
-    <value>Bibliothèque mise à jour.</value>
+    <value>歌曲库已更新。</value>
   </data>
   <data name="LeastRecentlyPlayed" xml:space="preserve">
-    <value>Dernier récemment lu</value>
+    <value>最近播放最少的</value>
   </data>
   <data name="LeastRecentlyAdded" xml:space="preserve">
-    <value>Dernier récemment ajouté</value>
+    <value>最近添加</value>
   </data>
   <data name="LeastOftenPlayed" xml:space="preserve">
-    <value>Dernier souvent lu</value>
+    <value>最近播放</value>
   </data>
   <data name="LastPlayed" xml:space="preserve">
-    <value>Dernière lecture</value>
+    <value>上次播放时间</value>
   </data>
   <data name="IsNot" xml:space="preserve">
-    <value>N'est pas</value>
+    <value>不等于</value>
   </data>
   <data name="IsLess" xml:space="preserve">
-    <value>Est plus petit</value>
+    <value>小于</value>
   </data>
   <data name="IsGreater" xml:space="preserve">
-    <value>Est plus grand</value>
+    <value>大于</value>
   </data>
   <data name="Is" xml:space="preserve">
-    <value>Est</value>
+    <value>等于</value>
   </data>
   <data name="ImportMediaButton.Content" xml:space="preserve">
-    <value>Ajouter des chansons à la bibliothèque</value>
+    <value>添加到歌曲库</value>
   </data>
   <data name="Hours" xml:space="preserve">
-    <value>Heures</value>
+    <value>小时</value>
   </data>
   <data name="HighestRating" xml:space="preserve">
-    <value>Note la plus élevée</value>
+    <value>热门</value>
   </data>
   <data name="GenresPageTitle.Text" xml:space="preserve">
-    <value>genres</value>
+    <value>类型</value>
   </data>
   <data name="Genre" xml:space="preserve">
-    <value>Genre</value>
+    <value>风格</value>
   </data>
   <data name="FilePath" xml:space="preserve">
-    <value>Chemin d'accès</value>
+    <value>文件路径</value>
   </data>
   <data name="EndsWith" xml:space="preserve">
-    <value>Se termine par</value>
+    <value>以%@结束</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Durée</value>
+    <value>时长</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>Ne contient pas</value>
+    <value>不包含</value>
   </data>
   <data name="DeleteRule.Content" xml:space="preserve">
-    <value>Supprimer la règle</value>
+    <value>删除规则</value>
   </data>
   <data name="DeletePlaylistConfirmation.Text" xml:space="preserve">
-    <value>Voulez-vous vraiment supprimer cette playlist ?</value>
+    <value>你确认要删除播放列表吗？</value>
   </data>
   <data name="Delete.Text" xml:space="preserve">
-    <value>Effacer</value>
+    <value>删除</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date d'ajout</value>
+    <value>添加时间</value>
   </data>
   <data name="Contains" xml:space="preserve">
-    <value>Contient</value>
+    <value>包含</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
-    <value>Erreur de connexion</value>
+    <value>连接失败</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>Connexion</value>
+    <value>正在连接</value>
   </data>
   <data name="Cancel.Label" xml:space="preserve">
-    <value>Annuler</value>
+    <value>取消</value>
   </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
-    <value>Supprimer</value>
+    <value>删除</value>
   </data>
   <data name="ButtonCancel.Content" xml:space="preserve">
-    <value>Annuler</value>
+    <value>取消</value>
   </data>
   <data name="ArtistsPageTitle.Text" xml:space="preserve">
-    <value>artistes</value>
+    <value>歌手</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artiste</value>
+    <value>歌手</value>
   </data>
   <data name="AppName.Text" xml:space="preserve">
-    <value>NEXT PLAYER</value>
+    <value>下一首</value>
   </data>
   <data name="AlbumsPageTitle.Text" xml:space="preserve">
-    <value>albums</value>
+    <value>专辑</value>
   </data>
   <data name="AlbumPageTitle.Text" xml:space="preserve">
-    <value>album</value>
+    <value>专辑</value>
   </data>
   <data name="Album" xml:space="preserve">
-    <value>Album</value>
+    <value>专辑</value>
   </data>
   <data name="AddToPlaylist.Text" xml:space="preserve">
-    <value>Ajouter à la playlist</value>
+    <value>添加到播放列表</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Ajouter à la lecture en cours</value>
+    <value>添加到下一曲</value>
   </data>
   <data name="AddSmartPlaylist.Label" xml:space="preserve">
-    <value>Ajouter une playlist intelligente</value>
+    <value>添加到智能播放列表</value>
   </data>
   <data name="AddPlaylist.Label" xml:space="preserve">
-    <value>Ajouter une playlist</value>  </data>
+    <value>添加播放列表</value>  </data>
   <data name="OstatnioOdtwarzane" xml:space="preserve">
-    <value>Dernière lecture</value>  </data>
+    <value>上次播放</value>  </data>
   <data name="PlayCount" xml:space="preserve">
-    <value>Nombre de lectures</value>  </data>
+    <value>播放次数</value>  </data>
   <data name="PlaylistsPageTitle.Text" xml:space="preserve">
-    <value>playlists</value>  </data>
+    <value>播放列表</value>  </data>
   <data name="PlayNow.Text" xml:space="preserve">
-    <value>Lire maintenant</value>  </data>
+    <value>立即播放</value>  </data>
   <data name="Rating" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>评分</value>  </data>
   <data name="Rules.Text" xml:space="preserve">
-    <value>Règles</value>  </data>
+    <value>规则</value>  </data>
   <data name="Save.Content" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>保存</value>  </data>
   <data name="Save.Label" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>保存</value>  </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Secondes</value>  </data>
+    <value>秒</value>  </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>paramètres</value>  </data>
+    <value>设置</value>  </data>
   <data name="SongsPageTitle" xml:space="preserve">
-    <value>chansons</value>  </data>
+    <value>歌曲</value>  </data>
   <data name="SPName.Text" xml:space="preserve">
-    <value>Nom</value>  </data>
+    <value>名称</value>  </data>
   <data name="SPSongsNumber.Text" xml:space="preserve">
-    <value>Nombre de chansons</value>  </data>
+    <value>歌曲编号</value>  </data>
   <data name="SPSortBy.Text" xml:space="preserve">
-    <value>Trier par</value>  </data>
+    <value>排序</value>  </data>
   <data name="StartsWith" xml:space="preserve">
-    <value>Commence par</value>  </data>
+    <value>以%@开始</value>  </data>
   <data name="Title" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>标题</value>  </data>
   <data name="UpdateMediaButton.Content" xml:space="preserve">
-    <value>Mettre à jour la bibliothèque</value>  </data>
+    <value>更新歌曲库</value>  </data>
   <data name="Year" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>年</value>  </data>
   <data name="WaitFewMinutes.Text" xml:space="preserve">
-    <value>Ne fermez pas cette page lors de l'analyse.</value>  </data>
+    <value>正在扫描，请勿关闭当前页面</value>  </data>
   <data name="MenuSearch.Content" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>搜索</value>  </data>
   <data name="SearchPageTitle.Text" xml:space="preserve">
-    <value>rechercher</value>  </data>
+    <value>搜索</value>  </data>
   <data name="FoldersPageTitle.Text" xml:space="preserve">
-    <value>dossiers</value>  </data>
+    <value>文件夹</value>  </data>
   <data name="RateButton.Content" xml:space="preserve">
-    <value>Noter</value>  </data>
+    <value>评分</value>  </data>
   <data name="SPErrorText.Text" xml:space="preserve">
-    <value>Remplissez bien tous les champs.</value>  </data>
+    <value>请正确填写信息</value>  </data>
   <data name="ShowDetails.Text" xml:space="preserve">
-    <value>Afficher les détails</value>  </data>
+    <value>显示详细内容</value>  </data>
   <data name="DeleteFromPlaylist.Text" xml:space="preserve">
-    <value>Supprimer de la playlist</value>  </data>
+    <value>从列表中删除</value>  </data>
   <data name="MenuStop.Content" xml:space="preserve">
-    <value>Stop</value>  </data>
+    <value>停止</value>  </data>
   <data name="TBAlbum.Text" xml:space="preserve">
-    <value>Album</value>  </data>
+    <value>专辑</value>  </data>
   <data name="TBArtist.Text" xml:space="preserve">
-    <value>Artiste</value>  </data>
+    <value>歌手</value>  </data>
   <data name="TBBitrate.Text" xml:space="preserve">
-    <value>Vitesse de transmission</value>  </data>
+    <value>比特率</value>  </data>
   <data name="TBDateAdded.Text" xml:space="preserve">
-    <value>Date d'ajout</value>  </data>
+    <value>添加时间</value>  </data>
   <data name="TBFilePath.Text" xml:space="preserve">
-    <value>Chemin d'accès</value>  </data>
+    <value>文件路径</value>  </data>
   <data name="TBFileSize.Text" xml:space="preserve">
-    <value>Taille du fichier</value>  </data>
+    <value>文件大小</value>  </data>
   <data name="TBLastTimePlayed.Text" xml:space="preserve">
-    <value>Heure de la dernière lecture</value>  </data>
+    <value>上次播放时间</value>  </data>
   <data name="TBPlayCount.Text" xml:space="preserve">
-    <value>Nombre de lectures</value>  </data>
+    <value>播放次数</value>  </data>
   <data name="TBRating.Text" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>评价</value>  </data>
   <data name="TBTitle.Text" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>标题</value>  </data>
   <data name="TBTrackNumber.Text" xml:space="preserve">
-    <value>Numéro de piste</value>  </data>
+    <value>音轨数</value>  </data>
   <data name="TBYear.Text" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>年</value>  </data>
   <data name="AppBarOrder.Label" xml:space="preserve">
-    <value>inverser</value>  </data>
+    <value>倒退</value>  </data>
   <data name="AppBarSave.Label" xml:space="preserve">
-    <value>enregistrer</value>  </data>
+    <value>保存</value>  </data>
   <data name="AppBarSort.Label" xml:space="preserve">
-    <value>trier par</value>  </data>
+    <value>排序</value>  </data>
   <data name="MFIAlbum.Text" xml:space="preserve">
-    <value>Album</value>  </data>
+    <value>专辑</value>  </data>
   <data name="MFIArtist.Text" xml:space="preserve">
-    <value>Artiste</value>  </data>
+    <value>歌手</value>  </data>
   <data name="MFIDuration.Text" xml:space="preserve">
-    <value>Durée</value>  </data>
+    <value>时长</value>  </data>
   <data name="MFIRating.Text" xml:space="preserve">
-    <value>Classement</value>  </data>
+    <value>评价</value>  </data>
   <data name="MFITitle.Text" xml:space="preserve">
-    <value>Titre</value>  </data>
+    <value>标题</value>  </data>
   <data name="MFITrackNumber.Text" xml:space="preserve">
-    <value>Numéro de piste</value>  </data>
+    <value>音轨数</value>  </data>
   <data name="ButtonSave.Content" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>保存</value>  </data>
   <data name="AppBarEdit.Label" xml:space="preserve">
-    <value>modifier</value>  </data>
+    <value>编辑</value>  </data>
   <data name="ButtonSearch.Content" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>搜索</value>  </data>
   <data name="Later" xml:space="preserve">
-    <value>Plus tard</value>  </data>
+    <value>稍后</value>  </data>
   <data name="MainPageTitle.Text" xml:space="preserve">
-    <value>page principale</value>  </data>
+    <value>主页</value>  </data>
   <data name="RateAppMsg" xml:space="preserve">
-    <value>Si vous aimez utiliser Next Player, pourriez-vous prendre un moment pour le noter ? Cela ne prendra pas plus d'une minute. Merci de votre soutien !</value>  </data>
+    <value>给个好评吧，亲~</value>  </data>
   <data name="RateAppTitle" xml:space="preserve">
-    <value>Noter l'application</value>  </data>
+    <value>给我们评分</value>  </data>
   <data name="SelectPlaylist.Text" xml:space="preserve">
-    <value>choisir une sélection</value>  </data>
+    <value>选择播放列表</value>  </data>
   <data name="Yes" xml:space="preserve">
-    <value>Noter</value>  </data>
+    <value>评分</value>  </data>
   <data name="AppBarSaveLyrics.Label" xml:space="preserve">
-    <value>Enregistrer</value>  </data>
+    <value>保存</value>  </data>
   <data name="Playlist" xml:space="preserve">
-    <value>Playlist</value>  </data>
+    <value>播放列表</value>  </data>
   <data name="PinToStart.Text" xml:space="preserve">
-    <value>Épingler</value>  </data>
+    <value>锁住</value>  </data>
   <data name="Folder" xml:space="preserve">
-    <value>Dossier</value>  </data>
+    <value>文件夹</value>  </data>
   <data name="HeaderTransparentTile.Header" xml:space="preserve">
-    <value>Tuile transparente</value>  </data>
+    <value>半透明标题</value>  </data>
   <data name="MenuNowPlayingPlaylistTB.Text" xml:space="preserve">
-    <value>Playlist en cours de lecture</value>  </data>
+    <value>正在播放的列表</value>  </data>
   <data name="TBTransparentTile.Text" xml:space="preserve">
-    <value>Tuile transparente</value>  </data>
+    <value>半透明标题</value>  </data>
   <data name="UpdateMediaTB.Text" xml:space="preserve">
-    <value>Mettre à jour la bibliothèque</value>  </data>
+    <value>更新歌曲库</value>  </data>
   <data name="FilesSharedError" xml:space="preserve">
-    <value>Impossible de partager certains fichiers.</value>  </data>
+    <value>部分文件保存失败，请重试</value>  </data>
   <data name="FilesSharedOK" xml:space="preserve">
-    <value>Tous les fichiers ont été partagés.</value>  </data>
+    <value>文件分享成功</value>  </data>
   <data name="BTSharePageTitle.Text" xml:space="preserve">
-    <value>partager</value>  </data>
+    <value>分享</value>  </data>
   <data name="MFIShare.Text" xml:space="preserve">
-    <value>Partager</value>  </data>
+    <value>分享</value>  </data>
   <data name="TBDevices.Text" xml:space="preserve">
-    <value>Appareils</value>  </data>
+    <value>设备</value>  </data>
   <data name="TBFiles.Text" xml:space="preserve">
-    <value>Fichiers</value>  </data>
+    <value>文件</value>  </data>
   <data name="AppBarScan" xml:space="preserve">
-    <value>analyser</value>  </data>
+    <value>扫描</value>  </data>
   <data name="Devices" xml:space="preserve">
-    <value>Appareils</value>  </data>
+    <value>设备</value>  </data>
   <data name="DevicesNotFound" xml:space="preserve">
-    <value>Appareil introuvable</value>  </data>
+    <value>没有发现可用蓝牙设备</value>  </data>
   <data name="SearchForDevices" xml:space="preserve">
-    <value>Recherche d'appareils . . .</value>  </data>
+    <value>正在搜索蓝牙设备</value>  </data>
   <data name="AppBarSearch.Label" xml:space="preserve">
-    <value>rechercher</value>  </data>
+    <value>搜索</value>  </data>
   <data name="AlbumArtist" xml:space="preserve">
-    <value>Artiste de l'album</value>  </data>
+    <value>专辑歌手</value>  </data>
   <data name="Composer" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>作曲</value>  </data>
   <data name="TBAlbumArtist.Text" xml:space="preserve">
-    <value>Artiste de l'album</value>  </data>
+    <value>专辑歌手</value>  </data>
   <data name="TBComposer.Text" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>作曲</value>  </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Album inconnu</value>  </data>
+    <value>未知专辑</value>  </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Artiste inconnu</value>  </data>
+    <value>未知歌手</value>  </data>
   <data name="AlbumsH.Header" xml:space="preserve">
-    <value>albums</value>  </data>
+    <value>专辑</value>  </data>
   <data name="ArtistsH.Header" xml:space="preserve">
-    <value>artistes</value>  </data>
+    <value>歌手</value>  </data>
   <data name="SongsH.Header" xml:space="preserve">
-    <value>chansons</value>  </data>
+    <value>歌曲</value>  </data>
   <data name="EditTags.Text" xml:space="preserve">
-    <value>Modifier</value>  </data>
+    <value>编辑</value>  </data>
   <data name="TagsEditorPageTitle.Text" xml:space="preserve">
-    <value>éditeur de balises</value>  </data>
+    <value>标签编辑器</value>  </data>
   <data name="TBComment.Text" xml:space="preserve">
-    <value>Commentaire</value>  </data>
+    <value>评论</value>  </data>
   <data name="TBConductor.Text" xml:space="preserve">
-    <value>Chef d'orchestre</value>  </data>
+    <value>导演</value>  </data>
   <data name="TBDisc.Text" xml:space="preserve">
-    <value>Disque</value>  </data>
+    <value>唱片</value>  </data>
   <data name="TBSemicolonSeparatedValues.Text" xml:space="preserve">
-    <value>Valeurs séparées par des points-virgules</value>  </data>
+    <value>逗号分隔</value>  </data>
   <data name="MFIComposer.Text" xml:space="preserve">
-    <value>Compositeur</value>  </data>
+    <value>作曲</value>  </data>
   <data name="MFIYear.Text" xml:space="preserve">
-    <value>Année</value>  </data>
+    <value>年</value>  </data>
   <data name="TBDuration.Text" xml:space="preserve">
-    <value>Durée</value>  </data>
+    <value>时长</value>  </data>
   <data name="TBGenre.Text" xml:space="preserve">
-    <value>Genre</value>  </data>
+    <value>类型</value>  </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Genre inconnu</value>  </data>
+    <value>未知类型</value>  </data>
   <data name="TBShowAlbumCover.Text" xml:space="preserve">
-    <value>Afficher la pochette d'album en arrière-plan</value>  </data>
+    <value>把专辑封面设为背景</value>  </data>
   <data name="ButtonSelectImage.Content" xml:space="preserve">
-    <value>Sélectionner une image</value>  </data>
+    <value>选择图片</value>  </data>
   <data name="TBShowBackgroundImage.Text" xml:space="preserve">
-    <value>Afficher l'image d'arrière-plan</value>  </data>
+    <value>显示背景图片</value>  </data>
   <data name="HPersonalize.Header" xml:space="preserve">
-    <value>personnaliser</value>  </data>
+    <value>个性化设置</value>  </data>
   <data name="TBSelectAccentColor.Text" xml:space="preserve">
-    <value>Couleur d'accentuation</value>  </data>
+    <value>颜色</value>  </data>
   <data name="TBAppTheme.Text" xml:space="preserve">
-    <value>Thème</value>  </data>
+    <value>主题</value>  </data>
   <data name="RBDark.Content" xml:space="preserve">
-    <value>Foncé</value>  </data>
+    <value>暗色</value>  </data>
   <data name="RBLight.Content" xml:space="preserve">
-    <value>Clair</value>  </data>
+    <value>亮色</value>  </data>
   <data name="HSettings.Header" xml:space="preserve">
-    <value>paramètres</value>  </data>
+    <value>设置</value>  </data>
   <data name="SelectImagePageTitle.Text" xml:space="preserve">
-    <value>sélection de l'image</value>  </data>
+    <value>图片选择</value>  </data>
   <data name="TBMenuPlaylists.Text" xml:space="preserve">
-    <value>Playlists</value>  </data>
+    <value>播放列表</value>  </data>
   <data name="TBMenuSettings.Text" xml:space="preserve">
-    <value>Paramètres</value>  </data>
+    <value>设置</value>  </data>
   <data name="TBMenuSearch.Text" xml:space="preserve">
-    <value>Rechercher</value>  </data>
+    <value>搜索</value>  </data>
   <data name="TBMenuAlbums.Text" xml:space="preserve">
-    <value>Albums</value>  </data>
+    <value>专辑</value>  </data>
   <data name="TBMenuGenres.Text" xml:space="preserve">
-    <value>Genres</value>  </data>
+    <value>分类</value>  </data>
   <data name="TBMenuFolders.Text" xml:space="preserve">
-    <value>Dossiers</value>  </data>
+    <value>文件夹</value>  </data>
   <data name="TBMenuArtists.Text" xml:space="preserve">
-    <value>Artistes</value>  </data>
+    <value>歌手</value>  </data>
   <data name="TBMenuSongs.Text" xml:space="preserve">
-    <value>Chansons</value>  </data>
+    <value>歌曲</value>  </data>
   <data name="ButtonLogin.Content" xml:space="preserve">
-    <value>Connexion</value>  </data>
+    <value>登录</value>  </data>
   <data name="ButtonLogout.Content" xml:space="preserve">
-    <value>Déconnexion</value>  </data>
+    <value>退出</value>  </data>
   <data name="TBChangeAfterRestart.Text" xml:space="preserve">
-    <value>Redémarrer l'application pour appliquer le thème</value>  </data>
+    <value>重启应用更新主题</value>  </data>
   <data name="TBLogin.Text" xml:space="preserve">
-    <value>Connexion</value>  </data>
+    <value>登录</value>  </data>
   <data name="TBLoginError.Text" xml:space="preserve">
-    <value>Impossible de se connecter</value>  </data>
+    <value>登录失败</value>  </data>
   <data name="TBMarkAtLeast.Text" xml:space="preserve">
-    <value>Marquer comme aimé lorsque je note au moins une fois</value>  </data>
+    <value>已评价的歌曲标记为喜欢的歌曲</value>  </data>
   <data name="TBPassword.Text" xml:space="preserve">
-    <value>Mot de passe</value>  </data>
+    <value>密码</value>  </data>
   <data name="TBSendLoveTrack.Text" xml:space="preserve">
-    <value>Marquer la piste comme aimée lorsque je note la chanson</value>  </data>
+    <value>已评价的歌曲标记为已播放歌曲</value>  </data>
   <data name="TBSendNP.Text" xml:space="preserve">
-    <value>Mettre à jour En cours de lecture sur mon page de profil</value>  </data>
+    <value>更新个人主页的正在播放列表</value>  </data>
   <data name="TBYouAreLogedIn.Text" xml:space="preserve">
-    <value>Vous êtes connecté(e)</value>  </data>
+    <value>您已登录成功</value>  </data>
   <data name="FileInfoPageTitle.Text" xml:space="preserve">
-    <value>détails</value>  </data>
+    <value>详细</value>  </data>
 </root>
