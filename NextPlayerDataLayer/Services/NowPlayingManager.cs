@@ -210,12 +210,28 @@ namespace NextPlayerDataLayer.Services
         {
             if (!paused)
             {
-                songPlayed += DateTime.Now - songsStart;
+                try
+                {
+                    songPlayed += DateTime.Now - songsStart;
+                }
+                catch(Exception ex)
+                {
+                    Diagnostics.Logger.SaveBG("Scrobble !paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                }
             }
             if (songPlayed.TotalSeconds >= BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60)
             {
-                DateTime start = DateTime.UtcNow - songPlayed;
-                int seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                int seconds = 0;
+                try
+                {
+                    DateTime start = DateTime.UtcNow - songPlayed;
+                    seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                }
+                catch(Exception ex)
+                {
+                    Diagnostics.Logger.SaveBG("Scrobble paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                    return;
+                }
                 string artist = playlist.GetCurrentSong().Artist;
                 string track = playlist.GetCurrentSong().Title;
                 string timestamp = seconds.ToString();

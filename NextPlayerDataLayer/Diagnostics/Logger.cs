@@ -14,7 +14,7 @@ namespace NextPlayerDataLayer.Diagnostics
         private static string temp = "";
         private static string tempBG = "";
 
-        private static bool BGLogON = false;
+        private static bool BGLogON = true;
 
         public async static void SaveToFile()
         {

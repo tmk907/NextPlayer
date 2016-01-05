@@ -11,12 +11,16 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Core;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -41,6 +45,7 @@ namespace NextPlayer.View
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         bool isTimerOn;
         bool loading;
+        CoreApplicationView view;
 
         public SettingsView()
         {
@@ -49,6 +54,7 @@ namespace NextPlayer.View
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            view = CoreApplication.GetCurrentView();
         }
 
         /// <summary>
@@ -517,7 +523,7 @@ namespace NextPlayer.View
             if (((ToggleSwitch)sender).IsOn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
-                NextPlayer.Helpers.StyleHelper.EnableBGImage();
+                Helpers.StyleHelper.EnableBGImage();
                 App.TelemetryClient.TrackEvent("BG image On");
                 //SelectImage_Button.IsEnabled = true;
             }
@@ -525,10 +531,10 @@ namespace NextPlayer.View
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 //SelectImage_Button.IsEnabled = false; ;
-                NextPlayer.Helpers.StyleHelper.DisableBGImage();
+                Helpers.StyleHelper.DisableBGImage();
                 App.TelemetryClient.TrackEvent("BG image Off");
             }
-            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
+            Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
 
         private void selectBGImage_Click(object sender, RoutedEventArgs e)
@@ -539,6 +545,7 @@ namespace NextPlayer.View
         #region Background Cover
         private void BGCover_Toggled(object sender, RoutedEventArgs e)
         {
+            throw new Exception();
             if (((ToggleSwitch)sender).IsOn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
@@ -645,7 +652,36 @@ namespace NextPlayer.View
 
         private void selectBGImageFile_Click(object sender, RoutedEventArgs e)
         {
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
 
+            openPicker.PickSingleFileAndContinue();
+            view.Activated += viewActivated;
+        }
+
+        private async void viewActivated(CoreApplicationView sender, IActivatedEventArgs args1)
+        {
+            FileOpenPickerContinuationEventArgs args = args1 as FileOpenPickerContinuationEventArgs;
+
+            if (args != null)
+            {
+                if (args.Files.Count == 0) return;
+
+                view.Activated -= viewActivated;
+                StorageFile SelectedImageFile = args.Files[0];
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                string name = "userbgimage." + System.IO.Path.GetExtension(SelectedImageFile.Path);
+                StorageFile img = await SelectedImageFile.CopyAsync(localFolder, name, NameCollisionOption.ReplaceExisting);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, img.Path);
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
+                App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
+                ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(img.Path, UriKind.RelativeOrAbsolute));
+                ShowBGImage_ToggleSwitch.IsOn = true;
+            }
         }
     }
 }

@@ -40,7 +40,12 @@ namespace NextPlayerDataLayer.Diagnostics
                     using (var responseMessages = await httpclient.PostAsync(uri, content))
                     {
                         string x = await responseMessages.Content.ReadAsStringAsync();
-                        if (x == "OK") NextPlayerDataLayer.Diagnostics.Logger.ClearAll();
+                        if (x == "OK")
+                        {
+                            Logger.ClearAll();
+                            Logger.ClearLastFm();
+                        }
+
                     }
                 }
             }
@@ -49,8 +54,9 @@ namespace NextPlayerDataLayer.Diagnostics
         private async Task<List<KeyValuePair<string, string>>> GetData()
         {
             var data = new List<KeyValuePair<string, string>>();
-            string logFG = await NextPlayerDataLayer.Diagnostics.Logger.Read();
-            string logBG = await NextPlayerDataLayer.Diagnostics.Logger.ReadBG();
+            string logFG = await Logger.Read();
+            string logBG = await Logger.ReadBG();
+            string logLastFm = await Logger.ReadLastFm();
             try
             {
                 Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation deviceInfo = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation();
@@ -72,6 +78,7 @@ namespace NextPlayerDataLayer.Diagnostics
             }
             data.Add(new KeyValuePair<string,string>("logFG",logFG));
             data.Add(new KeyValuePair<string,string>("logBG",logBG));
+            data.Add(new KeyValuePair<string, string>("logLastFm", logLastFm));
             data.Add(new KeyValuePair<string,string>("Date",DateTime.Now.ToString()));
             return data;
         }

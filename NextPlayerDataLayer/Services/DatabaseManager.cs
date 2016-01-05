@@ -680,11 +680,18 @@ namespace NextPlayerDataLayer.Services
                 {
                     songs++;
                 }
-                string path = item.FirstOrDefault().Path;
-                string dir = (Path.GetDirectoryName(path));
-                string name = Path.GetFileName(dir);
-                if (name == "") name = dir;
-                list.Add(new FolderItem(name, dir, songs));
+                try
+                {
+                    string path = item.FirstOrDefault().Path;
+                    string dir = (Path.GetDirectoryName(path));
+                    string name = Path.GetFileName(dir);
+                    if (name == "") name = dir;
+                    list.Add(new FolderItem(name, dir, songs));
+                }
+                catch(Exception ex)
+                {
+                    Diagnostics.Logger.SaveBG(ex.Data + Environment.NewLine + ex.Message);
+                }
             }
             foreach (var x in list.OrderBy(f => f.Directory.ToLower()))
             {

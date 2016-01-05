@@ -71,6 +71,7 @@ namespace NextPlayer.ViewModel
             navigationService.Configure(ViewNames.FileInfoView, typeof(FileInfoView));
             navigationService.Configure(ViewNames.BluetoothShare, typeof(BluetoothShareView));
             navigationService.Configure(ViewNames.TagsEditor, typeof(TagsEditor));
+            navigationService.Configure("test1", typeof(ANowPlayingTest));
             // navigationService.Configure("key2", typeof(OtherPage2));
             //HardwareButtons.BackPressed += (sender, args) =>
             //{

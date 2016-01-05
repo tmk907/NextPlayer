@@ -191,20 +191,20 @@
                                     Style="{StaticResource ToggleSwitchStyle1}"
                                     Toggled="BGImage_Toggled"
                                     />
-                            <Button Grid.Row="2" Grid.ColumnSpan="2"
+                            <Button Grid.Row="2" Grid.Column="0"
                                     x:Name="Button1"
                                     HorizontalAlignment="Stretch"
                                     x:Uid="ButtonSelectImage"
                                     Click="selectBGImage_Click"
                                     Content="Select image"
                                     Margin="0,0,4,0"/>
-                            <!--<Button Grid.Row="2" Grid.Column="1"
+                            <Button Grid.Row="2" Grid.Column="1"
                                     x:Name="ButtonSelectFile"
                                     HorizontalAlignment="Stretch"
                                     x:Uid="ButtonSelectImageFile"
                                     Click="selectBGImageFile_Click"
-                                    Content="Select from file"
-                                    Margin="4,0,0,0"/>-->
+                                    Content="Select file"
+                                    Margin="4,0,0,0"/>
                         </Grid>
                         <Grid Grid.Row="2" Margin="0,8,0,8">
                             <Grid.RowDefinitions>

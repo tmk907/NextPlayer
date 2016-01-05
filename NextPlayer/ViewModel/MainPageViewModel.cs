@@ -258,7 +258,8 @@ namespace NextPlayer.ViewModel
                     ?? (goToGenresPage = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo(ViewNames.GenresView);
+                        //navigationService.NavigateTo(ViewNames.GenresView);
+                        navigationService.NavigateTo("test1");
                     }));
             }
         }
@@ -417,6 +418,7 @@ namespace NextPlayer.ViewModel
                         {
                             //SendMessage(AppConstants.ShutdownBGPlayer);
                             //RemoveMediaPlayerEventHandlers();
+                            App.TelemetryClient.TrackEvent("Stop button");
                             SendMessage(AppConstants.ShutdownBGPlayer);
                         }
                     }));

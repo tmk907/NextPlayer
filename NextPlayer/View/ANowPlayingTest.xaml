@@ -1,0 +1,275 @@
+﻿<Page
+    x:Class="NextPlayer.View.ANowPlayingTest"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NextPlayer.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:NextPlayer.Helpers"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:rating="using:Bratched.Tools.RatingControl"
+    xmlns:RatingControl="using:JISoft.RatingControl" 
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding NowPlayingVM, Mode=OneWay, Source={StaticResource Locator}}">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--<Image 
+            Grid.RowSpan="2"
+            x:Name="imageBG"
+            Stretch="UniformToFill"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Source="/Assets/Wallpapers/wallpaper 18.jpg"
+            />
+        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock x:Uid="AppNameTextBlock"  Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="NowPlayingPageTitle" Text="now playing" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="{Binding MinHeight, ElementName=row1}" x:Name="column1"/>
+                    <ColumnDefinition MinWidth="88"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <!--480x800 120%-->
+                    <RowDefinition Height="*" MinHeight="230" x:Name="row1"/>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="86" />
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="60"/>
+                    <!--768x1280 200%-->
+                    <!--<RowDefinition Height="*" MinHeight="230" x:Name="row1"/>
+                    <RowDefinition Height="36"/>
+                    <RowDefinition Height="86" />
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="60"/>-->
+                    <!--720x1280 180%-->
+                    <!--<RowDefinition Height="*" MinHeight="260" x:Name="row1"/>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="96" />
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="60"/>-->
+                    <!--540x960 120%-->
+                    <!--<RowDefinition Height="*" MinHeight="316" x:Name="row1"/>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="84"/>
+                    <RowDefinition Height="60"/>-->
+                    <!--1080x1920 240%-->
+                    <!--<RowDefinition Height="*" MinHeight="308" x:Name="row1"/>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="108" />
+                    <RowDefinition Height="92"/>
+                    <RowDefinition Height="60"/>-->
+                    
+                    <!--720x1280 140%-->
+                    <!--<RowDefinition Height="*" MinHeight="376"/>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="116" />
+                    <RowDefinition Height="96"/>
+                    <RowDefinition Height="60"/>-->
+                    <!--1080x1920 220%-->
+                    <!--<RowDefinition Height="*" MinHeight="344"/>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="112" />
+                    <RowDefinition Height="96"/>
+                    <RowDefinition Height="60"/>-->
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       Width="{Binding MinHeight, ElementName=row1}"
+                       Height="{Binding MinHeight, ElementName=row1}"
+                       Source="/Assets/SongCover.png"/>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0"
+                            x:Name="ShuffleButton" 
+                            Content="&#xE14b;" 
+                            Foreground="Gray"
+                            BorderBrush="Gray"
+                            VerticalContentAlignment="Center"
+                            Style="{StaticResource ButtonStyleSmallRound}">
+                    </Button>
+                    <Button Grid.Row="1"
+                            x:Name="RepeatButton" 
+                            Content="&#xE1cd;" 
+                            Foreground="Gray"
+                            BorderBrush="Gray"
+                            Style="{StaticResource ButtonStyleSmallRound}"/>
+                    <Button Grid.Row="2"
+                            Content="&#xE185;"  
+                            Style="{StaticResource ButtonStyleSmallRound}"/>
+                    <Button Grid.Row="3"
+                            Content="&#xE14C;"  
+                            Style="{StaticResource ButtonStyleSmallRound}"/>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="NrTextBlock" 
+                               Grid.Column="0"
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Center"
+                               Text="31" 
+                               FontSize="20"/>
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Text="/" 
+                               FontSize="20"/>
+                    <TextBlock x:Name="AllTextBlock" 
+                               Grid.Column="2"
+                               HorizontalAlignment="Left" 
+                               VerticalAlignment="Center"
+                               Text="296" 
+                               FontSize="20"/>
+                </Grid>
+                <RatingControl:Rating Grid.Row="1" Grid.Column="0"
+                                      Visibility="Collapsed"
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"   
+                            AllowSelectingZero="True" 
+                            ReadOnly="False"  
+                            RatingItemCount="5" 
+                            Value="4">
+                    <RatingControl:Rating.FilledItemStyle>
+                        <Style TargetType="RatingControl:RatingItem">
+                            <Setter Property="Background" Value="{StaticResource UserAccentBrush}"/>
+                        </Style>
+                    </RatingControl:Rating.FilledItemStyle>
+                    <RatingControl:Rating.UnfilledItemStyle>
+                        <Style TargetType="RatingControl:RatingItem">
+                            <Setter Property="Background" Value="#cc646464"/>
+                        </Style>
+                    </RatingControl:Rating.UnfilledItemStyle>
+                </RatingControl:Rating>
+                <Grid Grid.Row="1" Grid.Column="0" Visibility="Visible">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0"
+                            Style="{StaticResource SliderStyle1}" 
+                            x:Name="PlaybackRateSlider"
+                            HorizontalAlignment="Stretch"
+                            Minimum="30" 
+                            Maximum="200" 
+                            StepFrequency="1.0"
+                            Value="100"/>
+                    <TextBlock Grid.Column="1"
+                               x:Name="PlaybackRateTB"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Margin="8,0,0,0"
+                               
+                               Text="100%"/>
+                </Grid>
+                <Grid Grid.Row="2" Grid.ColumnSpan="2" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.RowSpan="3" Opacity="0" Background="White"/>
+                    <TextBlock Grid.Row="0"
+                        HorizontalAlignment="Left"  
+                        TextWrapping="NoWrap" 
+                        Text="Summertime sadness" 
+                        VerticalAlignment="Center" 
+                        FontSize="24"/>
+                    <TextBlock Grid.Row="1"
+                        HorizontalAlignment="Left"  
+                        TextWrapping="NoWrap" 
+                        Text="Lana del Rey" 
+                        VerticalAlignment="Center" 
+                        FontSize="24"/>
+                    <TextBlock Grid.Row="2"
+                        HorizontalAlignment="Left"  
+                        TextWrapping="NoWrap" 
+                        Text="Album" 
+                        VerticalAlignment="Center" 
+                        FontSize="24"/>
+                </Grid>
+                <Grid Grid.Row="3" Grid.ColumnSpan="2"
+                        >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"
+                    x:Name="PreviousButton"  
+                        FontFamily="Segoe UI Symbol" 
+                        Content="&#xE17e;&#xE100;" 
+                        FontSize="25"
+                        Margin="0,0,0,0" MinWidth="70" Width="100" 
+                        Style="{StaticResource ButtonStyle1}"/>
+                    <Button Grid.Column="1"
+                    x:Name="PlayButton" 
+                        Content="&#xE17e;&#xE102;"  
+                        FontFamily="Segoe UI Symbol" 
+                        FontSize="35"
+                        Margin="0,0,0,0" MinWidth="70" Width="100"
+                        Style="{StaticResource ButtonStyle1}"/>
+                    <Button Grid.Column="2"
+                    x:Name="NextButton"  
+                        Content="&#xE17e;&#xE101;" 
+                        FontSize="25"
+                        FontFamily="Segoe UI Symbol" 
+                        Margin="0,0,0,0" MinWidth="70" Width="100"
+                        Style="{StaticResource ButtonStyle1}"/>
+                </Grid>
+                <Grid Grid.Row="4" Grid.ColumnSpan="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="CurrentTime" 
+                                Text="1:24"
+                                FontSize="16"
+                               TextTrimming="None"/>
+                    <TextBlock Grid.Column="2" x:Name="EndTime" 
+                                Text="2:25"
+                               HorizontalAlignment="Right"
+                                FontSize="16"
+                               Margin="0,0,0,0"
+                               TextTrimming="None"/>
+                    <Slider Grid.ColumnSpan="3"
+                            x:Name="progressbar"
+                            Margin="0,10,0,0"
+                            StepFrequency="1.0" 
+                            Maximum="356" 
+                            Value="224" 
+                            HorizontalAlignment="Stretch" 
+                            Style="{StaticResource SliderStyle1}" 
+                             >
+                    </Slider>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

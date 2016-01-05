@@ -35,7 +35,7 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = false;
+        private bool dev = true;
 
         public static bool LastFmRateOn;
         public static int LastFmUnLove;
@@ -54,6 +54,7 @@ namespace NextPlayer
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "01fcaacd-5dd7-490e-b6a9-ebd5f927558e";
+                //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "1180633f-bfda-4a57-9060-7ba3c812da5e";
             }
             else
             {
@@ -120,9 +121,11 @@ namespace NextPlayer
                     
                 }
 
-                //SendLogs();
+                SendLogs();
                 //UpdateDB();
             }
+
+            #region LastFm
 
             //aplikacja jest uruchomiona 1 raz lub po aktualizacji
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs) == null)
@@ -145,6 +148,8 @@ namespace NextPlayer
                 DatabaseManager.CreateLastFmDB();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LastFmDBVersion, 1);
             }
+
+            #endregion LastFm
 
             //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
@@ -170,7 +175,14 @@ namespace NextPlayer
                     ApplicationSettingsHelper.SaveSongIndex(0);
                 }
             }
-            TelemetryClient.TrackException(e.Exception);
+            var updateEvent = new Microsoft.ApplicationInsights.DataContracts.ExceptionTelemetry();
+            updateEvent.Exception = e.Exception;
+            TelemetryClient.TrackException(updateEvent);
+
+            //updateEvent.Name = "UnhandledException";
+            //updateEvent.Metrics["data"] = e.Exception.Data;
+            //updateEvent.Metrics["message"] = e.Exception.Message;
+            //TelemetryClient.TrackEvent(updateEvent);
         }
 
         /// <summary>
@@ -446,7 +458,7 @@ namespace NextPlayer
         {
             try
             {
-                var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                var settings = ApplicationData.Current.LocalSettings;
 
                 if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
                 {

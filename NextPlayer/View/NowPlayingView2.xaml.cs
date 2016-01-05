@@ -35,6 +35,17 @@ namespace NextPlayer.View
         {
             this.InitializeComponent();
 
+            //480x800 120 %
+            //768x1280 200 %
+            //720x1280 180 %
+            //540x960 120 %
+            //1080x1920 240 %
+
+            //720x1280 140 %
+            //1080x1920 220 %
+            var a = Window.Current.Bounds.Height;
+            var b = Window.Current.Content.RenderSize.Height;
+            var c = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
