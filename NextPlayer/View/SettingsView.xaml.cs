@@ -211,7 +211,6 @@ namespace NextPlayer.View
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
             App.TelemetryClient.TrackEvent("Settings page open");
-            App.TelemetryClient.TrackTrace("test", SeverityLevel.Warning);
         }
 
         /// <summary>
@@ -585,6 +584,7 @@ namespace NextPlayer.View
                 LFMLogin.Visibility = Visibility.Collapsed;
 
                 LFMPassword.Password = "";
+                App.TelemetryClient.TrackEvent("LastFm Log in");
             }
             else
             {
@@ -608,6 +608,7 @@ namespace NextPlayer.View
 
             LFMPassword.Visibility = Visibility.Visible;
             LFMLogin.Visibility = Visibility.Visible;
+            App.TelemetryClient.TrackEvent("LastFm Log out");
         }
 
         private void SendNP_Toggled(object sender, RoutedEventArgs e)
