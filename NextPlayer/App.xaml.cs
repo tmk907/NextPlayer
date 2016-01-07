@@ -150,7 +150,7 @@ namespace NextPlayer
             }
 
             #endregion LastFm
-
+            
             //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
         }
@@ -345,6 +345,7 @@ namespace NextPlayer
             // Ensure the current window is active
 
             Window.Current.Activate();
+            SetDimensions();
             DispatcherHelper.Initialize();
         }
 
@@ -530,5 +531,86 @@ namespace NextPlayer
 
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
         }
+
+        private void SetDimensions()
+        {
+            try
+            {
+                double height = Window.Current.Bounds.Height;
+                double width = Window.Current.Bounds.Width;
+                bool unknown = false;
+
+
+                if (width == 400 && Math.Round(height, MidpointRounding.AwayFromZero) == 667)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(230.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(44.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(87.5);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(80.0);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(60.0);
+                }
+                else if (width == 384 && Math.Round(height, MidpointRounding.AwayFromZero) == 640)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(224.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(44.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(84.0);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(74.0);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(60.0);
+                }
+                else if (width == 400 && Math.Round(height, MidpointRounding.AwayFromZero) == 711)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(260.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(44.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(92.0);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(88.0);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(60.0);
+                }
+                else if (width == 450 && Math.Round(height, MidpointRounding.AwayFromZero) == 800)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(306.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(44.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(128.0);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(92.0);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(60.0);
+                }
+                else if (Math.Round(width, MidpointRounding.AwayFromZero) == 514 && Math.Round(height, MidpointRounding.AwayFromZero) == 914)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(360.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(64.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(148.0);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(108.0);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(72.0);
+                }
+                else if (Math.Round(width, MidpointRounding.AwayFromZero) == 491 && Math.Round(height, MidpointRounding.AwayFromZero) == 872)
+                {
+                    Application.Current.Resources["ImageSize"] = new GridLength(230.0);
+                    Application.Current.Resources["RatingControlHeight"] = new GridLength(56.0);
+                    Application.Current.Resources["SongDescriptionHeight"] = new GridLength(136.0);
+                    Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(100);
+                    Application.Current.Resources["TimeSliderHeight"] = new GridLength(72.0);
+                }
+                else
+                {
+                    NextPlayerDataLayer.Diagnostics.Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height);
+                    unknown = true;
+                }
+
+                if (ApplicationSettingsHelper.ReadSettingsValue("dimensions") == null)
+                {
+                    var updateEvent = new Microsoft.ApplicationInsights.DataContracts.EventTelemetry();
+                    updateEvent.Name = "Resolution";
+                    updateEvent.Metrics["width"] = width;
+                    updateEvent.Metrics["height"] = height;
+                    updateEvent.Metrics["unknown"] = unknown ? 1 : 0;
+                    TelemetryClient.TrackEvent(updateEvent);
+                    ApplicationSettingsHelper.SaveSettingsValue("dimensions", true);
+                }
+            }
+            catch(Exception ex)
+            {
+                NextPlayerDataLayer.Diagnostics.Logger.Save("SetDimensions()" + Environment.NewLine + ex.Message);
+            }
+        }
+
     }
 }

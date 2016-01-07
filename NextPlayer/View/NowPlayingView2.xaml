@@ -46,30 +46,28 @@
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="230" x:Name="column1"/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="{Binding Height, ElementName=row1}" x:Name="column1"/>
+                    <ColumnDefinition MinWidth="88"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="230"/>
-                    <RowDefinition Height="4*" MinHeight="30" MaxHeight="44" />
-                    <RowDefinition Height="12*"/>
-                    <RowDefinition Height="8*" MinHeight="80"/>
-                    <RowDefinition Height="60" MinHeight="60"/>
+                    <RowDefinition Height="{StaticResource ImageSize}" x:Name="row1"/>
+                    <RowDefinition Height="{StaticResource RatingControlHeight}"/>
+                    <RowDefinition Height="{StaticResource SongDescriptionHeight}"/>
+                    <RowDefinition Height="{StaticResource PlayerButtonsHeight}"/>
+                    <RowDefinition Height="{StaticResource TimeSliderHeight}"/>
                 </Grid.RowDefinitions>
-                <local:SizeNotifyPanel x:Name="Content" Grid.Row="0" Grid.Column="0">
-                    <Image
-                       x:Name="CoverImage" 
-                       Stretch="Fill"
-                       Height="{Binding Size.Width, ElementName=Content}"
-                       Width="{Binding Size.Width, ElementName=Content}"
-                       Source="{Binding Cover}" 
-                       VerticalAlignment="Bottom" 
-                       HorizontalAlignment="Left"
-                       PointerPressed="Image_Pressed"
-                       PointerReleased="Image_Released"
-                       PointerExited="Image_Exited"
-                       DoubleTapped="Image_DoubleTapped"/>
-                </local:SizeNotifyPanel>
+                <Image Grid.Row="0" Grid.Column="0"
+                    x:Name="CoverImage" 
+                    Stretch="Fill"
+                    Width="{Binding Height, ElementName=row1, Converter={StaticResource GridLengthToDoubleConverter}}"
+                    Height="{Binding Height, ElementName=row1, Converter={StaticResource GridLengthToDoubleConverter}}"
+                    Source="{Binding Cover}" 
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Left"
+                    PointerPressed="Image_Pressed"
+                    PointerReleased="Image_Released"
+                    PointerExited="Image_Exited"
+                    DoubleTapped="Image_DoubleTapped"/>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -124,18 +122,18 @@
                     <TextBlock x:Name="NrTextBlock" 
                                Grid.Column="0"
                                HorizontalAlignment="Right" 
-                               VerticalAlignment="Bottom"
+                               VerticalAlignment="center"
                                Text="{Binding CurrentNr}" 
                                FontSize="20"/>
                     <TextBlock Grid.Column="1"
                                HorizontalAlignment="Center" 
-                               VerticalAlignment="Bottom"
+                               VerticalAlignment="Center"
                                Text="/" 
                                FontSize="20"/>
                     <TextBlock x:Name="AllTextBlock" 
                                Grid.Column="2"
                                HorizontalAlignment="Left" 
-                               VerticalAlignment="Bottom"
+                               VerticalAlignment="Center"
                                Text="{Binding SongsCount}" 
                                FontSize="20"/>
                 </Grid>
@@ -173,7 +171,7 @@
                             Value="{Binding PlaybackRate, Mode=TwoWay}"/>
                     <TextBlock Grid.Column="1"
                                x:Name="PlaybackRateTB"
-                               VerticalAlignment="Bottom"
+                               VerticalAlignment="Center"
                                FontSize="20"
                                Margin="8,0,0,0"
                                DoubleTapped="TextBlock_DoubleTapped"

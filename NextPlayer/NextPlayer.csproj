@@ -114,6 +114,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="Converters\DateTimeToStringConverter.cs" />
+    <Compile Include="Converters\GridLengthToDoubleConverter.cs" />
     <Compile Include="Converters\IntToBitrateConverter.cs" />
     <Compile Include="Converters\IntToSongsConverter.cs" />
     <Compile Include="Converters\GetListViewConverter.cs" />

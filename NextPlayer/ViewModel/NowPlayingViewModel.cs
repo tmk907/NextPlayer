@@ -65,7 +65,6 @@ namespace NextPlayer.ViewModel
             this.navigationService = navigationService;
             SererInitialized = new AutoResetEvent(false);
             _timer = new DispatcherTimer();
-            //Library.Current.Save("NPVM konstruktor");
             App.Current.Suspending += ForegroundApp_Suspending;
             App.Current.Resuming += ForegroundApp_Resuming;
             //SetupTimer();
@@ -687,10 +686,8 @@ namespace NextPlayer.ViewModel
 
         public void Activate(object parameter, Dictionary<string, object> state)
         {
-            
             //App.Current.Suspending += ForegroundApp_Suspending;
             //App.Current.Resuming += ForegroundApp_Resuming;
-            
             
             index = CurrentSongIndex;
             if (index > -1)

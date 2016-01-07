@@ -42,16 +42,28 @@
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="{Binding MinHeight, ElementName=row1}" x:Name="column1"/>
+                    <ColumnDefinition Width="{Binding Height, ElementName=row1}" x:Name="column1"/>
                     <ColumnDefinition MinWidth="88"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <!--All-->
+                    <RowDefinition Height="260" x:Name="row1"/>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="92"/>
+                    <RowDefinition Height="88"/>
+                    <RowDefinition Height="60"/>
+                    <!--<RowDefinition/>-->
+                    <!--<RowDefinition Height="230" x:Name="row1"/>
+                    <RowDefinition MinHeight="36" MaxHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="72" MaxHeight="80"/>
+                    <RowDefinition Height="60" MinHeight="60" MaxHeight="60"/>-->
                     <!--480x800 120%-->
-                    <RowDefinition Height="*" MinHeight="230" x:Name="row1"/>
+                    <!--<RowDefinition Height="*" MinHeight="230" x:Name="row1"/>
                     <RowDefinition Height="44"/>
                     <RowDefinition Height="86" />
                     <RowDefinition Height="80"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>-->
                     <!--768x1280 200%-->
                     <!--<RowDefinition Height="*" MinHeight="230" x:Name="row1"/>
                     <RowDefinition Height="36"/>
@@ -76,7 +88,6 @@
                     <RowDefinition Height="108" />
                     <RowDefinition Height="92"/>
                     <RowDefinition Height="60"/>-->
-                    
                     <!--720x1280 140%-->
                     <!--<RowDefinition Height="*" MinHeight="376"/>
                     <RowDefinition Height="48"/>
@@ -90,10 +101,11 @@
                     <RowDefinition Height="96"/>
                     <RowDefinition Height="60"/>-->
                 </Grid.RowDefinitions>
+                <!--<Rectangle Grid.Row="5" Fill="Yellow"/>-->
                 <Image Grid.Row="0" Grid.Column="0"
                        HorizontalAlignment="Left"
-                       Width="{Binding MinHeight, ElementName=row1}"
-                       Height="{Binding MinHeight, ElementName=row1}"
+                       Width="{Binding Height, ElementName=row1}"
+                       Height="{Binding Height, ElementName=row1}"
                        Source="/Assets/SongCover.png"/>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -133,7 +145,7 @@
                                Grid.Column="0"
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center"
-                               Text="31" 
+                               Text="1313" 
                                FontSize="20"/>
                     <TextBlock Grid.Column="1"
                                HorizontalAlignment="Center" 
@@ -144,7 +156,7 @@
                                Grid.Column="2"
                                HorizontalAlignment="Left" 
                                VerticalAlignment="Center"
-                               Text="296" 
+                               Text="1896" 
                                FontSize="20"/>
                 </Grid>
                 <RatingControl:Rating Grid.Row="1" Grid.Column="0"
@@ -187,7 +199,7 @@
                                
                                Text="100%"/>
                 </Grid>
-                <Grid Grid.Row="2" Grid.ColumnSpan="2" >
+                <Grid Grid.Row="2" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -209,7 +221,7 @@
                     <TextBlock Grid.Row="2"
                         HorizontalAlignment="Left"  
                         TextWrapping="NoWrap" 
-                        Text="Album" 
+                        Text="Album Album Album Album" 
                         VerticalAlignment="Center" 
                         FontSize="24"/>
                 </Grid>

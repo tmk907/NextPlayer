@@ -258,8 +258,7 @@ namespace NextPlayer.ViewModel
                     ?? (goToGenresPage = new RelayCommand(
                     () =>
                     {
-                        //navigationService.NavigateTo(ViewNames.GenresView);
-                        navigationService.NavigateTo("test1");
+                        navigationService.NavigateTo(ViewNames.GenresView);
                     }));
             }
         }

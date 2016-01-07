@@ -545,7 +545,6 @@ namespace NextPlayer.View
         #region Background Cover
         private void BGCover_Toggled(object sender, RoutedEventArgs e)
         {
-            throw new Exception();
             if (((ToggleSwitch)sender).IsOn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
