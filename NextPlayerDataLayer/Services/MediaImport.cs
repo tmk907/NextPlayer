@@ -82,7 +82,6 @@ namespace NextPlayerDataLayer.Services
 
         public async static Task ImportAndUpdateDatabase(IProgress<int> progress)
         {
-            int a = Environment.CurrentManagedThreadId;
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.MediaScan, true);
             IReadOnlyList<StorageFile> list = await KnownFolders.MusicLibrary.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
             int all = list.Count;
