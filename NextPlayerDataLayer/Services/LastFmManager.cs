@@ -67,7 +67,7 @@ namespace NextPlayerDataLayer.Services
             {
                 if (!IsSessionOn())
                 {
-                    SetMobileSession();
+                    SetSessionAndSendCached();
                 }
             }
         }
@@ -324,5 +324,35 @@ namespace NextPlayerDataLayer.Services
             SessionKey = "";
         }
         
+        private async Task SendCachedScrobbles()
+        {
+            var savedScrobbles = DatabaseManager.ReadAndDeleteAll();
+            List<TrackScrobble> tracks = new List<TrackScrobble>();
+            foreach(var scrobble in savedScrobbles)
+            {
+                switch (scrobble["function"])
+                {
+                    case "track.scrobble":
+                        tracks.Add(new TrackScrobble() { Artist = scrobble["artist"], Timestamp = scrobble["timestamp"], Track = scrobble["title"] });
+                        break;
+                    case "track.love":
+                        await TrackLove(scrobble["artist"], scrobble["title"]);
+                        break;
+                    case "track.unlove":
+                        await TrackUnlove(scrobble["artist"], scrobble["title"]);
+                        break;
+                }
+            }
+            if (tracks.Count > 0)
+            {
+                await TrackScroblle(tracks);
+            }
+        }
+
+        private async Task SetSessionAndSendCached()
+        {
+            await SetMobileSession();
+            await SendCachedScrobbles();
+        }
     }
 }

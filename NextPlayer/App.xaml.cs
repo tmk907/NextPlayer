@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.ApplicationInsights;
+using NextPlayerDataLayer.Diagnostics;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -123,6 +124,7 @@ namespace NextPlayer
 
                 SendLogs();
                 //UpdateDB();
+                Logger.SaveFromSettingsToFile();
             }
 
             #region LastFm
@@ -151,14 +153,13 @@ namespace NextPlayer
 
             #endregion LastFm
             
-            //NextPlayerDataLayer.Diagnostics.Logger.Clear();
             UnhandledException += App_UnhandledException;
+            
         }
 
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            NextPlayerDataLayer.Diagnostics.Logger.Save(e.Exception.ToString() + "\nMessage:\n" + e.Message);
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            Logger.SaveInSettings(e.Exception.ToString() + "\nMessage:\n" + e.Message);
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             int i = ApplicationSettingsHelper.ReadSongIndex();
@@ -175,14 +176,7 @@ namespace NextPlayer
                     ApplicationSettingsHelper.SaveSongIndex(0);
                 }
             }
-            var updateEvent = new Microsoft.ApplicationInsights.DataContracts.ExceptionTelemetry();
-            updateEvent.Exception = e.Exception;
-            TelemetryClient.TrackException(updateEvent);
-
-            //updateEvent.Name = "UnhandledException";
-            //updateEvent.Metrics["data"] = e.Exception.Data;
-            //updateEvent.Metrics["message"] = e.Exception.Message;
-            //TelemetryClient.TrackEvent(updateEvent);
+            TelemetryClient.TrackTrace("Unhandled Exception " + e.Exception.ToString() + "\n" + e.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
         }
 
         /// <summary>
@@ -299,8 +293,8 @@ namespace NextPlayer
                         try
                         {
 
-                            //NextPlayerDataLayer.Diagnostics.Logger.Save("resumed terminate app");
-                            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                            //Logger.Save("resumed terminate app");
+                            //Logger.SaveToFile();
                             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ResumePlayback, "");
                             await SuspensionManager.RestoreAsync();
                         }
@@ -308,8 +302,8 @@ namespace NextPlayer
                         {
                             // Something went wrong restoring state.
                             // Assume there is no state and continue.
-                            NextPlayerDataLayer.Diagnostics.Logger.Save("App OnLaunched() SuspensionManagerException" + "\n" + ex.Message);
-                            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                            Logger.Save("App OnLaunched() SuspensionManagerException" + "\n" + ex.Message);
+                            Logger.SaveToFileBG();
                         }
                     }
                 }
@@ -371,8 +365,8 @@ namespace NextPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //NextPlayerDataLayer.Diagnostics.Logger.Save("on suspending" + Library.Current.Read());
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+            //Logger.Save("on suspending" + Library.Current.Read());
+            //Logger.SaveToFile();
             await SuspensionManager.SaveAsync();
 
             if (OnNewTilePinned != null)
@@ -455,33 +449,51 @@ namespace NextPlayer
 
         //old
 
-        private void SendLogs()
+        private async Task SendLogs()
         {
-            try
+            string bg = await Logger.ReadBG();
+            string fg = await Logger.Read();
+            string lastfm = await Logger.ReadLastFm();
+
+            if (bg != "")
             {
-                var settings = ApplicationData.Current.LocalSettings;
-
-                if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
-                {
-                    settings.Values.Add(AppConstants.DataLastSend, DateTime.Today.Ticks);
-
-                    CreateTask();
-                }
-                else
-                {
-                    long dateticks = (long)(settings.Values[AppConstants.DataLastSend]);
-                    TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-                    //if (TimeSpan.FromDays(2) <= elapsed)
-                    //{
-                    //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
-                    CreateTask();
-                    //}
-                }
+                TelemetryClient.TrackTrace(bg, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
             }
-            catch (Exception ex)
+            if (fg != "")
             {
-
+                TelemetryClient.TrackTrace(fg, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
             }
+            if (lastfm != "")
+            {
+                TelemetryClient.TrackTrace(lastfm, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+            }
+            Logger.ClearAll();
+            Logger.ClearLastFm();
+            //try
+            //{
+            //    var settings = ApplicationData.Current.LocalSettings;
+
+            //    if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
+            //    {
+            //        settings.Values.Add(AppConstants.DataLastSend, DateTime.Today.Ticks);
+
+            //        CreateTask();
+            //    }
+            //    else
+            //    {
+            //        long dateticks = (long)(settings.Values[AppConstants.DataLastSend]);
+            //        TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
+            //        //if (TimeSpan.FromDays(2) <= elapsed)
+            //        //{
+            //        //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
+            //        CreateTask();
+            //        //}
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
         }
 
         private async void CreateTask()
@@ -591,7 +603,8 @@ namespace NextPlayer
                 }
                 else
                 {
-                    NextPlayerDataLayer.Diagnostics.Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height);
+                    Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height);
+                    Logger.SaveToFile();
                     unknown = true;
                 }
 
@@ -608,7 +621,8 @@ namespace NextPlayer
             }
             catch(Exception ex)
             {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("SetDimensions()" + Environment.NewLine + ex.Message);
+                Logger.Save("SetDimensions()" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
             }
         }
 

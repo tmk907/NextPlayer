@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextPlayerDataLayer.Helpers;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -7,8 +8,8 @@ namespace NextPlayerDataLayer.Diagnostics
 {
     public class Logger
     {
-        private const string filename = "log1.txt";
-        private const string filenameBG = "logBG1.txt";
+        private const string filename = "log2.txt";
+        private const string filenameBG = "logBG2.txt";
         private const string lastfmlog = "lastfmlog.txt";
 
         private static string temp = "";
@@ -20,25 +21,20 @@ namespace NextPlayerDataLayer.Diagnostics
         {
             string content = temp;
             temp = "";
-            // saves the string 'content' to a file 'filename' in the app's local storage folder
-            byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(content.ToCharArray());
             try
             {
-                // create a file with the given filename in the local folder; replace any existing file with the same name
                 StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
-
                 await FileIO.AppendTextAsync(file, content);
             }
             catch (Exception e)
             {
-                Logger.Save("error log\n"+content+"\n");
+                Save("error log\n"+content+"\n");
             }
-           
         }
 
         public static void Save(string data)
         {
-            temp += DateTime.Now.ToString() + " " + data + "\n"+Environment.NewLine;
+            temp += DateTime.Now.ToString() + Environment.NewLine + data + Environment.NewLine;
         }
 
         
@@ -156,6 +152,27 @@ namespace NextPlayerDataLayer.Diagnostics
         public async static void ClearLastFm()
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync(lastfmlog, CreationCollisionOption.ReplaceExisting);
+        }
+
+        public static void SaveInSettings(string data)
+        {
+            ApplicationSettingsHelper.SaveSettingsValue("temperror", data);
+        }
+        public static void SaveFromSettingsToFile()
+        {
+            var a = ApplicationSettingsHelper.ReadResetSettingsValue("temperror");
+            if (a != null)
+            {
+                try
+                {
+                    Save(a as string);
+                    SaveToFile();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
         }
     }
 }

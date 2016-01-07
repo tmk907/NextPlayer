@@ -217,6 +217,7 @@ namespace NextPlayerDataLayer.Services
                 catch(Exception ex)
                 {
                     Diagnostics.Logger.SaveBG("Scrobble !paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                    Diagnostics.Logger.SaveToFileBG();
                 }
             }
             if (songPlayed.TotalSeconds >= BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60)
@@ -230,6 +231,7 @@ namespace NextPlayerDataLayer.Services
                 catch(Exception ex)
                 {
                     Diagnostics.Logger.SaveBG("Scrobble paused" + Environment.NewLine + ex.Data + Environment.NewLine + ex.Message);
+                    Diagnostics.Logger.SaveToFileBG();
                     return;
                 }
                 string artist = playlist.GetCurrentSong().Artist;

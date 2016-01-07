@@ -211,6 +211,7 @@ namespace NextPlayer.View
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
             App.TelemetryClient.TrackEvent("Settings page open");
+            App.TelemetryClient.TrackTrace("test", SeverityLevel.Warning);
         }
 
         /// <summary>
@@ -298,6 +299,7 @@ namespace NextPlayer.View
             catch(Exception ex)
             {
                 NextPlayerDataLayer.Diagnostics.Logger.Save("Update library" + Environment.NewLine + ex.Message);
+                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
             }
 
             WaitFewMinutes.Visibility = Visibility.Collapsed;

@@ -691,6 +691,7 @@ namespace NextPlayerDataLayer.Services
                 catch(Exception ex)
                 {
                     Diagnostics.Logger.SaveBG(ex.Data + Environment.NewLine + ex.Message);
+                    Diagnostics.Logger.SaveToFileBG();
                 }
             }
             foreach (var x in list.OrderBy(f => f.Directory.ToLower()))
@@ -1497,7 +1498,8 @@ namespace NextPlayerDataLayer.Services
                     {"function", item.Function }
                 });
             }
-
+            LastFmDBConnection().DropTable<CachedScrobble>();
+            LastFmDBConnection().CreateTable<CachedScrobble>();
             return list;
         }
 
