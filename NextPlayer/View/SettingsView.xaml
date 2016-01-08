@@ -113,7 +113,7 @@
                             Header="Transparent tile"
                             Style="{StaticResource ToggleSwitchStyle1}"
                             Toggled="transparentToggleSwitch_Toggled"
-                            Visibility="Collapsed"/>
+                            Visibility="Visible"/>
 
                             <Button x:Uid="RateButton" 
                             Grid.Row="5" Grid.Column="0"

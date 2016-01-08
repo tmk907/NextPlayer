@@ -550,10 +550,10 @@
     <value>album</value>
   </data>
   <data name="ArtistsH.Header" xml:space="preserve">
-    <value>artists</value>
+    <value>artisti</value>
   </data>
   <data name="SongsH.Header" xml:space="preserve">
-    <value>songs</value>
+    <value>canzoni</value>
   </data>
   <data name="EditTags.Text" xml:space="preserve">
     <value>Modifica</value>

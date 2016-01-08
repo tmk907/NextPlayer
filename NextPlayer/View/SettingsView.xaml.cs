@@ -414,12 +414,12 @@ namespace NextPlayer.View
         {
             if (((ToggleSwitch)sender).IsOn)
             {
-                //UpdateAppTile(true);
+                UpdateAppTile(true);
                 App.TelemetryClient.TrackEvent("Transparent tile On");
             }
             else
             {
-                //UpdateAppTile(false);
+                UpdateAppTile(false);
                 App.TelemetryClient.TrackEvent("Transparent tile Off");
             }
         }

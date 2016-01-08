@@ -214,6 +214,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-100.png" />
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-140.png" />
+    <Content Include="Assets\AppImages\BadgeLogo\BadgeLogo.scale-240.png" />
     <Content Include="Assets\AppImages\Logo\Logo.scale-100.png" />
     <Content Include="Assets\AppImages\Logo\Logo.scale-140.png" />
     <Content Include="Assets\AppImages\Logo\Logo.scale-240.png" />

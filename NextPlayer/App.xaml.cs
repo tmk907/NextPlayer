@@ -79,7 +79,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
-                
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
             }
             else
             {
@@ -126,7 +126,10 @@ namespace NextPlayer
                 //UpdateDB();
                 Logger.SaveFromSettingsToFile();
             }
-
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileAppTransparent) == null)
+            {
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
+            }
             #region LastFm
 
             //aplikacja jest uruchomiona 1 raz lub po aktualizacji
@@ -603,7 +606,6 @@ namespace NextPlayer
                 {
                     Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height);
                     Logger.SaveToFile();
-                    unknown = true;
                 }
 
                 if (ApplicationSettingsHelper.ReadSettingsValue("dimensions") == null)
