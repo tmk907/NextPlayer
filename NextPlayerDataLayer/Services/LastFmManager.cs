@@ -343,6 +343,11 @@ namespace NextPlayerDataLayer.Services
                         break;
                 }
             }
+            while (tracks.Count > 50)
+            {
+                await TrackScroblle(tracks.Take(50).ToList());
+                tracks.RemoveRange(0, 50);
+            }
             if (tracks.Count > 0)
             {
                 await TrackScroblle(tracks);

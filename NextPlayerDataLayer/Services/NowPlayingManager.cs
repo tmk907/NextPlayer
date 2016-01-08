@@ -83,13 +83,13 @@ namespace NextPlayerDataLayer.Services
                 //    {
                 //        Pause();
                 //    }
-                //    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
-                //    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                //    Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
+                //    Diagnostics.Logger.SaveToFileBG();
                 //}
                 //else
                 //{
-                //    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
-                //    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                //    Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
+                //    Diagnostics.Logger.SaveToFileBG();
 
                 //    ValueSet message = new ValueSet();
                 //    message.Add(AppConstants.ShutdownBGPlayer, "");
@@ -144,7 +144,7 @@ namespace NextPlayerDataLayer.Services
             paused = true;
             songPlayed = DateTime.Now - songsStart;
         }
-
+        bool test = false;
         public async Task Next(bool userchoice = true)
         {
             StopSongEvent();
@@ -154,12 +154,18 @@ namespace NextPlayerDataLayer.Services
                 return;
             }
             await LoadFile(playlist.GetCurrentSong().Path);
+            if (!userchoice)
+            {
+                ValueSet message = new ValueSet();
+                message.Add(AppConstants.UpdateUVC, null);
+                BackgroundMediaPlayer.SendMessageToBackground(message);
+            }
             SendIndex();
         }
 
         public async Task Previous()
         {
-            if (mediaPlayer.Position > TimeSpan.FromSeconds(15))
+            if (mediaPlayer.Position > TimeSpan.FromSeconds(5))
             {
                 mediaPlayer.Position = TimeSpan.Zero;
             }
@@ -180,7 +186,10 @@ namespace NextPlayerDataLayer.Services
         private void StopSongEvent()
         {
             UpdateSongStatistics();
-            ScrobbleTrack();
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
+            {
+                ScrobbleTrack();
+            }
         }
 
         private void SendIndex()
@@ -250,7 +259,6 @@ namespace NextPlayerDataLayer.Services
         private async Task SendScrobble(TrackScrobble scrobble)
         {
             await Task.Run(() => LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { scrobble }));
-
         }
 
         private void ScrobbleNowPlaying()
@@ -259,8 +267,13 @@ namespace NextPlayerDataLayer.Services
             {
                 string artist = playlist.GetCurrentSong().Artist;
                 string track = playlist.GetCurrentSong().Title;
-                LastFmManager.Current.TrackUpdateNowPlaying(artist,track);
+                SendNowPlayingScrobble(artist, track);
             }
+        }
+
+        private async Task SendNowPlayingScrobble(string artist, string track)
+        {
+            await Task.Run(() => LastFmManager.Current.TrackUpdateNowPlaying(artist, track));
         }
 
         public void UpdateSongStatistics()
@@ -273,9 +286,6 @@ namespace NextPlayerDataLayer.Services
 
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG media opened");
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
-
             // wait for media to be ready
             ValueSet message = new ValueSet();
             message.Add(AppConstants.MediaOpened, "");
@@ -300,8 +310,6 @@ namespace NextPlayerDataLayer.Services
 
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG NP ended");
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             Next(false);
         }
 
@@ -344,8 +352,6 @@ namespace NextPlayerDataLayer.Services
             double rate = percent / 100.0;
             mediaPlayer.PlaybackRate = rate;
         }
-
-
     }
 
     public sealed class NowPlayingManager2
@@ -427,13 +433,13 @@ namespace NextPlayerDataLayer.Services
                     {
                         Pause();
                     }
-                    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
-                    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
+                    Diagnostics.Logger.SaveToFileBG();
                 }
                 else
                 {
-                    NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
-                    NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                    Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
+                    Diagnostics.Logger.SaveToFileBG();
 
                     ValueSet message = new ValueSet();
                     message.Add(AppConstants.ShutdownBGPlayer, "");
@@ -697,8 +703,8 @@ namespace NextPlayerDataLayer.Services
 
         void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG media opened");
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+            //Diagnostics.Logger.SaveBG("BG media opened");
+            //Diagnostics.Logger.SaveToFileBG();
 
             // wait for media to be ready
             ValueSet message = new ValueSet();
@@ -720,8 +726,8 @@ namespace NextPlayerDataLayer.Services
 
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG NP ended");
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+            //Diagnostics.Logger.SaveBG("BG NP ended");
+            //Diagnostics.Logger.SaveToFileBG();
 
             if (repeat.Equals(RepeatEnum.NoRepeat))
             {

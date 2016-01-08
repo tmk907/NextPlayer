@@ -44,9 +44,6 @@ namespace NextPlayerBackgroundAudioPlayer
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Task Started");
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
-
             nowPlayingManager = new NowPlayingManager();
 
             systemControls = SystemMediaTransportControls.GetForCurrentView();
@@ -88,9 +85,6 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void HandleTaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG HandleTaskCompleted");
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
-            //BackgroundMediaPlayer.Shutdown();
             deferral.Complete();
         }
 
@@ -99,15 +93,8 @@ namespace NextPlayerBackgroundAudioPlayer
             try
             {
                 BackgroundMediaPlayer.Current.Pause();
-                NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Before Cancel");
-                NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
                 BackgroundMediaPlayer.MessageReceivedFromForeground -= MessageReceivedFromForeground;
-                //ValueSet message = new ValueSet();
-                //message.Add(AppConstants.PlayerClosed, "");
-                //BackgroundMediaPlayer.SendMessageToForeground(message);
 
-                //jest zapisywane w playliscie
-                //ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, nowPlayingManager.currentSongIndex);
                 if (shutdown)
                 {
                     ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
@@ -138,8 +125,6 @@ namespace NextPlayerBackgroundAudioPlayer
                 NextPlayerDataLayer.Diagnostics.Logger.SaveBG("Audio Player OnCanceled " + "\n" + "Message: " + ex.Message + "\n" + "Link: " + ex.HelpLink);
                 NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             }
-            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG After Cancel");
-            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             deferral.Complete(); // signals task completion. 
         }
 
@@ -207,6 +192,9 @@ namespace NextPlayerBackgroundAudioPlayer
                         break;
                     case AppConstants.ChangeRate:
                         nowPlayingManager.ChangeRate(Int32.Parse(e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString()));
+                        break;
+                    case AppConstants.UpdateUVC:
+                        UpdateUVCOnNewTrack();
                         break;
                 }
             }
@@ -338,20 +326,8 @@ namespace NextPlayerBackgroundAudioPlayer
         bool shutdown;
         private void ShutdownPlayer()
         {
-            //Pause();
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Shutdown");
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
             shutdown = true;
             BackgroundMediaPlayer.Shutdown();
-        }
-
-        private void ClearPlayer()
-        {
-            Pause();
-            BackgroundMediaPlayer.Current.Position = TimeSpan.Zero;
-            //ApplicationSettingsHelper.SaveSongIndex(nowPlayingManager.currentSongIndex);
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.Position, TimeSpan.Zero.ToString());
-            systemControls.IsEnabled = false;
         }
 
         private void SetTimer()
@@ -380,9 +356,7 @@ namespace NextPlayerBackgroundAudioPlayer
 
         private void TimerCallback(ThreadPoolTimer timer)
         {
-            //NextPlayerDataLayer.Diagnostics.Logger.SaveBG("BG Timer Cancel");
             ShutdownPlayer();
-            //ClearPlayer();
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, false);
             TimerCancel();
         }

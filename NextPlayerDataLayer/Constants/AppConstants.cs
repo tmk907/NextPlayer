@@ -49,6 +49,7 @@ namespace NextPlayerDataLayer.Constants
         public const string CancelTimer = "canceltimer";
         public const string ShutdownBGPlayer = "shutdown";
         public const string ChangeRate = "changerate";
+        public const string UpdateUVC = "updateuvc";
 
         //Timer
         public const string TimerOn = "TimerOn";

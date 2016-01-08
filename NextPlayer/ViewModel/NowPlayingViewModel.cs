@@ -1057,6 +1057,7 @@ namespace NextPlayer.ViewModel
                     case AppConstants.MediaOpened:
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
+
                             TimeSpan t = BackgroundMediaPlayer.Current.NaturalDuration;
                             double absvalue = (int)Math.Round(t.TotalSeconds - 0.5, MidpointRounding.AwayFromZero);
                             ProgressBarMaxValue = absvalue;                           

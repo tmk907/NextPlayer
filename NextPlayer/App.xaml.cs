@@ -550,8 +550,6 @@ namespace NextPlayer
             {
                 double height = Window.Current.Bounds.Height;
                 double width = Window.Current.Bounds.Width;
-                bool unknown = false;
-
 
                 if (width == 400 && Math.Round(height, MidpointRounding.AwayFromZero) == 667)
                 {
@@ -614,7 +612,6 @@ namespace NextPlayer
                     updateEvent.Name = "Resolution";
                     updateEvent.Metrics["width"] = width;
                     updateEvent.Metrics["height"] = height;
-                    updateEvent.Metrics["unknown"] = unknown ? 1 : 0;
                     TelemetryClient.TrackEvent(updateEvent);
                     ApplicationSettingsHelper.SaveSettingsValue("dimensions", true);
                 }
