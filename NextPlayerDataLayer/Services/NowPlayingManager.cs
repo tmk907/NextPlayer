@@ -811,6 +811,8 @@ namespace NextPlayerDataLayer.Services
         public int CurrentIndex { get { return currentIndex; } }
         public int SongsCount { get { return playlist.Count; } }
         private bool shuffle;
+        private Queue<int> lastPlayed;
+        private int maxQueueSize;
         private RepeatEnum repeat;
 
         private bool isSongRepeated;
@@ -818,6 +820,7 @@ namespace NextPlayerDataLayer.Services
 
         public Playlist()
         {
+            lastPlayed = new Queue<int>();
             LoadSongsFromDB();
             previousIndex = -1;
             shuffle = Shuffle.CurrentState();
@@ -828,6 +831,7 @@ namespace NextPlayerDataLayer.Services
 
         public Playlist(int index, bool shuffle, RepeatEnum repeat)
         {
+            lastPlayed = new Queue<int>();
             LoadSongsFromDB();
             currentIndex = index;
             previousIndex = -1;
@@ -1027,6 +1031,10 @@ namespace NextPlayerDataLayer.Services
         public void ChangeShuffle()
         {
             shuffle = !shuffle;
+            if (!shuffle)
+            {
+                lastPlayed.Clear();
+            }
         }
 
         public void ChangeRepeat()
@@ -1048,8 +1056,9 @@ namespace NextPlayerDataLayer.Services
             //{
             //    currentIndex = 0;
             //}
+            lastPlayed.Clear();
+            maxQueueSize = (playlist.Count > 60) ? 15 : playlist.Count / 4;
         }
-
 
         private int GetRandomIndex()
         {
@@ -1059,10 +1068,15 @@ namespace NextPlayerDataLayer.Services
             }
             Random rnd = new Random();
             int r = rnd.Next(playlist.Count);
-            while (r == currentIndex)
+            while (r == currentIndex || (playlist.Count>5 && lastPlayed.Contains(r)))
             {
                 r = rnd.Next(playlist.Count);
             }
+            if (lastPlayed.Count == maxQueueSize)
+            {
+                lastPlayed.Dequeue();
+            }
+            lastPlayed.Enqueue(r);
             return r;
         }
 

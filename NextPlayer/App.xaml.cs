@@ -36,7 +36,7 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = true;
+        private bool dev = false;
 
         public static bool LastFmRateOn;
         public static int LastFmUnLove;
