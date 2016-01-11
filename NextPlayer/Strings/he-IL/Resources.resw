@@ -676,4 +676,7 @@
   <data name="TBSendLoveTrack.Text" xml:space="preserve">
     <value>Mark track as loved when I rate song</value>
   </data>
+  <data name="ButtonSelectImageFile.Content" xml:space="preserve">
+    <value>Select file</value>
+  </data>
 </root>

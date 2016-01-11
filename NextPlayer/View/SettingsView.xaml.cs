@@ -567,7 +567,9 @@ namespace NextPlayer.View
         #region Last.fm
         private async void LFMLoginButton_Click(object sender, RoutedEventArgs e)
         {
+            LFMLoginButton.IsEnabled = false;
             bool isLoggedIn = await LastFmManager.Current.Login(LFMLogin.Text, LFMPassword.Password);
+            LFMLoginButton.IsEnabled = true;
             if (isLoggedIn)
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LfmLogin, LFMLogin.Text);

@@ -1,13 +1,13 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Model;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.ViewManagement;
 
 namespace NextPlayer.ViewModel
 {
@@ -16,10 +16,12 @@ namespace NextPlayer.ViewModel
         private INavigationService navigationService;
         private int songId;
         private SongData songData;
+        StatusBar systemTray;
 
         public TagsEditorViewModel(INavigationService navigationService)
         {
             this.navigationService = navigationService;
+            systemTray = StatusBar.GetForCurrentView();
         }
 
         /// <summary>
@@ -65,12 +67,7 @@ namespace NextPlayer.ViewModel
                     ?? (save = new RelayCommand(
                     () =>
                     {
-                        TagData.FirstArtist = GetFirst(tagData.Artists);
-                        TagData.FirstComposer = GetFirst(tagData.Composers);
-                        songData.Tag = TagData;
-                        DatabaseManager.UpdateSongData(songData, songId);
-                        MediaImport.UpdateFileTags(songData);
-                        navigationService.GoBack();
+                        SaveTags();
                     }));
             }
         }
@@ -91,6 +88,20 @@ namespace NextPlayer.ViewModel
                         navigationService.GoBack();
                     }));
             }
+        }
+
+        private async Task SaveTags()
+        {
+            await systemTray.ProgressIndicator.ShowAsync();
+            TagData.FirstArtist = GetFirst(tagData.Artists);
+            TagData.FirstComposer = GetFirst(tagData.Composers);
+            songData.Tag = TagData;
+            DatabaseManager.UpdateSongData(songData, songId);
+            Library.Current.UpdateSong(songData);
+            SaveLater.Current.SaveTagsLater(songData);
+            App.OnSongUpdated(songData.SongId);
+            await systemTray.ProgressIndicator.HideAsync();
+            navigationService.GoBack();
         }
 
         private string GetFirst(string text)

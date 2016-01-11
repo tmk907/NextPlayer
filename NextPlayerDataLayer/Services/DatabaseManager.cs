@@ -1136,9 +1136,9 @@ namespace NextPlayerDataLayer.Services
         }
 
 
-        public async static Task<string> GetLyrics(int id)
+        public static string GetLyrics(int id)
         {
-            var result = await SongsConnAsync().Where(s => s.SongId.Equals(id)).ToListAsync();
+            var result = SongsConn().Where(s => s.SongId.Equals(id)).ToList();
             return result.FirstOrDefault().Lyrics;
         }
 
@@ -1221,10 +1221,10 @@ namespace NextPlayerDataLayer.Services
 
         #region Update
 
-        public async static Task UpdateSongData(SongData songData, int id)
+        public static void UpdateSongData(SongData songData, int id)
         {
             var song = CreateSongsTable(songData);
-            await AsyncConnectionDb().UpdateAsync(song);
+            ConnectionDb().Update(song);
         }
 
         public static void FillSongData(SongData song)

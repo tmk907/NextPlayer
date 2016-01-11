@@ -1057,7 +1057,18 @@ namespace NextPlayerDataLayer.Services
             //    currentIndex = 0;
             //}
             lastPlayed.Clear();
-            maxQueueSize = (playlist.Count > 60) ? 15 : playlist.Count / 4;
+            if (playlist.Count < 20)
+            {
+                maxQueueSize = playlist.Count;
+            }
+            else if (playlist.Count > 60)
+            {
+                maxQueueSize = 15;
+            }
+            else
+            {
+                maxQueueSize = 10 + (playlist.Count / 4);
+            }
         }
 
         private int GetRandomIndex()
@@ -1068,9 +1079,13 @@ namespace NextPlayerDataLayer.Services
             }
             Random rnd = new Random();
             int r = rnd.Next(playlist.Count);
-            while (r == currentIndex || (playlist.Count>5 && lastPlayed.Contains(r)))
+            while (r == currentIndex || (playlist.Count > 5 && lastPlayed.Contains(r)))
             {
                 r = rnd.Next(playlist.Count);
+            }
+            if(maxQueueSize == playlist.Count && lastPlayed.Count == maxQueueSize - 1)
+            {
+                lastPlayed.Clear();
             }
             if (lastPlayed.Count == maxQueueSize)
             {

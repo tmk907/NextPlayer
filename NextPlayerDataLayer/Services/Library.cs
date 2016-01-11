@@ -43,6 +43,7 @@ namespace NextPlayerDataLayer.Services
                 return instance;
             }
         }
+
         #region NowPlaying
 
         private ObservableCollection<SongItem> nowPlayingList = new ObservableCollection<SongItem>();
@@ -116,9 +117,28 @@ namespace NextPlayerDataLayer.Services
             }
             catch(Exception ex)
             {
-                
+                Diagnostics.Logger.Save("GetCurrentPlayingSong" + Environment.NewLine + ex.Message);
+                Diagnostics.Logger.SaveToFile();
             }
             return null;
+        }
+
+        public void UpdateSong(SongData updatedSong)
+        {
+            foreach(var song in NowPlayingList)
+            {
+                if(song.SongId == updatedSong.SongId)
+                {
+                    song.Album = updatedSong.Tag.Album;
+                    song.Artist = updatedSong.Tag.Artists;
+                    song.Composer = updatedSong.Tag.Composers;
+                    song.Rating = (int)updatedSong.Tag.Rating;
+                    song.Title = updatedSong.Tag.Title;
+                    song.TrackNumber = updatedSong.Tag.Track;
+                    song.Year = updatedSong.Tag.Year;
+                    break;
+                }
+            }
         }
 
         public void ChangeRating(int rating, int songId)

@@ -675,4 +675,7 @@
   <data name="FileInfoPageTitle.Text" xml:space="preserve">
     <value>dettagli</value>
   </data>
+  <data name="ButtonSelectImageFile.Content" xml:space="preserve">
+    <value>Select file</value>
+  </data>
 </root>

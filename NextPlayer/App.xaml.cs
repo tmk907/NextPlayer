@@ -25,6 +25,7 @@ using NextPlayerDataLayer.Diagnostics;
 
 namespace NextPlayer
 {
+    public delegate void SongUpdatedHandler(int id);
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -36,12 +37,22 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
-        private bool dev = false;
+        private bool dev = true;
 
         public static bool LastFmRateOn;
         public static int LastFmUnLove;
         public static int LastFmLove;
         public static bool LastFmSendNP;
+
+        
+        public static event SongUpdatedHandler SongUpdated;
+        public static void OnSongUpdated(int id)
+        {
+            if (SongUpdated != null)
+            {
+                SongUpdated(id);
+            }
+        }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -50,6 +61,7 @@ namespace NextPlayer
         public App()
         {
             TelemetryClient = new TelemetryClient();
+            TelemetryClient.Context.Device.Model = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
             //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.DisableTelemetry = true;
             if (dev)
             {
@@ -60,7 +72,7 @@ namespace NextPlayer
             else
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "80222e7f-9556-409e-adbc-a0b0151540b2";
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "7dc5e66f-7f6e-429b-84f6-c35142bb912e";
             }
 
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
@@ -123,6 +135,7 @@ namespace NextPlayer
                 }
 
                 SendLogs();
+                SaveLater.Current.SaveAllNow();
                 //UpdateDB();
                 Logger.SaveFromSettingsToFile();
             }
@@ -157,7 +170,6 @@ namespace NextPlayer
             #endregion LastFm
             
             UnhandledException += App_UnhandledException;
-            
         }
 
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -225,10 +237,10 @@ namespace NextPlayer
             }
             if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
-                NextPlayer.Helpers.StyleHelper.EnableBGImage();
+                Helpers.StyleHelper.EnableBGImage();
             }
-            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
-            NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
+            Helpers.StyleHelper.ChangeMainPageButtonsBackground();
+            Helpers.StyleHelper.ChangeAlbumViewTransparency();
 
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
             Frame rootFrame = Window.Current.Content as Frame;
@@ -388,7 +400,7 @@ namespace NextPlayer
         {
             try
             {
-                var store = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                var store = await ApplicationData.Current.LocalFolder.GetFileAsync(filename);
                 return true;
             }
             catch
@@ -450,14 +462,11 @@ namespace NextPlayer
             }
         }
 
-        //old
-
         private async Task SendLogs()
         {
             string bg = await Logger.ReadBG();
             string fg = await Logger.Read();
             string lastfm = await Logger.ReadLastFm();
-
             if (bg != "")
             {
                 TelemetryClient.TrackTrace(bg, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
@@ -472,31 +481,6 @@ namespace NextPlayer
             }
             Logger.ClearAll();
             Logger.ClearLastFm();
-            //try
-            //{
-            //    var settings = ApplicationData.Current.LocalSettings;
-
-            //    if (!settings.Values.ContainsKey(AppConstants.DataLastSend))
-            //    {
-            //        settings.Values.Add(AppConstants.DataLastSend, DateTime.Today.Ticks);
-
-            //        CreateTask();
-            //    }
-            //    else
-            //    {
-            //        long dateticks = (long)(settings.Values[AppConstants.DataLastSend]);
-            //        TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-            //        //if (TimeSpan.FromDays(2) <= elapsed)
-            //        //{
-            //        //settings.Values[AppConstants.DataLastSend] = DateTime.Today.Ticks;
-            //        CreateTask();
-            //        //}
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-
-            //}
         }
 
         private async void CreateTask()
@@ -525,26 +509,6 @@ namespace NextPlayer
                 //new SystemCondition(SystemConditionType.InternetAvailable);
                 BackgroundTaskRegistration task = builder.Register();
             }
-        }
-
-        private async void CheckAppVersion()
-        {
-            String appVersion = String.Format("{0}.{1}.{2}.{3}",
-                    Package.Current.Id.Version.Build,
-                    Package.Current.Id.Version.Major,
-                    Package.Current.Id.Version.Minor,
-                    Package.Current.Id.Version.Revision);
-
-            if ((string)ApplicationData.Current.LocalSettings.Values["AppVersion"] != appVersion)
-            {
-                // Our app has been updated
-                ApplicationData.Current.LocalSettings.Values["AppVersion"] = appVersion;
-
-                // Call RemoveAccess
-                BackgroundExecutionManager.RemoveAccess();
-            }
-
-            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
         }
 
         private void SetDimensions()
@@ -594,7 +558,7 @@ namespace NextPlayer
                     Application.Current.Resources["PlayerButtonsHeight"] = new GridLength(108.0);
                     Application.Current.Resources["TimeSliderHeight"] = new GridLength(72.0);
                 }
-                else if (Math.Round(width, MidpointRounding.AwayFromZero) == 491 && Math.Round(height, MidpointRounding.AwayFromZero) == 872)
+                else if (Math.Round(width, MidpointRounding.AwayFromZero) == 491 && Math.Round(height, MidpointRounding.AwayFromZero) == 873)
                 {
                     Application.Current.Resources["ImageSize"] = new GridLength(230.0);
                     Application.Current.Resources["RatingControlHeight"] = new GridLength(56.0);
@@ -614,6 +578,14 @@ namespace NextPlayer
                     updateEvent.Name = "Resolution";
                     updateEvent.Metrics["width"] = width;
                     updateEvent.Metrics["height"] = height;
+                    try
+                    {
+                        updateEvent.Metrics["scale"] = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+                    }
+                    catch(Exception ex)
+                    {
+                        updateEvent.Metrics["scale"] = 0;
+                    }                 
                     TelemetryClient.TrackEvent(updateEvent);
                     ApplicationSettingsHelper.SaveSettingsValue("dimensions", true);
                 }

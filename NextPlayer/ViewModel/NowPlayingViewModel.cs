@@ -66,8 +66,7 @@ namespace NextPlayer.ViewModel
             SererInitialized = new AutoResetEvent(false);
             _timer = new DispatcherTimer();
             App.Current.Suspending += ForegroundApp_Suspending;
-            App.Current.Resuming += ForegroundApp_Resuming;
-            //SetupTimer();
+            App.Current.Resuming += ForegroundApp_Resuming;         
         }
 
         #region Properties
@@ -1250,8 +1249,7 @@ namespace NextPlayer.ViewModel
 
         private async Task SaveCached()
         {
-            await SaveLater.Current.SaveRatingsNow();
-            await SaveLater.Current.SaveTagsNow();
+            await SaveLater.Current.SaveAllNow();
         }
 
 

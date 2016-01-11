@@ -35,7 +35,7 @@ namespace NextPlayer.ViewModel
             this.navigationService = navigationService;
             index = 0;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
-            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
+            App.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
         private void OnLibraryUpdated(string s)
@@ -44,7 +44,7 @@ namespace NextPlayer.ViewModel
             LoadAlbums();
         }
 
-        private void OnSongUpdated()
+        private void OnSongUpdated(int id)
         {
             Albums.Clear();
             LoadAlbums();

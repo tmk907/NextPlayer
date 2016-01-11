@@ -2,8 +2,6 @@
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NextPlayerDataLayer.Helpers
@@ -12,37 +10,63 @@ namespace NextPlayerDataLayer.Helpers
     {
         private List<SongData> songs;
         private List<Tuple<int, int>> ratings;
+        private List<Tuple<int, string>> cachedLyrics;
 
         private static SaveLater current = null;
         private SaveLater()
         {
             songs = new List<SongData>();
             ratings = new List<Tuple<int, int>>();
+            cachedLyrics = new List<Tuple<int, string>>();
             object r = ApplicationSettingsHelper.ReadResetSettingsValue("savelaterratings");
             if (r != null)
             {
                 string[] a = r.ToString().Split(new char[]{ '|' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < a.Length; i++)
+                if (a.Length % 2 != 0)
                 {
-                    ratings.Add(new Tuple<int, int>(Int32.Parse(a[2 * i]), Int32.Parse(a[2 * i + 1])));
+                    Diagnostics.Logger.Save("SaveLater blad modulo");
+                    Diagnostics.Logger.SaveToFile();
+                }
+                else
+                {
+                    for (int i = 0; i < a.Length / 2; i++)
+                    {
+                        ratings.Add(new Tuple<int, int>(Int32.Parse(a[2 * i]), Int32.Parse(a[2 * i + 1])));
+                    }
                 }
             }
             object t = ApplicationSettingsHelper.ReadResetSettingsValue("savelatertags");
             if (t != null)
             {
                 string[] a = t.ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach(var item in a)
+                foreach (var item in a)
                 {
                     songs.Add(DatabaseManager.SelectSongData(Int32.Parse(item)));
                 }
             }
+            object l = ApplicationSettingsHelper.ReadResetSettingsValue("savelaterlyrics");
+            if (l != null)
+            {
+                string[] a = l.ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach(var item in a)
+                {
+                    int id = Int32.Parse(item);
+                    cachedLyrics.Add(new Tuple<int, string>(id, DatabaseManager.GetLyrics(id)));
+                }
+            }
+        }
+
+        public async Task SaveAllNow()
+        {
+            await SaveLyricsNow();
+            await SaveRatingsNow();
+            await SaveTagsNow();
         }
 
         public static SaveLater Current
         {
             get
             {
-
                 if (current == null)
                 {
                     current = new SaveLater();
@@ -53,55 +77,124 @@ namespace NextPlayerDataLayer.Helpers
 
         public async Task SaveTagsNow()
         {
-            foreach(var song in songs)
+            List<SongData> l = new List<SongData>();
+            if (songs.Count != 0)
             {
-                var s = Library.Current.GetCurrentPlayingSong();
-                if (s != null && s.SongId != song.SongId)
+                var currSong = Library.Current.GetCurrentPlayingSong();
+                if (currSong == null) return;
+                foreach (var item in songs)
                 {
-                    await SaveTags(song);
+                    if (currSong.SongId != item.SongId)
+                    {
+                        await MediaImport.UpdateFileTags(item);
+                    }
+                    else
+                    {
+                        l.Add(item);
+                    }
+                }
+                songs = new List<SongData>();
+                ApplicationSettingsHelper.ReadResetSettingsValue("savelatertags");
+                foreach (var item in l)
+                {
+                    SaveTagsLater(item);
                 }
             }
-            //! some data can be lost
-            songs = new List<SongData>();
-            ApplicationSettingsHelper.ReadResetSettingsValue("savelatertags");
         }
 
         public async Task SaveRatingsNow()
         {
-            foreach (var item in ratings)
+            List<Tuple<int, int>> l = new List<Tuple<int, int>>();
+            if (ratings.Count != 0)
             {
-                var song = Library.Current.GetCurrentPlayingSong();
-                if (song != null && song.SongId != item.Item1)
+                var currSong = Library.Current.GetCurrentPlayingSong();
+                if (currSong == null) return;
+                foreach (var item in ratings)
                 {
-                    await SaveRating(item.Item1, item.Item2);
+                    if (currSong.SongId != item.Item1)
+                    {
+                        await MediaImport.UpdateRating(item.Item1, item.Item2);
+                    }
+                    else
+                    {
+                        l.Add(item);
+                    }
+                }
+                ratings = new List<Tuple<int, int>>();
+                ApplicationSettingsHelper.ReadResetSettingsValue("savelaterratings");
+                foreach (var item in l)
+                {
+                    SaveRatingLater(item.Item1, item.Item2);
                 }
             }
-            //! some data can be lost
-            ratings = new List<Tuple<int, int>>();
-            ApplicationSettingsHelper.ReadResetSettingsValue("savelaterratings");
+        }
+
+        public async Task SaveLyricsNow()
+        {
+            List<Tuple<int, string>> l = new List<Tuple<int, string>>();
+            if (cachedLyrics.Count != 0)
+            {
+                var currSong = Library.Current.GetCurrentPlayingSong();
+                if (currSong == null) return;
+                foreach(var item in cachedLyrics)
+                {
+                    if (currSong.SongId != item.Item1)
+                    {
+                        await MediaImport.UpdateLyrics(item.Item1, item.Item2);
+                    }
+                    else
+                    {
+                        l.Add(item);
+                    }
+                }
+                cachedLyrics = new List<Tuple<int, string>>();
+                ApplicationSettingsHelper.ReadResetSettingsValue("savelaterlyrics");
+                foreach(var item in l)
+                {
+                    SaveLyricsLater(item.Item1, item.Item2);
+                }
+            }
         }
 
         public void SaveTagsLater(SongData song)
         {
+            bool duplicate = songs.Remove(song);
             songs.Add(song);
-            ApplicationSettingsHelper.SaveSettingsValue("savelatertags", (ApplicationSettingsHelper.ReadSettingsValue("savelatertags") ?? "").ToString() + song.SongId + "|");
+            if (!duplicate)
+            {
+                string val = (ApplicationSettingsHelper.ReadSettingsValue("savelatertags") ?? "").ToString() + song.SongId + "|";
+                ApplicationSettingsHelper.SaveSettingsValue("savelatertags", val);
+            }
         }
 
         public void SaveRatingLater(int songId, int rating)
         {
+            bool duplicate = false;
+            int oldRating = 0;
+            foreach(var item in ratings)
+            {
+                if (item.Item1 == songId)
+                {
+                    duplicate = true;
+                    oldRating = item.Item2;
+                    break;
+                }
+            }
+            string val = (ApplicationSettingsHelper.ReadSettingsValue("savelaterratings") ?? "").ToString();
+            if (duplicate)
+            {
+                ratings.Remove(new Tuple<int, int>(songId, oldRating));
+                val = val.Replace(songId + "|" + oldRating + "|", "");
+            }
             ratings.Add(new Tuple<int, int>(songId, rating));
-            ApplicationSettingsHelper.SaveSettingsValue("savelaterratings", (ApplicationSettingsHelper.ReadSettingsValue("savelaterratings") ?? "").ToString() + songId + "|" + rating + "|");
+            ApplicationSettingsHelper.SaveSettingsValue("savelaterratings", val + songId + "|" + rating + "|");
         }
 
-        private async Task SaveTags(SongData song)
+        public void SaveLyricsLater(int songId, string lyrics)
         {
-            await MediaImport.UpdateFileTags(song);
+            cachedLyrics.Add(new Tuple<int, string>(songId, lyrics));
+            string val = (ApplicationSettingsHelper.ReadSettingsValue("savelaterlyrics") ?? "").ToString() + songId + "|";
+            ApplicationSettingsHelper.SaveSettingsValue("savelaterlyrics", val);
         }
-
-        private async Task SaveRating(int songId, int rating)
-        {
-            await MediaImport.UpdateRating(songId, rating);
-        }
-
     }
 }

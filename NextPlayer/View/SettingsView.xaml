@@ -215,7 +215,8 @@
                             <TextBlock Grid.Row="0"
                                    FontSize="24"
                                    x:Uid="TBSelectAccentColor"
-                                   Text="Accent color" />
+                                   Text="Accent color"
+                                       Margin="0,0,0,8"/>
                             <ToggleSwitch Grid.Row="1"
                                    x:Name="phoneAccentToggleSwitch"
                                    x:Uid="HeaderPhoneAccent"
@@ -225,7 +226,7 @@
                             <Grid Grid.Row="2" 
                                 x:Name="gridColors"
                                 HorizontalAlignment="Center"
-                                Margin="0,12,0,0"  
+                                Margin="0,16,0,0"  
                                 Opacity="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="70"/>
@@ -357,6 +358,7 @@
                                     Style="{StaticResource ToggleSwitchStyle1}"
                                     Toggled="SendNP_Toggled"/>
                         <TextBlock x:Uid="TBSendLoveTrack" Grid.Row="8" 
+                                   Margin="0,16,0,0"
                                    FontSize="24"
                                    TextWrapping="WrapWholeWords"
                                    Text="Mark track as loved when I rate song"/>

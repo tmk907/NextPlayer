@@ -33,11 +33,22 @@ namespace NextPlayer.ViewModel
         {
             this.navigationService = navigationService;
 
-            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
+            App.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
         
-        private void OnSongUpdated()
+        private void OnSongUpdated(int id)
         {
+            bool find = false;
+            foreach (var song in playlist)
+            {
+                if (song.SongId == id)
+                {
+                    find = true;
+                    break;
+                }
+            }
+            if (!find) return;
+
             Playlist.Clear();
             if (isNowPlaying)
             {
@@ -468,6 +479,7 @@ namespace NextPlayer.ViewModel
             int id = -1;
             if (isNowPlaying)
             {
+                if (playlist.Count == 0) return;
                 id = playlist.ElementAt(index).SongId;
             }
             if (ascending)

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NextPlayerDataLayer.Model
 {
@@ -95,11 +90,39 @@ namespace NextPlayerDataLayer.Model
                 }
             }
         }
-
         private string composer;
-        public string Composer { get { return composer; } }
+        public string Composer
+        {
+            get
+            {
+                return composer;
+            }
+            set
+            {
+                if (value != composer)
+                {
+                    composer = value;
+                    onPropertyChanged(this, "Composer");
+                }
+            }
+        }
         private int year;
-        public int Year { get { return year; } }
+        public int Year
+        {
+            get
+            {
+                return year;
+            }
+            set
+            {
+                if (value != year)
+                {
+                    year = value;
+                    onPropertyChanged(this, "Year");
+                }
+            }
+        }
+
         public SongItem()
         {
             title = "Unknown Title";

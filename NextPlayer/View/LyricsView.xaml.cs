@@ -1,5 +1,6 @@
 ﻿using NextPlayer.Common;
 using NextPlayer.Converters;
+using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -134,9 +135,9 @@ namespace NextPlayer.View
 
         #endregion
 
-        private async void LoadLyrics()
+        private void LoadLyrics()
         {
-            lyrics = await DatabaseManager.GetLyrics(songId);
+            lyrics = DatabaseManager.GetLyrics(songId);
             if (string.IsNullOrEmpty(lyrics))
             {
                 WebVisibility(true);
@@ -261,6 +262,7 @@ namespace NextPlayer.View
         private async void SaveLyrics()
         {
             await DatabaseManager.UpdateLyricsAsync(songId, lyrics);
+            SaveLater.Current.SaveLyricsLater(songId, lyrics);
         }
         //private void webView1_FrameNavigationCompleted(WebView sender, WebViewContentLoadingEventArgs args)
         //{

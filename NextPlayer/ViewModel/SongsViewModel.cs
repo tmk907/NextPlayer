@@ -32,16 +32,15 @@ namespace NextPlayer.ViewModel
             index = 0;
             genre = null;
             MediaImport.MediaImported += new MediaImportedHandler(OnLibraryUpdated);
-            MediaImport.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
+            App.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
         private void OnLibraryUpdated(string s)
         {
             LoadSongs();
         }
-        private void OnSongUpdated()
+        private void OnSongUpdated(int id)
         {
-            Songs.Clear();
             LoadSongs();
         }
 

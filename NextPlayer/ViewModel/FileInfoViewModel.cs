@@ -60,8 +60,21 @@ namespace NextPlayer.ViewModel
             if (parameter != null)
             {
                 songId = Int32.Parse(parameter.ToString());
-                Song = DatabaseManager.SelectSongData(songId);
+                AddFileSize(DatabaseManager.SelectSongData(songId));
             }
+        }
+        private async Task AddFileSize(SongData s)
+        {
+            try
+            {
+                Windows.Storage.IStorageFile file = await Windows.Storage.StorageFile.GetFileFromPathAsync(s.Path);
+                s.FileSize = file.OpenAsync(Windows.Storage.FileAccessMode.Read).AsTask().Result.Size;
+            }
+            catch(Exception ex)
+            {
+                App.TelemetryClient.TrackTrace("AddFileSize" + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+            }
+            Song = s;
         }
 
         public void Deactivate(Dictionary<string, object> state)

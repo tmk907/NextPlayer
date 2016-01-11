@@ -12,6 +12,7 @@ using Windows.Data.Xml.Dom;
 using System.Diagnostics;
 using NextPlayerDataLayer.Helpers;
 using NextPlayerDataLayer.Constants;
+using NextPlayerDataLayer.Diagnostics;
 
 namespace NextPlayerDataLayer.Services
 {
@@ -136,21 +137,54 @@ namespace NextPlayerDataLayer.Services
         
         private async static Task<SongData> CreateSongFromFile(StorageFile file)
         {
-            //var w1 = Stopwatch.StartNew();
-
-            //Windows.Storage.FileProperties.MusicProperties mp = await file.Properties.GetMusicPropertiesAsync();
-            Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
-           
             SongData song = new SongData();
-
             song.DateAdded = DateTime.Now;
             song.Filename = file.Name;
-            song.FileSize = bp.Size;
             song.Path = file.Path;
             song.PlayCount = 0;
             song.LastPlayed = DateTime.MinValue;
             song.IsAvailable = 1;
             song.Tag.Rating = 0;
+
+            try
+            {
+                Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+                song.FileSize = bp.Size;
+            }
+            catch(FileNotFoundException ex)
+            {
+                Logger.Save("CreateSongFromFile FileNotFound" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
+                song.FileSize = 0;
+                song.IsAvailable = 0;
+
+                song.Duration = TimeSpan.Zero;
+                song.Bitrate = 0;
+                song.Tag.Album = "";
+                song.Tag.AlbumArtist = "";
+                song.Tag.Artists = "";
+                song.Tag.Comment = "";
+                song.Tag.Composers = "";
+                song.Tag.Conductor = "";
+                song.Tag.Disc = 0;
+                song.Tag.DiscCount = 0;
+                song.Tag.FirstArtist = "";
+                song.Tag.FirstComposer = "";
+                song.Tag.Genre = "";
+                song.Tag.Lyrics = "";
+                song.Tag.Title = file.DisplayName;
+                song.Tag.Track = 0;
+                song.Tag.TrackCount = 0;
+                song.Tag.Year = 0;
+
+                return song;
+            }
+            catch(Exception ex)
+            {
+                Logger.Save("CreateSongFromFile" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
+                song.FileSize = 0;
+            }
 
             using (Stream fileStream = await file.OpenStreamForReadAsync())
             {
@@ -271,14 +305,7 @@ namespace NextPlayerDataLayer.Services
         }
 
         public async static Task UpdateFileTags(SongData songData)
-        {
-            var song = Library.Current.GetCurrentPlayingSong();
-            if (song == null) return;
-            if (song.SongId == songData.SongId)
-            {
-                SaveLater.Current.SaveTagsLater(songData);
-                return;
-            }
+        {            
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(songData.Path);
@@ -307,27 +334,15 @@ namespace NextPlayerDataLayer.Services
                         }
                     }
                 }
-
-                //tempTag = new TagLib.Id3v2.Tag();
-                //tagFile1.Tag.CopyTo(tempTag, true);
-                //tagFile1.RemoveTags(TagLib.TagTypes.AllTags);
-                //tagFile1.Save();
-                //tagFile1.Dispose();
-
-                //TagLib.File tagFile2 = TagLib.File.Create(new StreamFileAbstraction(file.Name, fileReadStream, fileWriteStream));
-                //tempTag.CopyTo(tagFile2.Tag, true);
-                //tagFile2.Save();
-                //tagFile2.Dispose();
             }
             catch (Exception ex)
             {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateFileTags() " + ex.Message);
-                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                Logger.Save("UpdateFileTags() " + ex.Message);
+                Logger.SaveToFile();
             }
-            SongUpdated();
         }
 
-        public async static void UpdateLyrics(int songId, string lyrics)
+        public async static Task UpdateLyrics(int songId, string lyrics)
         {
             string path = DatabaseManager.GetFileInfo(songId).FilePath;
             try
@@ -347,20 +362,13 @@ namespace NextPlayerDataLayer.Services
             }
             catch (Exception ex)
             {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateLyrics() " + ex.Message);
-                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                Logger.Save("UpdateLyrics() " + ex.Message);
+                Logger.SaveToFile();
             }
         }
 
         public async static Task UpdateRating(int songId, int rating)
-        {
-            var song = Library.Current.GetCurrentPlayingSong();
-            if (song == null) return;
-            if (song.SongId == songId)
-            {
-                SaveLater.Current.SaveRatingLater(songId, rating);
-                return;
-            }
+        {            
             string path = DatabaseManager.GetFileInfo(songId).FilePath;
             try
             {
@@ -375,7 +383,7 @@ namespace NextPlayerDataLayer.Services
                             {
                                 Tag tags = tagFile.GetTag(TagTypes.Id3v2);
 
-                                TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", false);
+                                TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", true);
                                 if (pop != null)
                                 {
                                     if (rating == 5) pop.Rating = 255;
@@ -396,11 +404,10 @@ namespace NextPlayerDataLayer.Services
             }
             catch (Exception ex)
             {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("UpdateRating() " + ex.Message);
-                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
+                Logger.Save("UpdateRating() " + ex.Message);
+                Logger.SaveToFile();
             }
         }
-
 
         //public static async Task UpdateDB(IProgress<int> progress, string dbVersion)
         //{

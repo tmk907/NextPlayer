@@ -675,4 +675,7 @@
   <data name="TBSendNP.Text" xml:space="preserve">
     <value>Aktualizuj stronę Teraz Odtwarzane</value>
   </data>
+  <data name="ButtonSelectImageFile.Content" xml:space="preserve">
+    <value>Wybierz plik</value>
+  </data>
 </root>
