@@ -46,7 +46,7 @@ namespace NextPlayer.View
         bool isTimerOn;
         bool loading;
         CoreApplicationView view;
-
+        bool initialization = true;
         public SettingsView()
         {
             this.InitializeComponent();
@@ -87,6 +87,7 @@ namespace NextPlayer.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            initialization = true;
             if (e.PageState != null && e.PageState.ContainsKey("pivotIndex"))
             {
                 PivotSettings.SelectedIndex = (int)e.PageState["pivotIndex"];
@@ -210,7 +211,8 @@ namespace NextPlayer.View
             var navigableViewModel = this.DataContext as INavigable;
             if (navigableViewModel != null)
                 navigableViewModel.Activate(e.NavigationParameter, e.PageState);
-            App.TelemetryClient.TrackEvent("Settings page open");
+            initialization = false;
+            //App.TelemetryClient.TrackEvent("Settings page open");
         }
 
         /// <summary>
@@ -272,8 +274,6 @@ namespace NextPlayer.View
 
         private async void UpdateLibrary()
         {
-            App.TelemetryClient.TrackEvent("Start UpdateLibrary");
-
             DisableControls();
             ProgressRing2.IsActive = true;
             ProgressRing2.Visibility = Visibility.Visible;
@@ -288,24 +288,13 @@ namespace NextPlayer.View
 
             await Task.Run(() => MediaImport.ImportAndUpdateDatabase(progress));
 
-            try
-            {
-                var updateEvent = new EventTelemetry();
-                updateEvent.Name = "Library update finished";
-                updateEvent.Metrics["count"] = Int32.Parse(Count2.Text.Replace("%", ""));
-                App.TelemetryClient.TrackEvent(updateEvent);
-            }
-            catch(Exception ex)
-            {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("Update library" + Environment.NewLine + ex.Message);
-                NextPlayerDataLayer.Diagnostics.Logger.SaveToFile();
-            }
-
             WaitFewMinutes.Visibility = Visibility.Collapsed;
             Count2.Visibility = Visibility.Collapsed;
             ProgressRing2.IsActive = false;
             ProgressRing2.Visibility = Visibility.Collapsed;
             EnableControls();
+
+            App.TelemetryClient.TrackEvent("UpdateLibrary finished");
         }
 
         private void DisableControls()
@@ -415,12 +404,12 @@ namespace NextPlayer.View
             if (((ToggleSwitch)sender).IsOn)
             {
                 UpdateAppTile(true);
-                App.TelemetryClient.TrackEvent("Transparent tile On");
+                TrackEvent("Transparent tile On");
             }
             else
             {
                 UpdateAppTile(false);
-                App.TelemetryClient.TrackEvent("Transparent tile Off");
+                TrackEvent("Transparent tile Off");
             }
         }
 
@@ -497,7 +486,7 @@ namespace NextPlayer.View
             ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppAccent, color.ToString());
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, false);
-            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
+            Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
         #endregion
         #region App theme
@@ -507,7 +496,7 @@ namespace NextPlayer.View
             if (rb.Name == "RBDark")
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppTheme, AppThemeEnum.Dark.ToString());
-                App.TelemetryClient.TrackEvent("Theme changed Dark");
+                TrackEvent("Theme changed Dark");
             }
             else if (rb.Name == "RBLight")
             {
@@ -516,7 +505,7 @@ namespace NextPlayer.View
                 {
                     App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
                 }
-                App.TelemetryClient.TrackEvent("Theme changed Light");
+                TrackEvent("Theme changed Light");
             }
         }
         #endregion
@@ -528,7 +517,7 @@ namespace NextPlayer.View
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
                 Helpers.StyleHelper.EnableBGImage();
-                App.TelemetryClient.TrackEvent("BG image On");
+                TrackEvent("BG image On");
                 //SelectImage_Button.IsEnabled = true;
             }
             else
@@ -536,7 +525,7 @@ namespace NextPlayer.View
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, false);
                 //SelectImage_Button.IsEnabled = false; ;
                 Helpers.StyleHelper.DisableBGImage();
-                App.TelemetryClient.TrackEvent("BG image Off");
+                TrackEvent("BG image Off");
             }
             Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
@@ -553,13 +542,13 @@ namespace NextPlayer.View
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
                 NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
-                App.TelemetryClient.TrackEvent("BG Cover On");
+                TrackEvent("BG Cover On");
             }
             else
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, false);
                 NextPlayer.Helpers.StyleHelper.ChangeAlbumViewTransparency();
-                App.TelemetryClient.TrackEvent("BG Cover Off");
+                TrackEvent("BG Cover Off");
             }
         }
         #endregion
@@ -681,7 +670,7 @@ namespace NextPlayer.View
                 view.Activated -= viewActivated;
                 StorageFile SelectedImageFile = args.Files[0];
                 StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-                string name = "userbgimage." + System.IO.Path.GetExtension(SelectedImageFile.Path);
+                string name = "userbgimage" + System.IO.Path.GetExtension(SelectedImageFile.Path);
                 StorageFile img = await SelectedImageFile.CopyAsync(localFolder, name, NameCollisionOption.ReplaceExisting);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, img.Path);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsBGImageSet, true);
@@ -689,6 +678,17 @@ namespace NextPlayer.View
                 ((ImageBrush)App.Current.Resources["BgImage"]).ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(img.Path, UriKind.RelativeOrAbsolute));
                 ShowBGImage_ToggleSwitch.IsOn = true;
             }
+        }
+
+
+        private void TrackEvent(string name)
+        {
+            if (!initialization)
+            {
+                App.TelemetryClient.TrackEvent(name);
+            }
+            //var tel = new EventTelemetry(name);
+            //tel.Timestamp = DateTime.UtcNow;
         }
     }
 }

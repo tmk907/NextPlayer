@@ -135,9 +135,12 @@ namespace NextPlayer
                 }
 
                 SendLogs();
+                
                 SaveLater.Current.SaveAllNow();
                 //UpdateDB();
                 Logger.SaveFromSettingsToFile();
+
+                CreateTask();
             }
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileAppTransparent) == null)
             {
@@ -165,6 +168,12 @@ namespace NextPlayer
             {
                 DatabaseManager.CreateLastFmDB();
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LastFmDBVersion, 1);
+            }
+            else if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LastFmDBVersion).ToString() == "1")
+            {
+                DatabaseManager.DeleteLastFmDB();
+                DatabaseManager.CreateLastFmDB();
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LastFmDBVersion, 2);
             }
 
             #endregion LastFm
@@ -486,14 +495,14 @@ namespace NextPlayer
         private async void CreateTask()
         {
             var taskRegistered = false;
-            var taskName = "LogSenderNetworkTask";
+            var taskName = "ScrobbleSenderNetworkTask";
 
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 if (task.Value.Name == taskName)
                 {
-                    task.Value.Unregister(true);
-                    //taskRegistered = true;
+                    //task.Value.Unregister(true);
+                    taskRegistered = true;
                     break;
                 }
             }
@@ -501,14 +510,36 @@ namespace NextPlayer
             if (!taskRegistered)
             {
                 await BackgroundExecutionManager.RequestAccessAsync();
+                
                 var builder = new BackgroundTaskBuilder();
-
                 builder.Name = taskName;
                 builder.TaskEntryPoint = "BackgroundNetworkTask.NetworkTask";
-                builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, true));
-                //new SystemCondition(SystemConditionType.InternetAvailable);
+                builder.SetTrigger(new TimeTrigger(30, false));
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 BackgroundTaskRegistration task = builder.Register();
             }
+        }
+
+        private async void CheckAppVersion()
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            var pkgVersion = Package.Current.Id.Version;
+
+            var appVersion = pkgVersion.Build + "." +
+                                pkgVersion.Major + "." +
+                                pkgVersion.Minor + "." +
+                                pkgVersion.Revision;
+
+            if ((localSettings.Values["appVersion"]??"").ToString() != appVersion)
+            {
+                // Our app has been updated
+                localSettings.Values["appVersion"] = appVersion;
+
+                // Call removeAccess
+                BackgroundExecutionManager.RemoveAccess();
+            }
+
+            await BackgroundExecutionManager.RequestAccessAsync();
         }
 
         private void SetDimensions()

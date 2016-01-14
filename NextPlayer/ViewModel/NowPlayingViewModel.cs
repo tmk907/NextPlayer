@@ -936,7 +936,7 @@ namespace NextPlayer.ViewModel
         {
             if (status == AsyncStatus.Completed)
             {
-                NextPlayerDataLayer.Diagnostics.Logger.Save("Background Audio Task initialized");
+                //NextPlayerDataLayer.Diagnostics.Logger.Save("Background Audio Task initialized");
             }
             else if (status == AsyncStatus.Error)
             {
@@ -1233,11 +1233,11 @@ namespace NextPlayer.ViewModel
                 {
                     if (rating >= App.LastFmLove)
                     {
-                        await Task.Run(() => LastFmManager.Current.TrackLove(Artist, Title));
+                        await LastFmManager.Current.CacheTrackLove(Artist, Title);
                     }
-                    if (rating < App.LastFmLove)
+                    else
                     {
-                        await Task.Run(() => LastFmManager.Current.TrackUnlove(Artist, Title));
+                        await LastFmManager.Current.CacheTrackUnlove(Artist, Title);
                     }
                 }
                 //Library.Current.NowPlayingList.ElementAt(CurrentSongIndex).Rating = rating;

@@ -188,7 +188,12 @@ namespace NextPlayerDataLayer.Services
             UpdateSongStatistics();
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmLogin).ToString() != "" && BackgroundMediaPlayer.Current.NaturalDuration != TimeSpan.Zero)
             {
+                System.Diagnostics.Debug.WriteLine("scrobble");
                 ScrobbleTrack();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("no scrobble");
             }
         }
 
@@ -252,13 +257,15 @@ namespace NextPlayerDataLayer.Services
                     Track = track,
                     Timestamp = timestamp
                 };
-                SendScrobble(scrobble);
+                //System.Diagnostics.Debug.WriteLine("scrobble " + artist + " " + track + " " + songPlayed);
+                //SendScrobble(scrobble);
+                LastFmManager.Current.CacheTrackScrobble(scrobble);
             }
         }
 
-        private async Task SendScrobble(TrackScrobble scrobble)
+        private async Task SendScrobble(TrackScrobble s)
         {
-            await Task.Run(() => LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { scrobble }));
+            await Task.Run(() => LastFmManager.Current.CacheTrackScrobble(s));
         }
 
         private void ScrobbleNowPlaying()
@@ -354,454 +361,7 @@ namespace NextPlayerDataLayer.Services
         }
     }
 
-    public sealed class NowPlayingManager2
-    {
-        private List<NowPlayingSong> songList;
-        public int currentSongIndex;
-        private bool paused;
-        private bool isShuffleOn;
-        private bool isSongRepeated = false;
-        private bool isPlaylistRepeated = false;
-        private RepeatEnum repeat;
-        private MediaPlayer mediaPlayer;
-        TimeSpan startPosition = TimeSpan.FromSeconds(0);
-        private List<int> shuffleSongIndexes = new List<int>();
-        int prevSongIndex = -1;
-        private int currentSongId = -1;
-
-        private DateTime songsStart;
-        private TimeSpan songPlayed;
-
-        public NowPlayingManager2()
-        {
-            songList = DatabaseManager.SelectAllSongsFromNowPlaying();
-
-            object currentIndex = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongIndex);
-            object prevIndex = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PrevSongIndex);
-            if (currentIndex == null) currentSongIndex = 0;
-            else currentSongIndex = Int32.Parse(currentIndex.ToString());
-            startPosition = TimeSpan.Zero;
-            //if (prevIndex != null && Int32.Parse(prevIndex.ToString()) == currentSongIndex)
-            //{
-            //    object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
-            //    if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
-            //}
-
-            //Shuffle
-            isShuffleOn = Shuffle.CurrentState();
-
-            //Repeat
-            repeat = Repeat.CurrentState();
-
-            paused = false;
-
-            songPlayed = TimeSpan.Zero;
-            songsStart = DateTime.Now;
-
-            mediaPlayer = BackgroundMediaPlayer.Current;
-            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
-            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
-            //mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
-            mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
-        }
-
-
-        public bool IsPrevious()
-        {
-            return currentSongIndex != 0;
-        }
-
-        public bool IsNext()
-        {
-            return currentSongIndex != songList.Count() - 1;
-        }
-
-        private async Task LoadSong()
-        {
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(songList.ElementAt<NowPlayingSong>(currentSongIndex).Path);
-                mediaPlayer.AutoPlay = false;
-                mediaPlayer.SetFileSource(file);
-                currentSongId = songList.ElementAt(currentSongIndex).SongId;
-            }
-            catch (Exception e)
-            {
-                if (currentSongIndex >= 0 && currentSongIndex < songList.Count)
-                {
-                    if (!paused)
-                    {
-                        Pause();
-                    }
-                    Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
-                    Diagnostics.Logger.SaveToFileBG();
-                }
-                else
-                {
-                    Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
-                    Diagnostics.Logger.SaveToFileBG();
-
-                    ValueSet message = new ValueSet();
-                    message.Add(AppConstants.ShutdownBGPlayer, "");
-                    BackgroundMediaPlayer.SendMessageToBackground(message);
-                }
-            }
-            
-        }
-        
-        public void StartPlaying(int index)
-        {
-            ScrobbleTrack();
-            UpdateSongStatistics();
-            paused = false;
-            currentSongIndex = index;
-            LoadSong();
-           // ScrobbleNowPlaying();
-        }
-
-        public void ResumePlayback()
-        {
-            if (mediaPlayer.CurrentState == MediaPlayerState.Playing || mediaPlayer.CurrentState == MediaPlayerState.Paused)
-            {
-                SendPosition();
-                return;
-            }
-            paused = false;
-            object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
-            ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongId);
-            if (value2 != null)
-            {
-                startPosition = TimeSpan.Parse(value2.ToString());
-            }
-            LoadSong();
-        }
-
-        public void Play()
-        {
-            paused = false;
-            mediaPlayer.Play();
-            if (mediaPlayer.Position.Equals(TimeSpan.Zero))
-            {
-                ScrobbleNowPlaying();
-            }
-            //SendPosition();
-            songsStart = DateTime.Now;
-        }
-
-        public void Pause()
-        {
-            paused = true;
-            mediaPlayer.Pause();
-            songPlayed += DateTime.Now - songsStart;
-        }
-
-        public void Next()
-        {
-            UpdateSongStatistics();
-            ScrobbleTrack();
-            if (isShuffleOn)
-            {
-                prevSongIndex = currentSongIndex;
-                currentSongIndex = GetRandomNumber();
-            }
-            else currentSongIndex++;
-            if (currentSongIndex == songList.Count)
-            {
-                currentSongIndex--;
-                mediaPlayer.Position = TimeSpan.Zero;
-                Pause();
-            }
-            else
-            {
-                if (paused)
-                {
-                    LoadSong();
-                }
-                else
-                {
-                    LoadSong();
-                }
-            }
-            SendIndex();
-            isSongRepeated = false;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, currentSongIndex);
-        }
-
-        public void Previous()
-        {
-            UpdateSongStatistics();
-            ScrobbleTrack();
-            if (isShuffleOn)
-            {
-                //currentSongIndex = shuffleSongIndexes.Last();
-                //shuffleSongIndexes.RemoveAt(shuffleSongIndexes.Count - 1);
-                if (prevSongIndex == -1) currentSongIndex = GetRandomNumber();
-                else
-                {
-                    currentSongIndex = prevSongIndex;
-                    prevSongIndex = -1;
-                }
-            }
-            else currentSongIndex--;
-            if (currentSongIndex < 0)
-            {
-                currentSongIndex++;
-                
-                mediaPlayer.Position = TimeSpan.Zero;
-                Pause();
-            }
-            else
-            {
-                if (paused) //dodac currenttimetrack
-                {
-                    LoadSong();
-                }
-                else
-                {
-                    LoadSong();
-                }
-            }
-            SendIndex();
-            isSongRepeated = false;
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, currentSongIndex);
-        }
-
-        private void SendIndex()
-        {
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.SongIndex, currentSongIndex.ToString());
-            BackgroundMediaPlayer.SendMessageToForeground(message);
-        }
-
-        private void SendPosition()
-        {
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.Position, mediaPlayer.Position.ToString());
-            BackgroundMediaPlayer.SendMessageToForeground(message);
-        }
-
-        private void SendSkipNext()
-        {
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.SkipNext, "");
-            BackgroundMediaPlayer.SendMessageToBackground(message);
-        }
-
-        public void CompleteUpdate()
-        {
-            SendIndex();
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.MediaOpened, BackgroundMediaPlayer.Current.NaturalDuration);
-            BackgroundMediaPlayer.SendMessageToForeground(message);
-            SendPosition();
-        }
-
-        private int GetRandomNumber()
-        {
-            if (songList.Count == 1)
-            {
-                return 0;
-            }
-            Random rnd = new Random();
-            int r = rnd.Next(songList.Count);
-            while (r == currentSongIndex)
-            {
-                r = rnd.Next(songList.Count);
-            }
-            return r;
-        }
-
-        public void ChangeShuffle()
-        {
-            isShuffleOn = !isShuffleOn;
-        }
-
-        public void ChangeRepeat()
-        {
-            repeat = Repeat.CurrentState();
-            ResetRepeat();
-        }
-
-        private void ResetRepeat()
-        {
-            isSongRepeated = false;
-            isPlaylistRepeated = false;
-        }
-
-        public string GetTitle()
-        {
-            if (currentSongIndex < songList.Count && currentSongIndex >= 0)
-            {
-                return songList.ElementAt(currentSongIndex).Title;
-            }
-            else return "-";
-        }
-
-        public string GetArtist()
-        {
-            if (currentSongIndex < songList.Count && currentSongIndex >= 0)
-            {
-                return songList.ElementAt(currentSongIndex).Artist;
-            }
-            else return "-";
-        }
-
-        public void UpdateNowPlayingList()
-        {
-            songList = DatabaseManager.SelectAllSongsFromNowPlaying();
-            if (currentSongIndex >= songList.Count)
-            {
-                currentSongIndex = songList.Count - 1;
-            }
-        }
-
-        public void UpdateNowPlayingList2()
-        {
-            songList = DatabaseManager.SelectAllSongsFromNowPlaying();
-            currentSongIndex = ApplicationSettingsHelper.ReadSongIndex();
-            if (currentSongIndex >= songList.Count)
-            {
-                currentSongIndex = songList.Count - 1;
-            }
-        }
-
-        private async Task ScrobbleTrack()
-        {
-            if (!paused)
-            {
-                songPlayed += DateTime.Now - songsStart;
-            }
-            if (songPlayed.TotalSeconds >= BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60)
-            {
-                DateTime start = DateTime.UtcNow - songPlayed;
-                int seconds = (int)start.Subtract(new DateTime(1970,1,1)).TotalSeconds;
-                await LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { new TrackScrobble() {
-                        Artist = GetArtist(),
-                        Track = GetTitle(),
-                        Timestamp = seconds.ToString()
-                    } });
-            }
-        }
-
-        private async Task ScrobbleNowPlaying()
-        {
-            if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
-            {
-                await LastFmManager.Current.TrackUpdateNowPlaying(GetArtist(), GetTitle());
-            }
-        }
-
-        public void UpdateSongStatistics()
-        {
-            if (currentSongId>0 &&  BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
-            {
-                DatabaseManager.UpdateSongStatistics(currentSongId);
-            }
-        }
-
-        #region MediaPlayer Handlers
-
-        void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
-        {
-            //Diagnostics.Logger.SaveBG("BG media opened");
-            //Diagnostics.Logger.SaveToFileBG();
-
-            // wait for media to be ready
-            ValueSet message = new ValueSet();
-            message.Add(AppConstants.MediaOpened,"");
-            BackgroundMediaPlayer.SendMessageToForeground(message);
-            songPlayed = TimeSpan.Zero;
-            if (!paused)
-            {
-                sender.Play();
-                songsStart = DateTime.Now;
-                ScrobbleNowPlaying();
-                if (!startPosition.Equals(TimeSpan.Zero))
-                {
-                    sender.Position = startPosition;
-                    startPosition = TimeSpan.Zero;
-                }
-            }
-        }
-
-        private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            //Diagnostics.Logger.SaveBG("BG NP ended");
-            //Diagnostics.Logger.SaveToFileBG();
-
-            if (repeat.Equals(RepeatEnum.NoRepeat))
-            {
-                SendSkipNext();
-            }
-            else if (repeat.Equals(RepeatEnum.RepeatOnce))
-            {
-                if (isSongRepeated)
-                {
-                    SendSkipNext();
-                }
-                else
-                {
-                    StartPlaying(currentSongIndex);
-                }
-                isSongRepeated = !isSongRepeated;
-            }
-            else if (repeat.Equals(RepeatEnum.RepeatPlaylist))
-            {
-                if (!isShuffleOn && !IsNext())
-                {
-                    if (isPlaylistRepeated)
-                    {
-                        SendSkipNext();
-                    }
-                    else
-                    {
-                        ScrobbleTrack();
-                        ValueSet message = new ValueSet();
-                        message.Add(AppConstants.StartPlayback, 0);
-                        BackgroundMediaPlayer.SendMessageToBackground(message);
-                        //StartPlaying(0);
-                        currentSongIndex = 0;//trzeba ustawic wczesniej, poniewaz SendIndex() moze byc wykonane przed StartPlaying()
-                        SendIndex();
-                    }
-                    isPlaylistRepeated = !isPlaylistRepeated;
-                }
-                else
-                {
-                    SendSkipNext();
-                }
-            }
-        }
-
-        private void mediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
-        {
-            //Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
-        }
-
-        public void RemoveHandlers()
-        {
-            mediaPlayer.MediaOpened -= MediaPlayer_MediaOpened;
-            mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
-            //mediaPlayer.CurrentStateChanged -= mediaPlayer_CurrentStateChanged;
-            mediaPlayer.MediaFailed -= mediaPlayer_MediaFailed;
-            mediaPlayer = null;
-        }
-
-        //private void mediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
-        //{
-
-        //    //if (sender.CurrentState == MediaPlayerState.Playing && startPosition != TimeSpan.FromSeconds(0))
-        //    //{
-        //    //    // if the start position is other than 0, then set it now
-        //    //    sender.Position = startPosition;
-        //    //    sender.Volume = 1.0;
-        //    //    startPosition = TimeSpan.FromSeconds(0);
-        //    //    sender.PlaybackMediaMarkers.Clear();
-        //    //    paused = false;
-        //    //}
-        //}
-        #endregion
-
-    }
+    
 
     class Playlist
     {
@@ -1114,5 +674,452 @@ namespace NextPlayerDataLayer.Services
         }
     }
 
-    
+    #region oldnpm
+    //public sealed class NowPlayingManager2
+    //{
+    //    private List<NowPlayingSong> songList;
+    //    public int currentSongIndex;
+    //    private bool paused;
+    //    private bool isShuffleOn;
+    //    private bool isSongRepeated = false;
+    //    private bool isPlaylistRepeated = false;
+    //    private RepeatEnum repeat;
+    //    private MediaPlayer mediaPlayer;
+    //    TimeSpan startPosition = TimeSpan.FromSeconds(0);
+    //    private List<int> shuffleSongIndexes = new List<int>();
+    //    int prevSongIndex = -1;
+    //    private int currentSongId = -1;
+
+    //    private DateTime songsStart;
+    //    private TimeSpan songPlayed;
+
+    //    public NowPlayingManager2()
+    //    {
+    //        songList = DatabaseManager.SelectAllSongsFromNowPlaying();
+
+    //        object currentIndex = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongIndex);
+    //        object prevIndex = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.PrevSongIndex);
+    //        if (currentIndex == null) currentSongIndex = 0;
+    //        else currentSongIndex = Int32.Parse(currentIndex.ToString());
+    //        startPosition = TimeSpan.Zero;
+    //        //if (prevIndex != null && Int32.Parse(prevIndex.ToString()) == currentSongIndex)
+    //        //{
+    //        //    object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
+    //        //    if (value2 != null) startPosition = TimeSpan.Parse(value2.ToString());
+    //        //}
+
+    //        //Shuffle
+    //        isShuffleOn = Shuffle.CurrentState();
+
+    //        //Repeat
+    //        repeat = Repeat.CurrentState();
+
+    //        paused = false;
+
+    //        songPlayed = TimeSpan.Zero;
+    //        songsStart = DateTime.Now;
+
+    //        mediaPlayer = BackgroundMediaPlayer.Current;
+    //        mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
+    //        mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+    //        //mediaPlayer.CurrentStateChanged += mediaPlayer_CurrentStateChanged;
+    //        mediaPlayer.MediaFailed += mediaPlayer_MediaFailed;
+    //    }
+
+
+    //    public bool IsPrevious()
+    //    {
+    //        return currentSongIndex != 0;
+    //    }
+
+    //    public bool IsNext()
+    //    {
+    //        return currentSongIndex != songList.Count() - 1;
+    //    }
+
+    //    private async Task LoadSong()
+    //    {
+    //        try
+    //        {
+    //            StorageFile file = await StorageFile.GetFileFromPathAsync(songList.ElementAt<NowPlayingSong>(currentSongIndex).Path);
+    //            mediaPlayer.AutoPlay = false;
+    //            mediaPlayer.SetFileSource(file);
+    //            currentSongId = songList.ElementAt(currentSongIndex).SongId;
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            if (currentSongIndex >= 0 && currentSongIndex < songList.Count)
+    //            {
+    //                if (!paused)
+    //                {
+    //                    Pause();
+    //                }
+    //                Diagnostics.Logger.SaveBG("NPManager LoadSong() index OK" + "\n" + e.Message);
+    //                Diagnostics.Logger.SaveToFileBG();
+    //            }
+    //            else
+    //            {
+    //                Diagnostics.Logger.SaveBG("NPManager LoadSong() index not OK" + "\n" + e.Message);
+    //                Diagnostics.Logger.SaveToFileBG();
+
+    //                ValueSet message = new ValueSet();
+    //                message.Add(AppConstants.ShutdownBGPlayer, "");
+    //                BackgroundMediaPlayer.SendMessageToBackground(message);
+    //            }
+    //        }
+
+    //    }
+
+    //    public void StartPlaying(int index)
+    //    {
+    //        ScrobbleTrack();
+    //        UpdateSongStatistics();
+    //        paused = false;
+    //        currentSongIndex = index;
+    //        LoadSong();
+    //        // ScrobbleNowPlaying();
+    //    }
+
+    //    public void ResumePlayback()
+    //    {
+    //        if (mediaPlayer.CurrentState == MediaPlayerState.Playing || mediaPlayer.CurrentState == MediaPlayerState.Paused)
+    //        {
+    //            SendPosition();
+    //            return;
+    //        }
+    //        paused = false;
+    //        object value2 = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.Position);
+    //        ApplicationSettingsHelper.ReadSettingsValue(AppConstants.SongId);
+    //        if (value2 != null)
+    //        {
+    //            startPosition = TimeSpan.Parse(value2.ToString());
+    //        }
+    //        LoadSong();
+    //    }
+
+    //    public void Play()
+    //    {
+    //        paused = false;
+    //        mediaPlayer.Play();
+    //        if (mediaPlayer.Position.Equals(TimeSpan.Zero))
+    //        {
+    //            ScrobbleNowPlaying();
+    //        }
+    //        //SendPosition();
+    //        songsStart = DateTime.Now;
+    //    }
+
+    //    public void Pause()
+    //    {
+    //        paused = true;
+    //        mediaPlayer.Pause();
+    //        songPlayed += DateTime.Now - songsStart;
+    //    }
+
+    //    public void Next()
+    //    {
+    //        UpdateSongStatistics();
+    //        ScrobbleTrack();
+    //        if (isShuffleOn)
+    //        {
+    //            prevSongIndex = currentSongIndex;
+    //            currentSongIndex = GetRandomNumber();
+    //        }
+    //        else currentSongIndex++;
+    //        if (currentSongIndex == songList.Count)
+    //        {
+    //            currentSongIndex--;
+    //            mediaPlayer.Position = TimeSpan.Zero;
+    //            Pause();
+    //        }
+    //        else
+    //        {
+    //            if (paused)
+    //            {
+    //                LoadSong();
+    //            }
+    //            else
+    //            {
+    //                LoadSong();
+    //            }
+    //        }
+    //        SendIndex();
+    //        isSongRepeated = false;
+    //        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, currentSongIndex);
+    //    }
+
+    //    public void Previous()
+    //    {
+    //        UpdateSongStatistics();
+    //        ScrobbleTrack();
+    //        if (isShuffleOn)
+    //        {
+    //            //currentSongIndex = shuffleSongIndexes.Last();
+    //            //shuffleSongIndexes.RemoveAt(shuffleSongIndexes.Count - 1);
+    //            if (prevSongIndex == -1) currentSongIndex = GetRandomNumber();
+    //            else
+    //            {
+    //                currentSongIndex = prevSongIndex;
+    //                prevSongIndex = -1;
+    //            }
+    //        }
+    //        else currentSongIndex--;
+    //        if (currentSongIndex < 0)
+    //        {
+    //            currentSongIndex++;
+
+    //            mediaPlayer.Position = TimeSpan.Zero;
+    //            Pause();
+    //        }
+    //        else
+    //        {
+    //            if (paused) //dodac currenttimetrack
+    //            {
+    //                LoadSong();
+    //            }
+    //            else
+    //            {
+    //                LoadSong();
+    //            }
+    //        }
+    //        SendIndex();
+    //        isSongRepeated = false;
+    //        ApplicationSettingsHelper.SaveSettingsValue(AppConstants.SongIndex, currentSongIndex);
+    //    }
+
+    //    private void SendIndex()
+    //    {
+    //        ValueSet message = new ValueSet();
+    //        message.Add(AppConstants.SongIndex, currentSongIndex.ToString());
+    //        BackgroundMediaPlayer.SendMessageToForeground(message);
+    //    }
+
+    //    private void SendPosition()
+    //    {
+    //        ValueSet message = new ValueSet();
+    //        message.Add(AppConstants.Position, mediaPlayer.Position.ToString());
+    //        BackgroundMediaPlayer.SendMessageToForeground(message);
+    //    }
+
+    //    private void SendSkipNext()
+    //    {
+    //        ValueSet message = new ValueSet();
+    //        message.Add(AppConstants.SkipNext, "");
+    //        BackgroundMediaPlayer.SendMessageToBackground(message);
+    //    }
+
+    //    public void CompleteUpdate()
+    //    {
+    //        SendIndex();
+    //        ValueSet message = new ValueSet();
+    //        message.Add(AppConstants.MediaOpened, BackgroundMediaPlayer.Current.NaturalDuration);
+    //        BackgroundMediaPlayer.SendMessageToForeground(message);
+    //        SendPosition();
+    //    }
+
+    //    private int GetRandomNumber()
+    //    {
+    //        if (songList.Count == 1)
+    //        {
+    //            return 0;
+    //        }
+    //        Random rnd = new Random();
+    //        int r = rnd.Next(songList.Count);
+    //        while (r == currentSongIndex)
+    //        {
+    //            r = rnd.Next(songList.Count);
+    //        }
+    //        return r;
+    //    }
+
+    //    public void ChangeShuffle()
+    //    {
+    //        isShuffleOn = !isShuffleOn;
+    //    }
+
+    //    public void ChangeRepeat()
+    //    {
+    //        repeat = Repeat.CurrentState();
+    //        ResetRepeat();
+    //    }
+
+    //    private void ResetRepeat()
+    //    {
+    //        isSongRepeated = false;
+    //        isPlaylistRepeated = false;
+    //    }
+
+    //    public string GetTitle()
+    //    {
+    //        if (currentSongIndex < songList.Count && currentSongIndex >= 0)
+    //        {
+    //            return songList.ElementAt(currentSongIndex).Title;
+    //        }
+    //        else return "-";
+    //    }
+
+    //    public string GetArtist()
+    //    {
+    //        if (currentSongIndex < songList.Count && currentSongIndex >= 0)
+    //        {
+    //            return songList.ElementAt(currentSongIndex).Artist;
+    //        }
+    //        else return "-";
+    //    }
+
+    //    public void UpdateNowPlayingList()
+    //    {
+    //        songList = DatabaseManager.SelectAllSongsFromNowPlaying();
+    //        if (currentSongIndex >= songList.Count)
+    //        {
+    //            currentSongIndex = songList.Count - 1;
+    //        }
+    //    }
+
+    //    public void UpdateNowPlayingList2()
+    //    {
+    //        songList = DatabaseManager.SelectAllSongsFromNowPlaying();
+    //        currentSongIndex = ApplicationSettingsHelper.ReadSongIndex();
+    //        if (currentSongIndex >= songList.Count)
+    //        {
+    //            currentSongIndex = songList.Count - 1;
+    //        }
+    //    }
+
+    //    private async Task ScrobbleTrack()
+    //    {
+    //        if (!paused)
+    //        {
+    //            songPlayed += DateTime.Now - songsStart;
+    //        }
+    //        if (songPlayed.TotalSeconds >= BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * 0.5 || songPlayed.TotalSeconds >= 4 * 60)
+    //        {
+    //            DateTime start = DateTime.UtcNow - songPlayed;
+    //            int seconds = (int)start.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+    //            await LastFmManager.Current.TrackScroblle(new List<TrackScrobble>() { new TrackScrobble() {
+    //                    Artist = GetArtist(),
+    //                    Track = GetTitle(),
+    //                    Timestamp = seconds.ToString()
+    //                } });
+    //        }
+    //    }
+
+    //    private async Task ScrobbleNowPlaying()
+    //    {
+    //        if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSendNP))
+    //        {
+    //            await LastFmManager.Current.TrackUpdateNowPlaying(GetArtist(), GetTitle());
+    //        }
+    //    }
+
+    //    public void UpdateSongStatistics()
+    //    {
+    //        if (currentSongId > 0 && BackgroundMediaPlayer.Current.Position.TotalSeconds >= 5.0)
+    //        {
+    //            DatabaseManager.UpdateSongStatistics(currentSongId);
+    //        }
+    //    }
+
+    //    #region MediaPlayer Handlers
+
+    //    void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
+    //    {
+    //        //Diagnostics.Logger.SaveBG("BG media opened");
+    //        //Diagnostics.Logger.SaveToFileBG();
+
+    //        // wait for media to be ready
+    //        ValueSet message = new ValueSet();
+    //        message.Add(AppConstants.MediaOpened, "");
+    //        BackgroundMediaPlayer.SendMessageToForeground(message);
+    //        songPlayed = TimeSpan.Zero;
+    //        if (!paused)
+    //        {
+    //            sender.Play();
+    //            songsStart = DateTime.Now;
+    //            ScrobbleNowPlaying();
+    //            if (!startPosition.Equals(TimeSpan.Zero))
+    //            {
+    //                sender.Position = startPosition;
+    //                startPosition = TimeSpan.Zero;
+    //            }
+    //        }
+    //    }
+
+    //    private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+    //    {
+    //        //Diagnostics.Logger.SaveBG("BG NP ended");
+    //        //Diagnostics.Logger.SaveToFileBG();
+
+    //        if (repeat.Equals(RepeatEnum.NoRepeat))
+    //        {
+    //            SendSkipNext();
+    //        }
+    //        else if (repeat.Equals(RepeatEnum.RepeatOnce))
+    //        {
+    //            if (isSongRepeated)
+    //            {
+    //                SendSkipNext();
+    //            }
+    //            else
+    //            {
+    //                StartPlaying(currentSongIndex);
+    //            }
+    //            isSongRepeated = !isSongRepeated;
+    //        }
+    //        else if (repeat.Equals(RepeatEnum.RepeatPlaylist))
+    //        {
+    //            if (!isShuffleOn && !IsNext())
+    //            {
+    //                if (isPlaylistRepeated)
+    //                {
+    //                    SendSkipNext();
+    //                }
+    //                else
+    //                {
+    //                    ScrobbleTrack();
+    //                    ValueSet message = new ValueSet();
+    //                    message.Add(AppConstants.StartPlayback, 0);
+    //                    BackgroundMediaPlayer.SendMessageToBackground(message);
+    //                    //StartPlaying(0);
+    //                    currentSongIndex = 0;//trzeba ustawic wczesniej, poniewaz SendIndex() moze byc wykonane przed StartPlaying()
+    //                    SendIndex();
+    //                }
+    //                isPlaylistRepeated = !isPlaylistRepeated;
+    //            }
+    //            else
+    //            {
+    //                SendSkipNext();
+    //            }
+    //        }
+    //    }
+
+    //    private void mediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+    //    {
+    //        //Debug.WriteLine("Failed with error code " + args.ExtendedErrorCode.ToString());
+    //    }
+
+    //    public void RemoveHandlers()
+    //    {
+    //        mediaPlayer.MediaOpened -= MediaPlayer_MediaOpened;
+    //        mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
+    //        //mediaPlayer.CurrentStateChanged -= mediaPlayer_CurrentStateChanged;
+    //        mediaPlayer.MediaFailed -= mediaPlayer_MediaFailed;
+    //        mediaPlayer = null;
+    //    }
+
+        //private void mediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
+        //{
+
+        //    //if (sender.CurrentState == MediaPlayerState.Playing && startPosition != TimeSpan.FromSeconds(0))
+        //    //{
+        //    //    // if the start position is other than 0, then set it now
+        //    //    sender.Position = startPosition;
+        //    //    sender.Volume = 1.0;
+        //    //    startPosition = TimeSpan.FromSeconds(0);
+        //    //    sender.PlaybackMediaMarkers.Clear();
+        //    //    paused = false;
+        //    //}
+        //}
+        
+    #endregion
 }

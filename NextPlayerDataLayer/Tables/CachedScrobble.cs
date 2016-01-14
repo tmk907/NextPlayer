@@ -5,7 +5,8 @@ namespace NextPlayerDataLayer.Tables
     [Table("CachedScrobble")]
     public class CachedScrobble
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
+        public int id { get; set; }
         public string Artist { get; set; }
         public string Track { get; set; }
         public string Timestamp { get; set; }

@@ -65,10 +65,7 @@ namespace NextPlayerDataLayer.Services
             SessionKey = (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmSessionKey) ?? String.Empty).ToString();
             if (AreCredentialsSet())
             {
-                if (!IsSessionOn())
-                {
-                    SetSessionAndSendCached();
-                }
+                SetSessionAndSendCached();
             }
         }
 
@@ -202,28 +199,36 @@ namespace NextPlayerDataLayer.Services
             }
             if (code != ErrorCode.Nothing)
             {
+                string info = "";
                 switch (function)
                 {
                     case "track.scrobble":
                         List<TrackScrobble> list = (List<TrackScrobble>)data;
                         foreach(var item in list)
                         {
-                            DatabaseManager.Save(function, item.Artist, item.Track, item.Timestamp);
+                            await DatabaseManager.SaveAsync(function, item.Artist, item.Track, item.Timestamp);
                         }
+                        info = list[0].Artist + " " + list[0].Track;
                         break;
                     case "track.love":
                         Tuple<string, string> t = (Tuple<string, string>)data;
-                        DatabaseManager.Save(function, t.Item1, t.Item2);
+                        await DatabaseManager.SaveAsync(function, t.Item1, t.Item2);
+                        info = t.Item1 + "" + t.Item2;
                         break;
                     case "track.unlove":
                         Tuple<string, string> t2 = (Tuple<string, string>)data;
-                        DatabaseManager.Save(function, t2.Item1, t2.Item2);
+                        await DatabaseManager.SaveAsync(function, t2.Item1, t2.Item2);
+                        info = t2.Item1 + "" + t2.Item2;
+                        break;
+                    case "track.nowplaying":
+                        info = "nowplaying";
                         break;
                 }
+                Logger.SaveLastFm("Error Last.fm " + function + Environment.NewLine + info);
             }
         }
 
-        public async Task TrackScroblle(List<TrackScrobble> data)
+        private async Task TrackScroblle(List<TrackScrobble> data)
         {
             if (!AreCredentialsSet()) return;
             Dictionary<string, string> msg = new Dictionary<string, string>();
@@ -253,7 +258,7 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
-        public async Task TrackLove(string artist, string track)
+        private async Task TrackLove(string artist, string track)
         {
             if (!AreCredentialsSet()) return;
             Dictionary<string, string> msg = new Dictionary<string, string>
@@ -272,7 +277,7 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
-        public async Task TrackUnlove(string artist, string track)
+        private async Task TrackUnlove(string artist, string track)
         {
             if (!AreCredentialsSet()) return;
             Dictionary<string, string> msg = new Dictionary<string, string>
@@ -324,8 +329,10 @@ namespace NextPlayerDataLayer.Services
             SessionKey = "";
         }
         
-        private async Task SendCachedScrobbles()
+        public async Task SendCachedScrobbles()
         {
+            if (!AreCredentialsSet()) return;
+            //System.Diagnostics.Debug.WriteLine("sendcached1 " + DateTime.Now);
             var savedScrobbles = DatabaseManager.ReadAndDeleteAll();
             List<TrackScrobble> tracks = new List<TrackScrobble>();
             foreach(var scrobble in savedScrobbles)
@@ -333,13 +340,13 @@ namespace NextPlayerDataLayer.Services
                 switch (scrobble["function"])
                 {
                     case "track.scrobble":
-                        tracks.Add(new TrackScrobble() { Artist = scrobble["artist"], Timestamp = scrobble["timestamp"], Track = scrobble["title"] });
+                        tracks.Add(new TrackScrobble() { Artist = scrobble["artist"], Timestamp = scrobble["timestamp"], Track = scrobble["track"] });
                         break;
                     case "track.love":
-                        await TrackLove(scrobble["artist"], scrobble["title"]);
+                        await TrackLove(scrobble["artist"], scrobble["track"]);
                         break;
                     case "track.unlove":
-                        await TrackUnlove(scrobble["artist"], scrobble["title"]);
+                        await TrackUnlove(scrobble["artist"], scrobble["track"]);
                         break;
                 }
             }
@@ -352,12 +359,31 @@ namespace NextPlayerDataLayer.Services
             {
                 await TrackScroblle(tracks);
             }
+            //System.Diagnostics.Debug.WriteLine("sendcached2 " + DateTime.Now);
         }
 
         private async Task SetSessionAndSendCached()
         {
-            await SetMobileSession();
-            await SendCachedScrobbles();
+            if (!IsSessionOn())
+            {
+                await SetMobileSession();
+            }
+            //await SendCachedScrobbles();
+        }
+
+        public void CacheTrackScrobble(TrackScrobble scrobble)
+        {
+            DatabaseManager.Save("track.scrobble", scrobble.Artist, scrobble.Track, scrobble.Timestamp);
+        }
+
+        public async Task CacheTrackLove(string artist, string track)
+        {
+            await DatabaseManager.UpdateFavoriteAsync("track.love", artist, track);
+        }
+
+        public async Task CacheTrackUnlove(string artist, string track)
+        {
+            await DatabaseManager.UpdateFavoriteAsync("track.unlove", artist, track);
         }
     }
 }

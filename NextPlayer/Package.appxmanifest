@@ -57,6 +57,7 @@
         <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundNetworkTask.NetworkTask">
           <BackgroundTasks>
             <Task Type="systemEvent" />
+            <Task Type="timer" />
           </BackgroundTasks>
         </Extension>
       </Extensions>

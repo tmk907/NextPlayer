@@ -63,6 +63,12 @@ namespace NextPlayerDataLayer.Services
             return conn;
         }
 
+        private static SQLiteAsyncConnection LastFmDBConnectionAsync()
+        {
+            var conn = new SQLite.SQLiteAsyncConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.LastFmDBFileName), true);
+            return conn;
+        }
+
         //Only available songs
         private static SQLite.TableQuery<SongsTable2> SongsConn()
         {
@@ -97,6 +103,11 @@ namespace NextPlayerDataLayer.Services
         public static void CreateLastFmDB()
         {
             LastFmDBConnection().CreateTable<CachedScrobble>();
+        }
+
+        public static void DeleteLastFmDB()
+        {
+            LastFmDBConnection().DropTable<CachedScrobble>();
         }
 
         //public static void ResetSongsTable()
@@ -1485,11 +1496,22 @@ namespace NextPlayerDataLayer.Services
             });
         }
 
+        public static async Task SaveAsync(string function, string artist, string track, string timestamp = "")
+        {
+            await LastFmDBConnectionAsync().InsertAsync(new CachedScrobble()
+            {
+                Artist = artist,
+                Function = function,
+                Timestamp = timestamp,
+                Track = track
+            });
+        }
+
         public static List<Dictionary<string, string>> ReadAndDeleteAll()
         {
             List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
-
-            foreach(var item in LastFmDBConnection().Table<CachedScrobble>().ToList())
+            var conn = LastFmDBConnection();
+            foreach(var item in conn.Table<CachedScrobble>().ToList())
             {
                 list.Add(new Dictionary<string, string>() {
                     {"artist", item.Artist },
@@ -1498,9 +1520,48 @@ namespace NextPlayerDataLayer.Services
                     {"function", item.Function }
                 });
             }
-            LastFmDBConnection().DropTable<CachedScrobble>();
-            LastFmDBConnection().CreateTable<CachedScrobble>();
+            conn.DropTable<CachedScrobble>();
+            conn.CreateTable<CachedScrobble>();
             return list;
+        }
+
+        public static void UpdateFavorite(string function, string artist, string title)
+        {
+            int count = LastFmDBConnection().Table<CachedScrobble>().Where(s => s.Artist.Equals(artist) && s.Track.Equals(title)).ToList().Count;
+            if (count == 0)
+            {
+                LastFmDBConnection().Insert(new CachedScrobble()
+                {
+                    Artist = artist,
+                    Function = function,
+                    Timestamp = "",
+                    Track = title
+                });
+            }
+            else
+            {
+                LastFmDBConnection().Execute("UPDATE CachedScrobble SET function = ? WHERE artist = ? AND track = ?", function, artist, title);
+            }
+        }
+        public static async Task UpdateFavoriteAsync(string function, string artist, string title)
+        {
+
+            var l = await LastFmDBConnectionAsync().Table<CachedScrobble>().Where(s => s.Artist.Equals(artist) && s.Track.Equals(title)).ToListAsync();
+            int count = l.Count;
+            if (count == 0)
+            {
+                await LastFmDBConnectionAsync().InsertAsync(new CachedScrobble()
+                {
+                    Artist = artist,
+                    Function = function,
+                    Timestamp = "",
+                    Track = title
+                });
+            }
+            else
+            {
+                await LastFmDBConnectionAsync().ExecuteAsync("UPDATE CachedScrobble SET function = ? WHERE artist = ? AND track = ?", function, artist, title);
+            }
         }
 
         #endregion
