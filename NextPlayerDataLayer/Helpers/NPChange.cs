@@ -1,9 +1,5 @@
 ﻿using NextPlayerDataLayer.Constants;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 
@@ -34,6 +30,18 @@ namespace NextPlayerDataLayer.Helpers
             {
                 var value = new ValueSet();
                 value.Add(AppConstants.NowPlayingListChanged, "");
+                BackgroundMediaPlayer.SendMessageToBackground(value);
+            }
+        }
+
+        //same songs, different order or tags update
+        public static void SendMessageRefreshNP(int songId, string title, string artist)
+        {
+            if (IsMyBackgroundTaskRunning)
+            {
+                var value = new ValueSet();
+                
+                value.Add(AppConstants.NowPlayingListRefresh, songId + "!@#$" + title + "!@#$" + artist);
                 BackgroundMediaPlayer.SendMessageToBackground(value);
             }
         }

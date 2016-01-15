@@ -486,7 +486,6 @@ namespace NextPlayerDataLayer.Services
         {
             ConnectionDb().DeleteAll<NowPlayingTable>();
             NPChange.SendMessageNPChanged();
-
         }
 
         #endregion
@@ -1238,9 +1237,9 @@ namespace NextPlayerDataLayer.Services
             ConnectionDb().Update(song);
         }
 
-        public static void FillSongData(SongData song)
+        public static void UpdateNowPlayingSong(SongData song)
         {
-            ConnectionDb().Execute("UPDATE SongsTable2 SET Artists = ?, Comment = ?, Composers = ?, Conductor = ?, Disc = ?, DiscCount = ?, FirstArtist = ?, FirstComposer = ?, TrackCount = ?,  WHERE SongId = ?", song.Tag.Artists, song.Tag.Comment, song.Tag.Composers, song.Tag.Conductor, song.Tag.Disc, song.Tag.DiscCount, song.Tag.FirstArtist, song.Tag.FirstComposer, song.Tag.TrackCount, song.SongId);
+            ConnectionDb().Execute("Update NowPlayingTable SET Title = ?, Artist = ? WHERE SongId = ?", song.Tag.Title, song.Tag.Artists, song.SongId);
         }
 
         public async static Task UpdateSongStatisticsAync(int id)

@@ -97,7 +97,7 @@ namespace NextPlayer.ViewModel
             TagData.FirstComposer = GetFirst(tagData.Composers);
             songData.Tag = TagData;
             DatabaseManager.UpdateSongData(songData, songId);
-            Library.Current.UpdateSong(songData);
+            Library.Current.UpdateSong(songData);            
             SaveLater.Current.SaveTagsLater(songData);
             App.OnSongUpdated(songData.SongId);
             await systemTray.ProgressIndicator.HideAsync();

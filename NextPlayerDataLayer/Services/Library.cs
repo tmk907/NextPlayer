@@ -136,6 +136,8 @@ namespace NextPlayerDataLayer.Services
                     song.Title = updatedSong.Tag.Title;
                     song.TrackNumber = updatedSong.Tag.Track;
                     song.Year = updatedSong.Tag.Year;
+                    DatabaseManager.UpdateNowPlayingSong(updatedSong);
+                    NPChange.SendMessageRefreshNP(song.SongId, song.Title, song.Artist);
                     break;
                 }
             }

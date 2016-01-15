@@ -63,6 +63,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<AlbumItem>(
                     item =>
                     {
+                        FindIndex(item);
                         var g = DatabaseManager.GetSongItemsFromAlbum(item.AlbumParam, item.ArtistParam);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
@@ -106,6 +107,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<AlbumItem>(
                     item =>
                     {
+                        FindIndex(item);
                         String[] s = new String[4];
                         s[0] = "album";
                         s[1] = item.AlbumParam;
@@ -198,23 +200,7 @@ namespace NextPlayer.ViewModel
                     ?? (itemClicked = new RelayCommand<AlbumItem>(
                     item =>
                     {
-                        bool find = false;
-                        int i = 0;
-                        foreach (var a in Albums)
-                        {
-                            foreach (var b in a)
-                            {
-                                if (b.Album == item.Album)
-                                {
-                                    find = true;
-                                    index = i;
-                                    break;
-                                }
-                                i++;
-                            }
-                            if (find) break;
-                        }
-                        if (!find) index = 0;
+                        FindIndex(item);
                         String[] s = new String[4];
                         s[0] = "album";
                         s[1] = item.AlbumParam;
@@ -241,6 +227,27 @@ namespace NextPlayer.ViewModel
                         LoadAlbums();
                     }));
             }
+        }
+
+        private void FindIndex(AlbumItem item)
+        {
+            bool find = false;
+            int i = 0;
+            foreach (var a in Albums)
+            {
+                foreach (var b in a)
+                {
+                    if (b.Album == item.Album)
+                    {
+                        find = true;
+                        index = i;
+                        break;
+                    }
+                    i++;
+                }
+                if (find) break;
+            }
+            if (!find) index = 0;
         }
 
         private void LoadAlbums()
@@ -272,6 +279,7 @@ namespace NextPlayer.ViewModel
                     ?? (pinAlbum = new RelayCommand<AlbumItem>(
                     p =>
                     {
+                        FindIndex(p);
                         Pin(p);
                     }));
             }
@@ -371,6 +379,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<AlbumItem>(
                     item =>
                     {
+                        FindIndex(item);
                         String[] s = new String[3];
                         s[0] = "album";
                         s[1] = item.AlbumParam;

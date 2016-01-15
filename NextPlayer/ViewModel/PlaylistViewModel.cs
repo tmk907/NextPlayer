@@ -357,9 +357,10 @@ namespace NextPlayer.ViewModel
                     p =>
                     {
                         listView = (ListView)p;
+                        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
                         if (isNowPlaying)
                         {
-                            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                            
                             //Playlist = await DatabaseManager.SelectAllSongItemsFromNowPlaying();
                             LoadNowPlayingPlaylist();
                             PageTitle = loader.GetString("NowPlayingPlaylistPageTitle");
@@ -382,6 +383,7 @@ namespace NextPlayer.ViewModel
                             {
                                 LoadGenrePlaylist();
                                 PageTitle = genre.ToLower();
+                                if (genre == "") PageTitle = loader.GetString("UnknownGenre").ToLower();
                             }
                             else if (folderName != null)
                             {

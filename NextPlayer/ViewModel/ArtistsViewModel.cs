@@ -105,6 +105,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<ArtistItem>(
                     item =>
                     {
+                        FindIndex(item);
                         var g = DatabaseManager.GetSongItemsFromArtist(item.ArtistParam);
                         g.OrderBy(s => s.Album).ThenBy(t=>t.TrackNumber);
                         Library.Current.SetNowPlayingList(g);
@@ -150,6 +151,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<ArtistItem>(
                     item =>
                     {
+                        FindIndex(item);
                         String[] s = new String[2];
                         s[0] = "artist";
                         s[1] = item.ArtistParam;
@@ -171,6 +173,7 @@ namespace NextPlayer.ViewModel
                     ?? (pinArtist = new RelayCommand<ArtistItem>(
                     p =>
                     {
+                        FindIndex(p);
                         Pin(p);
                     }));
             }
@@ -240,6 +243,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<ArtistItem>(
                     item =>
                     {
+                        FindIndex(item);
                         String[] s = new String[2];
                         s[0] = "artist";
                         s[1] = item.ArtistParam;
@@ -261,23 +265,7 @@ namespace NextPlayer.ViewModel
                     ?? (itemClicked = new RelayCommand<ArtistItem>(
                     item =>
                     {
-                        bool find = false;
-                        int i = 0;
-                        foreach (var a in Artists)
-                        {
-                            foreach (var b in a)
-                            {
-                                if (b.Artist == item.Artist)
-                                {
-                                    find = true;
-                                    index = i;
-                                    break;
-                                }
-                                i++;
-                            }
-                            if (find) break;
-                        }
-                        if (!find) index = 0;
+                        FindIndex(item);
                         String[] s = new String[2];
                         s[0] = "artist";
                         s[1] = item.ArtistParam;
@@ -330,6 +318,27 @@ namespace NextPlayer.ViewModel
                         }
                     }));
             }
+        }
+
+        private void FindIndex(ArtistItem item)
+        {
+            bool find = false;
+            int i = 0;
+            foreach (var a in Artists)
+            {
+                foreach (var b in a)
+                {
+                    if (b.Artist == item.Artist)
+                    {
+                        find = true;
+                        index = i;
+                        break;
+                    }
+                    i++;
+                }
+                if (find) break;
+            }
+            if (!find) index = 0;
         }
 
         private async void LoadArtists()

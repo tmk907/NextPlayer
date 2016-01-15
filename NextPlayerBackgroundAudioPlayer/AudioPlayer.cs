@@ -196,6 +196,21 @@ namespace NextPlayerBackgroundAudioPlayer
                     case AppConstants.UpdateUVC:
                         UpdateUVCOnNewTrack();
                         break;
+                    case AppConstants.NowPlayingListRefresh:
+                        string p = "";
+                        try
+                        {
+                            p = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
+                            string[] s = p.Split(new string[] { "!@#$" }, StringSplitOptions.RemoveEmptyEntries);
+                            nowPlayingManager.UpdateSong(Int32.Parse(s[0]), s[1], s[2]);
+                            UpdateUVCOnNewTrack();
+                        }
+                        catch(Exception ex)
+                        {
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveBG("NowPlayingListRefresh" + Environment.NewLine + p + Environment.NewLine + ex.Message);
+                            NextPlayerDataLayer.Diagnostics.Logger.SaveToFileBG();
+                        }
+                        break;
                 }
             }
         }

@@ -61,7 +61,15 @@ namespace NextPlayer
         public App()
         {
             TelemetryClient = new TelemetryClient();
-            TelemetryClient.Context.Device.Model = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
+            try
+            {
+                TelemetryClient.Context.Device.Model = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
+            }
+            catch(Exception ex)
+            {
+                Logger.Save("SystemProductName" + Environment.NewLine + ex.Message);
+                Logger.SaveToFile();
+            }
             //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.DisableTelemetry = true;
             if (dev)
             {
@@ -139,7 +147,6 @@ namespace NextPlayer
                 SaveLater.Current.SaveAllNow();
                 //UpdateDB();
                 Logger.SaveFromSettingsToFile();
-
                 CreateTask();
             }
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.TileAppTransparent) == null)
@@ -494,6 +501,7 @@ namespace NextPlayer
 
         private async void CreateTask()
         {
+            CheckAppVersion();
             var taskRegistered = false;
             var taskName = "ScrobbleSenderNetworkTask";
 

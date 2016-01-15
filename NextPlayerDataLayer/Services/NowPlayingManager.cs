@@ -183,6 +183,11 @@ namespace NextPlayerDataLayer.Services
             playlist.LoadSongsFromDB();
         }
 
+        public void UpdateSong(int songId, string title, string artist)
+        {
+            playlist.UpdateSong(songId, title, artist);
+        }
+
         private void StopSongEvent()
         {
             UpdateSongStatistics();
@@ -628,6 +633,18 @@ namespace NextPlayerDataLayer.Services
             else
             {
                 maxQueueSize = 10 + (playlist.Count / 4);
+            }
+        }
+
+        public void UpdateSong(int songId, string title, string artist)
+        {
+            foreach(var song in playlist)
+            {
+                if (song.SongId == songId)
+                {
+                    song.Title = title;
+                    song.Artist = artist;
+                }
             }
         }
 

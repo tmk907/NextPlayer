@@ -17,7 +17,6 @@ using NextPlayerDataLayer.Diagnostics;
 namespace NextPlayerDataLayer.Services
 {
     public delegate void MediaImportedHandler(string s);
-    public delegate void SongUpdatedHandler();
 
     public class OwnFileAbstraction : TagLib.File.IFileAbstraction
     {
@@ -68,16 +67,6 @@ namespace NextPlayerDataLayer.Services
             if (MediaImported != null)
             {
                 MediaImported(s);
-            }
-        }
-
-        public static event SongUpdatedHandler SongUpdated;
-
-        public static void OnSongUpdated()
-        {
-            if (SongUpdated != null)
-            {
-                SongUpdated();
             }
         }
 

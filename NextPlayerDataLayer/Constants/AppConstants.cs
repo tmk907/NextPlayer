@@ -28,7 +28,7 @@ namespace NextPlayerDataLayer.Constants
         public const string MediaScan = "mediascan";
         public const string NowPlayingListChanged = "nplistchanged";
         public const string NowPlayingListSorted = "nplistsorted";
-
+        public const string NowPlayingListRefresh = "nplistrefresh";
         
         public const string SongId = "songid";
         public const string SongIndex = "songindex";

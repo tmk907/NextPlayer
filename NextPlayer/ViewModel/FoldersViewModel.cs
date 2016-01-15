@@ -163,6 +163,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<FolderItem>(
                     item =>
                     {
+                        index = Folders.IndexOf(item);
                         var g = DatabaseManager.GetSongItemsFromFolder(item.Directory);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
@@ -202,6 +203,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<FolderItem>(
                     item =>
                     {
+                        index = Folders.IndexOf(item);
                         String[] s = new String[3];
                         s[0] = "folder";
                         s[1] = item.Folder;
@@ -230,6 +232,7 @@ namespace NextPlayer.ViewModel
                     ?? (pinFolder = new RelayCommand<FolderItem>(
                     p =>
                     {
+                        index = Folders.IndexOf(p);
                         Pin(p);
                     }));
             }
@@ -299,6 +302,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<FolderItem>(
                     item =>
                     {
+                        index = Folders.IndexOf(item);
                         String[] s = new String[3];
                         s[0] = "folder";
                         s[1] = item.Directory;

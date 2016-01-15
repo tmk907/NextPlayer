@@ -1,8 +1,4 @@
-﻿using NextPlayerDataLayer.Constants;
-using NextPlayerDataLayer.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace NextPlayer.Converters
 {
@@ -31,7 +27,7 @@ namespace NextPlayer.Converters
 
         public static string[] ToStringArray(string s)
         {
-            string[] table = s.Split(new string[] { delimiter }, 5, System.StringSplitOptions.None);
+            string[] table = s.Split(new string[] { delimiter }, 5, StringSplitOptions.None);
             int i = 0;
             while (i < table.Length)
             {

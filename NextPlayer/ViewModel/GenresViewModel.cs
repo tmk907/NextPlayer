@@ -169,6 +169,7 @@ namespace NextPlayer.ViewModel
                     ?? (playNow = new RelayCommand<GenreItem>(
                     item =>
                     {
+                        index = Genres.IndexOf(item);
                         var g = DatabaseManager.GetSongItemsFromGenre(item.GenreParam);
                         Library.Current.SetNowPlayingList(g);
                         ApplicationSettingsHelper.SaveSongIndex(0);
@@ -208,6 +209,7 @@ namespace NextPlayer.ViewModel
                     ?? (addToPlaylist = new RelayCommand<GenreItem>(
                     item =>
                     {
+                        index = Genres.IndexOf(item);
                         String[] s = new String[2];
                         s[0] = "genre";
                         s[1] = item.GenreParam;
@@ -235,6 +237,7 @@ namespace NextPlayer.ViewModel
                     ?? (pinGenre = new RelayCommand<GenreItem>(
                     p =>
                     {
+                        index = genres.IndexOf(p);
                         Pin(p);
                     }));
             }
@@ -304,6 +307,7 @@ namespace NextPlayer.ViewModel
                     ?? (share = new RelayCommand<GenreItem>(
                     item =>
                     {
+                        index = genres.IndexOf(item);
                         String[] s = new String[3];
                         s[0] = "genre";
                         s[1] = item.GenreParam;

@@ -55,7 +55,7 @@ namespace NextPlayer.ViewModel
             }
             set
             {
-                ApplicationSettingsHelper.SaveSongIndex((int)value);
+                ApplicationSettingsHelper.SaveSongIndex(value);
             }
         }
         private AutoResetEvent SererInitialized;
@@ -805,10 +805,18 @@ namespace NextPlayer.ViewModel
         /// </summary>
         public void ForegroundApp_Resuming(object sender, object e)
         {
-            //Library.Current.Save("foreground resumed");
             ApplicationSettingsHelper.SaveSettingsValue(AppConstants.AppState, AppConstants.ForegroundAppActive);
-
-            SongItem song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+            SongItem song;
+            try
+            {
+                song = Library.Current.NowPlayingList.ElementAt(CurrentSongIndex);
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                App.TelemetryClient.TrackTrace("NPViewModel Resuming" + Environment.NewLine + Library.Current.NowPlayingList.Count + " " + CurrentSongIndex + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                song = new SongItem();
+            }
+            
             CurrentNr = CurrentSongIndex + 1;
             songId = song.SongId;
             SetCover(song.Path);
@@ -817,7 +825,6 @@ namespace NextPlayer.ViewModel
             Title = song.Title;
             fromDB = true;
             Rating = song.Rating;
-            
 
             if (IsMyBackgroundTaskRunning)
             {

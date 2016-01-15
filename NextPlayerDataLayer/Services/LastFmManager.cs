@@ -332,7 +332,6 @@ namespace NextPlayerDataLayer.Services
         public async Task SendCachedScrobbles()
         {
             if (!AreCredentialsSet()) return;
-            //System.Diagnostics.Debug.WriteLine("sendcached1 " + DateTime.Now);
             var savedScrobbles = DatabaseManager.ReadAndDeleteAll();
             List<TrackScrobble> tracks = new List<TrackScrobble>();
             foreach(var scrobble in savedScrobbles)
@@ -359,7 +358,6 @@ namespace NextPlayerDataLayer.Services
             {
                 await TrackScroblle(tracks);
             }
-            //System.Diagnostics.Debug.WriteLine("sendcached2 " + DateTime.Now);
         }
 
         private async Task SetSessionAndSendCached()

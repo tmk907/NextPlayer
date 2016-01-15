@@ -84,7 +84,8 @@ namespace NextPlayerDataLayer.Enums
             {Item.Rating, "Rating"},
             {Item.PlayCount, "PlayCount"},
             {Item.DateAdded, "DateAdded"},
-            {Item.LastPlayed, "LastPlayed"}
+            {Item.LastPlayed, "LastPlayed"},
+            {Item.FilePath, "Path" }
         };
 
         internal static Dictionary<string, string> SPConditionComparison = new Dictionary<string, string>()
