@@ -243,7 +243,7 @@ namespace NextPlayer.View
                         int i3 = html.IndexOf("<script>", i2);
 
                         string text = html.Substring(i2, i3 - i2);
-                        lyrics = text.Replace("<br>", "\n").Replace("<b>", "").Replace("</b>", "").Replace("&amp;", "&");
+                        lyrics = text.Replace("<br>", "\n").Replace("<b>", "").Replace("</b>", "").Replace("&amp;", "&").Replace("<i>","(").Replace("</i>", ")");
                         artistTB.Text = artist;
                         titleTB.Text = title;
                         lyricsTB.Text = lyrics;

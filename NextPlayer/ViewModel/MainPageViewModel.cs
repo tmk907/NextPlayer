@@ -415,9 +415,6 @@ namespace NextPlayer.ViewModel
                     {
                         if (IsMyBackgroundTaskRunning)
                         {
-                            //SendMessage(AppConstants.ShutdownBGPlayer);
-                            //RemoveMediaPlayerEventHandlers();
-                            App.TelemetryClient.TrackEvent("Stop button");
                             SendMessage(AppConstants.ShutdownBGPlayer);
                         }
                     }));

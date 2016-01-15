@@ -61,16 +61,26 @@ namespace NextPlayer
         public App()
         {
             TelemetryClient = new TelemetryClient();
-            try
+            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName) == null)
             {
-                TelemetryClient.Context.Device.Model = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
+                string name = "";
+                try
+                {
+                    name = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Save("SystemProductName" + Environment.NewLine + ex.Message);
+                    Logger.SaveToFile();
+                }
+                TelemetryClient.Context.Device.Model = name;
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DeviceName, name);
             }
-            catch(Exception ex)
+            else
             {
-                Logger.Save("SystemProductName" + Environment.NewLine + ex.Message);
-                Logger.SaveToFile();
+                TelemetryClient.Context.Device.Model = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName).ToString();
             }
-            //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.DisableTelemetry = true;
+            
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
@@ -144,7 +154,7 @@ namespace NextPlayer
 
                 SendLogs();
                 
-                SaveLater.Current.SaveAllNow();
+                //SaveLater.Current.SaveAllNow();
                 //UpdateDB();
                 Logger.SaveFromSettingsToFile();
                 CreateTask();

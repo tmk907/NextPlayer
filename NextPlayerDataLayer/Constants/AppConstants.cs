@@ -11,6 +11,7 @@ namespace NextPlayerDataLayer.Constants
         public const string AppVersion = "AppVersion";
         public const string LastFmDBFileName = "lastfm.db";
         public const string LastFmDBVersion = "lastfmDBVersion";
+        public const string DeviceName = "devicename";
 
         //Layout
         public const string AppTheme = "AppTheme";
