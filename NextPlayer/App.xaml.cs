@@ -37,8 +37,11 @@ namespace NextPlayer
         public static TelemetryClient TelemetryClient;
 
         private TransitionCollection transitions;
+#if DEBUG
         private bool dev = true;
-
+#else
+        private bool dev = false;
+#endif
         public static bool LastFmRateOn;
         public static int LastFmUnLove;
         public static int LastFmLove;
@@ -84,8 +87,7 @@ namespace NextPlayer
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "01fcaacd-5dd7-490e-b6a9-ebd5f927558e";
-                //Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "1180633f-bfda-4a57-9060-7ba3c812da5e";
+                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "6ac887c7-3342-4313-bfc5-3a6ab5cf8066";
             }
             else
             {
@@ -110,6 +112,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
+                TelemetryClient.TrackTrace("New instalation",Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Information);
             }
             else
             {
@@ -163,7 +166,7 @@ namespace NextPlayer
             {
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
             }
-            #region LastFm
+#region LastFm
 
             //aplikacja jest uruchomiona 1 raz lub po aktualizacji
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.LfmRateSongs) == null)
@@ -193,7 +196,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.LastFmDBVersion, 2);
             }
 
-            #endregion LastFm
+#endregion LastFm
             
             UnhandledException += App_UnhandledException;
         }

@@ -600,6 +600,10 @@ namespace NextPlayerDataLayer.Services
             {
                 lastPlayed.Clear();
             }
+            else
+            {
+                lastPlayed.Enqueue(currentIndex);
+            }
         }
 
         public void ChangeRepeat()
