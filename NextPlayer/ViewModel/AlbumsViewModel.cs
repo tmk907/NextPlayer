@@ -4,6 +4,7 @@ using NextPlayerDataLayer.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using GalaSoft.MvvmLight.Threading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,8 +41,10 @@ namespace NextPlayer.ViewModel
 
         private void OnLibraryUpdated(string s)
         {
-            Albums.Clear();
-            LoadAlbums();
+            DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                Albums.Clear();
+                LoadAlbums();
+            });
         }
 
         private void OnSongUpdated(int id)

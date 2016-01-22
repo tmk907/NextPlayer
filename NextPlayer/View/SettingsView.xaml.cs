@@ -294,7 +294,7 @@ namespace NextPlayer.View
             ProgressRing2.Visibility = Visibility.Collapsed;
             EnableControls();
 
-            App.TelemetryClient.TrackEvent("UpdateLibrary finished");
+            //App.TelemetryClient.TrackEvent("UpdateLibrary finished");
         }
 
         private void DisableControls()

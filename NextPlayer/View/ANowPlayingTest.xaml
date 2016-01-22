@@ -47,11 +47,11 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <!--All-->
-                    <RowDefinition Height="260" x:Name="row1"/>
-                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="320" x:Name="row1"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="124"/>
                     <RowDefinition Height="92"/>
-                    <RowDefinition Height="88"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="66"/>
                     <!--<RowDefinition/>-->
                     <!--<RowDefinition Height="230" x:Name="row1"/>
                     <RowDefinition MinHeight="36" MaxHeight="48"/>

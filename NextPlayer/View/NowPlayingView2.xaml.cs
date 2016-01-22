@@ -112,6 +112,13 @@ namespace NextPlayer.View
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            if (App.res == 1)
+            {
+                App.res = 2;
+                App.TelemetryClient.TrackTrace("Unknown res NP" 
+                    + Environment.NewLine + Window.Current.Bounds.Height + " " + LayoutRoot.ActualHeight + " " + ContentRoot.ActualHeight + " " + TitleStackPanel.ActualHeight 
+                    + Environment.NewLine+ContentRoot.ActualWidth, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Information);
+            }
             this.navigationHelper.OnNavigatedFrom(e);
         }
 

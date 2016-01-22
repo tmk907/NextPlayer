@@ -240,6 +240,89 @@ namespace NextPlayer.ViewModel
             }
         }
 
+        private RelayCommand<SongItem> addSongToPlaylist;
+
+        /// <summary>
+        /// Gets the AddSongToPlaylist.
+        /// </summary>
+        public RelayCommand<SongItem> AddSongToPlaylist
+        {
+            get
+            {
+                return addSongToPlaylist
+                    ?? (addSongToPlaylist = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "song";
+                        s[1] = item.SongId.ToString();
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
+        private RelayCommand<ArtistItem> addArtistToPlaylist;
+
+        /// <summary>
+        /// Gets the AddArtistToPlaylist.
+        /// </summary>
+        public RelayCommand<ArtistItem> AddArtistToPlaylist
+        {
+            get
+            {
+                return addArtistToPlaylist
+                    ?? (addArtistToPlaylist = new RelayCommand<ArtistItem>(
+                    item =>
+                    {
+                        String[] s = new String[2];
+                        s[0] = "artist";
+                        s[1] = item.ArtistParam;
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
+        private RelayCommand<AlbumItem> addAlbumToPlaylist;
+
+        /// <summary>
+        /// Gets the AddAlbumToPlaylist.
+        /// </summary>
+        public RelayCommand<AlbumItem> AddAlbumToPlaylist
+        {
+            get
+            {
+                return addAlbumToPlaylist
+                    ?? (addAlbumToPlaylist = new RelayCommand<AlbumItem>(
+                    item =>
+                    {
+                        String[] s = new String[4];
+                        s[0] = "album";
+                        s[1] = item.AlbumParam;
+                        s[2] = "artist";
+                        s[3] = item.ArtistParam;
+                        navigationService.NavigateTo(ViewNames.AddToPlaylistView, ParamConvert.ToString(s));
+                    }));
+            }
+        }
+
+        private RelayCommand<SongItem> addSongToNP;
+
+        /// <summary>
+        /// Gets the AddSongToNP.
+        /// </summary>
+        public RelayCommand<SongItem> AddSongToNP
+        {
+            get
+            {
+                return addSongToNP
+                    ?? (addSongToNP = new RelayCommand<SongItem>(
+                    item =>
+                    {
+                        Library.Current.AddToNowPlaying(item);
+                    }));
+            }
+        }
+
         private RelayCommand<AlbumItem> playAlbumNow;
 
         /// <summary>

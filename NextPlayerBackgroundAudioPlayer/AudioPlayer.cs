@@ -201,7 +201,7 @@ namespace NextPlayerBackgroundAudioPlayer
                         try
                         {
                             p = e.Data.Where(z => z.Key.Equals(key)).FirstOrDefault().Value.ToString();
-                            string[] s = p.Split(new string[] { "!@#$" }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] s = p.Split(new string[] { "!@#$" }, StringSplitOptions.None);//s[2](artist) can equal ""
                             nowPlayingManager.UpdateSong(Int32.Parse(s[0]), s[1], s[2]);
                             UpdateUVCOnNewTrack();
                         }

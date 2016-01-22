@@ -201,24 +201,30 @@ namespace NextPlayerDataLayer.Services
 
         private void obexService_ConnectionFailed(object sender, ConnectionFailedEventArgs e)
         {
-            filesToShare[0].SetStatus(FileShareStatus.Error);
-            filesToShare[0].SetProgress(0);
-            FileItemToShare fileToShare = filesToShare[0];
-            filesToShare.RemoveAt(0);
-            filesToShare.Add(fileToShare);
+            if (filesToShare.Count > 0)
+            {
+                filesToShare[0].SetStatus(FileShareStatus.Error);
+                filesToShare[0].SetProgress(0);
+                FileItemToShare fileToShare = filesToShare[0];
+                filesToShare.RemoveAt(0);
+                filesToShare.Add(fileToShare);
+                OnFailed(fileToShare);
+            }
             //OnRemoveFirstFile();
-            OnFailed(fileToShare);
         }
 
         private void obexService_DataTransferFailed(object sender, DataTransferFailedEventArgs e)
         {
-            filesToShare[0].SetStatus(FileShareStatus.Error);
-            filesToShare[0].SetProgress(0);
-            FileItemToShare fileToShare = filesToShare[0];
-            filesToShare.RemoveAt(0);
-            filesToShare.Add(fileToShare);
-            //OnRemoveFirstFile();
-            OnFailed(fileToShare);
+            if (filesToShare.Count > 0)
+            {
+                filesToShare[0].SetStatus(FileShareStatus.Error);
+                filesToShare[0].SetProgress(0);
+                FileItemToShare fileToShare = filesToShare[0];
+                filesToShare.RemoveAt(0);
+                filesToShare.Add(fileToShare);
+                //OnRemoveFirstFile();
+                OnFailed(fileToShare);
+            }
         }
 
         private void obexService_DataTransferProgressed(object sender, DataTransferProgressedEventArgs e)

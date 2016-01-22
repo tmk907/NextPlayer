@@ -4,6 +4,7 @@ using NextPlayerDataLayer.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using GalaSoft.MvvmLight.Threading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,9 +36,12 @@ namespace NextPlayer.ViewModel
             App.SongUpdated += new SongUpdatedHandler(OnSongUpdated);
         }
 
-        private void OnLibraryUpdated(string s)
+        private async void OnLibraryUpdated(string s)
         {
-            LoadSongs();
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
+            {
+                await LoadSongs();
+            });
         }
         private void OnSongUpdated(int id)
         {

@@ -47,6 +47,7 @@ namespace NextPlayer
         public static int LastFmLove;
         public static bool LastFmSendNP;
 
+        public static int res = 0;
         
         public static event SongUpdatedHandler SongUpdated;
         public static void OnSongUpdated(int id)
@@ -250,19 +251,26 @@ namespace NextPlayer
                 statusBar.ForegroundColor = Windows.UI.Colors.Black;
             }  
             bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
-            if (isPhoneAccent)
+            try
             {
-                App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                if (isPhoneAccent)
+                {
+                    App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                }
+                else
+                {
+                    string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
+                    byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
+                    Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
+                    ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
+                }
             }
-            else
+            catch(Exception ex)
             {
-                string hexColor = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppAccent) as string;
-                byte a = byte.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-                byte r = byte.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-                byte g = byte.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
-                byte b = byte.Parse(hexColor.Substring(7, 2), System.Globalization.NumberStyles.HexNumber);
-                Windows.UI.Color color = Windows.UI.Color.FromArgb(a, r, g, b);
-                ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
+                TelemetryClient.TrackTrace("User accent set" + Environment.NewLine + ex.Message);
             }
             if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
@@ -620,12 +628,22 @@ namespace NextPlayer
                 }
                 else
                 {
-                    Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height);
+                    
+                    string scale = "0";
+                    try
+                    {
+                        scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    Logger.Save("Unknown resolution" + Environment.NewLine + "Width:" + width + " Height:" + height+ " " + scale);
                     Logger.SaveToFile();
                 }
 
                 if (ApplicationSettingsHelper.ReadSettingsValue("dimensions") == null)
                 {
+                    res = 1;
                     var updateEvent = new Microsoft.ApplicationInsights.DataContracts.EventTelemetry();
                     updateEvent.Name = "Resolution";
                     updateEvent.Metrics["width"] = width;
