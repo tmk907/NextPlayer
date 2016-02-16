@@ -35,17 +35,6 @@ namespace NextPlayerDataLayer.Helpers
             return b;
         }
 
-        public static string CurrentStateString()
-        {
-            if (CurrentState())
-            {
-                return "ShuffleOn";
-            }
-            else
-            {
-                return "ShuffleOff";
-            }
-        }
         public static SolidColorBrush CurrentStateColor()
         {
             if (CurrentState())

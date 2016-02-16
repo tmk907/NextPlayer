@@ -138,11 +138,11 @@ namespace NextPlayer.View
 
             //Personalize
             //Color accent
-            //bool isPhoneAccent = (bool) ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
-            //if (isPhoneAccent)
-            //{
-            //    phoneAccentToggleSwitch.IsOn = false;
-            //}
+            bool isPhoneAccent = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
+            if (isPhoneAccent)
+            {
+                phoneAccentToggleSwitch.IsOn = false;
+            }
             //Theme
             string appTheme = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
             if (appTheme.Equals(AppThemeEnum.Dark.ToString()))
@@ -451,7 +451,7 @@ namespace NextPlayer.View
             Windows.UI.Color color = brush.Color;
             color.A = 144;
             ((SolidColorBrush)App.Current.Resources["TransparentColor"]).Color = color;
-            App.Current.Resources["UserAccentBrush"] = (SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"];
+            ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;
             App.Current.Resources["UserListFontColor"] = new SolidColorBrush(Windows.UI.Colors.White);
         }
 
@@ -461,7 +461,8 @@ namespace NextPlayer.View
         {
             if (((ToggleSwitch)sender).IsOn)
             {
-                App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                Windows.UI.Color color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;
+                ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, true);
             }
             else
@@ -475,7 +476,7 @@ namespace NextPlayer.View
                 ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.IsPhoneAccentSet, false);
             }
-            NextPlayer.Helpers.StyleHelper.ChangeMainPageButtonsBackground();
+            Helpers.StyleHelper.ChangeMainPageButtonsBackground();
         }
 
         private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)

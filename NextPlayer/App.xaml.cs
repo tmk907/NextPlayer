@@ -84,7 +84,13 @@ namespace NextPlayer
             {
                 TelemetryClient.Context.Device.Model = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName).ToString();
             }
-            
+            try
+            {
+                TelemetryClient.Context.Component.Version = GetAppVersion();
+            }
+            catch (Exception ex)
+            {
+            }
             if (dev)
             {
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
@@ -255,7 +261,8 @@ namespace NextPlayer
             {
                 if (isPhoneAccent)
                 {
-                    App.Current.Resources["UserAccentBrush"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                    Windows.UI.Color color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;
+                    ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;
                 }
                 else
                 {
@@ -569,6 +576,16 @@ namespace NextPlayer
             }
 
             await BackgroundExecutionManager.RequestAccessAsync();
+        }
+
+        private string GetAppVersion()
+        {
+            var pkgVersion = Package.Current.Id.Version;
+            string appVersion = pkgVersion.Build + "." +
+                                pkgVersion.Major + "." +
+                                pkgVersion.Minor + "." +
+                                pkgVersion.Revision;
+            return appVersion;
         }
 
         private void SetDimensions()

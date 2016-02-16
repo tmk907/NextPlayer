@@ -1260,6 +1260,8 @@ namespace NextPlayer.ViewModel
         }
 
 
+        #region Rating and playback rate
+
         /// <summary>
         /// The <see cref="RatingControlVisibility" /> property's name.
         /// </summary>
@@ -1325,5 +1327,7 @@ namespace NextPlayer.ViewModel
         {
             SendMessage(AppConstants.ChangeRate, percent);
         }
+
+        #endregion
     }
 }

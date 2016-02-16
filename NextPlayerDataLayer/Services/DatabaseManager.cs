@@ -1187,7 +1187,7 @@ namespace NextPlayerDataLayer.Services
             return list;
         }
 
-        public static ObservableCollection<SongItem> SelectAllSongItemsFromNowPlaying()
+        public static ObservableCollection<SongItem> SelectAllSongItemsFromNowPlaying()//! error?
         {
             var conn = ConnectionDb();
             var query = conn.Table<NowPlayingTable>().OrderBy(e => e.Position).ToList();

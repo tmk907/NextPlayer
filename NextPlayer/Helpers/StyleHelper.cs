@@ -1,10 +1,6 @@
 ﻿using NextPlayerDataLayer.Constants;
 using NextPlayerDataLayer.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -40,7 +36,7 @@ namespace NextPlayer.Helpers
             {
                 if (isPhoneAccent)
                 {
-                    App.Current.Resources["MainPageButtonsBackground"] = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]);
+                    ((SolidColorBrush)App.Current.Resources["MainPageButtonsBackground"]).Color = ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color;
                 }
                 else
                 {

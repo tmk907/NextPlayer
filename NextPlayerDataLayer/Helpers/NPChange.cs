@@ -40,7 +40,6 @@ namespace NextPlayerDataLayer.Helpers
             if (IsMyBackgroundTaskRunning)
             {
                 var value = new ValueSet();
-                
                 value.Add(AppConstants.NowPlayingListRefresh, songId + "!@#$" + title + "!@#$" + artist);
                 BackgroundMediaPlayer.SendMessageToBackground(value);
             }
