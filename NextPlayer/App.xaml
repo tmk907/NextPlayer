@@ -22,12 +22,6 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
-            <GridLength x:Key="ImageSize">230.0</GridLength>
-            <GridLength x:Key="RatingControlHeight">44.0</GridLength>
-            <GridLength x:Key="SongDescriptionHeight">87.5</GridLength>
-            <GridLength x:Key="PlayerButtonsHeight">80.0</GridLength>
-            <GridLength x:Key="TimeSliderHeight">60.0</GridLength>
-            
             
             <SolidColorBrush x:Key="UserAccentBrush" Color="{ThemeResource SystemColorControlAccentColor}"/>
             <SolidColorBrush x:Key="MainPageButtonsBackground" Color="{ThemeResource SystemColorControlAccentColor}"/>

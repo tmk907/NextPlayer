@@ -668,7 +668,7 @@ namespace NextPlayerDataLayer.Services
             {
                 lastPlayed.Clear();
             }
-            if (lastPlayed.Count == maxQueueSize)
+            if (lastPlayed.Count == maxQueueSize && lastPlayed.Count > 0)
             {
                 lastPlayed.Dequeue();
             }

@@ -66,7 +66,7 @@ namespace NextPlayer.ViewModel
             SererInitialized = new AutoResetEvent(false);
             _timer = new DispatcherTimer();
             App.Current.Suspending += ForegroundApp_Suspending;
-            App.Current.Resuming += ForegroundApp_Resuming;         
+            App.Current.Resuming += ForegroundApp_Resuming;
         }
 
         #region Properties
@@ -247,7 +247,7 @@ namespace NextPlayer.ViewModel
             {
                 if (currentTime == value)
                 {
-                    if (IsInDesignMode) currentTime = new TimeSpan(0, 5, 39);
+                    if (IsInDesignMode) currentTime = new TimeSpan(0, 1, 29);
                     return;
                 }
 
@@ -460,7 +460,7 @@ namespace NextPlayer.ViewModel
         {
             get
             {
-                if (IsInDesignMode) repeatButtonContent = "&#xE1cd;";
+                if (IsInDesignMode) repeatButtonContent = "\uE1cd";
                 return repeatButtonContent;
             }
 

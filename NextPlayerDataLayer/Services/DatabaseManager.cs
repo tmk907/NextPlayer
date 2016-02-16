@@ -621,6 +621,12 @@ namespace NextPlayerDataLayer.Services
 
         public static AlbumItem GetAlbumItem(string albumParam, string artistParam)
         {
+            if (albumParam == null)
+            {
+                Diagnostics.Logger.SaveBG("GetAlbumItem() albumParam == null");
+                Diagnostics.Logger.SaveToFileBG();
+                return new AlbumItem();
+            }
             List<SongsTable2> query;
             if (artistParam == null)
             {
@@ -630,7 +636,12 @@ namespace NextPlayerDataLayer.Services
             {
                 query = SongsConn().Where(a => a.Album.Equals(albumParam)).Where(b => b.Artists.Equals(artistParam)).ToList();
             }
-            
+            if (query.Count == 0)
+            {
+                Diagnostics.Logger.SaveBG("GetAlbumItem() query.Count == 0");
+                Diagnostics.Logger.SaveToFileBG();
+                return new AlbumItem();
+            }
             TimeSpan duration = TimeSpan.Zero;
             int songs = 0;
             string albumArtist = "";
@@ -1351,9 +1362,26 @@ namespace NextPlayerDataLayer.Services
         {
             Dictionary<string, Tuple<int,int>> dict = new Dictionary<string, Tuple<int,int>>();
             var result = ConnectionDb().Table<SongsTable2>().ToList();
+
+            string log = "";
             foreach (var x in result)
             {
-                dict.Add(x.Path, new Tuple<int,int>(x.IsAvailable,x.SongId));
+                if (!dict.ContainsKey(x.Path))
+                {
+                    dict.Add(x.Path, new Tuple<int, int>(x.IsAvailable, x.SongId));
+                }
+                else
+                {
+                    log += "Path " + x.Path + Environment.NewLine
+                        + dict[x.Path].Item1 + dict[x.Path].Item2 + Environment.NewLine
+                        + x.IsAvailable + x.SongId + Environment.NewLine
+                        + x.Album + " " + x.Artists + " " + x.Title + " " + x.DateAdded + Environment.NewLine;
+                }
+            }
+            if (log != "")
+            {
+                Diagnostics.Logger.SaveBG(log);
+                Diagnostics.Logger.SaveToFileBG();
             }
             return dict;
         }

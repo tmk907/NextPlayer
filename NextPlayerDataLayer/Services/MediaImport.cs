@@ -87,25 +87,31 @@ namespace NextPlayerDataLayer.Services
 
             foreach (var file in list)
             {
-                //Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
-                // Sprawdzanie rozmiaru nie działa
-                if (dict.TryGetValue(file.Path, out tuple))
+                string type = file.FileType.ToLower();
+                if (type == ".mp3" || type == ".m4a" || type == ".wma" ||
+                    type == ".wav" || type == ".aac" || type == ".asf" ||
+                    type == ".adt" || type == ".adts" || type == ".amr")
                 {
-                    if (tuple.Item1 == 0)//zaznaczony jako niedostepny
-                    {
-                        toAvailable.Add(tuple.Item2);
-                    }
-                    else//zaznaczony jako dostepny
-                    {
-                        toAvailable.Add(tuple.Item2);
-                    }
-                }
-                else
-                {
-                    SongData song = await CreateSongFromFile(file);
-                    newSongs.Add(song);
-                }
 
+                    //Windows.Storage.FileProperties.BasicProperties bp = await file.GetBasicPropertiesAsync();
+                    // Sprawdzanie rozmiaru nie działa
+                    if (dict.TryGetValue(file.Path, out tuple))
+                    {
+                        if (tuple.Item1 == 0)//zaznaczony jako niedostepny
+                        {
+                            toAvailable.Add(tuple.Item2);
+                        }
+                        else//zaznaczony jako dostepny
+                        {
+                            toAvailable.Add(tuple.Item2);
+                        }
+                    }
+                    else
+                    {
+                        SongData song = await CreateSongFromFile(file);
+                        newSongs.Add(song);
+                    }
+                }
                 w1 = (100 * count / all);
                 w2 = (100 * (count - 1) / all);
 
@@ -299,110 +305,7 @@ namespace NextPlayerDataLayer.Services
             }
         }
 
-        public async static Task UpdateFileTags(SongData songData)
-        {            
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(songData.Path);
-
-                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
-                {
-                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
-                    {
-                        using(File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
-                        {
-                            tagFile.Tag.AlbumArtists = null;
-                            tagFile.Tag.Composers = null;
-                            tagFile.Tag.Performers = null;
-                            tagFile.Tag.Album = songData.Tag.Album;
-                            tagFile.Tag.AlbumArtists = new string[] { songData.Tag.AlbumArtist };
-                            tagFile.Tag.Performers = songData.Tag.Artists.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                            tagFile.Tag.Comment = songData.Tag.Comment;
-                            tagFile.Tag.Composers = songData.Tag.Composers.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                            tagFile.Tag.Conductor = songData.Tag.Conductor;
-                            tagFile.Tag.Disc = (uint)songData.Tag.Disc;
-                            tagFile.Tag.Genres = new string[] { songData.Tag.Genre };
-                            tagFile.Tag.Title = songData.Tag.Title;
-                            tagFile.Tag.Track = (uint)songData.Tag.Track;
-                            tagFile.Tag.Year = (uint)songData.Tag.Year;
-                            tagFile.Save();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Save("UpdateFileTags() " + ex.Message);
-                Logger.SaveToFile();
-            }
-        }
-
-        public async static Task UpdateLyrics(int songId, string lyrics)
-        {
-            string path = DatabaseManager.GetFileInfo(songId).FilePath;
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
-                {
-                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
-                    {
-                        using (File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
-                        {
-                            tagFile.Tag.Lyrics = lyrics;
-                            tagFile.Save();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Save("UpdateLyrics() " + ex.Message);
-                Logger.SaveToFile();
-            }
-        }
-
-        public async static Task UpdateRating(int songId, int rating)
-        {            
-            string path = DatabaseManager.GetFileInfo(songId).FilePath;
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                using (Stream fileReadStream = await file.OpenStreamForReadAsync())
-                {
-                    using (Stream fileWriteStream = await file.OpenStreamForWriteAsync())
-                    {
-                        using (File tagFile = TagLib.File.Create(new OwnFileAbstraction(file.Name, fileReadStream, fileWriteStream)))
-                        {
-                            if (tagFile.TagTypes.ToString().Contains(TagTypes.Id3v2.ToString()))
-                            {
-                                Tag tags = tagFile.GetTag(TagTypes.Id3v2);
-
-                                TagLib.Id3v2.PopularimeterFrame pop = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tags, "Windows Media Player 9 Series", true);
-                                if (pop != null)
-                                {
-                                    if (rating == 5) pop.Rating = 255;
-                                    else if (rating == 4) pop.Rating = 196;
-                                    else if (rating == 3) pop.Rating = 128;
-                                    else if (rating == 2) pop.Rating = 64;
-                                    else if (rating == 1) pop.Rating = 1;
-                                    else if (rating == 0) pop.Rating = 0;
-
-                                    TagLib.Id3v2.Tag.DefaultVersion = 3;
-                                    TagLib.Id3v2.Tag.ForceDefaultVersion = true;
-                                    tagFile.Save();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Save("UpdateRating() " + ex.Message);
-                Logger.SaveToFile();
-            }
-        }
+        
 
         //public static async Task UpdateDB(IProgress<int> progress, string dbVersion)
         //{

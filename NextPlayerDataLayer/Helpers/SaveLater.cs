@@ -82,11 +82,12 @@ namespace NextPlayerDataLayer.Helpers
             {
                 var currSong = Library.Current.GetCurrentPlayingSong();
                 if (currSong == null) return;
+                FileTagsUpdater tagsUpdater = new FileTagsUpdater();
                 foreach (var item in songs)
-                {
+                {                   
                     if (currSong.SongId != item.SongId)
                     {
-                        await MediaImport.UpdateFileTags(item);
+                        await tagsUpdater.UpdateFileTags(item);
                     }
                     else
                     {
@@ -109,11 +110,12 @@ namespace NextPlayerDataLayer.Helpers
             {
                 var currSong = Library.Current.GetCurrentPlayingSong();
                 if (currSong == null) return;
+                FileTagsUpdater tagsUpdater = new FileTagsUpdater();
                 foreach (var item in ratings)
                 {
                     if (currSong.SongId != item.Item1)
                     {
-                        await MediaImport.UpdateRating(item.Item1, item.Item2);
+                        await tagsUpdater.UpdateRating(item.Item1, item.Item2);
                     }
                     else
                     {
@@ -136,11 +138,12 @@ namespace NextPlayerDataLayer.Helpers
             {
                 var currSong = Library.Current.GetCurrentPlayingSong();
                 if (currSong == null) return;
-                foreach(var item in cachedLyrics)
+                FileTagsUpdater tagsUpdater = new FileTagsUpdater();
+                foreach (var item in cachedLyrics)
                 {
                     if (currSong.SongId != item.Item1)
                     {
-                        await MediaImport.UpdateLyrics(item.Item1, item.Item2);
+                        await tagsUpdater.UpdateLyrics(item.Item1, item.Item2);
                     }
                     else
                     {

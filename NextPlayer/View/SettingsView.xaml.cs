@@ -141,7 +141,7 @@ namespace NextPlayer.View
             bool isPhoneAccent = (bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsPhoneAccentSet);
             if (isPhoneAccent)
             {
-                phoneAccentToggleSwitch.IsOn = false;
+                phoneAccentToggleSwitch.IsOn = true;
             }
             //Theme
             string appTheme = (string)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.AppTheme);
@@ -481,7 +481,7 @@ namespace NextPlayer.View
 
         private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            //phoneAccentToggleSwitch.IsOn = false;
+            phoneAccentToggleSwitch.IsOn = false;
             Rectangle rect = sender as Rectangle;
             Windows.UI.Color color = ((SolidColorBrush)rect.Fill).Color;
             ((SolidColorBrush)App.Current.Resources["UserAccentBrush"]).Color = color;

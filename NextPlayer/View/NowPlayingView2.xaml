@@ -8,66 +8,68 @@
     xmlns:helpers="using:NextPlayer.Helpers"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:rating="using:Bratched.Tools.RatingControl"
     xmlns:RatingControl="using:JISoft.RatingControl" 
     Loaded="MainPage_Loaded"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding NowPlayingVM, Mode=OneWay, Source={StaticResource Locator}}">
+    DataContext="{Binding NowPlayingVM, Source={StaticResource Locator}, Mode=OneWay}">
 
     <Grid x:Name="LayoutRoot">
-
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="18*"/>
         </Grid.RowDefinitions>
-        <!--<Image 
-            Grid.RowSpan="2"
-            x:Name="imageBG"
-            Stretch="UniformToFill"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Source="/Assets/Wallpapers/wallpaper 18.jpg"
-            />
-        <Rectangle Grid.RowSpan="2" Fill="#80161616"/>-->
         <!-- Title Panel -->
-        <StackPanel Grid.Row="0" x:Name="TitleStackPanel" Margin="19,0,0,0">
-            <TextBlock x:Uid="AppNameTextBlock"  Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock x:Uid="NowPlayingPageTitle" Text="now playing" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
-        </StackPanel>
-
-
+        <Grid Grid.Row="0" x:Name="TitleStackPanel" Margin="19,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                x:Uid="AppName"  
+                       Text="NEXT PLAYER"
+                       Style="{ThemeResource TitleTextBlockStyle}" 
+                       Margin="0,12,0,0"/>
+            <TextBlock Grid.Row="1"
+                x:Uid="NowPlayingPageTitle" 
+                       Text="now playing" 
+                       Margin="0,-8,0,8" 
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource HeaderTextBlockStyle}" 
+                       CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </Grid>
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{Binding Height, ElementName=row1}" x:Name="column1"/>
-                    <ColumnDefinition MinWidth="88"/>
+                    <ColumnDefinition Width="20*" x:Name="column1"/>
+                    <ColumnDefinition Width="7*" MinWidth="88"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="{StaticResource ImageSize}" x:Name="row1"/>
-                    <RowDefinition Height="{StaticResource RatingControlHeight}"/>
-                    <RowDefinition Height="{StaticResource SongDescriptionHeight}"/>
-                    <RowDefinition Height="{StaticResource PlayerButtonsHeight}"/>
-                    <RowDefinition Height="{StaticResource TimeSliderHeight}"/>
+                    <RowDefinition Height="48*" x:Name="row1"/>
+                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="18*"/>
+                    <RowDefinition Height="16*"/>
+                    <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Grid.Column="0"
+                <local:SizeNotifyPanel x:Name="Content" Grid.Row="0" Grid.Column="0">
+                    <Image Grid.Row="0" Grid.Column="0"
                     x:Name="CoverImage" 
                     Stretch="Fill"
-                    Width="{Binding Height, ElementName=row1, Converter={StaticResource GridLengthToDoubleConverter}}"
-                    Height="{Binding Height, ElementName=row1, Converter={StaticResource GridLengthToDoubleConverter}}"
+                    Height="{Binding Size.Height, ElementName=Content}"
+                    Width="{Binding Size.Height, ElementName=Content}"
                     Source="{Binding Cover}" 
                     VerticalAlignment="Bottom" 
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Center"
                     PointerPressed="Image_Pressed"
                     PointerReleased="Image_Released"
                     PointerExited="Image_Exited"
                     DoubleTapped="Image_DoubleTapped"/>
+                </local:SizeNotifyPanel>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -255,6 +257,7 @@
                             Maximum="{Binding ProgressBarMaxValue, Mode=TwoWay}" 
                             Value="{Binding ProgressBarValue, Mode=TwoWay}" 
                             HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Center"
                             Style="{StaticResource SliderStyle1}" 
                              >
                     </Slider>
