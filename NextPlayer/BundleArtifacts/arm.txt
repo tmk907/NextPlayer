@@ -1,0 +1,3 @@
+MainPackage=C:\Users\Tomasz\Source\Repos\NextPlayer\NextPlayer\bin\ARM\Release\NextPlayer_2015.807.1.1_Bundle\NextPlayer_2015.807.1.1_ARM.appx
+SymbolPackage=C:\Users\Tomasz\Source\Repos\NextPlayer\NextPlayer\AppPackages\NextPlayer_2015.807.1.1_Test\NextPlayer_2015.807.1.1_ARM.appxsym
+ResourcePack=C:\Users\Tomasz\Source\Repos\NextPlayer\NextPlayer\bin\ARM\Release\NextPlayer_2015.807.1.1_Bundle\NextPlayer_2015.807.1.1_language-pl.appx

@@ -142,22 +142,22 @@ namespace NextPlayer.View
             FlyoutBase.GetAttachedFlyout(this).Hide();
         }
 
-        private PlaylistItem p;
-        private void Delete_Click(object sender, RoutedEventArgs e)
-        {
-            p = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
+            private PlaylistItem p;
+            private void Delete_Click(object sender, RoutedEventArgs e)
+            {
+                p = (e.OriginalSource as FrameworkElement).DataContext as PlaylistItem;
             
-            FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["DeletePlaylistFlyout"]);
-            FlyoutBase.ShowAttachedFlyout(this);
-        }
+                FlyoutBase.SetAttachedFlyout(this, (FlyoutBase)this.Resources["DeletePlaylistFlyout"]);
+                FlyoutBase.ShowAttachedFlyout(this);
+            }
 
-        private void DeleteConfirm_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
-            ViewModel.DeletePlaylist(p);
+            private void DeleteConfirm_Click(object sender, RoutedEventArgs e)
+            {
+                PlaylistsViewModel ViewModel = (PlaylistsViewModel)DataContext;
+                ViewModel.DeletePlaylist(p);
             
-            FlyoutBase.GetAttachedFlyout(this).Hide();
-        }
+                FlyoutBase.GetAttachedFlyout(this).Hide();
+            }
 
         private void AddToNP_Click(object sender, RoutedEventArgs e)
         {

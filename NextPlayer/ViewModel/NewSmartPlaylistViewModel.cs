@@ -628,14 +628,14 @@ namespace NextPlayer.ViewModel
         }
 
 
-        private GalaSoft.MvvmLight.Command.RelayCommand cancel_Click;
+        private RelayCommand cancel_Click;
         
-        public GalaSoft.MvvmLight.Command.RelayCommand Cancel_Click
+        public RelayCommand Cancel_Click
         {
             get
             {
                 return cancel_Click
-                    ?? (cancel_Click = new GalaSoft.MvvmLight.Command.RelayCommand(
+                    ?? (cancel_Click = new RelayCommand(
                     () =>
                     {
                         navigationService.GoBack();

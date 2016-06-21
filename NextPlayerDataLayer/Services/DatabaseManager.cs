@@ -164,6 +164,11 @@ namespace NextPlayerDataLayer.Services
             conn.CreateTable<PlainPlaylistEntryTable>();
         }
 
+        public static void UpdateDBToVersion3()
+        {
+            ConnectionDb().Execute("UPDATE SongsTable2 SET Lyrics = ? WHERE Lyrics LIKE ?", "", "%script src%");
+        }
+
         #region Insert
 
         public static int InsertPlainPlaylist(string _name)
@@ -1538,12 +1543,13 @@ namespace NextPlayerDataLayer.Services
         {
             List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
             var conn = LastFmDBConnection();
-            foreach(var item in conn.Table<CachedScrobble>().ToList())
+            var table = conn.Table<CachedScrobble>().ToList();
+            foreach (var item in table)
             {
                 list.Add(new Dictionary<string, string>() {
                     {"artist", item.Artist },
                     {"track", item.Track },
-                    {"timestamp", item.Timestamp },
+                    {"timestamp", item.Timestamp??"" },
                     {"function", item.Function }
                 });
             }

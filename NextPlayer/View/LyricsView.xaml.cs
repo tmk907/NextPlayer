@@ -156,13 +156,13 @@ namespace NextPlayer.View
         async private void ShowLyrics()
         {
             statusTextBlock.Text = loader.GetString("Connecting") + "...";
-            statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            webView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            statusTextBlock.Visibility = Visibility.Visible;
+            webView1.Visibility = Visibility.Collapsed;
             string result = await ReadDataFromWeb("http://lyrics.wikia.com/api.php?action=lyrics&artist=" + artist + "&song=" + title + "&fmt=realjson");
             if (result == null || result == "")
             {
                 statusTextBlock.Text = loader.GetString("ConnectionError");
-                statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                statusTextBlock.Visibility = Visibility.Visible;
                 return;
             }
             JsonValue jsonList;
@@ -173,23 +173,22 @@ namespace NextPlayer.View
                 address += "?useskin=wikiamobile";
                 try
                 {
-                    System.Uri a = new Uri(address);
+                    Uri a = new Uri(address);
                     webView1.Navigate(a);
-                    webView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                    statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    webView1.Visibility = Visibility.Visible;
+                    statusTextBlock.Visibility = Visibility.Collapsed;
                 }
                 catch (FormatException e)
                 {
                     statusTextBlock.Text = loader.GetString("ConnectionError");
-                    statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    statusTextBlock.Visibility = Visibility.Visible;
                 }
             }
             else
             {
                 statusTextBlock.Text = loader.GetString("ConnectionError");
                 statusTextBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            }
-            
+            }           
         }
 
         async private Task<string> ReadDataFromWeb(string a)
@@ -223,7 +222,7 @@ namespace NextPlayer.View
         {
             if (original)
             {
-                ParseLyrics();
+                //ParseLyrics();
                 original = false;
             }
         }
@@ -278,7 +277,7 @@ namespace NextPlayer.View
             title = editTitle.Text;
             FlyoutBase.GetAttachedFlyout(this).Hide();
             WebVisibility(true);
-            appBarSave.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            //appBarSave.Visibility = Windows.UI.Xaml.Visibility.Visible;
             ShowLyrics();
         }
 
@@ -294,19 +293,19 @@ namespace NextPlayer.View
         {
             if (visible)
             {
-                WebGrid.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                LyricsGrid.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                WebGrid.Visibility = Visibility.Visible;
+                LyricsGrid.Visibility = Visibility.Collapsed;
             }
             else
             {
-                WebGrid.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                LyricsGrid.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                WebGrid.Visibility = Visibility.Collapsed;
+                LyricsGrid.Visibility = Visibility.Visible;
             }
         }
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            ParseLyrics();
+            //ParseLyrics();
         }
 
     }

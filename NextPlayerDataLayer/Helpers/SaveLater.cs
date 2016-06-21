@@ -58,7 +58,7 @@ namespace NextPlayerDataLayer.Helpers
 
         public async Task SaveAllNow()
         {
-            await SaveLyricsNow();
+            //await SaveLyricsNow();
             await SaveRatingsNow();
             await SaveTagsNow();
         }
@@ -132,31 +132,31 @@ namespace NextPlayerDataLayer.Helpers
         }
 
         public async Task SaveLyricsNow()
-        {
-            List<Tuple<int, string>> l = new List<Tuple<int, string>>();
-            if (cachedLyrics.Count != 0)
-            {
-                var currSong = Library.Current.GetCurrentPlayingSong();
-                if (currSong == null) return;
-                FileTagsUpdater tagsUpdater = new FileTagsUpdater();
-                foreach (var item in cachedLyrics)
-                {
-                    if (currSong.SongId != item.Item1)
-                    {
-                        await tagsUpdater.UpdateLyrics(item.Item1, item.Item2);
-                    }
-                    else
-                    {
-                        l.Add(item);
-                    }
-                }
-                cachedLyrics = new List<Tuple<int, string>>();
-                ApplicationSettingsHelper.ReadResetSettingsValue("savelaterlyrics");
-                foreach(var item in l)
-                {
-                    SaveLyricsLater(item.Item1, item.Item2);
-                }
-            }
+        {           
+            //List<Tuple<int, string>> l = new List<Tuple<int, string>>();
+            //if (cachedLyrics.Count != 0)
+            //{
+            //    var currSong = Library.Current.GetCurrentPlayingSong();
+            //    if (currSong == null) return;
+            //    FileTagsUpdater tagsUpdater = new FileTagsUpdater();
+            //    foreach (var item in cachedLyrics)
+            //    {
+            //        if (currSong.SongId != item.Item1)
+            //        {
+            //            await tagsUpdater.UpdateLyrics(item.Item1, item.Item2);
+            //        }
+            //        else
+            //        {
+            //            l.Add(item);
+            //        }
+            //    }
+            //    cachedLyrics = new List<Tuple<int, string>>();
+            //    ApplicationSettingsHelper.ReadResetSettingsValue("savelaterlyrics");
+            //    foreach(var item in l)
+            //    {
+            //        SaveLyricsLater(item.Item1, item.Item2);
+            //    }
+            //}
         }
 
         public void SaveTagsLater(SongData song)
@@ -195,9 +195,9 @@ namespace NextPlayerDataLayer.Helpers
 
         public void SaveLyricsLater(int songId, string lyrics)
         {
-            cachedLyrics.Add(new Tuple<int, string>(songId, lyrics));
-            string val = (ApplicationSettingsHelper.ReadSettingsValue("savelaterlyrics") ?? "").ToString() + songId + "|";
-            ApplicationSettingsHelper.SaveSettingsValue("savelaterlyrics", val);
+            //cachedLyrics.Add(new Tuple<int, string>(songId, lyrics));
+            //string val = (ApplicationSettingsHelper.ReadSettingsValue("savelaterlyrics") ?? "").ToString() + songId + "|";
+            //ApplicationSettingsHelper.SaveSettingsValue("savelaterlyrics", val);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace NextPlayerDataLayer.Services
         private static Library instance = null;
         private Library()
         {
-            MediaImport.MediaImported += new MediaImportedHandler(UpdateLibrary);
+            
         }
 
         public static Library Current
@@ -350,22 +350,10 @@ namespace NextPlayerDataLayer.Services
             return imagePath;
         }
 
-        private void UpdateLibrary(string s)
-        {
-            //if (_songs.Count != 0) GetSongsFromDB();
-            //if (_albums.Count != 0) GetAlbumsFromDB();
-            //if (_artists.Count != 0) GetArtistsFromDB();
-            //if (_folders.Count != 0) GetFoldersFromDB();
-            //if (_genres.Count != 0) GetGenresFromDB();
-            //if (_playlists.Count != 0) GetPlaylistsFromDB();
-        }
-
-        
-
         public void SetDB()
         {
             DatabaseManager.CreateDatabase();
-            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 2);
+            ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
             int i;
             i = DatabaseManager.InsertSmartPlaylist2("Ostatnio dodane", 50, SPUtility.SortBy.MostRecentlyAdded);
             DatabaseManager.InsertSmartPlaylistEntry2(i, SPUtility.Item.DateAdded, SPUtility.Comparison.IsGreater, DateTime.Now.Subtract(TimeSpan.FromDays(14)).Ticks.ToString());

@@ -120,31 +120,49 @@ namespace NextPlayer.View
         {
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-            if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
+            if (!settings.Values.ContainsKey("Win10Version"))
             {
-                settings.Values.Add(AppConstants.IsReviewed, 0);
-                settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+                settings.Values.Add("Win10Version", 0);
+                ResourceLoader loader = new ResourceLoader();
+                string content = "Try out Next-Player! \nNew music player designed for Windows 10.";
+                MessageDialog mydial = new MessageDialog(content);
+                mydial.Title = loader.GetString("New music player");
+                mydial.Commands.Add(new UICommand(
+                    "Download",
+                    new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick10)));
+                mydial.Commands.Add(new UICommand(
+                   "Later",
+                   new UICommandInvokedHandler(this.CommandInvokedHandler_noclick)));
+                await mydial.ShowAsync();
             }
             else
             {
-                int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
-                long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
-                TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
-                if (isReviewed>=0 && isReviewed<8 && TimeSpan.FromDays(5)<=elapsed)//!!!!!!!!! <=
+                if (!settings.Values.ContainsKey(AppConstants.IsReviewed))
                 {
-                    settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
-                    settings.Values[AppConstants.IsReviewed] = isReviewed++;
-                    ResourceLoader loader = new ResourceLoader();
+                    settings.Values.Add(AppConstants.IsReviewed, 0);
+                    settings.Values.Add(AppConstants.LastReviewRemind, DateTime.Today.Ticks);
+                }
+                else
+                {
+                    int isReviewed = Convert.ToInt32(settings.Values[AppConstants.IsReviewed]);
+                    long dateticks = (long)(settings.Values[AppConstants.LastReviewRemind]);
+                    TimeSpan elapsed = TimeSpan.FromTicks(DateTime.Today.Ticks - dateticks);
+                    if (isReviewed >= 0 && isReviewed < 8 && TimeSpan.FromDays(5) <= elapsed)//!!!!!!!!! <=
+                    {
+                        settings.Values[AppConstants.LastReviewRemind] = DateTime.Today.Ticks;
+                        settings.Values[AppConstants.IsReviewed] = isReviewed++;
+                        ResourceLoader loader = new ResourceLoader();
 
-                    MessageDialog mydial = new MessageDialog(loader.GetString("RateAppMsg"));
-                    mydial.Title = loader.GetString("RateAppTitle");
-                    mydial.Commands.Add(new UICommand(
-                        loader.GetString("Yes"),
-                        new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick)));
-                    mydial.Commands.Add(new UICommand(
-                       loader.GetString("Later"),
-                       new UICommandInvokedHandler(this.CommandInvokedHandler_noclick)));
-                    await mydial.ShowAsync();
+                        MessageDialog mydial = new MessageDialog(loader.GetString("RateAppMsg"));
+                        mydial.Title = loader.GetString("RateAppTitle");
+                        mydial.Commands.Add(new UICommand(
+                            loader.GetString("Yes"),
+                            new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick)));
+                        mydial.Commands.Add(new UICommand(
+                           loader.GetString("Later"),
+                           new UICommandInvokedHandler(this.CommandInvokedHandler_noclick)));
+                        await mydial.ShowAsync();
+                    }
                 }
             }
         }
@@ -160,6 +178,14 @@ namespace NextPlayer.View
             settings.Values[AppConstants.IsReviewed] = -1;
 
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=" + AppConstants.AppId));
+        }
+
+        private async void CommandInvokedHandler_yesclick10(IUICommand command)
+        {
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            settings.Values[AppConstants.IsReviewed] = -1;
+            App.TelemetryClient.TrackEvent("Download Next-Player");
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?ProductId=9nblggh67n4f"));
         }
 
     }

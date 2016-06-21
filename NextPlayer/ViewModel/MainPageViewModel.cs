@@ -423,9 +423,6 @@ namespace NextPlayer.ViewModel
 
         #endregion
 
-
-
-
         public void Activate(object parameter, Dictionary<string, object> state)
         {
             //NextPlayerDataLayer.Diagnostics.Logger.Save("FG Main activate");

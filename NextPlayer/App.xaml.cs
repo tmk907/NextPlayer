@@ -165,7 +165,7 @@ namespace NextPlayer
                 SendLogs();
                 
                 //SaveLater.Current.SaveAllNow();
-                //UpdateDB();
+                UpdateDB();
                 Logger.SaveFromSettingsToFile();
                 CreateTask();
             }
@@ -497,12 +497,19 @@ namespace NextPlayer
 
         private void UpdateDB()
         {
-            var settings = ApplicationData.Current.LocalSettings;
+            //var settings = ApplicationData.Current.LocalSettings;
 
-            if (!settings.Values.ContainsKey(AppConstants.DBVersion))
+            //if (!settings.Values.ContainsKey(AppConstants.DBVersion))
+            //{
+            //    DatabaseManager.UpdateDBToVersion2();
+            //    settings.Values.Add(AppConstants.DBVersion, "2");
+            //}
+            int v = (int)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DBVersion);
+            if (v == 2)
             {
-                DatabaseManager.UpdateDBToVersion2();
-                settings.Values.Add(AppConstants.DBVersion, "2");
+                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DBVersion, 3);
+                ApplicationSettingsHelper.ReadResetSettingsValue("savelaterlyrics");
+                DatabaseManager.UpdateDBToVersion3();
             }
         }
 
