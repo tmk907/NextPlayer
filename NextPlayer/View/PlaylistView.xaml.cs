@@ -115,5 +115,30 @@ namespace NextPlayer.View
         }
 
         #endregion
+
+        private void AdMediator_Playlists_AdMediatorError(object sender, Microsoft.AdMediator.Core.Events.AdMediatorFailedEventArgs e)
+        {
+            string log = String.Format("Playlist AdMediatorError {0} {1}", e.ErrorCode, e.Error);
+            System.Diagnostics.Debug.WriteLine(log);
+            DiagnosticHelper.TrackTrace(log, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+        }
+
+        private void AdMediator_Playlists_AdSdkError(object sender, Microsoft.AdMediator.Core.Events.AdFailedEventArgs e)
+        {
+            string log = String.Format("Playlist AdSdkError {0} {1} {2} {3} {4} {5}", e.ErrorCode, e.ErrorDescription, e.Error, e.EventName, e.Name, e.SdkEventArgs);
+            System.Diagnostics.Debug.WriteLine(log);
+            if (e.Error !=null && e.Error.ToString() == "ad control requires Width and Height to be set to a non zero positive value") return;
+            DiagnosticHelper.TrackTrace(log, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+        }
+
+        private void AdMediator_Playlists_AdMediatorFilled(object sender, Microsoft.AdMediator.Core.Events.AdSdkEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Playlist AdMediatorFilled {0} {1} {2}", e.EventName, e.Name, e.SdkEventArgs);
+        }
+
+        private void AdMediator_Playlists_AdSdkEvent(object sender, Microsoft.AdMediator.Core.Events.AdSdkEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Playlist AdSdkEvent {0} {1} {2}", e.EventName, e.Name, e.SdkEventArgs);
+        }
     }
 }

@@ -334,7 +334,7 @@ namespace NextPlayer.View
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerOn, true);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TimerTime, timerPicker.Time.Ticks);
                 SendMessage(AppConstants.SetTimer);
-                App.TelemetryClient.TrackEvent("Timer On");
+                TrackEvent("Timer On");
             }
             else
             {
@@ -576,7 +576,7 @@ namespace NextPlayer.View
                 LFMLogin.Visibility = Visibility.Collapsed;
 
                 LFMPassword.Password = "";
-                App.TelemetryClient.TrackEvent("LastFm Log in");
+                TrackEvent("LastFm Log in");
             }
             else
             {
@@ -600,7 +600,7 @@ namespace NextPlayer.View
 
             LFMPassword.Visibility = Visibility.Visible;
             LFMLogin.Visibility = Visibility.Visible;
-            App.TelemetryClient.TrackEvent("LastFm Log out");
+            TrackEvent("LastFm Log out");
         }
 
         private void SendNP_Toggled(object sender, RoutedEventArgs e)
@@ -686,7 +686,7 @@ namespace NextPlayer.View
         {
             if (!initialization)
             {
-                App.TelemetryClient.TrackEvent(name);
+                DiagnosticHelper.TrackEvent(name);
             }
             //var tel = new EventTelemetry(name);
             //tel.Timestamp = DateTime.UtcNow;

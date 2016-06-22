@@ -1,5 +1,4 @@
 ﻿<Page
-    x:Class="NextPlayer.View.PlaylistsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayer.View"
@@ -8,10 +7,12 @@
     xmlns:helpers="using:NextPlayer.Helpers"
     xmlns:i="using:Microsoft.Xaml.Interactivity" 
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:WindowsPhone81="using:Microsoft.AdMediator.WindowsPhone81"
+    x:Class="NextPlayer.View.PlaylistsView"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding PlaylistsVM, Mode=OneWay, Source={StaticResource Locator}}">
-    
+    >
+
     <Page.Resources>
         <DataTemplate x:Key="PlaylistItemTemplate">
 
@@ -29,58 +30,63 @@
                                         Command="{Binding DataContext.EditSmartPlaylist, ElementName=PlaylistsListView}" CommandParameter="{Binding}"
                                         Visibility="{Binding IsSmart, Converter={StaticResource BoolToVisibilityConverter}}"/>-->
                         <MenuFlyoutItem x:Uid="Delete" Text="Delete" Click="Delete_Click"
-                                        Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        					Visibility="{Binding IsNotDefault, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <MenuFlyoutItem x:Uid="PinToStart" Text="Pin" Click="Pin_Click"/>
                         <MenuFlyoutItem x:Uid="MFIShare" Text="Share" Click="Share_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
                 <TextBlock Text="{Binding Name}" 
-                           TextWrapping="NoWrap" 
-                           TextTrimming="CharacterEllipsis" 
-                           FontSize="24" 
-                           FontWeight="Normal"
-                           Foreground="{StaticResource UserListFontColor}"
-                           Margin="0,0,0,0"/>
+        			TextWrapping="NoWrap" 
+        			TextTrimming="CharacterEllipsis" 
+        			FontSize="24" 
+        			FontWeight="Normal"
+        			Foreground="{StaticResource UserListFontColor}"
+        			Margin="0,0,0,0"/>
             </Border>
         </DataTemplate>
-        
+
         <Flyout x:Key="NewPlaylistFlyout">
             <StackPanel Orientation="Vertical" Height="Auto">
                 <TextBox x:Name="playlistNameTextBox" Text="" Margin="4,0,4,4"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button  x:Uid="ButtonSave" 
-                             Content="Save" 
-                             Margin="4,4,4,4" 
-                             Click="Save_Click"/>
+        				Content="Save" 
+        				Margin="4,4,4,4" 
+        				Click="Save_Click"/>
                     <Button  x:Uid="ButtonCancel"
-                             Content="Cancel" 
-                             Margin="4,4,4,4"
-                             Click="Cancel_Click"/>
+        				Content="Cancel" 
+        				Margin="4,4,4,4"
+        				Click="Cancel_Click"/>
                 </StackPanel>
             </StackPanel>
         </Flyout>
         <Flyout x:Key="DeletePlaylistFlyout">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="DeletePlaylistConfirmation" 
-                           FontSize="20"
-                           Text="Are you sure?"
-                           TextWrapping="WrapWholeWords"
-                           Margin="4,0,4,4"/>
+        			FontSize="20"
+        			Text="Are you sure?"
+        			TextWrapping="WrapWholeWords"
+        			Margin="4,0,4,4"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Uid="ButtonDelete" 
-                            Content="Delete" 
-                            Margin="4,4,4,4"
-                            Click="DeleteConfirm_Click"/>
+        				Content="Delete" 
+        				Margin="4,4,4,4"
+        				Click="DeleteConfirm_Click"/>
                     <Button x:Uid="ButtonCancel" 
-                            Content="Cancel"
-                            Margin="4,4,4,4"
-                            Click="Cancel_Click"/>
+        				Content="Cancel"
+        				Margin="4,4,4,4"
+        				Click="Cancel_Click"/>
                 </StackPanel>
             </StackPanel>
         </Flyout>
     </Page.Resources>
-	
-    
+
+
+    <Page.DataContext>
+        <Binding Mode="OneWay" Path="PlaylistsVM" Source="{StaticResource Locator}"/>
+    </Page.DataContext>
+
+
     <Page.BottomAppBar>
         <CommandBar x:Name="myCommandBar" ClosedDisplayMode="Minimal">
             <!--<CommandBar.PrimaryCommands>
@@ -112,7 +118,7 @@
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
             <TextBlock x:Uid="PlaylistsPageTitle" Text="playlists" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
+        
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid.ChildrenTransitions>
@@ -120,14 +126,14 @@
                     <EntranceThemeTransition/>
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            
+
             <ListView x:Name="PlaylistsListView"
-                      DataContext="{Binding}"
-                      SelectionMode="None"
-                      IsItemClickEnabled="True"
-                      ItemsSource="{Binding Playlists}"
-                      helpers:ItemClickCommand.Command="{Binding ItemClicked}"
-                      ItemTemplate="{StaticResource PlaylistItemTemplate}">
+				DataContext="{Binding}"
+				SelectionMode="None"
+				IsItemClickEnabled="True"
+				ItemsSource="{Binding Playlists}"
+				helpers:ItemClickCommand.Command="{Binding ItemClicked}"
+				ItemTemplate="{StaticResource PlaylistItemTemplate}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

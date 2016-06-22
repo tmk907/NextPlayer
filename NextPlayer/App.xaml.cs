@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.ApplicationInsights;
 using NextPlayerDataLayer.Diagnostics;
+using Microsoft.HockeyApp;
+using System.Diagnostics;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -67,15 +69,13 @@ namespace NextPlayer
             TelemetryClient = new TelemetryClient();
             if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName) == null)
             {
-                string name = "";
+                string name = "unknown";
                 try
                 {
                     name = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Logger.Save("SystemProductName" + Environment.NewLine + ex.Message);
-                    Logger.SaveToFile();
                 }
                 TelemetryClient.Context.Device.Model = name;
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DeviceName, name);
@@ -101,6 +101,7 @@ namespace NextPlayer
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
                 Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "7dc5e66f-7f6e-429b-84f6-c35142bb912e";
             }
+            HockeyClient.Current.Configure("7dc5e66f-7f6e-429b-84f6-c35142bb912e");
 
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
             this.InitializeComponent();
@@ -211,6 +212,22 @@ namespace NextPlayer
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Logger.SaveInSettings(e.Exception.ToString() + "\nMessage:\n" + e.Message);
+
+            if (e != null)
+            {
+                Exception exception = e.Exception;
+                if (exception is NullReferenceException && exception.ToString().ToUpper().Contains("SOMA"))
+                {
+                    Debug.WriteLine("Handled Smaato null reference exception {0}", exception);
+                    e.Handled = true;
+                    return;
+                }
+                else if (exception.ToString().Contains("AdDuplex"))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
 
             ApplicationSettingsHelper.ReadResetSettingsValue(AppConstants.MediaScan);
             int i = ApplicationSettingsHelper.ReadSongIndex();
@@ -400,6 +417,8 @@ namespace NextPlayer
             Window.Current.Activate();
             //SetDimensions();
             DispatcherHelper.Initialize();
+
+            await HockeyClient.Current.SendCrashesAsync(true);
         }
 
         /// <summary>

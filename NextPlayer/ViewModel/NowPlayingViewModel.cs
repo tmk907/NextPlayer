@@ -22,6 +22,7 @@ using System.Threading;
 using Windows.UI.Core;
 using GalaSoft.MvvmLight.Threading;
 using Windows.UI.Xaml.Media;
+using NextPlayer.Common;
 
 namespace NextPlayer.ViewModel
 {
@@ -813,7 +814,7 @@ namespace NextPlayer.ViewModel
             }
             catch(IndexOutOfRangeException ex)
             {
-                App.TelemetryClient.TrackTrace("NPViewModel Resuming" + Environment.NewLine + Library.Current.NowPlayingList.Count + " " + CurrentSongIndex + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace("NPViewModel Resuming" + Environment.NewLine + Library.Current.NowPlayingList.Count + " " + CurrentSongIndex + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
                 song = new SongItem();
             }
             

@@ -52,14 +52,14 @@ namespace NextPlayerDataLayer.Services
         private static SQLiteConnection ConnectionDb()
         {
             var conn = new SQLite.SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.DBFileName), true);
-            conn.BusyTimeout = TimeSpan.FromSeconds(2);
+            conn.BusyTimeout = TimeSpan.FromSeconds(3);
             return conn;
         }
 
         private static SQLiteConnection LastFmDBConnection()
         {
             var conn = new SQLite.SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, AppConstants.LastFmDBFileName), true);
-            conn.BusyTimeout = TimeSpan.FromSeconds(2);
+            conn.BusyTimeout = TimeSpan.FromSeconds(4);
             return conn;
         }
 

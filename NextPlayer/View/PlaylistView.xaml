@@ -1,5 +1,4 @@
 ﻿<Page
-    x:Class="NextPlayer.View.PlaylistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayer.View"
@@ -8,6 +7,8 @@
     xmlns:helpers="using:NextPlayer.Helpers"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:WindowsPhone81="using:Microsoft.AdMediator.WindowsPhone81"
+    x:Class="NextPlayer.View.PlaylistView"
     mc:Ignorable="d"
     Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding PlaylistVM, Mode=OneWay, Source={StaticResource Locator}}">
@@ -17,7 +18,7 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton x:Uid="AppBarSort" Icon="Sort" Label="Sort" IsCompact="True">
-                <Button.Flyout>
+                <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Uid="MFITitle" Text="Title"
                             Command="{Binding SortBy}" CommandParameter="Title"/>
@@ -36,17 +37,16 @@
                         <MenuFlyoutItem x:Uid="MFIDuration" Text="Duration"
                             Command="{Binding SortBy}" CommandParameter="Duration"/>
                     </MenuFlyout>
-                </Button.Flyout>
+                </AppBarButton.Flyout>
             </AppBarButton>
             <AppBarButton x:Uid="AppBarOrder" Icon="Priority" Label="Order" 
                           IsCompact="True" 
-                          Command="{Binding ChangeOrder}">
-            </AppBarButton>
+                          Command="{Binding ChangeOrder}"/>
             <AppBarButton x:Uid="AppBarSave" Icon="Save" Label="Save" IsCompact="True" 
                           Visibility="{Binding IsNowPlaying, Converter={StaticResource BoolToVisibilityConverter}}"
                           Command="{Binding SaveAsPlaylist}" />
         </CommandBar>
-        
+
     </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
@@ -60,7 +60,21 @@
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
             <TextBlock x:Name="pageTitleText" Text="{Binding PageTitle}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
+        <Grid Grid.Row="0" 
+              HorizontalAlignment="Center" 
+              VerticalAlignment="Top">
+            <WindowsPhone81:AdMediatorControl 
+                x:Name="AdMediator_Playlist"
+                Id="102"
+                Height="50" 
+                Width="320"
+                Canvas.ZIndex="1"
+                AdMediatorError="AdMediator_Playlists_AdMediatorError"
+                AdSdkError="AdMediator_Playlists_AdSdkError"
+                AdMediatorFilled="AdMediator_Playlists_AdMediatorFilled"
+                AdSdkEvent="AdMediator_Playlists_AdSdkEvent"
+                />
+        </Grid>
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <Grid.ChildrenTransitions>
@@ -68,14 +82,14 @@
                     <EntranceThemeTransition/>
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            
+
             <ListView x:Name="PlaylistSongsListView"  
-                SelectionMode="None"
-                IsItemClickEnabled="True"
-                ItemsSource="{Binding Playlist}"
-                ContinuumNavigationTransitionInfo.ExitElementContainer="True"
-                helpers:ItemClickCommand.Command="{Binding ItemClicked}"
-                ItemTemplate="{StaticResource PlaylistSongItemTemplate}">
+				SelectionMode="None"
+				IsItemClickEnabled="True"
+				ItemsSource="{Binding Playlist}"
+				ContinuumNavigationTransitionInfo.ExitElementContainer="True"
+				helpers:ItemClickCommand.Command="{Binding ItemClicked}"
+				ItemTemplate="{StaticResource PlaylistSongItemTemplate}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -87,9 +101,9 @@
                     </core:EventTriggerBehavior>-->
                     <core:EventTriggerBehavior EventName="Loaded">
                         <core:InvokeCommandAction
-                                    Command="{Binding LoadAndScroll, Mode=TwoWay}"
-                                    InputConverter="{StaticResource GetListView}"
-                                    InputConverterParameter="{Binding ElementName=PlaylistSongsListView}" />
+							Command="{Binding LoadAndScroll, Mode=TwoWay}"
+							InputConverter="{StaticResource GetListView}"
+							InputConverterParameter="{Binding ElementName=PlaylistSongsListView}" />
                     </core:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>

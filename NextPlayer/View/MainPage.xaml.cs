@@ -1,24 +1,11 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using NextPlayer.Common;
+﻿using NextPlayer.Common;
 using NextPlayer.ViewModel;
 using NextPlayerDataLayer.Constants;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -122,7 +109,12 @@ namespace NextPlayer.View
 
             if (!settings.Values.ContainsKey("Win10Version"))
             {
-                settings.Values.Add("Win10Version", 0);
+                settings.Values.Add("Win10Version", DateTime.Now.Day);
+            }
+            else if (settings.Values["Win10Version"].ToString() != "-1")
+            {
+                int day = (int)settings.Values["Win10Version"];
+                if (day == DateTime.Now.Day) return;
                 ResourceLoader loader = new ResourceLoader();
                 string content = "Try out Next-Player! \nNew music player designed for Windows 10.";
                 MessageDialog mydial = new MessageDialog(content);
@@ -131,8 +123,8 @@ namespace NextPlayer.View
                     "Download",
                     new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick10)));
                 mydial.Commands.Add(new UICommand(
-                   "Later",
-                   new UICommandInvokedHandler(this.CommandInvokedHandler_noclick)));
+                    "Not now",
+                    new UICommandInvokedHandler(this.CommandInvokedHandler_noclick10)));
                 await mydial.ShowAsync();
             }
             else
@@ -172,6 +164,11 @@ namespace NextPlayer.View
 
         }
 
+        private void CommandInvokedHandler_noclick10(IUICommand command)
+        {
+
+        }
+
         private async void CommandInvokedHandler_yesclick(IUICommand command)
         {
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -183,10 +180,9 @@ namespace NextPlayer.View
         private async void CommandInvokedHandler_yesclick10(IUICommand command)
         {
             var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            settings.Values[AppConstants.IsReviewed] = -1;
-            App.TelemetryClient.TrackEvent("Download Next-Player");
+            settings.Values["Win10Version"] = -1;
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?ProductId=9nblggh67n4f"));
+            DiagnosticHelper.TrackEvent("Download Next-Player");
         }
-
     }
 }

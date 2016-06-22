@@ -1,13 +1,14 @@
 ﻿<Page
-    x:Class="NextPlayer.View.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:NextPlayer.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:WindowsPhone81="using:Microsoft.AdMediator.WindowsPhone81"
+    x:Class="NextPlayer.View.MainPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding MainVM, Mode=OneWay, Source={StaticResource Locator}}">
+    >
 
     <Page.Resources>
         <Thickness x:Key="TopMargin">4,0,4,8</Thickness>
@@ -15,6 +16,10 @@
         <Thickness x:Key="MiddleMargin">4,0,4,8</Thickness>
         <Thickness x:Key="RightMargin">4,0,4,8</Thickness>
     </Page.Resources>
+
+    <Page.DataContext>
+        <Binding Mode="OneWay" Path="MainVM" Source="{StaticResource Locator}"/>
+    </Page.DataContext>
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource BgImage}">
         <Grid.RowDefinitions>
@@ -29,14 +34,14 @@
             <TextBlock x:Uid="AppName" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" Margin="0,12,0,0"/>
             <TextBlock x:Uid="MainPageTitle" Text="main page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" Foreground="{StaticResource UserListFontColor}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
+        
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="0,0,0,0">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <EntranceThemeTransition/>
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="80"/>
@@ -57,128 +62,128 @@
                     <ColumnDefinition Width="16"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
-                        Command="{Binding GoToNowPlayingListPage}" 
-                        Margin="{StaticResource TopMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToNowPlayingListPage}" 
+					Margin="{StaticResource TopMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="MenuNowPlayingPlaylistTB"
-                                Text="Now playing playlist"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Now playing playlist"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="1" Grid.Column="2" 
-                        Command="{Binding GoToAlbumsPage}" 
-                        Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToAlbumsPage}" 
+					Margin="{StaticResource LeftMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuAlbums"
-                                Text="Albums"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Albums"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="1" Grid.Column="3" 
-                        Command="{Binding GoToArtistsPage}" 
-                        Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToArtistsPage}" 
+					Margin="{StaticResource MiddleMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuArtists"
-                                Text="Artists"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Artists"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="2" Grid.Column="3" 
-                        Command="{Binding GoToFoldersPage}"
-                        Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToFoldersPage}"
+					Margin="{StaticResource MiddleMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuFolders"
-                                Text="Folders"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Folders"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="2" Grid.Column="2" 
-                        Command="{Binding GoToGenresPage}"
-                        Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToGenresPage}"
+					Margin="{StaticResource LeftMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuGenres"
-                                Text="Genres"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Genres"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="3" Grid.Column="2" 
-                        Command="{Binding GoToPlaylistsPage}"
-                        Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToPlaylistsPage}"
+					Margin="{StaticResource MiddleMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuPlaylists"
-                                Text="Playlists"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Playlists"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="3" Grid.Column="3" 
-                        Command="{Binding GoToSongsPage}" 
-                        Margin="{StaticResource MiddleMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToSongsPage}" 
+					Margin="{StaticResource MiddleMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuSongs"
-                                Text="Songs"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Songs"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="3" Grid.Column="1" 
-                        Command="{Binding GoToSettingsPage}" 
-                        Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToSettingsPage}" 
+					Margin="{StaticResource LeftMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuSettings"
-                                Text="Settings"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Settings"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
-                        Command="{Binding GoToSearchPage}" 
-                        Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}">
+					Command="{Binding GoToSearchPage}" 
+					Margin="{StaticResource LeftMargin}"
+					Style="{StaticResource ButtonStyleMainPage}">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock x:Uid="TBMenuSearch"
-                                Text="Search"
-                                TextWrapping="WrapWholeWords"
-                                TextAlignment="Center"/>
+								Text="Search"
+								TextWrapping="WrapWholeWords"
+								TextAlignment="Center"/>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
                 <Button x:Uid="MenuStop" 
-                        Grid.Row="0" Grid.Column="1"
-                        Content="Stop" 
-                        Command="{Binding Stop}" 
-                        Margin="{StaticResource LeftMargin}"
-                        Style="{StaticResource ButtonStyleMainPage}"/>
+					Grid.Row="0" Grid.Column="1"
+					Content="Stop" 
+					Command="{Binding Stop}" 
+					Margin="{StaticResource LeftMargin}"
+					Style="{StaticResource ButtonStyleMainPage}"/>
 
             </Grid>
             <Grid Grid.Row="1" Margin="0,0,0,0"
@@ -193,75 +198,77 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="2"
-                           Margin="20,0,20,0"
-                           Fill="{StaticResource TransparentMainPageBGImageColor}"/>
+					Margin="20,0,20,0"
+					Fill="{StaticResource TransparentMainPageBGImageColor}"/>
 
                 <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                   Margin="20,0,0,0"
-                           Width="80"
-                           Height="80"
-                           Source="{Binding Cover}"
-                           DoubleTapped="Image_DoubleTapped"
+					Margin="20,0,0,0"
+					Width="80"
+					Height="80"
+					Source="{Binding Cover}"
+					DoubleTapped="Image_DoubleTapped"
                            />
                 <Button Grid.Row="0" Grid.Column="1"
-                            Command="{Binding GoToNowPlaying}"
-                            Style="{StaticResource ButtonStyleEmpty}"
-                            MinHeight="40"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Padding="4,0,4,0"
+					Command="{Binding GoToNowPlaying}"
+					Style="{StaticResource ButtonStyleEmpty}"
+					MinHeight="40"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					Padding="4,0,4,0"
                             >
                     <TextBlock
-                            Text="{Binding Title}"
-                            TextTrimming="CharacterEllipsis"
-                            FontSize="18"
-                        Foreground="{StaticResource UserListFontColor}"
-                            VerticalAlignment="Center"
-                            Height="Auto"
+						Text="{Binding Title}"
+						TextTrimming="CharacterEllipsis"
+						FontSize="18"
+						Foreground="{StaticResource UserListFontColor}"
+						VerticalAlignment="Center"
+						Height="Auto"
                         />
                 </Button>
 
                 <Button Grid.Row="1" Grid.Column="1"
-                            Command="{Binding GoToNowPlaying}"
-                            Style="{StaticResource ButtonStyleEmpty}"
-                            MinHeight="40"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Padding="4,0,4,0">
+					Command="{Binding GoToNowPlaying}"
+					Style="{StaticResource ButtonStyleEmpty}"
+					MinHeight="40"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					Padding="4,0,4,0">
                     <TextBlock 
-                            Text="{Binding Artist}"
-                            TextTrimming="CharacterEllipsis"
-                            FontSize="16"
-                        Foreground="{StaticResource UserListFontColor}"
-                            VerticalAlignment="Center"
-                            Height="Auto"
+						Text="{Binding Artist}"
+						TextTrimming="CharacterEllipsis"
+						FontSize="16"
+						Foreground="{StaticResource UserListFontColor}"
+						VerticalAlignment="Center"
+						Height="Auto"
                         />
                 </Button>
 
                 <Button Grid.RowSpan="2" Grid.Column="2"
-                            Command="{Binding NextClick}"
-                            Style="{StaticResource ButtonStyleEmptyN}"
-                            Foreground="{StaticResource UserAccentBrush}"
-                            Content="&#xE101;"
-                            FontFamily="Segoe UI Symbol" 
-                            FontSize="36"
-                            VerticalAlignment="Top"
-                            VerticalContentAlignment="Center"
-                            HorizontalAlignment="Center"
-                            MinWidth="72"
-                            MinHeight="72"
-                            Width="72"
-                            Height="72"
-                            Margin="0,0,20,0"
-                            Padding="0"
+					Command="{Binding NextClick}"
+					Style="{StaticResource ButtonStyleEmptyN}"
+					Foreground="{StaticResource UserAccentBrush}"
+					Content="&#xE101;"
+					FontFamily="Segoe UI Symbol" 
+					FontSize="36"
+					VerticalAlignment="Top"
+					VerticalContentAlignment="Center"
+					HorizontalAlignment="Center"
+					MinWidth="72"
+					MinHeight="72"
+					Width="72"
+					Height="72"
+					Margin="0,0,20,0"
+					Padding="0"
                         >
                     <!--<Image Source="/Assets/Buttons/Dark/MainNextButton.png" Height="80" Width="80"/>-->
                 </Button>
-                
+
             </Grid>
         </Grid>
+
         
+
     </Grid>
 </Page>
