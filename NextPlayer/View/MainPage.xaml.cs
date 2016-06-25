@@ -109,23 +109,27 @@ namespace NextPlayer.View
 
             if (!settings.Values.ContainsKey("Win10Version"))
             {
-                settings.Values.Add("Win10Version", DateTime.Now.Day);
+                settings.Values.Add("Win10Version", DateTime.Now.AddDays(1).Day);
             }
             else if (settings.Values["Win10Version"].ToString() != "-1")
             {
                 int day = (int)settings.Values["Win10Version"];
-                if (day == DateTime.Now.Day) return;
-                ResourceLoader loader = new ResourceLoader();
-                string content = "Try out Next-Player! \nNew music player designed for Windows 10.";
-                MessageDialog mydial = new MessageDialog(content);
-                mydial.Title = loader.GetString("New music player");
-                mydial.Commands.Add(new UICommand(
-                    "Download",
-                    new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick10)));
-                mydial.Commands.Add(new UICommand(
-                    "Not now",
-                    new UICommandInvokedHandler(this.CommandInvokedHandler_noclick10)));
-                await mydial.ShowAsync();
+                if (day == DateTime.Now.Day)
+                {
+                    settings.Values["Win10Version"] = DateTime.Now.AddDays(3);
+
+                    ResourceLoader loader = new ResourceLoader();
+                    string content = "Try out Next-Player! \nNew music player designed for Windows 10.";
+                    MessageDialog mydial = new MessageDialog(content);
+                    mydial.Title = loader.GetString("New music player");
+                    mydial.Commands.Add(new UICommand(
+                        "Download",
+                        new UICommandInvokedHandler(this.CommandInvokedHandler_yesclick10)));
+                    mydial.Commands.Add(new UICommand(
+                        "Not now",
+                        new UICommandInvokedHandler(this.CommandInvokedHandler_noclick10)));
+                    await mydial.ShowAsync();
+                }
             }
             else
             {
