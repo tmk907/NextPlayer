@@ -814,7 +814,7 @@ namespace NextPlayer.ViewModel
             }
             catch(IndexOutOfRangeException ex)
             {
-                DiagnosticHelper.TrackTrace("NPViewModel Resuming" + Environment.NewLine + Library.Current.NowPlayingList.Count + " " + CurrentSongIndex + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace("NPViewModel Resuming" + Environment.NewLine + Library.Current.NowPlayingList.Count + " " + CurrentSongIndex + Environment.NewLine + ex.Message, Microsoft.HockeyApp.SeverityLevel.Error);
                 song = new SongItem();
             }
             

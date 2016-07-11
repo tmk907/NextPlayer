@@ -73,7 +73,7 @@ namespace NextPlayer.ViewModel
             }
             catch(Exception ex)
             {
-                DiagnosticHelper.TrackTrace("AddFileSize" + Environment.NewLine + ex.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace("AddFileSize" + Environment.NewLine + ex.Message, Microsoft.HockeyApp.SeverityLevel.Error);
             }
             Song = s;
         }

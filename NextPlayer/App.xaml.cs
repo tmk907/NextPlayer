@@ -66,41 +66,6 @@ namespace NextPlayer
         /// </summary>
         public App()
         {
-            TelemetryClient = new TelemetryClient();
-            if (ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName) == null)
-            {
-                string name = "unknown";
-                try
-                {
-                    name = new Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation().SystemProductName;
-                }
-                catch
-                {
-                }
-                TelemetryClient.Context.Device.Model = name;
-                ApplicationSettingsHelper.SaveSettingsValue(AppConstants.DeviceName, name);
-            }
-            else
-            {
-                TelemetryClient.Context.Device.Model = ApplicationSettingsHelper.ReadSettingsValue(AppConstants.DeviceName).ToString();
-            }
-            try
-            {
-                TelemetryClient.Context.Component.Version = GetAppVersion();
-            }
-            catch (Exception ex)
-            {
-            }
-            if (dev)
-            {
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "6ac887c7-3342-4313-bfc5-3a6ab5cf8066";
-            }
-            else
-            {
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = false;
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey = "7dc5e66f-7f6e-429b-84f6-c35142bb912e";
-            }
             HockeyClient.Current.Configure("7dc5e66f-7f6e-429b-84f6-c35142bb912e");
 
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
@@ -120,7 +85,7 @@ namespace NextPlayer
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.BackgroundImagePath, "");
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.ShowCoverAsBackground, true);
                 ApplicationSettingsHelper.SaveSettingsValue(AppConstants.TileAppTransparent, "yes");
-                TelemetryClient.TrackTrace("New instalation",Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Information);
+                //DiagnosticHelper.TrackTrace("New instalation",Microsoft.HockeyApp.SeverityLevel.Information);
             }
             else
             {
@@ -244,7 +209,7 @@ namespace NextPlayer
                     ApplicationSettingsHelper.SaveSongIndex(0);
                 }
             }
-            TelemetryClient.TrackTrace("Unhandled Exception " + e.Exception.ToString() + "\n" + e.Message, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+            DiagnosticHelper.TrackTrace("Unhandled Exception " + e.Exception.ToString() + "\n" + e.Message, Microsoft.HockeyApp.SeverityLevel.Error);
         }
 
         /// <summary>
@@ -294,7 +259,7 @@ namespace NextPlayer
             }
             catch(Exception ex)
             {
-                TelemetryClient.TrackTrace("User accent set" + Environment.NewLine + ex.Message);
+                DiagnosticHelper.TrackTrace("User accent set" + Environment.NewLine + ex.Message, SeverityLevel.Information);
             }
             if ((bool)ApplicationSettingsHelper.ReadSettingsValue(AppConstants.IsBGImageSet))
             {
@@ -539,15 +504,15 @@ namespace NextPlayer
             string lastfm = await Logger.ReadLastFm();
             if (bg != "")
             {
-                TelemetryClient.TrackTrace(bg, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace(bg, Microsoft.HockeyApp.SeverityLevel.Error);
             }
             if (fg != "")
             {
-                TelemetryClient.TrackTrace(fg, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace(fg, Microsoft.HockeyApp.SeverityLevel.Error);
             }
             if (lastfm != "")
             {
-                TelemetryClient.TrackTrace(lastfm, Microsoft.ApplicationInsights.DataContracts.SeverityLevel.Error);
+                DiagnosticHelper.TrackTrace(lastfm, Microsoft.HockeyApp.SeverityLevel.Error);
             }
             Logger.ClearAll();
             Logger.ClearLastFm();
