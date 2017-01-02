@@ -264,7 +264,9 @@
     <Content Include="Assets\SongCover192.scale-100.png" />
     <Content Include="Assets\SongCover192.scale-140.png" />
     <Content Include="Assets\SongCover192.scale-240.png" />
-    <Content Include="AdMediator.config" />
+    <Content Include="AdMediator.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="app.config" />
     <None Include="ApplicationInsights.config" />
     <None Include="Package.StoreAssociation.xml">
@@ -368,12 +370,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AdDuplex.Universal.Controls.WinPhone.XAML, Version=9.0.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdDuplexWinPhone81.9.0.0.7\lib\portable-win81+wpa81\AdDuplex.Universal.Controls.WinPhone.XAML.winmd</HintPath>
+    <Reference Include="AdDuplex.Universal.Controls.WinPhone.XAML, Version=9.0.0.14, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AdDuplexWinPhone81.9.0.0.14\lib\portable-win81+wpa81\AdDuplex.Universal.Controls.WinPhone.XAML.winmd</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AdDuplex.Universal.WinPhone.WinRT, Version=9.0.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdDuplexWinPhone81.9.0.0.7\lib\portable-win81+wpa81\AdDuplex.Universal.WinPhone.WinRT.winmd</HintPath>
+    <Reference Include="AdDuplex.Universal.WinPhone.WinRT, Version=9.0.0.14, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AdDuplexWinPhone81.9.0.0.14\lib\portable-win81+wpa81\AdDuplex.Universal.WinPhone.WinRT.winmd</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bluetooth.Core.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -412,10 +414,6 @@
       <HintPath>..\packages\Microsoft.AdMediator.WindowsPhone81.Smaato.2.1.3\lib\wpa\Microsoft.AdMediator.WindowsPhone81.Smaato.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AdMediator.WindowsPhone81.Vserv, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AdMediator.WindowsPhone81.Vserv.2.1.3\lib\wpa\Microsoft.AdMediator.WindowsPhone81.Vserv.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=1.2.3.490, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.1.2.3\lib\portable-win81+wpa81\Microsoft.ApplicationInsights.dll</HintPath>
       <Private>True</Private>
@@ -428,16 +426,20 @@
       <HintPath>..\packages\Microsoft.ApplicationInsights.PersistenceChannel.1.2.3\lib\portable-win81+wpa81\Microsoft.ApplicationInsights.PersistenceChannel.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.HockeyApp.Core45, Version=4.1.2.6673, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HockeySDK.Core.4.1.2\lib\portable-net45+win8+wp8+wpa81+win81+uap10.0\Microsoft.HockeyApp.Core45.dll</HintPath>
+    <Reference Include="Microsoft.HockeyApp.Core45, Version=4.1.5.1043, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HockeySDK.Core.4.1.5\lib\portable-net45+win8+wp8+wpa81+win81+uap10.0\Microsoft.HockeyApp.Core45.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.HockeyApp.Kit, Version=4.1.2.6673, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HockeySDK.WINRT.4.1.2\lib\portable-wpa81\Microsoft.HockeyApp.Kit.dll</HintPath>
+    <Reference Include="Microsoft.HockeyApp.Kit, Version=4.1.5.1043, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HockeySDK.WINRT.4.1.5\lib\portable-wpa81\Microsoft.HockeyApp.Kit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SOMAWP81, Version=1.5.0.4, Culture=neutral, processorArchitecture=MSIL">
@@ -446,7 +448,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <PRIResource Include="Strings\pl-PL\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <SubType>Designer</SubType>
@@ -462,7 +466,7 @@
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.AdMediator81, Version=1.0">
-      <Name>Microsoft.AdMediator81</Name>
+      <Name>Ad Mediator SDK for Windows Phone 8.1 XAML</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>

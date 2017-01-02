@@ -82,7 +82,7 @@ namespace NextPlayerDataLayer.Diagnostics
             return text;
         }
 
-        public async static void ClearAll()
+        public async static void ClearAll()//!UnauthorizedAccessException
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             await ApplicationData.Current.LocalFolder.CreateFileAsync(filenameBG, CreationCollisionOption.ReplaceExisting);

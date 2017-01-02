@@ -116,7 +116,7 @@ namespace NextPlayer.View
                 int day = (int)settings.Values["Win10Version"];
                 if (day == DateTime.Now.Day)
                 {
-                    settings.Values["Win10Version"] = DateTime.Now.AddDays(3);
+                    settings.Values["Win10Version"] = DateTime.Now.AddDays(3).Day;
 
                     ResourceLoader loader = new ResourceLoader();
                     string content = "Try out Next-Player! \nNew music player designed for Windows 10.";

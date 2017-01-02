@@ -201,7 +201,7 @@ namespace NextPlayer.View
         {
             string log = String.Format("NowPlaying AdMediatorError {0} {1}", e.ErrorCode, e.Error);
             System.Diagnostics.Debug.WriteLine(log);
-            DiagnosticHelper.TrackTrace(log, Microsoft.HockeyApp.SeverityLevel.Error);
+            //DiagnosticHelper.TrackTrace(log, Microsoft.HockeyApp.SeverityLevel.Error);
         }
 
         private void AdMediator_Playlists_AdSdkError(object sender, Microsoft.AdMediator.Core.Events.AdFailedEventArgs e)
@@ -209,7 +209,7 @@ namespace NextPlayer.View
             string log = String.Format("NowPlaying AdSdkError {0} {1} {2} {3} {4} {5}", e.ErrorCode, e.ErrorDescription, e.Error, e.EventName, e.Name, e.SdkEventArgs);
             System.Diagnostics.Debug.WriteLine(log);
             if (e.Error != null && e.Error.ToString() == "ad control requires Width and Height to be set to a non zero positive value") return;
-            DiagnosticHelper.TrackTrace(log, Microsoft.HockeyApp.SeverityLevel.Error);
+            //DiagnosticHelper.TrackTrace(log, Microsoft.HockeyApp.SeverityLevel.Error);
         }
 
         private void AdMediator_Playlists_AdMediatorFilled(object sender, Microsoft.AdMediator.Core.Events.AdSdkEventArgs e)
