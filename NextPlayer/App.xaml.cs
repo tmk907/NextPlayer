@@ -66,7 +66,7 @@ namespace NextPlayer
         /// </summary>
         public App()
         {
-            HockeyClient.Current.Configure("7dc5e66f-7f6e-429b-84f6-c35142bb912e");
+            HockeyClient.Current.Configure("");
 
             //App.Current.RequestedTheme = ApplicationTheme.Dark;
             this.InitializeComponent();

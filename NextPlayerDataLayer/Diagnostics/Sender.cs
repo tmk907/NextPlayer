@@ -7,7 +7,7 @@ namespace NextPlayerDataLayer.Diagnostics
 {
     public class Sender
     {
-        private const string hostname = "http://playerlogs.hol.es/WP/log.php";
+        private const string hostname = "";
         public Sender()
         {
         }
@@ -29,26 +29,26 @@ namespace NextPlayerDataLayer.Diagnostics
 
         private async Task Send()
         {
-            Uri uri;
-            Uri.TryCreate(hostname, UriKind.Absolute, out uri);
-            var data = await GetData();
+            //Uri uri;
+            //Uri.TryCreate(hostname, UriKind.Absolute, out uri);
+            //var data = await GetData();
 
-            using (var httpclient = new HttpClient())
-            {
-                using (var content = new FormUrlEncodedContent(data))
-                {
-                    using (var responseMessages = await httpclient.PostAsync(uri, content))
-                    {
-                        string x = await responseMessages.Content.ReadAsStringAsync();
-                        if (x == "OK")
-                        {
-                            Logger.ClearAll();
-                            Logger.ClearLastFm();
-                        }
+            //using (var httpclient = new HttpClient())
+            //{
+            //    using (var content = new FormUrlEncodedContent(data))
+            //    {
+            //        using (var responseMessages = await httpclient.PostAsync(uri, content))
+            //        {
+            //            string x = await responseMessages.Content.ReadAsStringAsync();
+            //            if (x == "OK")
+            //            {
+            //                Logger.ClearAll();
+            //                Logger.ClearLastFm();
+            //            }
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
         }
         
         private async Task<List<KeyValuePair<string, string>>> GetData()
